@@ -1,6 +1,6 @@
 import express, { Request, Response, NextFunction, Router } from 'express';
 const routerCliente = Router();
-import { Cliente } from '../models/cliente.js';
+import { Cliente } from '../models/cliente.model.js';
 
 const app = express();
 app.use(express.json());

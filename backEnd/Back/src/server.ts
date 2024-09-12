@@ -8,7 +8,7 @@ import { createProxyMiddleware } from 'http-proxy-middleware';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-import crudCliente from './controllers/crudCliente.js';
+import {routerCliente} from './routes/cliente.routes.js';
 import crudCiudad from './controllers/crudCiudad.js';
 
 const app = express();
@@ -19,7 +19,7 @@ app.use(cors({
 
 app.use(express.json());
 
-app.use('/api/cliente', crudCliente);
+app.use('/api/cliente', routerCliente);
 app.use('/api/ciudad', crudCiudad);
 
 app.use(express.static(path.join(__dirname, 'dist')));

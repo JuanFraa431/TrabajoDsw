@@ -1,7 +1,7 @@
 import express, { Request, Response, NextFunction, Router } from 'express';
 const routerCiudad = Router();
 import { Ciudad } from '../models/ciudad.model.js';
-import {pool} from '../shared/db/conn.js';
+import {pool} from '../shared/conn.js';
 
 routerCiudad.use(express.json());
 
