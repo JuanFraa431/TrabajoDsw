@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "CRUD1-Cliente.js",
   "scripts": {
-    "start": "webpack serve --mode development"
+    "startFront": "webpack serve --mode development"
   },
   "proxy": "http://localhost:3000/",
   "dependencies": {
@@ -12,7 +12,8 @@
     "react": "^18.3.1",
     "react-datepicker": "^7.3.0",
     "react-dom": "^18.3.1",
-    "react-router-dom": "^6.26.1"
+    "react-router-dom": "^6.26.1",
+    "tpdesarrollo": "file:"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
@@ -33,5 +34,4 @@
     "webpack-cli": "^5.1.4",
     "webpack-dev-server": "^5.0.4"
   }
-  
 }
