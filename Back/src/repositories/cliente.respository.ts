@@ -20,4 +20,38 @@ export class ClienteRepository implements Repository<Cliente>{
         const cliente = clientes[0] as Cliente 
         return cliente
     }
+
+    public async save(item: Cliente): Promise<Cliente> {
+        const [result] = await pool.query('INSERT INTO clientes (nombre, apellido, DNI, email, fecha_nacimiento) VALUES (?, ?, ?, ?, ?)',
+            [item.nombre, item.apellido, item.dni, item.email, item.fechaNacimiento]) as RowDataPacket[]
+        const affectedRows = (result as any).affectedRows
+        if(affectedRows == 1){
+            return item
+        } else {
+            throw new Error('No se ha podido insertar el cliente')
+        }
+    }
+
+    public async update(item: {id:string}, cliente: Cliente): Promise<Cliente | undefined> {
+        const id = Number.parseInt(item.id)
+        const [result] = await pool.query('UPDATE clientes SET nombre = ?, apellido = ?, DNI = ?, email = ?, fecha_nacimiento = ? WHERE id = ?',
+            [cliente.nombre, cliente.apellido, cliente.dni, cliente.email, cliente.fechaNacimiento, id]) as RowDataPacket[]
+        const affectedRows = (result as any).affectedRows
+        if(affectedRows == 1){
+            return cliente
+        } else {
+            throw new Error('No se ha podido actualizar el cliente')
+        }
+    }
+
+    public async remove(item: {id:string}): Promise<void> {
+        const id = Number.parseInt(item.id)
+        const [result] = await pool.query('DELETE FROM clientes WHERE id = ?',
+            [id]) as RowDataPacket[]
+        const affectedRows = (result as any).affectedRows
+        if(affectedRows == 0){
+            throw new Error('No se ha podido borrar el cliente')
+        }
+    }
 }
+
