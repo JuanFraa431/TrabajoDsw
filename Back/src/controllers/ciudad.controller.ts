@@ -26,6 +26,7 @@ async function findOne(req: Request, res: Response) {
 async function create(req: Request, res: Response) {
   try {
     const ciudad = new Ciudad(
+      req.body.id,
       req.body.nombre,
       req.body.descripcion,
       req.body.pais,
@@ -41,6 +42,7 @@ async function update(req: Request, res: Response) {
   try {
     const { id } = req.params;
     const ciudad = new Ciudad(
+      req.body.id,
       req.body.nombre,
       req.body.descripcion,
       req.body.pais,

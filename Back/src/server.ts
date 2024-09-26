@@ -3,13 +3,13 @@ import path from 'path';
 import cors from 'cors';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
-import { createProxyMiddleware } from 'http-proxy-middleware';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 import {routerCliente} from './routes/cliente.routes.js';
 import {routerCiudad} from './routes/ciudad.routes.js';
+import { routerHotel } from './routes/hotel.routes.js';
 
 const app = express();
 
@@ -21,6 +21,7 @@ app.use(express.json());
 
 app.use('/api/cliente', routerCliente);
 app.use('/api/ciudad', routerCiudad);
+app.use('/api/hotel',routerHotel);
 
 app.use(express.static(path.join(__dirname, 'dist')));
 
