@@ -6,13 +6,13 @@ import { RowDataPacket } from "mysql2";
 export class ClienteRepository implements Repository<Cliente>{
 
     public async findAll(): Promise<Cliente [] | undefined> {
-        const [clientes] = await pool.query('SELECT * FROM clientes')
+        const [clientes] = await pool.query('SELECT * FROM cliente')
         return clientes as Cliente []
     }
 
     public async findOne(item: {id:string}): Promise<Cliente | undefined>{
         const id = Number.parseInt(item.id)
-        const [clientes] = await pool.query<RowDataPacket[]>('SELECT * FROM clientes where id = ?',
+        const [clientes] = await pool.query<RowDataPacket[]>('SELECT * FROM cliente where id = ?',
             [id])
         if(clientes.length == 0){
             return undefined
@@ -22,8 +22,8 @@ export class ClienteRepository implements Repository<Cliente>{
     }
 
     public async save(item: Cliente): Promise<Cliente> {
-        const [result] = await pool.query('INSERT INTO clientes (nombre, apellido, DNI, email, fecha_nacimiento) VALUES (?, ?, ?, ?, ?)',
-            [item.nombre, item.apellido, item.dni, item.email, item.fechaNacimiento]) as RowDataPacket[]
+        const [result] = await pool.query('INSERT INTO cliente (nombre, apellido, DNI, email, fecha_nacimiento, estado) VALUES (?, ?, ?, ?, ?, ?)',
+            [item.nombre, item.apellido, item.dni, item.email, item.fechaNacimiento,item.estado]) as RowDataPacket[]
         const affectedRows = (result as any).affectedRows
         if(affectedRows == 1){
             return item
@@ -34,8 +34,18 @@ export class ClienteRepository implements Repository<Cliente>{
 
     public async update(item: {id:string}, cliente: Cliente): Promise<Cliente | undefined> {
         const id = Number.parseInt(item.id)
-        const [result] = await pool.query('UPDATE clientes SET nombre = ?, apellido = ?, DNI = ?, email = ?, fecha_nacimiento = ? WHERE id = ?',
-            [cliente.nombre, cliente.apellido, cliente.dni, cliente.email, cliente.fechaNacimiento, id]) as RowDataPacket[]
+        const [result] = (await pool.query(
+          'UPDATE cliente SET nombre = ?, apellido = ?, dni = ?, email = ?, fecha_nacimiento = ?, estado = ? WHERE id = ?',
+          [
+            cliente.nombre,
+            cliente.apellido,
+            cliente.dni,
+            cliente.email,
+            cliente.fechaNacimiento,
+            cliente.estado,
+            id,
+          ]
+        )) as RowDataPacket[];
         const affectedRows = (result as any).affectedRows
         if(affectedRows == 1){
             return cliente
@@ -46,7 +56,7 @@ export class ClienteRepository implements Repository<Cliente>{
 
     public async remove(item: {id:string}): Promise<void> {
         const id = Number.parseInt(item.id)
-        const [result] = await pool.query('DELETE FROM clientes WHERE id = ?',
+        const [result] = await pool.query('DELETE FROM cliente WHERE id = ?',
             [id]) as RowDataPacket[]
         const affectedRows = (result as any).affectedRows
         if(affectedRows == 0){

@@ -8,12 +8,12 @@ export class HotelRepository implements Repository<Hotel> {
   
   public async findAll(): Promise<Hotel[] | undefined> {
     const [hoteles_raw] = await pool.query<RowDataPacket[]>(
-      'SELECT * FROM hoteles'
+      'SELECT * FROM hotel'
     );
     let hoteles = hoteles_raw as Hotel[];
     for (let i = 0; i < hoteles.length; i++) {
       const [ciudades] = await pool.query<RowDataPacket[]>(
-        'SELECT * FROM ciudades WHERE id = ?',
+        'SELECT * FROM ciudad WHERE id = ?',
         [hoteles_raw[i].id_ciudad]
       );
       console.log(ciudades);
@@ -44,14 +44,14 @@ export class HotelRepository implements Repository<Hotel> {
   public async findOne(item: { id: string }): Promise<Hotel | undefined> {
     const id = Number.parseInt(item.id);
     const [hoteles_raw] = await pool.query<RowDataPacket[]>(
-      'SELECT * FROM hoteles WHERE id = ?',
+      'SELECT * FROM hotel WHERE id = ?',
       [id]
     );
     if (hoteles_raw.length == 0) {
       return undefined;
     }
     const [ciudades] = await pool.query<RowDataPacket[]>(
-      'SELECT * FROM ciudades WHERE id = ?',
+      'SELECT * FROM ciudad WHERE id = ?',
       [hoteles_raw[0].id_ciudad]
     );
     const ciudad = new Ciudad(
@@ -76,7 +76,7 @@ export class HotelRepository implements Repository<Hotel> {
 
   public async save(item: Hotel): Promise<Hotel | undefined> {
     const [result] = await pool.query<[RowDataPacket[], ResultSetHeader]>(
-      'INSERT INTO hoteles (nombre, direccion, descripcion, telefono, email, estrellas, id_ciudad) VALUES (?, ?, ?, ?, ?, ?, ?)',
+      'INSERT INTO hotel (nombre, direccion, descripcion, telefono, email, estrellas, id_ciudad) VALUES (?, ?, ?, ?, ?, ?, ?)',
       [item.nombre, item.direccion, item.descripcion, item.telefono, item.email, item.estrellas, item.ciudad.id]
     );
     const affectedRows = (result as any).affectedRows;
@@ -89,12 +89,12 @@ export class HotelRepository implements Repository<Hotel> {
 
   public async update(item: { id: string }, hotel: Hotel): Promise<Hotel | undefined> {
     const id = Number.parseInt(item.id);
-    await pool.query('UPDATE hoteles SET nombre = ?, direccion = ?, descripcion = ?, telefono = ?, email = ?, estrellas = ?, id_ciudad = ? WHERE id = ?', [hotel.nombre, hotel.direccion, hotel.descripcion, hotel.telefono, hotel.email, hotel.estrellas, hotel.ciudad.id, id]);
+    await pool.query('UPDATE hotel SET nombre = ?, direccion = ?, descripcion = ?, telefono = ?, email = ?, estrellas = ?, id_ciudad = ? WHERE id = ?', [hotel.nombre, hotel.direccion, hotel.descripcion, hotel.telefono, hotel.email, hotel.estrellas, hotel.ciudad.id, id]);
     return hotel;
   }
   
   public async remove(item: { id: string }): Promise<void> {
     const id = Number.parseInt(item.id);
-    await pool.query('DELETE FROM hoteles WHERE id = ?', [id]);
+    await pool.query('DELETE FROM hotel WHERE id = ?', [id]);
   }
 }

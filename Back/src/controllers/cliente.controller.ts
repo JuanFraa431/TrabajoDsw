@@ -26,7 +26,7 @@ async function findOne(req: Request, res: Response) {
 
 async function create(req: Request, res: Response) {
     try {
-        const cliente = new Cliente(req.body.nombre, req.body.apellido, req.body.dni, req.body.email, req.body.fechaNacimiento);
+        const cliente = new Cliente(req.body.id,req.body.nombre, req.body.apellido, req.body.dni, req.body.email, req.body.fecha_nacimiento, req.body.estado);
         const result = await repository.save(cliente);
         res.json(result);
     } catch (error) {
@@ -37,7 +37,7 @@ async function create(req: Request, res: Response) {
 async function update(req: Request, res: Response) {
     try {
         const { id } = req.params;
-        const cliente = new Cliente(req.body.nombre, req.body.apellido, req.body.dni, req.body.email, req.body.fechaNacimiento);
+        const cliente = new Cliente(req.body.id,req.body.nombre, req.body.apellido, req.body.dni, req.body.email, req.body.fecha_nacimiento, req.body.estado);
         const result = await repository.update({ id }, cliente);
         res.json(result);
     } catch (error) {
