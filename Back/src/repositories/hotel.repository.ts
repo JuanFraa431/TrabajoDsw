@@ -79,7 +79,12 @@ export class HotelRepository implements Repository<Hotel> {
       'INSERT INTO hoteles (nombre, direccion, descripcion, telefono, email, estrellas, id_ciudad) VALUES (?, ?, ?, ?, ?, ?, ?)',
       [item.nombre, item.direccion, item.descripcion, item.telefono, item.email, item.estrellas, item.ciudad.id]
     );
-    return item
+    const affectedRows = (result as any).affectedRows;
+    if (affectedRows == 1) {
+      return item;
+    } else {
+      throw new Error('No se ha podido insertar el hotel');
+    }
   }
 
   public async update(item: { id: string }, hotel: Hotel): Promise<Hotel | undefined> {
