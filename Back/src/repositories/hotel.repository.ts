@@ -16,7 +16,6 @@ export class HotelRepository implements Repository<Hotel> {
         'SELECT * FROM ciudad WHERE id = ?',
         [hoteles_raw[i].id_ciudad]
       );
-      console.log(ciudades);
       
       const ciudad = new Ciudad(
         ciudades[0].id,
