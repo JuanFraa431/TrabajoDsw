@@ -33,7 +33,7 @@ async function create(req: Request, res: Response) {
       req.body.telefono,
       req.body.email,
       req.body.estrellas,
-      req.body.ciudad
+      req.body.id_ciudad
     );
     const result = await repository.save(hotel);
     res.json(result);
@@ -53,7 +53,7 @@ async function update(req: Request, res: Response) {
       req.body.telefono,
       req.body.email,
       req.body.estrellas,
-      req.body.ciudad
+      req.body.id_ciudad
     );
     const result = await repository.update({ id }, hotel);
     res.json(result);

@@ -11,6 +11,6 @@ export class Excursion {
     public nombre_empresa: string,
     public mail_empresa: string,
     public precio: number,
-    public ciudad: Ciudad
+    public id_ciudad: number,
   ) {}
 }

@@ -6,39 +6,11 @@ import { ResultSetHeader, RowDataPacket } from 'mysql2';
 
 export class ExcursionRepository implements Repository<Excursion> {
   public async findAll(): Promise<Excursion[] | undefined> {
-    const [excursiones_raw] = await pool.query<RowDataPacket[]>(
+    const [excursiones] = await pool.query<RowDataPacket[]>(
       'SELECT * FROM excursion'
-    );
-    let excursiones = excursiones_raw as Excursion[];
-    for (let i = 0; i < excursiones.length; i++) {
-      const [ciudades] = await pool.query<RowDataPacket[]>(
-        'SELECT * FROM ciudad WHERE id = ?',
-        [excursiones_raw[i].id_ciudad]
-      );
-
-      const ciudad = new Ciudad(
-        ciudades[0].id,
-        ciudades[0].nombre,
-        ciudades[0].descripcion,
-        ciudades[0].pais
-      );
-
-      excursiones[i] = new Excursion(
-        excursiones[i].id,
-        excursiones[i].nombre,
-        excursiones[i].descripcion,
-        excursiones[i].tipo,
-        excursiones[i].horario,
-        excursiones[i].nro_personas_max,
-        excursiones[i].nombre_empresa,
-        excursiones[i].mail_empresa,
-        excursiones[i].precio,
-        ciudad
-      );
-    }
-
+    )
     return excursiones as Excursion[];
-  }
+    }
 
   public async findOne(item: { id: string }): Promise<Excursion | undefined> {
     const id = Number.parseInt(item.id);
@@ -49,29 +21,9 @@ export class ExcursionRepository implements Repository<Excursion> {
     if (excursiones_raw.length == 0) {
       return undefined;
     }
-    const [ciudades] = await pool.query<RowDataPacket[]>(
-      'SELECT * FROM ciudad WHERE id = ?',
-      [excursiones_raw[0].id_ciudad]
-    );
-    const ciudad = new Ciudad(
-      ciudades[0].id,
-      ciudades[0].nombre,
-      ciudades[0].descripcion,
-      ciudades[0].pais
-    );
-    const excursion = new Excursion(
-      excursiones_raw[0].id,
-      excursiones_raw[0].nombre,
-      excursiones_raw[0].descripcion,
-      excursiones_raw[0].tipo,
-      excursiones_raw[0].horario,
-      excursiones_raw[0].nro_personas_max,
-      excursiones_raw[0].nombre_empresa,
-      excursiones_raw[0].mail_empresa,
-      excursiones_raw[0].precio,
-      ciudad
-    );
 
+    const excursion = excursiones_raw[0] as Excursion;
+    
     return excursion;
   }
 
@@ -87,7 +39,7 @@ export class ExcursionRepository implements Repository<Excursion> {
         item.nombre_empresa,
         item.mail_empresa,
         item.precio,
-        item.ciudad.id,
+        item.id_ciudad
       ]
     );
     const affectedRows = (result as any).affectedRows;
@@ -114,7 +66,7 @@ export class ExcursionRepository implements Repository<Excursion> {
         excursion.nombre_empresa,
         excursion.mail_empresa,
         excursion.precio,
-        excursion.ciudad.id,
+        excursion.id_ciudad,
         id,
       ]
     );

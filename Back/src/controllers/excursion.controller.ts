@@ -35,7 +35,7 @@ async function create(req: Request, res: Response) {
       req.body.nombre_empresa,
       req.body.mail_empresa,
       req.body.precio,
-      req.body.ciudad
+      req.body.id_ciudad
     );
     const result = await repository.save(excursion);
     res.json(result);
@@ -57,7 +57,7 @@ async function update(req: Request, res: Response) {
       req.body.nombre_empresa,
       req.body.mail_empresa,
       req.body.precio,
-      req.body.ciudad
+      req.body.id_ciudad
     );
     const result = await repository.update({ id }, excursion);
     res.json(result);

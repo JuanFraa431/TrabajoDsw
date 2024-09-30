@@ -9,6 +9,6 @@ export class Hotel {
     public telefono: string,
     public email: string,
     public estrellas: number,
-    public ciudad: Ciudad
+    public id_ciudad: number,
   ) {}
 }
