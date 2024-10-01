@@ -11,6 +11,7 @@ import { routerCliente } from './routes/cliente.routes.js';
 import { routerCiudad } from './routes/ciudad.routes.js';
 import { routerHotel } from './routes/hotel.routes.js';
 import { routerExcursion } from './routes/excursion.routes.js';
+import { routerTransporte } from './routes/transporte.routes.js';
 
 const app = express();
 
@@ -24,6 +25,7 @@ app.use('/api/cliente', routerCliente);
 app.use('/api/ciudad', routerCiudad);
 app.use('/api/hotel',routerHotel);
 app.use('/api/excursion', routerExcursion);
+app.use('/api/transporte', routerTransporte);
 
 app.use(express.static(path.join(__dirname, 'dist')));
 

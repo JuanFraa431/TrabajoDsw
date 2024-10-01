@@ -11,7 +11,7 @@ CREATE TABLE transporte (
     capacidad INT NOT NULL,
     tipo VARCHAR(100) NOT NULL,
     nombre_empresa VARCHAR(255) NOT NULL,
-    email_empresa VARCHAR(255) NOT NULL
+    mail_empresa VARCHAR(255) NOT NULL
 );
 
 -- Tabla ciudad
