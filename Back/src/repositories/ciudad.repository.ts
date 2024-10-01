@@ -5,14 +5,14 @@ import { RowDataPacket } from 'mysql2';
 
 export class CiudadRepository implements Repository<Ciudad> {
   public async findAll(): Promise<Ciudad[] | undefined> {
-    const [ciudades] = await pool.query('SELECT * FROM ciudad');
+    const [ciudades] = await pool.query('SELECT * FROM ciudades');
     return ciudades as Ciudad[];
   }
 
   public async findOne(item: { id: string }): Promise<Ciudad | undefined> {
     const id = Number.parseInt(item.id);
     const [ciudades] = (await pool.query<RowDataPacket[]>(
-      'SELECT * FROM ciudad where id = ?',
+      'SELECT * FROM ciudades where id = ?',
       [id]
     )) as RowDataPacket[];
     if (ciudades.length == 0) {
@@ -24,7 +24,7 @@ export class CiudadRepository implements Repository<Ciudad> {
 
   public async save(item: Ciudad): Promise<Ciudad> {
     const [result] = (await pool.query(
-      'INSERT INTO ciudad (nombre, descripcion, pais) VALUES (?, ?, ?)',
+      'INSERT INTO ciudades (nombre, descripcion, pais) VALUES (?, ?, ?)',
       [item.nombre, item.descripcion, item.pais]
     )) as RowDataPacket[];
     const affectedRows = (result as any).affectedRows;
@@ -38,7 +38,7 @@ export class CiudadRepository implements Repository<Ciudad> {
   public async update(item: { id: string }, ciudad: Ciudad): Promise<Ciudad | undefined> {
     const id = Number.parseInt(item.id);
     const [result] = (await pool.query(
-      'UPDATE ciudad SET nombre = ?, descripcion = ?, pais = ? WHERE id = ?',
+      'UPDATE ciudades SET nombre = ?, descripcion = ?, pais = ? WHERE id = ?',
       [ciudad.nombre, ciudad.descripcion, ciudad.pais, id]
     )) as RowDataPacket[];
     const affectedRows = (result as any).affectedRows;
@@ -51,7 +51,7 @@ export class CiudadRepository implements Repository<Ciudad> {
 
   public async remove(item: { id: string }): Promise<void> {
     const id = Number.parseInt(item.id);
-    const [result] = (await pool.query('DELETE FROM ciudad WHERE id = ?', [id])) as RowDataPacket[];
+    const [result] = (await pool.query('DELETE FROM ciudades WHERE id = ?', [id])) as RowDataPacket[];
     const affectedRows = (result as any).affectedRows;
     if (affectedRows == 0) {
       throw new Error('No se ha podido borrar la ciudad');

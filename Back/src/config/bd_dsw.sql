@@ -4,8 +4,8 @@ DROP DATABASE IF EXISTS agenciadeviajes;
 CREATE DATABASE agenciadeviajes;
 USE agenciadeviajes;
 
--- Tabla transporte
-CREATE TABLE transporte (
+-- Tabla transportes
+CREATE TABLE transportes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     descripcion VARCHAR(255) NOT NULL,
     capacidad INT NOT NULL,
@@ -14,16 +14,16 @@ CREATE TABLE transporte (
     mail_empresa VARCHAR(255) NOT NULL
 );
 
--- Tabla ciudad
-CREATE TABLE ciudad (
+-- Tabla ciudades
+CREATE TABLE ciudades (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
     descripcion VARCHAR(255) NOT NULL,
     pais VARCHAR(100) NOT NULL
 );
 
--- Tabla hotel
-CREATE TABLE hotel (
+-- Tabla hoteles
+CREATE TABLE hoteles (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(255) NOT NULL,
     direccion VARCHAR(255) NOT NULL,
@@ -32,19 +32,19 @@ CREATE TABLE hotel (
     email VARCHAR(255) NOT NULL,
     estrellas INT NOT NULL,
     id_ciudad INT NOT NULL,
-    FOREIGN KEY (id_ciudad) REFERENCES ciudad(id)
+    FOREIGN KEY (id_ciudad) REFERENCES ciudades(id)
 );
 
--- Tabla paquete
-CREATE TABLE paquete (
+-- Tabla paquetes
+CREATE TABLE paquetes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     estado BOOLEAN NOT NULL,
     descripcion VARCHAR(255) NOT NULL,
-    precio DOUBLE NOT NULL
+    precio DECIMAL(10, 2) NOT NULL
 );
 
--- Tabla cliente
-CREATE TABLE cliente (
+-- Tabla clientes
+CREATE TABLE clientes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
     apellido VARCHAR(100) NOT NULL,
@@ -54,8 +54,8 @@ CREATE TABLE cliente (
     estado BOOLEAN NOT NULL
 );
 
--- Tabla excursion
-CREATE TABLE excursion (
+-- Tabla excursiones
+CREATE TABLE excursiones (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(255) NOT NULL,
     tipo VARCHAR(100) NOT NULL,
@@ -64,62 +64,83 @@ CREATE TABLE excursion (
     nro_personas_max INT NOT NULL,
     nombre_empresa VARCHAR(255) NOT NULL,
     mail_empresa VARCHAR(255) NOT NULL,
-    precio DOUBLE NOT NULL,
+    precio DECIMAL(10, 2) NOT NULL,
     id_ciudad INT NOT NULL,
-    FOREIGN KEY (id_ciudad) REFERENCES ciudad(id)
+    FOREIGN KEY (id_ciudad) REFERENCES ciudades(id)
+);
+
+-- Tabla paquete_excursion
+CREATE TABLE paquete_excursion (
+    id_paquete INT NOT NULL,
+    id_excursion INT NOT NULL,
+    fecha DATE NOT NULL,
+    PRIMARY KEY (id_excursion, id_paquete, fecha),
+    FOREIGN KEY (id_paquete) REFERENCES paquetes(id),
+    FOREIGN KEY (id_excursion) REFERENCES excursiones(id)
 );
 
 -- Tabla reserva_paquete
-CREATE TABLE reserva_paquete (
-    id_cliente INT NOT NULL,
-    id_paquete INT NOT NULL,
-    fecha_reserva DATE NOT NULL,
-    metodo_de_pago VARCHAR(100) NOT NULL,
-    fecha_pago DATE NOT NULL,
-    PRIMARY KEY (id_cliente, id_paquete, fecha_reserva),
-    FOREIGN KEY (id_cliente) REFERENCES cliente(id),
-    FOREIGN KEY (id_paquete) REFERENCES paquete(id)
-);
-
--- Tabla reserva_excursion
 CREATE TABLE reserva_excursion (
     id_cliente INT NOT NULL,
     id_paquete INT NOT NULL,
     id_excursion INT NOT NULL,
-    nro_ticket INT NOT NULL,
     fecha DATE NOT NULL,
-    fecha_pago DATE NOT NULL,
+    nro_ticket INT NOT NULL,
     PRIMARY KEY (id_cliente, id_excursion, fecha),
-    FOREIGN KEY (id_cliente) REFERENCES cliente(id),
-    FOREIGN KEY (id_paquete) REFERENCES paquete(id),
-    FOREIGN KEY (id_excursion) REFERENCES excursion(id)
+    FOREIGN KEY (id_cliente) REFERENCES clientes(id),
+    FOREIGN KEY (id_paquete, id_excursion, fecha) 
+        REFERENCES paquete_excursion(id_paquete, id_excursion, fecha)
 );
 
--- Tabla estadia
-CREATE TABLE estadia (
-    id_cliente INT NOT NULL,
+-- Tabla estadias
+CREATE TABLE estadias (
     id_paquete INT NOT NULL,
     id_hotel INT NOT NULL,
     fecha_ini DATE NOT NULL,
     fecha_fin DATE NOT NULL,
     nro_habitacion VARCHAR(50) NOT NULL,
-    precio DOUBLE NOT NULL,
-    PRIMARY KEY (id_cliente, id_hotel, fecha_ini),
-    FOREIGN KEY (id_cliente) REFERENCES cliente(id),
-    FOREIGN KEY (id_paquete) REFERENCES paquete(id),
-    FOREIGN KEY (id_hotel) REFERENCES hotel(id)
+    precio DECIMAL(10, 2) NOT NULL,
+    PRIMARY KEY (id_paquete, id_hotel, fecha_ini),
+    FOREIGN KEY (id_paquete) REFERENCES paquetes(id),
+    FOREIGN KEY (id_hotel) REFERENCES hoteles(id)
 );
 
--- Tabla comentario
-CREATE TABLE comentario (
+-- Tabla reserva_estadias
+CREATE TABLE reserva_estadias (
+    id_cliente INT NOT NULL,
+    id_paquete INT NOT NULL,
+    id_hotel INT NOT NULL,
+    fecha_ini DATE NOT NULL,
+    PRIMARY KEY (id_cliente, id_hotel, fecha_ini),
+    FOREIGN KEY (id_cliente) REFERENCES clientes(id),
+    FOREIGN KEY (id_paquete, id_hotel, fecha_ini) 
+        REFERENCES estadias(id_paquete, id_hotel, fecha_ini)
+);
+
+
+-- Tabla comentarios
+CREATE TABLE comentarios (
     id INT AUTO_INCREMENT PRIMARY KEY,
     fecha DATE NOT NULL,
     descripcion VARCHAR(255) NOT NULL,
     estrellas INT NOT NULL,
     id_paquete INT NOT NULL,
     id_cliente INT NOT NULL,
-    FOREIGN KEY (id_cliente) REFERENCES cliente(id),
-    FOREIGN KEY (id_paquete) REFERENCES paquete(id)
+    FOREIGN KEY (id_cliente) REFERENCES clientes(id),
+    FOREIGN KEY (id_paquete) REFERENCES paquetes(id)
+);
+
+-- Tabla paquete_transporte
+CREATE TABLE paquete_transporte (
+    id_paquete INT NOT NULL,
+    id_transporte INT NOT NULL,
+    fecha DATE NOT NULL,
+    descripcion_paradas VARCHAR(255) NOT NULL,
+    precio DECIMAL(10, 2) NOT NULL,
+    categoria_asiento VARCHAR(50) NOT NULL,
+    PRIMARY KEY (id_transporte, id_paquete, fecha),
+    FOREIGN KEY (id_paquete) REFERENCES paquetes(id),
+    FOREIGN KEY (id_transporte) REFERENCES transportes(id)
 );
 
 -- Tabla reserva_transporte
@@ -128,12 +149,8 @@ CREATE TABLE reserva_transporte (
     id_paquete INT NOT NULL,
     id_transporte INT NOT NULL,
     fecha DATE NOT NULL,
-    nro_pasaje VARCHAR(50) NOT NULL,
-    descripcion_paradas VARCHAR(255) NOT NULL,
-    precio FLOAT NOT NULL,
-    categoria_asiento VARCHAR(50) NOT NULL,
-    PRIMARY KEY (id_cliente, id_transporte, fecha),
-    FOREIGN KEY (id_cliente) REFERENCES cliente(id),
-    FOREIGN KEY (id_paquete) REFERENCES paquete(id),
-    FOREIGN KEY (id_transporte) REFERENCES transporte(id)
+    PRIMARY KEY (id_cliente, id_transporte, id_paquete),
+    FOREIGN KEY (id_cliente) REFERENCES clientes(id),
+    FOREIGN KEY (id_paquete, id_transporte, fecha) 
+        REFERENCES paquete_transporte(id_paquete, id_transporte, fecha)
 );

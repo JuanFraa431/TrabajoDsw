@@ -1,13 +1,12 @@
 import { Repository } from '../shared/repository.js';
 import { Excursion } from '../models/excursion.model.js';
-import { Ciudad } from '../models/ciudad.model.js';
 import { pool } from '../shared/conn.js';
 import { ResultSetHeader, RowDataPacket } from 'mysql2';
 
 export class ExcursionRepository implements Repository<Excursion> {
   public async findAll(): Promise<Excursion[] | undefined> {
     const [excursiones] = await pool.query<RowDataPacket[]>(
-      'SELECT * FROM excursion'
+      'SELECT * FROM excursiones'
     )
     return excursiones as Excursion[];
     }
@@ -15,7 +14,7 @@ export class ExcursionRepository implements Repository<Excursion> {
   public async findOne(item: { id: string }): Promise<Excursion | undefined> {
     const id = Number.parseInt(item.id);
     const [excursiones_raw] = await pool.query<RowDataPacket[]>(
-      'SELECT * FROM excursion WHERE id = ?',
+      'SELECT * FROM excursiones WHERE id = ?',
       [id]
     );
     if (excursiones_raw.length == 0) {
@@ -29,7 +28,7 @@ export class ExcursionRepository implements Repository<Excursion> {
 
   public async save(item: Excursion): Promise<Excursion | undefined> {
     const [result] = await pool.query<[RowDataPacket[], ResultSetHeader]>(
-      'INSERT INTO excursion (nombre, tipo, descripcion, horario, nro_personas_max, nombre_empresa, mail_empresa, precio, id_ciudad) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      'INSERT INTO excursiones (nombre, tipo, descripcion, horario, nro_personas_max, nombre_empresa, mail_empresa, precio, id_ciudad) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
       [
         item.nombre,
         item.tipo,
@@ -56,7 +55,7 @@ export class ExcursionRepository implements Repository<Excursion> {
   ): Promise<Excursion | undefined> {
     const id = Number.parseInt(item.id);
     await pool.query(
-      'UPDATE excursion SET nombre = ?, tipo = ?, descripcion = ?, horario = ?, nro_personas_max = ?, nombre_empresa = ?, mail_empresa = ?, precio = ?, id_ciudad = ? WHERE id = ?',
+      'UPDATE excursiones SET nombre = ?, tipo = ?, descripcion = ?, horario = ?, nro_personas_max = ?, nombre_empresa = ?, mail_empresa = ?, precio = ?, id_ciudad = ? WHERE id = ?',
       [
         excursion.nombre,
         excursion.tipo,
@@ -75,6 +74,6 @@ export class ExcursionRepository implements Repository<Excursion> {
 
   public async remove(item: { id: string }): Promise<void> {
     const id = Number.parseInt(item.id);
-    await pool.query('DELETE FROM excursion WHERE id = ?', [id]);
+    await pool.query('DELETE FROM excursiones WHERE id = ?', [id]);
   }
 }
