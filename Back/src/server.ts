@@ -12,6 +12,7 @@ import { routerCiudad } from './routes/ciudad.routes.js';
 import { routerHotel } from './routes/hotel.routes.js';
 import { routerExcursion } from './routes/excursion.routes.js';
 import { routerTransporte } from './routes/transporte.routes.js';
+import { routerPaquete } from './routes/paquete.routes.js';
 
 const app = express();
 
@@ -26,6 +27,7 @@ app.use('/api/ciudad', routerCiudad);
 app.use('/api/hotel',routerHotel);
 app.use('/api/excursion', routerExcursion);
 app.use('/api/transporte', routerTransporte);
+app.use('/api/paquete', routerPaquete);
 
 app.use(express.static(path.join(__dirname, 'dist')));
 
