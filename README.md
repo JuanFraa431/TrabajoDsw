@@ -12,7 +12,7 @@
 *El sistema de gestión para la agencia de turismo automatiza procesos de alta, baja, modificación y consulta de destinos, excursiones y clientes. Permite la creación flexible de paquetes de viaje e integra un módulo de reservas en línea. Incluye herramientas para seguimiento de consultas y quejas, garantizando una gestión eficiente y transparente.*
 
 ### Modelo
-![Modelo de Clases]([https://github.com/BruCascardo/TpDesarrollo/blob/main/DCdsw.jpg](https://github.com/JuanFraa431/TrabajoDsw/blob/main/MD%20dsw.drawio.png))
+![Modelo de Clases]((https://github.com/JuanFraa431/TrabajoDsw/blob/main/MD%20dsw.drawio.png))
 
 ## Alcance Funcional 
 
