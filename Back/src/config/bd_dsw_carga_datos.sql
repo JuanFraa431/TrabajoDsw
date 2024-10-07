@@ -55,18 +55,18 @@ VALUES
 (3, 3, 3, '2025-01-01',3);
 
 -- Inserciones en tabla 'estadias'
-INSERT INTO estadias (id_paquete, id_hotel, fecha_ini, fecha_fin, nro_habitacion, precio)
+INSERT INTO estadias (id_paquete, id_hotel, fecha_ini, fecha_fin, precio_x_dia)
 VALUES
-(1, 1, '2024-11-01', '2024-11-05', '101', 500.00),
-(2, 2, '2024-12-01', '2024-12-06', '202', 600.00),
-(3, 3, '2025-01-01', '2025-01-07', '303', 700.00);
+(1, 1, '2024-11-01', '2024-11-05', 500.00),
+(2, 2, '2024-12-01', '2024-12-06', 600.00),
+(3, 3, '2025-01-01', '2025-01-07', 700.00);
 
 -- Inserciones en tabla 'reserva_estadias'
-INSERT INTO reserva_estadias (id_cliente, id_paquete, id_hotel, fecha_ini)
+INSERT INTO reserva_estadias (id_cliente, id_paquete, id_hotel, fecha_ini, nro_habitacion)
 VALUES
-(1, 1, 1, '2024-11-01'),
-(2, 2, 2, '2024-12-01'),
-(3, 3, 3, '2025-01-01');
+(2, 2, 2, '2024-12-01', '101'),
+(1, 1, 1, '2024-11-01', '202'),
+(3, 3, 3, '2025-01-01', '303');
 
 -- Inserciones en tabla 'comentarios'
 INSERT INTO comentarios (fecha, descripcion, estrellas, id_paquete, id_cliente)

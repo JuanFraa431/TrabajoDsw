@@ -98,8 +98,7 @@ CREATE TABLE estadias (
     id_hotel INT NOT NULL,
     fecha_ini DATE NOT NULL,
     fecha_fin DATE NOT NULL,
-    nro_habitacion VARCHAR(50) NOT NULL,
-    precio DECIMAL(10, 2) NOT NULL,
+    precio_x_dia DECIMAL(10, 2) NOT NULL,
     PRIMARY KEY (id_paquete, id_hotel, fecha_ini),
     FOREIGN KEY (id_paquete) REFERENCES paquetes(id),
     FOREIGN KEY (id_hotel) REFERENCES hoteles(id)
@@ -111,6 +110,7 @@ CREATE TABLE reserva_estadias (
     id_paquete INT NOT NULL,
     id_hotel INT NOT NULL,
     fecha_ini DATE NOT NULL,
+    nro_habitacion VARCHAR(50) NOT NULL,
     PRIMARY KEY (id_cliente, id_hotel, fecha_ini),
     FOREIGN KEY (id_cliente) REFERENCES clientes(id),
     FOREIGN KEY (id_paquete, id_hotel, fecha_ini) 
