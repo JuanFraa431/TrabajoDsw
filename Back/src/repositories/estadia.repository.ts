@@ -12,13 +12,15 @@ export class EstadiaRepository implements Repository<Estadia> {
   public async findOne(item: {
     id_paquete: string;
     id_hotel: string;
+    fecha_ini: string;
   }): Promise<Estadia | undefined> {
     const idPaquete = Number.parseInt(item.id_paquete);
     const idHotel = Number.parseInt(item.id_hotel);
+    const fechaIni = item.fecha_ini;
 
     const [estadias] = await pool.query<RowDataPacket[]>(
-      'SELECT * FROM estadias WHERE id_paquete = ? AND id_hotel = ?',
-      [idPaquete, idHotel]
+      'SELECT * FROM estadias WHERE id_paquete = ? AND id_hotel = ? AND fecha_ini = ?',
+      [idPaquete, idHotel, fechaIni]
     );
 
     if (estadias.length == 0) {
@@ -49,15 +51,16 @@ export class EstadiaRepository implements Repository<Estadia> {
   }
 
   public async update(
-    item: { id_paquete: string; id_hotel: string },
+    item: { id_paquete: string; id_hotel: string, fecha_ini: string },
     estadia: Estadia
   ): Promise<Estadia | undefined> {
 
     const idPaquete = Number.parseInt(item.id_paquete);
     const idHotel = Number.parseInt(item.id_hotel);
+    const fechaIni = item.fecha_ini;
 
     const [result] = (await pool.query(
-      'UPDATE estadias SET id_paquete = ?, id_hotel = ?, fecha_ini = ?, fecha_fin = ?, precio_x_dia = ? WHERE id_paquete = ? AND id_hotel = ?',
+      'UPDATE estadias SET id_paquete = ?, id_hotel = ?, fecha_ini = ?, fecha_fin = ?, precio_x_dia = ? WHERE id_paquete = ? AND id_hotel = ? AND fecha_ini = ?',
       [
         estadia.id_paquete,
         estadia.id_hotel,
@@ -66,6 +69,7 @@ export class EstadiaRepository implements Repository<Estadia> {
         estadia.precio_x_dia,
         idPaquete,
         idHotel,
+        fechaIni,
       ]
     )) as RowDataPacket[];
     const affectedRows = (result as any).affectedRows;
@@ -76,14 +80,15 @@ export class EstadiaRepository implements Repository<Estadia> {
     }
   }
 
-  public async remove(item: { id_paquete: string, id_hotel:string }): Promise<void> {
+  public async remove(item: { id_paquete: string, id_hotel:string, fecha_ini: string }): Promise<void> {
     
     const idPaquete = Number.parseInt(item.id_paquete);
     const idHotel = Number.parseInt(item.id_hotel);
+    const fechaIni = item.fecha_ini;
 
     const [result] = (await pool.query(
-      'DELETE FROM estadias WHERE id_paquete = ? AND id_hotel = ?',
-      [idPaquete, idHotel]
+      'DELETE FROM estadias WHERE id_paquete = ? AND id_hotel = ? AND fecha_ini = ?',
+      [idPaquete, idHotel, fechaIni]
     )) as RowDataPacket[];
     const affectedRows = (result as any).affectedRows;
     if (affectedRows == 0) {
