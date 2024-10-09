@@ -40,7 +40,9 @@ CREATE TABLE paquetes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     estado BOOLEAN NOT NULL,
     descripcion VARCHAR(255) NOT NULL,
-    precio DECIMAL(10, 2) NOT NULL
+    precio DECIMAL(10, 2) NOT NULL,
+    fecha_ini DATE NOT NULL,
+    fecha_fin DATE NOT NULL,
 );
 
 -- Tabla clientes

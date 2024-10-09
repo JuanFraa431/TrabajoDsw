@@ -4,5 +4,7 @@ export class Paquete {
     public estado: string,
     public descripcion: string,
     public precio: number,
+    public fecha_ini : string,
+    public fecha_fin : string,
   ) {}
 }
