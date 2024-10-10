@@ -15,7 +15,7 @@ const Header = () => {
             <nav className="nav">
                 <ul>
                     <li>
-                        <Link to="/card" >Alojamiento</Link>
+                        <Link to="/alojamiento" >Alojamiento</Link>
                     </li>
                     <li>
                         <a href="#paquetes">Paquetes</a>
@@ -24,7 +24,7 @@ const Header = () => {
                         <a href="#excurciones">Excurciones</a>
                     </li>
                     <li>
-                        <a href="#autos">Autos</a>
+                        <a href="#transporte">Transporte</a>
                     </li>
                     <li>
                         <a href="#nosotros">Nosotros</a>

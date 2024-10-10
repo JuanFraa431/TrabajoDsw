@@ -9,6 +9,7 @@ import Body from './components/Body';
 import CardList from './components/Card';
 import PreFooter from './components/PreFooter';
 import CardDetail from './components/CardDetail';
+import Paquetes from './components/Paquete';
 
 const flightDetails = {
     destino: 'Madrid',
@@ -71,6 +72,7 @@ const App: React.FC = () => {
                             </motion.div>
                         }
                     />
+                    <Route path="/paquetes" element={<Paquetes/>} />
                 </Routes>
             </AnimatePresence>
         </>

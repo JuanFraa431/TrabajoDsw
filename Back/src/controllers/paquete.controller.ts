@@ -55,4 +55,21 @@ async function remove(req: Request, res: Response) {
     }
 }
 
-export { findAll, findOne, create, update, remove };
+async function search(req: Request, res: Response) {
+    const { ciudad, fechaInicio, fechaFin, precioMaximo } = req.query;
+
+    try {
+        const paquetes = await repository.search({
+            ciudad: ciudad as string,
+            fechaInicio: fechaInicio as string,
+            fechaFin: fechaFin as string,
+            precioMaximo: Number(precioMaximo)
+        });
+
+        res.json(paquetes);
+    } catch (error) {
+        res.status(500).json({ message: 'Error al buscar paquetes', error });
+    }
+}
+
+export { findAll, findOne, create, update, remove, search };
