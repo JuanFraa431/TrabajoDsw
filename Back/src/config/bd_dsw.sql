@@ -96,12 +96,13 @@ CREATE TABLE reserva_excursion (
 
 -- Tabla estadias
 CREATE TABLE estadias (
+    id INT AUTO_INCREMENT, 
     id_paquete INT NOT NULL,
     id_hotel INT NOT NULL,
     fecha_ini DATE NOT NULL,
     fecha_fin DATE NOT NULL,
     precio_x_dia DECIMAL(10, 2) NOT NULL,
-    PRIMARY KEY (id_paquete, id_hotel, fecha_ini),
+    PRIMARY KEY (id),
     FOREIGN KEY (id_paquete) REFERENCES paquetes(id),
     FOREIGN KEY (id_hotel) REFERENCES hoteles(id)
 );
@@ -109,14 +110,11 @@ CREATE TABLE estadias (
 -- Tabla reserva_estadias
 CREATE TABLE reserva_estadias (
     id_cliente INT NOT NULL,
-    id_paquete INT NOT NULL,
-    id_hotel INT NOT NULL,
-    fecha_ini DATE NOT NULL,
+    id_estadia INT NOT NULL,
     nro_habitacion VARCHAR(50) NOT NULL,
-    PRIMARY KEY (id_cliente, id_hotel, fecha_ini),
+    PRIMARY KEY (id_estadia, id_cliente),
     FOREIGN KEY (id_cliente) REFERENCES clientes(id),
-    FOREIGN KEY (id_paquete, id_hotel, fecha_ini) 
-        REFERENCES estadias(id_paquete, id_hotel, fecha_ini)
+    FOREIGN KEY (id_estadia) REFERENCES estadias(id)
 );
 
 

@@ -31,7 +31,7 @@ Requisitos Funcionales:
 5) 1 CUU con valor para el negocio cada 2 integrantes 🟥
 
 Requisitos preentrega: 
-1) README.md 🟩
+1) README.md 🟨
 2) el proyecto debe poder ejecutarse con scripts 🟩 
 3) entregar la proposal actualizada con links al pull request de back y/o front 🟩 
 

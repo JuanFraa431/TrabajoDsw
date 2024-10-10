@@ -11,23 +11,9 @@ async function findAll(req: Request, res: Response) {
 
 async function findOne(req: Request, res: Response) {
   try {
-    const { id_paquete } = req.params;
-    const { id_hotel } = req.params;
-    const { fecha_ini } = req.params;
+    const { id } = req.params;
 
-    if (
-      !id_paquete ||
-      !id_hotel ||
-      !fecha_ini ||
-      id_paquete.trim() === '' ||
-      id_hotel.trim() === '' ||
-      fecha_ini.trim() === ''
-    ) {
-      res.status(400).json({ message: 'Falta el id del paquete o del hotel' }); // Error 400: Bad Request
-      return;
-    }
-
-    const estadia = await repository.findOne({ id_paquete, id_hotel, fecha_ini });
+    const estadia = await repository.findOne({ id });
     if (estadia) {
       res.json(estadia);
     } else {
@@ -56,21 +42,7 @@ async function create(req: Request, res: Response) {
 
 async function update(req: Request, res: Response) {
   try {
-    const { id_hotel } = req.params;
-    const { id_paquete } = req.params;
-    const { fecha_ini } = req.params;
-
-    if (
-      !id_paquete ||
-      !id_hotel ||
-      !fecha_ini ||
-      id_paquete.trim() === '' ||
-      id_hotel.trim() === '' ||
-      fecha_ini.trim() === ''
-    ) {
-      res.status(400).json({ message: 'Falta el id del paquete o del hotel' }); // Error 400: Bad Request
-      return;
-    }
+    const { id } = req.params;
 
     const estadia = new Estadia(
       req.body.id_paquete,
@@ -79,7 +51,7 @@ async function update(req: Request, res: Response) {
       req.body.fecha_fin,
       req.body.precio_x_dia
     );
-    const result = await repository.update({id_paquete, id_hotel, fecha_ini}, estadia);
+    const result = await repository.update({ id }, estadia);
     res.json(result);
   } catch (error) {
     res.status(500).json({ message: 'Error al actualizar la estadia', error });
@@ -88,23 +60,9 @@ async function update(req: Request, res: Response) {
 
 async function remove(req: Request, res: Response) {
   try {
-    const { id_paquete } = req.params;
-    const { id_hotel } = req.params;
-    const { fecha_ini } = req.params;
+    const { id } = req.params;
 
-    if (
-      !id_paquete ||
-      !id_hotel ||
-      !fecha_ini ||
-      id_paquete.trim() === '' ||
-      id_hotel.trim() === '' ||
-      fecha_ini.trim() === ''
-    ) {
-      res.status(400).json({ message: 'Falta el id del paquete o del hotel' }); // Error 400: Bad Request
-      return;
-    }
-
-    const result = await repository.remove({ id_paquete, id_hotel, fecha_ini });
+    const result = await repository.remove({ id });
     res.json(result);
   } catch (error) {
     res.status(500).json({ message: 'Error al eliminar la estadia', error });

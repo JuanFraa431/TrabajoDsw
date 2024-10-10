@@ -11,10 +11,10 @@ export const routerEstadia = Router();
 
 routerEstadia.get('/', findAll);
 
-routerEstadia.get('/:id_paquete/:id_hotel/:fecha_ini', findOne);
+routerEstadia.get('/:id', findOne);
 
 routerEstadia.post('/', create);
 
-routerEstadia.put('/:id_paquete/:id_hotel/:fecha_ini', update);
+routerEstadia.put('/:id', update);
 
-routerEstadia.delete('/:id_paquete/:id_hotel/:fecha_ini', remove);
+routerEstadia.delete('/:id', remove);
