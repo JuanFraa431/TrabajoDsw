@@ -1,0 +1,38 @@
+Requisitos técnicos regularidad:
+
+1) desarrollar JavaScript  🟩
+2) utilizar Framework web  🟩
+3) herramientas a través de middlewares, plugin o módulos 🟩
+4) exponer una api web para interactuar con el FrontEnd 🟩
+5) utilizar una base de datos persistente que acceda a través de un servicio externo 🟩
+6) Sql o micro 🟩 (para regularidad) 🟨 (para promocion cambiar a micro)
+7) realizarse mediante capas 🟩
+8) validar entrada de datos y manejar errores 🟨
+9) Package.json 🟩
+
+Requisitos del FrontEnd:
+1) usar un FrameWork de FrontEnd 🟩
+2) utilizar HTML5 🟩
+3) Utilizar CSS y algun Framework de CSS 🟩 
+4) aplicar la estrategia mobile first en CSS 🟥
+5) visualizar la app correctamente en al menos 3 diferentes breackpoints: sm md lg 🟥 
+6) buenas practicas UX 🟩 
+7) manejo de eventos y de errores de forma amigable para el usuario 🟩
+8) implementar al menos un servicio 🟥
+9) modelo de datos, interfaces y tipos de datos custom 🟩
+10) implementar un patron de diseño orientado a objetos 🟨
+11) Package.json 🟩
+
+Requisitos Funcionales: 
+1) 1 CRUD simple por integrante 🟩
+2) 1 CRUD dependiente cada 2 integrantes 🟩
+3) 1 listado con filtro cada 2 integrantes 🟨
+4) para cada listado mostrar un detalle 🟥
+5) 1 CUU con valor para el negocio cada 2 integrantes 🟥
+
+Requisitos preentrega: 
+1) README.md 🟩
+2) el proyecto debe poder ejecutarse con scripts 🟩 
+3) entregar la proposal actualizada con links al pull request de back y/o front 🟩 
+
+
