@@ -25,7 +25,7 @@ const BuscadorVuelos: React.FC = () => {
         event.preventDefault();
         // Formato de fechas usando toLocaleDateString() para evitar el cambio de zona horaria
         const formattedStartDate = startDate?.toLocaleDateString('en-CA'); // Formato YYYY-MM-DD
-        const formattedEndDate = endDate?.toLocaleDateString('en-CA'); // Formato YYYY-MM-DD
+        const formattedEndDate = endDate?.toLocaleDateString('en-CA'); // Formato YYYY-MM-DD¿
         
         try {
             // Enviar la solicitud al backend para buscar paquetes

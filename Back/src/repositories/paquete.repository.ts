@@ -60,8 +60,6 @@ export class PaqueteRepository implements Repository<Paquete>{
 
     public async search(params: { ciudad: string; fechaInicio: string; fechaFin: string; precioMaximo: number }): Promise<Paquete[]> {
         const { ciudad, fechaInicio, fechaFin, precioMaximo } = params;
-        console.log(fechaInicio, fechaFin);
-        
         const [paquetes] = await pool.query<RowDataPacket[]>(`
             SELECT p.*, c.nombre
             FROM 
@@ -77,7 +75,6 @@ export class PaqueteRepository implements Repository<Paquete>{
             AND p.fecha_fin <= ? 
             AND p.precio <= ?
         `, [ciudad, fechaInicio, fechaFin, precioMaximo]);
-        console.log(paquetes)
         return paquetes as Paquete[];
     }
 }
