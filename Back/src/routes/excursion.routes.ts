@@ -4,6 +4,7 @@ import {
   create,
   update,
   remove,
+  findByType,
 } from '../controllers/excursion.controller.js';
 import { Router } from 'express';
 
@@ -18,3 +19,5 @@ routerExcursion.post('/', create);
 routerExcursion.put('/:id', update);
 
 routerExcursion.delete('/:id', remove);
+
+routerExcursion.get('/tipo/:tipo', findByType);
