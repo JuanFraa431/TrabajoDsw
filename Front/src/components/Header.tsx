@@ -21,7 +21,7 @@ const Header = () => {
                         <a href="#paquetes">Paquetes</a>
                     </li>
                     <li>
-                        <a href="#excurciones">Excurciones</a>
+                        <a href="#excursiones">Excursiones</a>
                     </li>
                     <li>
                         <a href="#transporte">Transporte</a>
