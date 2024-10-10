@@ -23,11 +23,10 @@ const BuscadorVuelos: React.FC = () => {
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-
-        // Formato de fechas
-        const formattedStartDate = startDate?.toISOString().split('T')[0]; // Obtener fecha en formato YYYY-MM-DD
-        const formattedEndDate = endDate?.toISOString().split('T')[0]; // Obtener fecha en formato YYYY-MM-DD
-
+        // Formato de fechas usando toLocaleDateString() para evitar el cambio de zona horaria
+        const formattedStartDate = startDate?.toLocaleDateString('en-CA'); // Formato YYYY-MM-DD
+        const formattedEndDate = endDate?.toLocaleDateString('en-CA'); // Formato YYYY-MM-DD
+        
         try {
             // Enviar la solicitud al backend para buscar paquetes
             const response = await axios.get(`http://localhost:3000/api/paquete/search`, {
