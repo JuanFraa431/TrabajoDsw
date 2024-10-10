@@ -72,5 +72,4 @@ async function search(req: Request, res: Response) {
     }
 }
 
-
 export { findAll, findOne, create, update, remove, search };
