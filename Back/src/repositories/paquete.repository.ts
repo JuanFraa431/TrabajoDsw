@@ -60,7 +60,8 @@ export class PaqueteRepository implements Repository<Paquete>{
 
     public async search(params: { ciudad: string; fechaInicio: string; fechaFin: string; precioMaximo: number }): Promise<Paquete[]> {
         const { ciudad, fechaInicio, fechaFin, precioMaximo } = params;
-    
+        console.log(fechaInicio, fechaFin);
+        
         const [paquetes] = await pool.query<RowDataPacket[]>(`
             SELECT p.*, c.nombre
             FROM 
