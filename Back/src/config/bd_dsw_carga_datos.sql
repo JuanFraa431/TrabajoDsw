@@ -20,11 +20,11 @@ VALUES
 ('The Plaza', '5th Avenue 768', 'Hotel de lujo en Nueva York', '1122334455', 'plaza@hoteles.com', 5, 3);
 
 -- Inserciones en tabla 'paquetes'
-INSERT INTO paquetes (estado, descripcion, precio, fecha_ini, fecha_fin)
+INSERT INTO paquetes (estado, descripcion, precio, fecha_ini, fecha_fin, imagen)
 VALUES
-(true, 'Paquete completo a Buenos Aires', 1200.50, '2024-11-01', '2024-11-05'),
-(true, 'Paquete turístico a Madrid', 1500.75, '2024-12-01', '2024-12-06'),
-(false, 'Paquete de lujo a Nueva York', 3000.00, '2025-01-01', '2025-01-07');
+(true, 'Paquete completo a Buenos Aires', 1200.50, '2024-11-01', '2024-11-05',"https://www.tangol.com/Fotos/Destinos/buenos-aires_201608180851170.Mobile.webp"),
+(true, 'Paquete turístico a Madrid', 1500.75, '2024-12-01', '2024-12-06', "https://blog.localadventures.mx/wp-content/uploads/2022/10/Madrid-Plaza-Mayor.jpg"),
+(false, 'Paquete de lujo a Nueva York', 3000.00, '2025-01-01', '2025-01-07', "https://americanreceptive.es/wp-content/uploads/2018/07/1-74.jpg");
 
 -- Inserciones en tabla 'clientes'
 INSERT INTO clientes (nombre, apellido, dni, email, fecha_nacimiento, estado)

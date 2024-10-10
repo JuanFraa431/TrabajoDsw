@@ -5,7 +5,7 @@ export const routerPaquete = Router();
 
 routerPaquete.get('/', findAll);
 
-//routerPaquete.get('/:id', findOne);
+routerPaquete.get('/:id', findOne);
 
 routerPaquete.post('/', create);
 
