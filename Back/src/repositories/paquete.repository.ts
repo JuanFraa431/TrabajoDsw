@@ -74,6 +74,7 @@ export class PaqueteRepository implements Repository<Paquete>{
             AND p.fecha_ini >= ? 
             AND p.fecha_fin <= ? 
             AND p.precio <= ?
+            AND p.estado = 1
         `, [ciudad, fechaInicio, fechaFin, precioMaximo]);
         return paquetes as Paquete[];
     }
