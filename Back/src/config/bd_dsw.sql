@@ -42,7 +42,7 @@ CREATE TABLE paquetes (
     descripcion VARCHAR(255) NOT NULL,
     precio DECIMAL(10, 2) NOT NULL,
     fecha_ini DATE NOT NULL,
-    fecha_fin DATE NOT NULL,
+    fecha_fin DATE NOT NULL
 );
 
 -- Tabla clientes
