@@ -76,4 +76,14 @@ export class ExcursionRepository implements Repository<Excursion> {
     const id = Number.parseInt(item.id);
     await pool.query('DELETE FROM excursiones WHERE id = ?', [id]);
   }
+
+  public async findByType(params: { tipo: string }): Promise<Excursion[]> {
+    const { tipo } = params;
+    const [excursiones] = await pool.query<RowDataPacket[]>(
+      'SELECT * FROM excursiones WHERE tipo = ?',
+      [tipo]
+    );
+    return excursiones as Excursion[];
+  }
+
 }

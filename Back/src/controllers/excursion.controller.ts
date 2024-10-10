@@ -76,4 +76,14 @@ async function remove(req: Request, res: Response) {
   }
 }
 
-export { findAll, findOne, create, update, remove };
+async function findByType(req: Request, res: Response) {
+  try {
+    const { tipo } = req.params;
+    const excursiones = await repository.findByType({ tipo });
+    res.json(excursiones);
+  } catch (error) {
+    res.status(500).json({ message: 'Error al obtener las excursiones', error });
+  }
+}
+
+export { findAll, findOne, create, update, remove, findByType };
