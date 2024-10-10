@@ -60,13 +60,18 @@ export class PaqueteRepository implements Repository<Paquete>{
 
     public async search(params: { ciudad: string; fechaInicio: string; fechaFin: string; precioMaximo: number }): Promise<Paquete[]> {
         const { ciudad, fechaInicio, fechaFin, precioMaximo } = params;
-    
+        console.log(fechaInicio, fechaFin);
+        
         const [paquetes] = await pool.query<RowDataPacket[]>(`
             SELECT p.*, c.nombre
-            FROM paquetes p
-            JOIN estadias e ON p.id = e.id_paquete
-            JOIN hoteles h ON e.id_hotel = h.id
-            JOIN ciudades c ON h.id_ciudad = c.id
+            FROM 
+                    paquetes AS p
+                INNER JOIN
+                    estadias AS e ON p.id = e.id_paquete
+                INNER JOIN
+                    hoteles AS h ON e.id_hotel = h.id
+                INNER JOIN 
+                    ciudades AS c ON h.id_ciudad = c.id
             WHERE c.nombre = ? 
             AND p.fecha_ini >= ? 
             AND p.fecha_fin <= ? 
