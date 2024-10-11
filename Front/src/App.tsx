@@ -9,8 +9,8 @@ import Body from './components/Body';
 import CardList from './components/Card';
 import PreFooter from './components/PreFooter';
 import CardDetail from './components/CardDetail';
-import Paquetes from './components/Paquete';
-import HotelList from './components/prueba';
+import Paquetes from './components/paquete';
+import Filtro from './components/Filtro';
 
 const flightDetails = {
     destino: 'Madrid',
@@ -73,7 +73,12 @@ const App: React.FC = () => {
                             </motion.div>
                         }
                     />
-                    <Route path="/paquetes" element={<HotelList/>} />
+                    <Route path="/paquetes" element={
+                        <motion.div {...pageTransition}>
+                            <Filtro/>
+                            <Paquetes/>
+                        </motion.div>
+                        } />
                 </Routes>
             </AnimatePresence>
         </>

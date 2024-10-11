@@ -3,6 +3,8 @@ import { Router } from "express";
 
 export const routerPaquete = Router();
 
+routerPaquete.get('/search', search);
+
 routerPaquete.get('/', findAll);
 
 routerPaquete.get('/:id', findOne);
@@ -13,4 +15,3 @@ routerPaquete.put('/:id', update);
 
 routerPaquete.delete('/:id', remove);
 
-routerPaquete.get('/search', search);

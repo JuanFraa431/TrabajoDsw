@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import '../styles/Body.css';
+import '../styles/Filtro.css';
 import video from '../images/esteEs.mp4';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-const BuscadorVuelos: React.FC = () => {
+
+
+const Filtro: React.FC = () => {
     const today = new Date(); 
     const tomorrow = new Date(today); 
     tomorrow.setDate(today.getDate() + 1); 
@@ -44,12 +46,7 @@ const BuscadorVuelos: React.FC = () => {
         };
 
     return (
-        <div className="contenedor-buscador">
-            <video autoPlay muted loop id="bgVideo">
-                <source src={video} type="video/mp4" />
-            </video>
-            <h2>NUESTROS PAQUETES</h2>
-            <h1>Busca tu viaje ideal</h1>
+        <div className="contenedor-filtro">
             <form onSubmit={handleSubmit} className="formulario-buscador">
                 <div className="search-form">
                     <div className="form-group">
@@ -107,4 +104,4 @@ const BuscadorVuelos: React.FC = () => {
     );
 };
 
-export default BuscadorVuelos;
+export default Filtro;

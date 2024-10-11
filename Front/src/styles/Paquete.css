@@ -1,4 +1,4 @@
-.container {
+.container2 {
     display: grid;
     grid-template-columns: 1fr 4fr;
     margin: 20px;
@@ -32,6 +32,8 @@
   }
   
   .hotels-list {
+    display: flex;            
+    flex-direction: column;
     width: 70%;
     margin-left: 30px;
   }
@@ -64,17 +66,23 @@
   .hotel-info p {
     margin: 10px 0;
   }
-  
-  .hotel-info button {
-    background-color: #ff7f50;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
+
+  .boton-ver {
+    font-family: 'Poppins', sans-serif;
+    display: inline-block;
+    padding: 8px 16px;
+    border: 1px solid#0056b3 ;
+    border-radius: 20px;
+    text-decoration: none;
+    background: rgba(255, 255, 255, 0.6);
+    font-weight: bold;
+    transition: background-color 0.3s, color 0.3s;
+    color: #333;
     cursor: pointer;
-  }
-  
-  .hotel-info button:hover {
-    background-color: #ff6347;
-  }
+}
+
+.boton-ver:hover {
+    background-color: #0056b3;
+    color: white;
+}
   

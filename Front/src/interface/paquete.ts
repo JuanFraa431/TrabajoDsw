@@ -4,5 +4,6 @@ export interface Paquete {
     descripcion: string;
     precio: number;
     fecha_ini: string; 
-    fecha_fin: string; 
+    fecha_fin: string;
+    imagen: string;
 }
