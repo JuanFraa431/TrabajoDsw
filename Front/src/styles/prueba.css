@@ -1,0 +1,80 @@
+.container {
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+    margin: 20px;
+  }
+  
+  .filters {
+    width: 100%;
+    padding: 20px;
+    background-color: #f7f7f7;
+    border-radius: 10px;
+    align-self: start;
+  }
+  
+  .filters h2 {
+    margin-bottom: 20px;
+  }
+  
+  .filter-item {
+    margin-bottom: 20px;
+  }
+  
+  .filter-item label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    display: block;
+  }
+  
+  .price-range {
+    margin-top: 10px;
+    font-weight: bold;
+  }
+  
+  .hotels-list {
+    width: 70%;
+    margin-left: 30px;
+  }
+  
+  .hotel-card {
+    display: flex;
+    justify-content: space-between;
+    background-color: #fff;
+    border: 1px solid #eaeaea;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    padding: 20px;
+    width: 100%;
+  }
+  
+  .hotel-card img {
+    max-width: 150px;
+    border-radius: 10px;
+  }
+  
+  .hotel-info {
+    flex-grow: 1;
+    margin-left: 20px;
+  }
+  
+  .hotel-info h3 {
+    margin: 0;
+  }
+  
+  .hotel-info p {
+    margin: 10px 0;
+  }
+  
+  .hotel-info button {
+    background-color: #ff7f50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .hotel-info button:hover {
+    background-color: #ff6347;
+  }
+  

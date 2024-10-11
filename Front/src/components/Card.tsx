@@ -9,7 +9,6 @@ interface CardProps {
     imagen: string;
 }
 
-// Componente Card con tipos
 const Card: React.FC<CardProps> = ({ destino, origen, precio, imagen }) => {
     return (
         <div className="card">

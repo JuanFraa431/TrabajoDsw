@@ -2,10 +2,28 @@ import React from "react";
 import "../styles/Header.css";
 import userIcon from "../images/user-icon.png";
 import logo from "../images/logoFinal2.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+
 
 const Header = () => {
     const userName = "Juanfraa";
+
+    const navigate = useNavigate();
+
+    const handleLinkClick = async (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+        event.preventDefault();
+        
+        try {
+            // Hacer la solicitud al backend para obtener todos los paquetes
+            const response = await axios.get('http://localhost:3000/api/paquete');
+
+            // Redirigir a la página de paquetes con los datos obtenidos
+            navigate('/paquetes', { state: { paquetes: response.data } });
+        } catch (error) {
+            console.error('Error al obtener paquetes:', error);
+        }
+    };
 
     return (
         <header className="header">
@@ -18,7 +36,7 @@ const Header = () => {
                         <Link to="/alojamiento" >Alojamiento</Link>
                     </li>
                     <li>
-                        <a href="#paquetes">Paquetes</a>
+                        <Link to="/paquetes" onClick={handleLinkClick} >Paquetes</Link>
                     </li>
                     <li>
                         <a href="#excursiones">Excursiones</a>
