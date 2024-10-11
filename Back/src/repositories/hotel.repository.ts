@@ -83,6 +83,12 @@ export class HotelRepository implements Repository<Hotel> {
       );
     }
 
-    await pool.query('DELETE FROM hoteles WHERE id = ?', [id]);
+    const [result] = (await pool.query('DELETE FROM hoteles WHERE id = ?', [
+      id,
+    ])) as RowDataPacket[];
+    const affectedRows = (result as any).affectedRows;
+    if (affectedRows == 0) {
+      throw new Error('No se ha podido borrar el paquete');
+    }
   }
 }

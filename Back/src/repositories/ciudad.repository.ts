@@ -51,6 +51,17 @@ export class CiudadRepository implements Repository<Ciudad> {
 
   public async remove(item: { id: string }): Promise<void> {
     const id = Number.parseInt(item.id);
+
+    const [result_hotel] = (await pool.query('SELECT * FROM hoteles WHERE id_ciudad = ?', [id])) as RowDataPacket[];
+    if ((result_hotel as any).length > 0) {
+      throw new Error('No se puede borrar la ciudad porque tiene hoteles asociados');
+    }
+    
+    const [result_excursion] = (await pool.query('SELECT * FROM excursiones WHERE id_ciudad = ?', [id])) as RowDataPacket[];
+    if ((result_excursion as any).length > 0) {
+      throw new Error('No se puede borrar la ciudad porque tiene excursiones asociadas');
+    }
+
     const [result] = (await pool.query('DELETE FROM ciudades WHERE id = ?', [id])) as RowDataPacket[];
     const affectedRows = (result as any).affectedRows;
     if (affectedRows == 0) {

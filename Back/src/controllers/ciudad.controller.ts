@@ -18,8 +18,9 @@ async function findOne(req: Request, res: Response) {
     } else {
       res.status(404).json({ message: 'Ciudad no encontrada' });
     }
-  } catch (error) {
-    res.status(500).json({ message: 'Error al obtener la ciudad', error });
+  } catch (error: any) {
+    const errorMessage = error.message || 'Error desconocido';
+    res.status(500).json({ message: 'Error al obtener la ciudad', errorMessage });
   }
 }
 
@@ -33,8 +34,9 @@ async function create(req: Request, res: Response) {
     );
     const result = await repository.save(ciudad);
     res.json(result);
-  } catch (error) {
-    res.status(500).json({ message: 'Error al crear la ciudad', error });
+  } catch (error: any) {
+  const errorMessage = error.message || 'Error desconocido';
+    res.status(500).json({ message: 'Error al crear la ciudad', errorMessage });
   }
 }
 
@@ -49,8 +51,9 @@ async function update(req: Request, res: Response) {
     );
     const result = await repository.update({ id }, ciudad);
     res.json(result);
-  } catch (error) {
-    res.status(500).json({ message: 'Error al actualizar la ciudad', error });
+  } catch (error: any) {
+    const errorMessage = error.message || 'Error desconocido';
+    res.status(500).json({ message: 'Error al actualizar la ciudad', errorMessage });
   }
 }
 
@@ -58,9 +61,10 @@ async function remove(req: Request, res: Response) {
   try {
     const { id } = req.params;
     const result = await repository.remove({ id });
-    res.json(result);
-  } catch (error) {
-    res.status(500).json({ message: 'Error al eliminar la ciudad', error });
+    res.json({ message: 'Ciudad eliminada' });
+  } catch (error: any) {
+    const errorMessage = error.message || 'Error desconocido';
+    res.status(500).json({ message: 'Error al eliminar la ciudad', errorMessage });
   }
 }
 

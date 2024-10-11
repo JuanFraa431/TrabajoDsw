@@ -19,8 +19,9 @@ async function findOne(req: Request, res: Response) {
         } else {
             res.status(404).json({ message: 'Paquete no encontrado' });
         }
-    } catch (error) {
-        res.status(500).json({ message: 'Error al obtener el paquete', error });
+    } catch (error: any) {
+        const errorMessage = error.message || 'Error desconocido';
+        res.status(500).json({ message: 'Error al obtener el paquete', errorMessage });
     }
 }
 
@@ -29,8 +30,9 @@ async function create(req: Request, res: Response) {
         const paquete = new Paquete(req.body.id,req.body.estado, req.body.descripcion, req.body.precio, req.body.fecha_ini, req.body.fecha_fin, req.body.imagen);
         const result = await repository.save(paquete);
         res.json(result);
-    } catch (error) {
-        res.status(500).json({ message: 'Error al crear el paquete', error });
+    } catch (error: any) {
+        const errorMessage = error.message || 'Error desconocido';
+        res.status(500).json({ message: 'Error al crear el paquete', errorMessage });
     }
 }
 
@@ -40,8 +42,9 @@ async function update(req: Request, res: Response) {
         const paquete = new Paquete(req.body.id,req.body.estado, req.body.descripcion, req.body.precio, req.body.fecha_ini, req.body.fecha_fin, req.body.imagen);
         const result = await repository.update({ id }, paquete);
         res.json(result);
-    } catch (error) {
-        res.status(500).json({ message: 'Error al actualizar el paquete', error });
+    } catch (error: any) {
+        const errorMessage = error.message || 'Error desconocido';
+        res.status(500).json({ message: 'Error al actualizar el paquete', errorMessage });
     }
 }
 
@@ -49,9 +52,10 @@ async function remove(req: Request, res: Response) {
     try {
         const { id } = req.params;
         const result = await repository.remove({ id });
-        res.json(result);
-    } catch (error) {
-        res.status(500).json({ message: 'Error al eliminar el paquete', error });
+        res.json({ message: 'Paquete eliminado' });
+    } catch (error: any) {
+        const errorMessage = error.message || 'Error desconocido';
+        res.status(500).json({ message: 'Error al eliminar el paquete', errorMessage });
     }
 }
 
@@ -67,8 +71,9 @@ async function search(req: Request, res: Response) {
         });
 
         res.json(paquetes);
-    } catch (error) {
-        res.status(500).json({ message: 'Error al buscar paquetes', error });
+    } catch (error: any) {
+        const errorMessage = error.message || 'Error desconocido';
+        res.status(500).json({ message: 'Error al buscar paquetes', errorMessage });
     }
 }
 

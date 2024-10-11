@@ -95,9 +95,10 @@ export class PaqueteRepository implements Repository<Paquete> {
 
   public async remove(item: { id: string }): Promise<void> {
     const id = Number.parseInt(item.id);
-    const [result] = (await pool.query('DELETE FROM paquetes WHERE id = ?', [
-      id,
-    ])) as RowDataPacket[];
+    const [result] = (await pool.query(
+      'UPDATE paquetes SET estado = 0 WHERE id = ?',
+      [id]
+    )) as RowDataPacket[];
     const affectedRows = (result as any).affectedRows;
     if (affectedRows == 0) {
       throw new Error('No se ha podido borrar el paquete');

@@ -56,7 +56,7 @@ export class ClienteRepository implements Repository<Cliente>{
 
     public async remove(item: {id:string}): Promise<void> {
         const id = Number.parseInt(item.id)
-        const [result] = await pool.query('DELETE FROM clientes WHERE id = ?',
+        const [result] = await pool.query('UPDATE clientes SET estado = 0 WHERE id = ?',
             [id]) as RowDataPacket[]
         const affectedRows = (result as any).affectedRows
         if(affectedRows == 0){
