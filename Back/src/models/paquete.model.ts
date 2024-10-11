@@ -6,5 +6,6 @@ export class Paquete {
     public precio: number,
     public fecha_ini : string,
     public fecha_fin : string,
+    public imagen: string
   ) {}
 }

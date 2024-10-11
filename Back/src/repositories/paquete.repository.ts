@@ -49,8 +49,8 @@ export class PaqueteRepository implements Repository<Paquete> {
 
     public async save(item: Paquete): Promise<Paquete> {
         const [result] = (await pool.query(
-            'INSERT INTO paquetes (estado, descripcion, precio, fecha_ini, fecha_fin) VALUES (?, ?, ?, ?, ?)',
-            [item.estado, item.descripcion, item.precio, item.fecha_ini, item.fecha_fin]
+          'INSERT INTO paquetes (estado, descripcion, precio, fecha_ini, fecha_fin) VALUES (?, ?, ?, ?, ?)',
+          [item.estado, item.descripcion, item.precio, item.fecha_ini, item.fecha_fin]
         )) as RowDataPacket[];
         const affectedRows = (result as any).affectedRows
         if (affectedRows == 1) {
@@ -63,8 +63,8 @@ export class PaqueteRepository implements Repository<Paquete> {
     public async update(item: { id: string }, paquete: Paquete): Promise<Paquete | undefined> {
         const id = Number.parseInt(item.id)
         const [result] = (await pool.query(
-            'UPDATE paquetes SET estado = ?, descripcion = ?, precio = ?, fecha_ini = ?, fecha_fin = ? WHERE id = ?',
-            [paquete.estado, paquete.descripcion, paquete.precio, paquete.fecha_ini, paquete.fecha_fin, id]
+          'UPDATE paquetes SET estado = ?, descripcion = ?, precio = ?, fecha_ini = ?, fecha_fin = ? WHERE id = ?',
+          [paquete.estado, paquete.descripcion, paquete.precio, paquete.fecha_ini, paquete.fecha_fin, id]
         )) as RowDataPacket[];
         const affectedRows = (result as any).affectedRows
         if (affectedRows == 1) {
