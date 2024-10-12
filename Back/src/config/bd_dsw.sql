@@ -155,3 +155,144 @@ CREATE TABLE reserva_transporte (
     FOREIGN KEY (id_paquete, id_transporte, fecha) 
         REFERENCES paquete_transporte(id_paquete, id_transporte, fecha)
 );
+
+-- Inserciones en tabla 'ciudades'
+INSERT INTO ciudades (nombre, descripcion, pais)
+VALUES
+('Buenos Aires', 'Capital de Argentina', 'Argentina'),
+('Madrid', 'Capital de España', 'España'),
+('Nueva York', 'Ciudad en Estados Unidos', 'Estados Unidos'),
+('Rio de Janeiro', 'Famosa por sus playas y el Cristo Redentor', 'Brasil'),
+('Lima', 'Capital gastronómica de Sudamérica', 'Perú'),
+('Cancún', 'Conocido por sus playas de arena blanca', 'México'),
+('Barcelona', 'Conocida por su arquitectura y cultura', 'España'),
+('Santiago', 'Capital de Chile, rodeada de montañas', 'Chile');
+
+-- Inserciones en tabla 'transportes'
+INSERT INTO transportes (descripcion, capacidad, tipo, nombre_empresa, mail_empresa)
+VALUES
+('Autobús de turismo', 50, 'Autobús', 'Turismo SRL', 'contacto@turismosrl.com'),
+('Avión comercial', 180, 'Avión', 'Aerolíneas Argentinas', 'info@aerolineas.com.ar'),
+('Tren de alta velocidad', 300, 'Tren', 'Renfe', 'contacto@renfe.com'),
+('Autobús turístico', 50, 'Terrestre', 'Transporte Río', 'contacto@transporterio.com'),
+('Minibús privado', 12, 'Terrestre', 'Viajes Lima', 'info@viajeslima.com'),
+('Ferry a Isla Mujeres', 150, 'Marítimo', 'Ferries del Caribe', 'reservas@ferriescaribe.com'),
+('Transfer aeropuerto', 8, 'Terrestre', 'Transfers Barcelona', 'info@transfersbarcelona.com'),
+('Bus de lujo', 45, 'Terrestre', 'Transportes Santiago', 'reservas@transportessantiago.com');
+
+-- Inserciones en tabla 'hoteles'
+INSERT INTO hoteles (nombre, direccion, descripcion, telefono, email, estrellas, id_ciudad)
+VALUES
+('Hotel Hilton', 'Av. Santa Fe 123', 'Hotel 5 estrellas de lujo', '123456789', 'hilton@hoteles.com', 5, 1),
+('NH Collection', 'Calle de Alcalá 345', 'Hotel céntrico en Madrid', '987654321', 'nh@hoteles.com', 4, 2),
+('The Plaza', '5th Avenue 768', 'Hotel de lujo en Nueva York', '1122334455', 'plaza@hoteles.com', 5, 3),
+('Hotel Copacabana', 'Av. Atlântica, 1702 - Copacabana', 'Hotel frente a la playa con piscina', '21 1234-5678', 'info@copacabana.com', 4, 4),
+('Hotel Miraflores', 'Av. José Larco 812', 'Hotel elegante en el corazón de Miraflores', '51 1 234-5678', 'contacto@miraflores.com', 5, 5),
+('Hotel Playa del Carmen', '5a Avenida, 123', 'Resort con todo incluido cerca de la playa', '52 987 654 3210', 'reservas@playadelcarmen.com', 4, 6),
+('Hotel Barcelona Center', 'Carrer de Pau Claris, 1', 'Hotel boutique en el centro de Barcelona', '+34 93 123 4567', 'info@barcelonacenter.com', 4, 7),
+('Hotel Santiago Plaza', 'Av. Apoquindo 6580', 'Hotel moderno en el distrito financiero', '56 2 2345 6789', 'reservas@santiagoplaza.com', 4, 8);
+
+-- Inserciones en tabla 'paquetes'
+INSERT INTO paquetes (estado, descripcion, precio, fecha_ini, fecha_fin, imagen)
+VALUES
+(true, 'Paquete completo a Buenos Aires', 1200.50, '2024-11-01', '2024-11-05',"https://www.tangol.com/Fotos/Destinos/buenos-aires_201608180851170.Mobile.webp"),
+(true, 'Paquete turístico a Madrid', 1500.75, '2024-12-01', '2024-12-06', "https://blog.localadventures.mx/wp-content/uploads/2022/10/Madrid-Plaza-Mayor.jpg"),
+(false, 'Paquete de lujo a Nueva York', 3000.00, '2025-01-01', '2025-01-07', "https://americanreceptive.es/wp-content/uploads/2018/07/1-74.jpg"),
+(true, 'Paquete a Río de Janeiro con hotel y excursión', 1200.00, '2025-01-06', '2025-01-14', "https://media.staticontent.com/media/pictures/c2dc2d0b-f4a3-451f-a734-8dafc1b42477/300x200"),
+(true, 'Escapada a Lima con clases de cocina', 850.00, '2025-01-06', '2025-01-14', "https://media.staticontent.com/media/pictures/18426b70-15dd-43da-a889-b9a8e0479881/300x300"),
+(true, 'Vacaciones en Cancún con snorkel y hotel', 1400.00, '2025-01-06', '2025-01-14', "https://www.argtravelagency.com.ar/wp-content/uploads/2017/10/joanna-szumska-yZhQkOGJk_o-unsplash.jpg"),
+(true, 'Tour cultural en Barcelona', 1100.00, '2025-01-06', '2025-01-14', "https://travelviajes.net/image/casa-mila-casa-batllo-barcelona-917.jpg"),
+(true, 'Viaje a Santiago con tour a Valparaíso', 950.00, '2025-01-06', '2025-01-14', "https://www.hotelinfo.com.ar/uploads/6614492b47650.jpg");
+
+-- Inserciones en tabla 'clientes'
+INSERT INTO clientes (nombre, apellido, dni, email, fecha_nacimiento, estado)
+VALUES
+('Juan', 'Pérez', '12345678', 'juan.perez@mail.com', '1980-05-15', true),
+('María', 'Gómez', '87654321', 'maria.gomez@mail.com', '1990-03-10', true),
+('Pedro', 'Fernández', '45678912', 'pedro.fernandez@mail.com', '1985-07-20', false);
+
+-- Inserciones en tabla 'excursiones'
+INSERT INTO excursiones (nombre, tipo, descripcion, horario, nro_personas_max, nombre_empresa, mail_empresa, precio, id_ciudad)
+VALUES
+('City Tour Buenos Aires', 'Cultural', 'Recorrido por los principales puntos turísticos', '10:00:00', 30, 'Turismo BA', 'info@turismoba.com', 50.00, 1),
+('Tour por el Prado', 'Museo', 'Visita guiada por el Museo del Prado', '11:00:00', 25, 'Cultura Madrid', 'info@culturamadrid.com', 45.00, 2),
+('Tour Estatua de la Libertad', 'Monumento', 'Excursión en barco hacia la Estatua de la Libertad', '09:00:00', 50, 'NYC Tours', 'info@nyctours.com', 70.00, 3),
+('Tour por el Cristo Redentor', 'Cultural', 'Visita guiada al Cristo Redentor', '09:00:00', 30, 'Excursiones Río', 'info@excursionesrio.com', 50.00, 1),
+('Clase de cocina peruana', 'Gastronomía', 'Aprende a cocinar platos típicos', '14:00:00', 10, 'Cocina Lima', 'reservas@cocinalima.com', 70.00, 2),
+('Snorkel en Isla Mujeres', 'Aventura', 'Excursión de snorkel en el Caribe', '10:00:00', 25, 'Aventuras del Caribe', 'info@aventurascaribe.com', 60.00, 3),
+('Visita a La Sagrada Familia', 'Cultural', 'Tour guiado por la Sagrada Familia', '11:00:00', 20, 'Excursiones Barcelona', 'info@excursionesbarcelona.com', 40.00, 4),
+('Tour por Valparaíso', 'Cultural', 'Recorrido por la ciudad y sus cerros', '09:00:00', 15, 'Tours Santiago', 'contacto@tourssantiago.com', 45.00, 5);
+
+-- Inserciones en tabla 'paquete_excursion'
+INSERT INTO paquete_excursion (id_paquete, id_excursion, fecha)
+VALUES
+(1, 1, '2024-11-01'),
+(2, 2, '2024-12-01'),
+(3, 3, '2025-01-01'),
+(4, 4, '2025-01-06'),
+(5, 5, '2025-01-06'),
+(6, 6, '2025-01-06'),
+(7, 7, '2025-01-06'),
+(8, 8, '2025-01-06');
+
+-- Inserciones en tabla 'reserva_excursion'
+INSERT INTO reserva_excursion (id_cliente, id_paquete, id_excursion, fecha, nro_ticket)
+VALUES
+(1, 1, 1, '2024-11-01',1),
+(2, 2, 2, '2024-12-01',2),
+(3, 3, 3, '2025-01-01',3);
+
+-- Inserciones en tabla 'estadias'
+INSERT INTO estadias (id_paquete, id_hotel, fecha_ini, fecha_fin, precio_x_dia)
+VALUES
+(1, 1, '2024-11-01', '2024-11-05', 500.00),
+(2, 2, '2024-12-01', '2024-12-06', 600.00),
+(3, 3, '2025-01-01', '2025-01-07', 700.00),
+(4, 4, '2025-01-06', '2025-01-14', 100.00),
+(5, 5, '2025-01-06', '2025-01-14', 150.00),
+(6, 6, '2025-01-06', '2025-01-14', 200.00),
+(7, 7, '2025-01-06', '2025-01-14', 250.00),
+(8, 8, '2025-01-06', '2025-01-14', 300.00);
+
+-- Inserciones en tabla 'reserva_estadias'
+INSERT INTO reserva_estadias (id_cliente, id_estadia, nro_habitacion)
+VALUES
+(2, 2, '101'),
+(1, 1, '202'),
+(3, 3, '303'),
+(1, 4, '404'),
+(2, 5, '505'),
+(3, 6, '606'),
+(1, 7, '707'),
+(2, 8, '808');
+
+-- Inserciones en tabla 'comentarios'
+INSERT INTO comentarios (fecha, descripcion, estrellas, id_paquete, id_cliente)
+VALUES
+('2024-11-10', 'Excelente paquete, muy recomendado', 5, 1, 1),
+('2024-12-10', 'Buen servicio, aunque mejorable', 4, 2, 2),
+('2025-01-10', 'Muy caro para lo que ofrece', 3, 3, 3),
+('2025-01-09', 'Excelente paquete, muy bien organizado.', 5, 1, 1),
+('2025-01-10', 'La comida fue increíble en Lima.', 4, 2, 2),
+('2025-01-11', 'Las playas de Cancún son un sueño.', 5, 3, 3),
+('2025-01-12', 'Barcelona es hermosa, una experiencia inolvidable.', 5,4,3);
+
+-- Inserciones en tabla 'paquete_transporte'
+INSERT INTO paquete_transporte (id_paquete, id_transporte, fecha, descripcion_paradas, precio, categoria_asiento)
+VALUES
+(1, 1, '2024-11-01', 'Salida desde aeropuerto de Ezeiza', 100.00, 'Económica'),
+(2, 2, '2024-12-01', 'Salida desde el aeropuerto de Barajas', 200.00, 'Económica'),
+(3, 3, '2025-01-01', 'Salida desde la estación Grand Central', 300.00, 'Primera clase'),
+(1, 1, '2025-01-06', 'Paradas en puntos turísticos', 30.00, 'Económico'),
+(2, 2, '2025-01-06', 'Recogida en el aeropuerto', 20.00, 'Económico'),
+(3, 3, '2025-01-06', 'Transfer a Isla Mujeres', 40.00, 'Económico'),
+(4, 4, '2025-01-06', 'Transfer desde el aeropuerto', 25.00, 'Económico'),
+(5, 5, '2025-01-06', 'Transfer desde el hotel', 15.00, 'Económico');
+
+
+-- Inserciones en tabla 'reserva_transporte'
+INSERT INTO reserva_transporte (id_cliente, id_paquete, id_transporte, fecha)
+VALUES
+(1, 1, 1, '2024-11-01'),
+(2, 2, 2, '2024-12-01'),
+(3, 3, 3, '2025-01-01');

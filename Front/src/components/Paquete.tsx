@@ -3,22 +3,18 @@ import '../styles/Paquete.css';
 import { useLocation } from 'react-router-dom';
 import { Paquete } from '../interface/paquete';
 
-const  Paquetes: React.FC = () => { {
+const Paquetes: React.FC = () => {
     const location = useLocation();
-    const { paquetes } = location.state || { paquetes: [] };
+    const { paquetes, searchParams } = location.state || { paquetes: [], searchParams: {} };
 
     const [flexible, setFlexible] = useState(false);
-    const [priceRange, setPriceRange] = useState([0, 1000000]);
+    const [priceRange, setPriceRange] = useState([0, searchParams?.price || 1000000]);
 
     const handleFlexibleChange = () => {
         setFlexible(!flexible);
     };
 
-    interface PriceRangeChangeEvent extends React.ChangeEvent<HTMLInputElement> {
-        target: HTMLInputElement & EventTarget;
-    }
-
-    const handlePriceChange = (e: PriceRangeChangeEvent) => {
+    const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = parseFloat(e.target.value);
         setPriceRange([priceRange[0], value]);
     };
@@ -49,38 +45,22 @@ const  Paquetes: React.FC = () => { {
                         <span>${priceRange[1].toLocaleString()}</span>
                     </div>
                 </div>
-                <div className="filter-item">
-                    <label>Filtros más usados</label>
-                    <div>
-                        <input type="checkbox" id="all-inclusive" />
-                        <label htmlFor="all-inclusive">All Inclusive</label>
-                    </div>
-                    <div>
-                        <input type="checkbox" id="breakfast" />
-                        <label htmlFor="breakfast">Desayuno</label>
-                    </div>
-                    <div>
-                        <input type="checkbox" id="four-stars" />
-                        <label htmlFor="four-stars">4 Estrellas</label>
-                    </div>
-                </div>
+                {/* Agrega los filtros que desees */}
             </div>
 
-            <div className="hotels-list" >
+            <div className="hotels-list">
                 {paquetes.length > 0 ? (
                     paquetes.map((paquete: Paquete) => (
-                            <div className="hotel-card " key={paquete.id}>
-                                <img src={paquete.imagen} alt={paquete.nombre} className="card-img" />
-                                <div className="hotel-info">
-                                    <h3>{paquete.nombre}</h3>
-                                    <p className="p-footer">Precio por persona</p>
-                                    <p>${paquete.precio}</p>
-                                    <button className='boton-ver'>Ver Alojamiento</button>
-                                </div>
+                        <div className="hotel-card" key={paquete.id}>
+                            <img src={paquete.imagen} alt={paquete.nombre} className="card-img" />
+                            <div className="hotel-info">
+                                <h3>{paquete.nombre}</h3>
+                                <p className="p-footer">Precio por persona</p>
+                                <p>${paquete.precio}</p>
+                                <button className="boton-ver">Ver Alojamiento</button>
                             </div>
-                        
+                        </div>
                     ))
-                    
                 ) : (
                     <p>No se encontraron paquetes que coincidan con la búsqueda.</p>
                 )}
@@ -88,8 +68,5 @@ const  Paquetes: React.FC = () => { {
         </div>
     );
 };
-};
 
-
-export default Paquetes;     
-
+export default Paquetes;

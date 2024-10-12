@@ -1,15 +1,19 @@
 .container2 {
     display: grid;
     grid-template-columns: 1fr 4fr;
-    margin: 20px;
+    width: 100%;
   }
+  
   
   .filters {
     width: 100%;
-    padding: 20px;
+    padding: 10px;
     background-color: #f7f7f7;
     border-radius: 10px;
     align-self: start;
+    height: 87%;
+    margin-top: 20px;
+    margin-left: 20px;
   }
   
   .filters h2 {
@@ -34,8 +38,9 @@
   .hotels-list {
     display: flex;            
     flex-direction: column;
-    width: 70%;
-    margin-left: 30px;
+    width: 90%;
+    margin-left: 50px;
+    margin-top: 20px;
   }
   
   .hotel-card {

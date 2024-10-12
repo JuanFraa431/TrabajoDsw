@@ -7,14 +7,14 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 const BuscadorVuelos: React.FC = () => {
-    const today = new Date(); 
-    const tomorrow = new Date(today); 
-    tomorrow.setDate(today.getDate() + 1); 
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 1);
 
     const [price, setPrice] = useState<number>(5000);
-    const [startDate, setStartDate] = useState<Date | null>(today); 
+    const [startDate, setStartDate] = useState<Date | null>(today);
     const [endDate, setEndDate] = useState<Date | null>(tomorrow);
-    const [destination, setDestination] = useState<string>(''); 
+    const [destination, setDestination] = useState<string>('');
     const navigate = useNavigate();
 
     const handlePriceChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -23,25 +23,36 @@ const BuscadorVuelos: React.FC = () => {
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        
-        const formattedStartDate = startDate?.toLocaleDateString('en-CA'); 
-        const formattedEndDate = endDate?.toLocaleDateString('en-CA'); 
-        
+
+        const formattedStartDate = startDate?.toLocaleDateString('en-CA');
+        const formattedEndDate = endDate?.toLocaleDateString('en-CA');
+
         try {
             const response = await axios.get(`http://localhost:3000/api/paquete/search`, {
                 params: {
                     ciudad: destination,
                     fechaInicio: formattedStartDate,
                     fechaFin: formattedEndDate,
-                    precioMaximo: price 
+                    precioMaximo: price
                 }
             });
 
-                navigate('/paquetes', { state: { paquetes: response.data } });
-            } catch (error) {
-                console.error('Error al buscar paquetes:', error);
-            }
-        };
+            // Navegar a la página de paquetes pasando el estado con los datos ingresados
+            navigate('/paquetes', { 
+                state: { 
+                    paquetes: response.data,
+                    searchParams: {
+                        destination,
+                        startDate,
+                        endDate,
+                        price
+                    }
+                }
+            });
+        } catch (error) {
+            console.error('Error al buscar paquetes:', error);
+        }
+    };
 
     return (
         <div className="contenedor-buscador">
@@ -60,7 +71,7 @@ const BuscadorVuelos: React.FC = () => {
                                 id="destination"
                                 placeholder="Nombre del destino..."
                                 value={destination}
-                                onChange={(e) => setDestination(e.target.value)} 
+                                onChange={(e) => setDestination(e.target.value)}
                             />
                         </div>
                     </div>
@@ -73,7 +84,7 @@ const BuscadorVuelos: React.FC = () => {
                                 dateFormat="dd/MM/yyyy"
                                 placeholderText="Fecha de inicio"
                                 className="datepicker-input"
-                                minDate={today} 
+                                minDate={today}
                             />
                             <span> - </span>
                             <DatePicker
@@ -82,7 +93,7 @@ const BuscadorVuelos: React.FC = () => {
                                 dateFormat="dd/MM/yyyy"
                                 placeholderText="Fecha de fin"
                                 className="datepicker-input"
-                                minDate={tomorrow} 
+                                minDate={tomorrow}
                             />
                         </div>
                     </div>
