@@ -6,8 +6,6 @@ import video from '../images/esteEs.mp4';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-
-
 const Filtro: React.FC = () => {
     const today = new Date(); 
     const tomorrow = new Date(today); 
@@ -39,11 +37,11 @@ const Filtro: React.FC = () => {
                 }
             });
 
-                navigate('/paquetes', { state: { paquetes: response.data } });
-            } catch (error) {
-                console.error('Error al buscar paquetes:', error);
-            }
-        };
+            navigate('/paquetes', { state: { paquetes: response.data } });
+        } catch (error) {
+            console.error('Error al buscar paquetes:', error);
+        }
+    };
 
     return (
         <div className="contenedor-filtro">
@@ -71,6 +69,7 @@ const Filtro: React.FC = () => {
                                 placeholderText="Fecha de inicio"
                                 className="datepicker-input"
                                 minDate={today} 
+                                portalId="root-portal" /* Asegura que el calendario esté en un contenedor específico */
                             />
                             <span> - </span>
                             <DatePicker
@@ -79,7 +78,8 @@ const Filtro: React.FC = () => {
                                 dateFormat="dd/MM/yyyy"
                                 placeholderText="Fecha de fin"
                                 className="datepicker-input"
-                                minDate={tomorrow} 
+                                minDate={tomorrow}
+                                portalId="root-portal"
                             />
                         </div>
                     </div>

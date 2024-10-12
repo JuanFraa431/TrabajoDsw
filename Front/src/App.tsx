@@ -9,7 +9,7 @@ import Body from './components/Body';
 import CardList from './components/Card';
 import PreFooter from './components/PreFooter';
 import CardDetail from './components/CardDetail';
-import Paquetes from './components/paquete';
+import Paquetes from './components/Paquete';
 import Filtro from './components/Filtro';
 
 const flightDetails = {
