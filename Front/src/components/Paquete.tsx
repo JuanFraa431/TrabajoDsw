@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import '../styles/Paquete.css';
 import { useLocation } from 'react-router-dom';
 import { Paquete } from '../interface/paquete';
-import Filtro from './Filtro';
 
 const  Paquetes: React.FC = () => { {
     const location = useLocation();

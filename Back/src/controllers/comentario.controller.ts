@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import e, { Request, Response, NextFunction } from 'express';
 import { ClienteRepository } from '../repositories/comentario.repository.js';
 import { Comentario } from '../models/comentario.model.js';
 
@@ -18,8 +18,9 @@ async function findOne(req: Request, res: Response) {
     } else {
       res.status(404).json({ message: 'Comentario no encontrado' });
     }
-  } catch (error) {
-    res.status(500).json({ message: 'Error al obtener el comentario', error });
+  } catch (error: any) {
+    const errorMessage = error.message || 'Error desconocido';
+    res.status(500).json({ message: 'Error al obtener el comentario', errorMessage });
   }
 }
 
@@ -35,8 +36,9 @@ async function create(req: Request, res: Response) {
     );
     const result = await repository.save(comentario);
     res.json(result);
-  } catch (error) {
-    res.status(500).json({ message: 'Error al crear el comentario', error });
+  } catch (error: any) {
+    const errorMessage = error.message || 'Error desconocido';
+    res.status(500).json({ message: 'Error al crear el comentario', errorMessage });
   }
 }
 
@@ -53,8 +55,9 @@ async function update(req: Request, res: Response) {
     );
     const result = await repository.update({ id }, comentario);
     res.json(result);
-  } catch (error) {
-    res.status(500).json({ message: 'Error al actualizar el comentario', error });
+  } catch (error: any) {
+    const errorMessage = error.message || 'Error desconocido';
+    res.status(500).json({ message: 'Error al actualizar el comentario', errorMessage });
   }
 }
 
@@ -62,9 +65,10 @@ async function remove(req: Request, res: Response) {
   try {
     const { id } = req.params;
     const result = await repository.remove({ id });
-    res.json(result);
-  } catch (error) {
-    res.status(500).json({ message: 'Error al eliminar el comentario', error });
+    res.json({ message: 'Comentario eliminado' });
+  } catch (error: any) {
+    const errorMessage = error.message || 'Error desconocido';
+    res.status(500).json({ message: 'Error al eliminar el comentario', errorMessage });
   }
 }
 

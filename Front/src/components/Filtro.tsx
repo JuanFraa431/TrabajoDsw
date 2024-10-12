@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import '../styles/Filtro.css';
-import video from '../images/esteEs.mp4';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 

@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import e, { Request, Response, NextFunction } from 'express';
 import { HotelRepository } from '../repositories/hotel.repository.js';
 import { Hotel } from '../models/hotel.model.js';
 
@@ -18,8 +18,9 @@ async function findOne(req: Request, res: Response) {
     } else {
       res.status(404).json({ message: 'Hotel no encontrado' });
     }
-  } catch (error) {
-    res.status(500).json({ message: 'Error al obtener el hotel', error });
+  } catch (error: any) {
+    const errorMessage = error.message || 'Error desconocido';
+    res.status(500).json({ message: 'Error al obtener el hotel', errorMessage });
   }
 }
 
@@ -37,8 +38,9 @@ async function create(req: Request, res: Response) {
     );
     const result = await repository.save(hotel);
     res.json(result);
-  } catch (error) {
-    res.status(500).json({ message: 'Error al crear el hotel', error });
+  } catch (error: any) {
+    const errorMessage = error.message || 'Error desconocido';
+    res.status(500).json({ message: 'Error al crear el hotel', errorMessage });
   }
 }
 
@@ -57,18 +59,20 @@ async function update(req: Request, res: Response) {
     );
     const result = await repository.update({ id }, hotel);
     res.json(result);
-  } catch (error) {
-    res.status(500).json({ message: 'Error al actualizar el hotel', error });
+  } catch (error: any) {
+    const errorMessage = error.message || 'Error desconocido';
+    res.status(500).json({ message: 'Error al actualizar el hotel', errorMessage });
   }
 }
 
 async function remove(req: Request, res: Response) {
   try {
     const { id } = req.params;
-    const result = await repository.remove({ id });
-    res.json(result);
-  } catch (error) {
-    res.status(500).json({ message: 'Error al eliminar el hotel', error });
+    await repository.remove({ id });
+    res.json({ message: 'Hotel eliminado' });
+  } catch (error:  any) {
+    const errorMessage = error.message || 'Error desconocido';
+    res.status(500).json({ message: 'Error al eliminar el hotel', errorMessage });
   }
 }
 

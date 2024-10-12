@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import e, { Request, Response, NextFunction } from 'express';
 import { ExcursionRepository } from '../repositories/excursion.repository.js';
 import { Excursion } from '../models/excursion.model.js';
 
@@ -18,8 +18,9 @@ async function findOne(req: Request, res: Response) {
     } else {
       res.status(404).json({ message: 'Excursion no encontrada' });
     }
-  } catch (error) {
-    res.status(500).json({ message: 'Error al obtener la excursion', error });
+  } catch (error: any) {
+    const errorMessage = error.message || 'Error desconocido';
+    res.status(500).json({ message: 'Error al obtener la excursion', errorMessage });
   }
 }
 
@@ -39,8 +40,9 @@ async function create(req: Request, res: Response) {
     );
     const result = await repository.save(excursion);
     res.json(result);
-  } catch (error) {
-    res.status(500).json({ message: 'Error al crear la excursion', error });
+  } catch (error: any) {
+    const errorMessage = error.message || 'Error desconocido';
+    res.status(500).json({ message: 'Error al crear la excursion', errorMessage });
   }
 }
 
@@ -61,18 +63,20 @@ async function update(req: Request, res: Response) {
     );
     const result = await repository.update({ id }, excursion);
     res.json(result);
-  } catch (error) {
-    res.status(500).json({ message: 'Error al actualizar la excursion', error });
+  } catch (error: any) {
+    const errorMessage = error.message || 'Error desconocido';
+    res.status(500).json({ message: 'Error al actualizar la excursion', errorMessage });
   }
 }
 
 async function remove(req: Request, res: Response) {
   try {
     const { id } = req.params;
-    const result = await repository.remove({ id });
-    res.json(result);
-  } catch (error) {
-    res.status(500).json({ message: 'Error al eliminar la excursion', error });
+    await repository.remove({ id });
+    res.json({ message: 'Excursion eliminada' });
+  } catch (error: any) {
+    const errorMessage = error.message || 'Error desconocido';
+    res.status(500).json({ message: 'Error al eliminar la excursion', errorMessage });
   }
 }
 
@@ -81,8 +85,9 @@ async function findByType(req: Request, res: Response) {
     const { tipo } = req.params;
     const excursiones = await repository.findByType({ tipo });
     res.json(excursiones);
-  } catch (error) {
-    res.status(500).json({ message: 'Error al obtener las excursiones', error });
+  } catch (error: any) {
+    const errorMessage = error.message || 'Error desconocido';
+    res.status(500).json({ message: 'Error al obtener las excursiones', errorMessage });
   }
 }
 

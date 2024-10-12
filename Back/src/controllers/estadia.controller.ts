@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import e, { Request, Response, NextFunction } from 'express';
 import { EstadiaRepository } from '../repositories/estadia.repository.js';
 import { Estadia } from '../models/estadia.model.js';
 
@@ -19,8 +19,9 @@ async function findOne(req: Request, res: Response) {
     } else {
       res.status(404).json({ message: 'Estadia no encontrada' });
     }
-  } catch (error) {
-    res.status(500).json({ message: 'Error al obtener el estadia', error });
+  } catch (error: any) {
+    const errorMessage = error.message || 'Error desconocido';
+    res.status(500).json({ message: 'Error al obtener el estadia', errorMessage });
   }
 }
 
@@ -35,8 +36,9 @@ async function create(req: Request, res: Response) {
     );
     const result = await repository.save(estadia);
     res.json(result);
-  } catch (error) {
-    res.status(500).json({ message: 'Error al crear la estadia', error });
+  } catch (error: any) {
+    const errorMessage = error.message || 'Error desconocido';
+    res.status(500).json({ message: 'Error al crear la estadia', errorMessage });
   }
 }
 
@@ -53,8 +55,9 @@ async function update(req: Request, res: Response) {
     );
     const result = await repository.update({ id }, estadia);
     res.json(result);
-  } catch (error) {
-    res.status(500).json({ message: 'Error al actualizar la estadia', error });
+  } catch (error: any) {
+    const errorMessage = error.message || 'Error desconocido';
+    res.status(500).json({ message: 'Error al actualizar la estadia', errorMessage });
   }
 }
 
@@ -62,10 +65,11 @@ async function remove(req: Request, res: Response) {
   try {
     const { id } = req.params;
 
-    const result = await repository.remove({ id });
-    res.json(result);
-  } catch (error) {
-    res.status(500).json({ message: 'Error al eliminar la estadia', error });
+    await repository.remove({ id });
+    res.json({ message: 'Estadia eliminada' });
+  } catch (error: any) {
+    const errorMessage = error.message || 'Error desconocido';
+    res.status(500).json({ message: 'Error al eliminar la estadia', errorMessage });
   }
 }
 
