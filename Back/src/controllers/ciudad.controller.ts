@@ -31,6 +31,8 @@ async function create(req: Request, res: Response) {
       req.body.nombre,
       req.body.descripcion,
       req.body.pais,
+      req.body.latitud,
+      req.body.longitud
     );
     const result = await repository.save(ciudad);
     res.json(result);
@@ -48,6 +50,8 @@ async function update(req: Request, res: Response) {
       req.body.nombre,
       req.body.descripcion,
       req.body.pais,
+      req.body.latitud,
+      req.body.longitud
     );
     const result = await repository.update({ id }, ciudad);
     res.json(result);

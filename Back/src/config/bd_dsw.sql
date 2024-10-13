@@ -19,7 +19,9 @@ CREATE TABLE ciudades (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
     descripcion VARCHAR(255) NOT NULL,
-    pais VARCHAR(100) NOT NULL
+    pais VARCHAR(100) NOT NULL,
+    latitud VARCHAR(250) NOT NULL,
+    longitud VARCHAR(250) NOT NULL
 );
 
 -- Tabla hoteles
@@ -158,14 +160,14 @@ CREATE TABLE reserva_transporte (
 
 -- Inserciones en tabla 'ciudades'
 INSERT INTO ciudades (nombre, descripcion, pais, latitud, longitud) VALUES 
-('Buenos Aires', 'Capital de Argentina', 'Argentina', -34.6037, -58.3816),
-('Madrid', 'Capital de España', 'España', 40.4168, -3.7038),
-('Nueva York', 'Ciudad en Estados Unidos', 'Estados Unidos', 40.7128, -74.0060),
-('Rio de Janeiro', 'Famosa por sus playas y el Cristo Redentor', 'Brasil', -22.9068, -43.1729),
-('Lima', 'Capital gastronómica de Sudamérica', 'Perú', -12.0464, -77.0428),
-('Cancún', 'Conocido por sus playas de arena blanca', 'México', 21.1619, -86.8515),
-('Barcelona', 'Conocida por su arquitectura y cultura', 'España', 41.3851, 2.1734),
-('Santiago', 'Capital de Chile, rodeada de montañas', 'Chile', -33.4489, -70.6693);
+('Buenos Aires', 'Capital de Argentina', 'Argentina', '-34.6037', '-58.3816'),
+('Madrid', 'Capital de España', 'España', '40.4168', '-3.7038'),
+('Nueva York', 'Ciudad en Estados Unidos', 'Estados Unidos', '40.7128', '-74.0060'),
+('Rio de Janeiro', 'Famosa por sus playas y el Cristo Redentor', 'Brasil', '-22.9068', '-43.1729'),
+('Lima', 'Capital gastronómica de Sudamérica', 'Perú', '-12.0464', '-77.0428'),
+('Cancún', 'Conocido por sus playas de arena blanca', 'México', '21.1619', '-86.8515'),
+('Barcelona', 'Conocida por su arquitectura y cultura', 'España', '41.3851', '2.1734'),
+('Santiago', 'Capital de Chile, rodeada de montañas', 'Chile', '-33.4489', '-70.6693');
 
 -- Inserciones en tabla 'transportes'
 INSERT INTO transportes (descripcion, capacidad, tipo, nombre_empresa, mail_empresa)

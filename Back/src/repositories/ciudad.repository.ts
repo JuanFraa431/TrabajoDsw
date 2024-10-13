@@ -24,8 +24,8 @@ export class CiudadRepository implements Repository<Ciudad> {
 
   public async save(item: Ciudad): Promise<Ciudad> {
     const [result] = (await pool.query(
-      'INSERT INTO ciudades (nombre, descripcion, pais) VALUES (?, ?, ?)',
-      [item.nombre, item.descripcion, item.pais]
+      'INSERT INTO ciudades (nombre, descripcion, pais, latitud, longitud) VALUES (?, ?, ?, ?, ?)',
+      [item.nombre, item.descripcion, item.pais, item.latitud, item.longitud]
     )) as RowDataPacket[];
     const affectedRows = (result as any).affectedRows;
     if (affectedRows == 1) {
@@ -38,8 +38,8 @@ export class CiudadRepository implements Repository<Ciudad> {
   public async update(item: { id: string }, ciudad: Ciudad): Promise<Ciudad | undefined> {
     const id = Number.parseInt(item.id);
     const [result] = (await pool.query(
-      'UPDATE ciudades SET nombre = ?, descripcion = ?, pais = ? WHERE id = ?',
-      [ciudad.nombre, ciudad.descripcion, ciudad.pais, id]
+      'UPDATE ciudades SET nombre = ?, descripcion = ?, pais = ?, latitud = ?, longitud = ? WHERE id = ?',
+      [ciudad.nombre, ciudad.descripcion, ciudad.pais, ciudad.latitud, ciudad.longitud, id]
     )) as RowDataPacket[];
     const affectedRows = (result as any).affectedRows;
     if (affectedRows == 1) {
