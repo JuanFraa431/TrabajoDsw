@@ -33,7 +33,7 @@ const Header = () => {
             <nav className="nav">
                 <ul>
                     <li>
-                        <Link to="/alojamiento" >Alojamiento</Link>
+                        <Link to="/hoteles" >Hoteles</Link>
                     </li>
                     <li>
                         <Link to="/paquetes" onClick={handleLinkClick} >Paquetes</Link>
@@ -51,7 +51,7 @@ const Header = () => {
             </nav>
             <div className="user">
                 <img src={userIcon} alt="User Icon" className="user-icon" />
-                <span>Hola! {userName}</span>
+                <a href='/vistaAdmin'>Hola! {userName}</a>
             </div>
         </header>
     );

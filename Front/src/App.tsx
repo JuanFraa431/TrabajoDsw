@@ -11,6 +11,7 @@ import PreFooter from './components/PreFooter';
 import CardDetail from './components/CardDetail';
 import Paquetes from './components/Paquete';
 import Filtro from './components/Filtro';
+import VistaAdmin from './components/VistaAdmin';
 
 const flightDetails = {
     destino: 'Madrid',
@@ -79,6 +80,11 @@ const App: React.FC = () => {
                             <Paquetes/>
                         </motion.div>
                         } />
+                    <Route path='/vistaAdmin' element = {
+                        <motion.div {...pageTransition}>
+                            <VistaAdmin/>
+                        </motion.div>
+                    }/>
                 </Routes>
             </AnimatePresence>
         </>
