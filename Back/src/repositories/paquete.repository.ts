@@ -115,7 +115,7 @@ export class PaqueteRepository implements Repository<Paquete> {
 
         const [paquetes] = await pool.query<RowDataPacket[]>(
             `
-            SELECT p.*, c.nombre
+            SELECT p.*, c.nombre, c.latitud, c.longitud
             FROM 
                     paquetes AS p
                 INNER JOIN

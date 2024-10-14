@@ -7,7 +7,7 @@ import Filtros from './FiltroVertical'; // Importar el componente de filtros
 const Paquetes: React.FC = () => {
     const location = useLocation();
     const { paquetes } = location.state || { paquetes: [] };
-
+    console.log(paquetes)
     return (
         <div className="container2">
             <Filtros />

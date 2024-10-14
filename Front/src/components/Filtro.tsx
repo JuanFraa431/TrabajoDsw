@@ -3,13 +3,17 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import '../styles/Filtro.css';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+
 
 const Filtro: React.FC = () => {
     const today = new Date(); 
     const tomorrow = new Date(today); 
     tomorrow.setDate(today.getDate() + 1); 
 
+
+    const location = useLocation();
+    const { paquetes } = location.state || { paquetes: [] };
     const [price, setPrice] = useState<number>(5000);
     const [startDate, setStartDate] = useState<Date | null>(today); 
     const [endDate, setEndDate] = useState<Date | null>(tomorrow);
