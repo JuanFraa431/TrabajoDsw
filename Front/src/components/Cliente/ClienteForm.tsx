@@ -11,6 +11,8 @@ interface Props {
 const ClienteForm: React.FC<Props> = ({ clienteEditado, onChange, onCancel, onSave }) => {
   if (!clienteEditado) return null;
 
+  const limpiarFecha = (fecha: string) => fecha.split('T')[0];
+
   return (
     <form onSubmit={(e) => { e.preventDefault(); onSave(); }}>
       <label htmlFor="nombre">Nombre:</label>
@@ -54,7 +56,7 @@ const ClienteForm: React.FC<Props> = ({ clienteEditado, onChange, onCancel, onSa
         id="fecha_nacimiento"
         type="date"
         value={clienteEditado.fecha_nacimiento}
-        onChange={(e) => onChange({ ...clienteEditado, fecha_nacimiento: e.target.value })}
+        onChange={(e) => onChange({ ...clienteEditado,  fecha_nacimiento: limpiarFecha(e.target.value),})}
         required
       />
       

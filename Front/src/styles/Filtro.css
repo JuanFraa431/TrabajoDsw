@@ -2,10 +2,12 @@
     display: flex;
     justify-content: center;
     background-size: cover;
-    background-image: url('https://cdn.discordapp.com/attachments/1096858436676898867/1295081045082767470/pngegg_azul.png?ex=670d59b6&is=670c0836&hm=129c2f453fdfc7e882b3ae603b8204e022c0f30fcdc416208d228681bfc8c380&');
     background-size: contain;
+    background-image: url(https://cdn.discordapp.com/attachments/1032393755745058947/1295463636680183899/f16809b48f922043783c918ab7f469d7.jpg?ex=670ebe07&is=670d6c87&hm=15a9eaf96e75da8893aae2e51475c96e490eef340cad6a68c3b68c7f293be443&);
     padding: 20px 90px 20px 90px;
 }
+
+
 
 
 .content {

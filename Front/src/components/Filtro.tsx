@@ -4,6 +4,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import '../styles/Filtro.css';
 import axios from 'axios';
 import { useNavigate, useLocation } from 'react-router-dom';
+import video from '../images/esteEs.mp4';
 
 
 const Filtro: React.FC = () => {

@@ -35,7 +35,7 @@ const FiltroVertical: React.FC = () => {
         <div className="filters">
             <div className="filter-section">
                 <h3>Mapa</h3>
-                <iframe src={iframeSrc} width="300" height="225" style={{ border: 0 }} allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade"></iframe>
+                <iframe src={iframeSrc} className="mapa" style={{ border: 0 }} allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade"></iframe>
                 <h3>Filtros más usados</h3>
                 <div className="filter-item">
                     <input

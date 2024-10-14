@@ -11,7 +11,7 @@ const BuscadorVuelos: React.FC = () => {
     const tomorrow = new Date(today);
     tomorrow.setDate(today.getDate() + 1);
 
-    const [price, setPrice] = useState<number>(5000);
+    const [price, setPrice] = useState<number>(200000);
     const [startDate, setStartDate] = useState<Date | null>(today);
     const [endDate, setEndDate] = useState<Date | null>(tomorrow);
     const [destination, setDestination] = useState<string>('');
@@ -103,8 +103,9 @@ const BuscadorVuelos: React.FC = () => {
                             <input
                                 type="range"
                                 id="price"
-                                min="0"
+                                min="200000"
                                 max="10000000"
+                                
                                 value={price}
                                 onChange={handlePriceChange}
                             />

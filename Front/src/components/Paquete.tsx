@@ -27,7 +27,9 @@ const Paquetes: React.FC = () => {
                         </div>
                     ))
                 ) : (
-                    <p>No se encontraron paquetes que coincidan con la búsqueda.</p>
+                    <div className='fail'>
+                        <p>No se encontraron paquetes que coincidan con la búsqueda.</p>
+                    </div>
                 )}
             </div>
         </div>
