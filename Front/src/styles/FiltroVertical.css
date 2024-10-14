@@ -1,0 +1,11 @@
+
+.filter-item {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.filter-item input{
+    margin-right: 10px; 
+}

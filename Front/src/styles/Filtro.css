@@ -2,7 +2,8 @@
     display: flex;
     justify-content: center;
     background-size: cover;
-    background-color: #0066ff9f;
+    background-image: url('https://cdn.discordapp.com/attachments/1096858436676898867/1295081045082767470/pngegg_azul.png?ex=670d59b6&is=670c0836&hm=129c2f453fdfc7e882b3ae603b8204e022c0f30fcdc416208d228681bfc8c380&');
+    background-size: contain;
     padding: 20px 90px 20px 90px;
 }
 
@@ -23,7 +24,7 @@
 }
 
 .formulario-buscador {
-    background: rgba(255, 255, 255, 0.6);
+    background: rgba(255, 255, 255, 0.821);
     margin-top: 10px;
     border-radius: 8px;
     gap: 15px;
@@ -103,13 +104,13 @@
     border: 1px solid #ccc;
     border-radius: 4px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    z-index: 10; /* Asegúrate de que el z-index esté por encima de otros elementos */
+    z-index: 10; 
 }
 
-/* Añadir un contenedor para manejar la posición del selector de fecha */
+
 .fechas {
     display: flex;
     align-items: center;
-    position: relative; /* Permite el uso de elementos absolutos dentro */
+    position: relative; 
 }
 
