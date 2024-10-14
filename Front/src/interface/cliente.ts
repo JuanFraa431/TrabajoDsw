@@ -4,6 +4,6 @@ export interface Cliente {
   apellido: string;
   dni: string;
   email: string;
-  fechaNacimiento: Date;
+  fecha_nacimiento: string;
   estado: string;
 }

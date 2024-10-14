@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
+
 import ClienteList from './Cliente/ClienteList';
+import ClienteForm from './Cliente/ClienteForm';
+
 import HotelList from './Hotel/HotelList';
 import HotelForm from './Hotel/HotelForm';
+
 import CiudadList from './Ciudad/CiudadList';
 import CiudadForm from './Ciudad/CiudadForm';
 
@@ -15,13 +19,16 @@ import '../styles/VistaAdmin.css';
 
 const VistaAdmin: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
   const [clientes, setClientes] = useState<Cliente[]>([]);
   const [hoteles, setHoteles] = useState<Hotel[]>([]);
   const [ciudades, setCiudades] = useState<Ciudad[]>([]);
 
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+
   const [ciudadEditada, setCiudadEditada] = useState<Ciudad | null>(null);
   const [hotelEditado, setHotelEditado] = useState<Hotel | null>(null);
+  const [clienteEditado, setClienteEditado] = useState<Cliente | null>(null);
 
   useEffect(() => {
     loadEntities('/api/cliente', setClientes);
@@ -39,48 +46,27 @@ const VistaAdmin: React.FC = () => {
     }
   };
 
-  const handleCrearHotel = async () => {
-    const nuevoHotel: Hotel = {
-      id: 0, // Asumiendo que el ID será generado en el backend
-      nombre: '',
-      direccion: '',
-      descripcion: '',
-      telefono: '',
-      email: '',
-      estrellas: 0,
-      id_ciudad: 0, // Esto será seleccionado por el usuario
-    };
-
-    setHotelEditado(nuevoHotel); // Establece el nuevo hotel para editar
-  };
-
-  const handleCrearCiudad = async () => {
-    const nuevaCiudad: Ciudad = {
-      id: 0, // Asumiendo que el ID será generado en el backend
-      nombre: '',
-      descripcion:'', 
-      pais: '', 
-      latitud:'', 
-      longitud:''
-      // Agrega otros atributos necesarios para Ciudad
-    };
-
-    setCiudadEditada(nuevaCiudad); // Establece la nueva ciudad para editar
-  };
-
-  const handleEditar = async (entity: any, endpoint: string) => {
+  const handleCrear = async (entity: any, endpoint: string, setState: React.Dispatch<React.SetStateAction<any[]>>) => {
     try {
-      await updateEntity(endpoint, entity.id, entity);
-      await loadEntities(endpoint, endpoint === '/api/ciudad' ? setCiudades : endpoint === '/api/hotel' ? setHoteles : setClientes);
-      setCiudadEditada(null);
-      setHotelEditado(null);
-      setErrorMessage(null); 
+      await createEntity(endpoint, entity);
+      await loadEntities(endpoint, setState);
+      setErrorMessage(null);
     } catch (error) {
-      setErrorMessage('Error al actualizar la entidad. Inténtalo de nuevo.');
+      setErrorMessage('Error al crear la entidad.');
     }
   };
 
-  const handleEliminar = async (id: number, endpoint: string, entityName: string) => {
+  const handleEditar = async (entity: any, endpoint: string, setState: React.Dispatch<React.SetStateAction<any[]>>) => {
+    try {
+      await updateEntity(endpoint, entity.id, entity);
+      await loadEntities(endpoint, setState);
+      setErrorMessage(null);
+    } catch (error) {
+      setErrorMessage('Error al actualizar la entidad.');
+    }
+  };
+
+  const handleEliminar = async (id: number, endpoint: string, entityName: string, setState: React.Dispatch<React.SetStateAction<any[]>>) => {
     const confirmacion = window.confirm(`¿Seguro que deseas eliminar el ${entityName} con id ${id}?`);
 
     if (!confirmacion) {
@@ -89,23 +75,29 @@ const VistaAdmin: React.FC = () => {
 
     try {
       await deleteEntity(endpoint, id);
-      await loadEntities(endpoint, endpoint === '/api/ciudad' ? setCiudades : endpoint === '/api/hotel' ? setHoteles : setClientes);
+      await loadEntities(endpoint, setState);
       setErrorMessage(null);
     } catch (error) {
-      setErrorMessage('Error al eliminar la entidad. Inténtalo de nuevo.');
+      setErrorMessage('Error al eliminar la entidad.');
     }
   };
 
   const renderList = () => {
     switch (selectedCategory) {
       case 'clientes':
-        return <ClienteList clientes={clientes} />;
-      case 'hoteles':
+        return (
+          <ClienteList 
+            clientes={clientes} 
+            onEdit={(cliente) => setClienteEditado(cliente)}
+            onDelete={(cliente) => handleEliminar(cliente.id, '/api/cliente', 'cliente', setClientes)}
+          />
+        );
+        case 'hoteles':
         return (
           <HotelList 
-            hoteles={hoteles} 
+          hoteles={hoteles} 
             onEdit={(hotel) => setHotelEditado(hotel)}
-            onDelete={(hotel) => handleEliminar(hotel.id, '/api/hotel', 'hotel')}
+            onDelete={(hotel) => handleEliminar(hotel.id, '/api/hotel', 'hotel', setHoteles)}
           />
         );
       case 'ciudades':
@@ -113,7 +105,7 @@ const VistaAdmin: React.FC = () => {
           <CiudadList
             ciudades={ciudades}
             onEdit={(ciudad) => setCiudadEditada(ciudad)}
-            onDelete={(ciudad) => handleEliminar(ciudad.id, '/api/ciudad', 'ciudad')}
+            onDelete={(ciudad) => handleEliminar(ciudad.id, '/api/ciudad', 'ciudad', setCiudades)}
           />
         );
       default:
@@ -132,27 +124,38 @@ const VistaAdmin: React.FC = () => {
       <div>{errorMessage && <p className="error-message">{errorMessage}</p>}</div>
       <div>{renderList()}</div>
 
-      {/* Mostrar el botón Crear Ciudad solo si la categoría seleccionada es 'ciudades' */}
       {selectedCategory === 'ciudades' && (
-        <button onClick={handleCrearCiudad}>Crear Ciudad</button>
+        <button onClick={() => setCiudadEditada({ id: 0, nombre: '', descripcion: '', pais: '', latitud: '', longitud: '' })}>
+          Crear Ciudad
+        </button>
       )}
 
-      {/* Mostrar el botón Crear Hotel solo si la categoría seleccionada es 'hoteles' */}
       {selectedCategory === 'hoteles' && (
-        <button onClick={handleCrearHotel}>Crear Hotel</button>
+        <button onClick={() => setHotelEditado({ id: 0, nombre: '', direccion: '', descripcion: '', telefono: '', email: '', estrellas: 0, id_ciudad: 0 })}>
+          Crear Hotel
+        </button>
       )}
+
+      {selectedCategory === 'clientes' && (
+      <button onClick={() => setClienteEditado({ id: 0, nombre: '', apellido: '', dni: '', email: '', fecha_nacimiento: '', estado: '' })}>
+        Crear Cliente
+      </button>
+)}
 
       <div>
         {hotelEditado && (
           <HotelForm
             hotelEditado={hotelEditado}
-            ciudades={ciudades} // Pasamos las ciudades al formulario
+            ciudades={ciudades}
             onChange={setHotelEditado}
             onCancel={() => setHotelEditado(null)}
             onSave={async () => {
-              await createEntity('/api/hotel', hotelEditado); // Aquí utilizamos POST para crear el hotel
-              await loadEntities('/api/hotel', setHoteles); // Recargar los hoteles
-              setHotelEditado(null); // Limpiar la edición
+              if (hotelEditado.id === 0) {
+                await handleCrear(hotelEditado, '/api/hotel', setHoteles);
+              } else {
+                await handleEditar(hotelEditado, '/api/hotel', setHoteles);
+              }
+              setHotelEditado(null);
             }}
           />
         )}
@@ -165,9 +168,29 @@ const VistaAdmin: React.FC = () => {
             onChange={setCiudadEditada}
             onCancel={() => setCiudadEditada(null)}
             onSave={async () => {
-              await createEntity('/api/ciudad', ciudadEditada); // Aquí utilizamos POST para crear la ciudad
-              await loadEntities('/api/ciudad', setCiudades); // Recargar las ciudades
-              setCiudadEditada(null); // Limpiar la edición
+              if (ciudadEditada.id === 0) {
+                await handleCrear(ciudadEditada, '/api/ciudad', setCiudades);
+              } else {
+                await handleEditar(ciudadEditada, '/api/ciudad', setCiudades);
+              }
+              setCiudadEditada(null);
+            }}
+          />
+        )}
+      </div>
+      <div>
+        {clienteEditado && (
+          <ClienteForm
+            clienteEditado={clienteEditado}
+            onChange={setClienteEditado}
+            onCancel={() => setClienteEditado(null)}
+            onSave={async () => {
+              if (clienteEditado.id === 0) {
+                await handleCrear(clienteEditado, '/api/cliente', setClientes);
+              } else {
+                await handleEditar(clienteEditado, '/api/cliente', setClientes);
+              }
+              setClienteEditado(null);
             }}
           />
         )}
