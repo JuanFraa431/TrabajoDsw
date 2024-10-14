@@ -1,14 +1,16 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Hotel } from '../../interface/hotel';
+import { Ciudad } from '../../interface/ciudad';
 
 interface Props {
   hotelEditado: Hotel | null;
+  ciudades: Ciudad[]; // Agregamos el tipo de ciudades
   onChange: (hotel: Hotel) => void;
   onCancel: () => void;
   onSave: () => void;
 }
 
-const HotelForm: React.FC<Props> = ({ hotelEditado, onChange, onCancel, onSave }) => {
+const HotelForm: React.FC<Props> = ({ hotelEditado, ciudades, onChange, onCancel, onSave }) => {
   if (!hotelEditado) return null;
 
   return (
@@ -55,13 +57,17 @@ const HotelForm: React.FC<Props> = ({ hotelEditado, onChange, onCancel, onSave }
         value={hotelEditado.estrellas}
         onChange={(e) => onChange({ ...hotelEditado, estrellas: parseInt(e.target.value, 10) })}
       />
-      <label htmlFor="id_ciudad">ID Ciudad:</label>
-      <input
+      <label htmlFor="id_ciudad">Ciudad:</label>
+      <select
         id="id_ciudad"
-        type="number"
         value={hotelEditado.id_ciudad}
         onChange={(e) => onChange({ ...hotelEditado, id_ciudad: parseInt(e.target.value, 10) })}
-      />
+      >
+        <option value="">Selecciona una ciudad</option> {/* Opción vacía por defecto */}
+        {ciudades.map((ciudad) => (
+          <option key={ciudad.id} value={ciudad.id}>{ciudad.nombre}</option>
+        ))}
+      </select>
       <button type="submit">Guardar cambios</button>
       <button type="button" onClick={onCancel}>Cancelar</button>
     </form>

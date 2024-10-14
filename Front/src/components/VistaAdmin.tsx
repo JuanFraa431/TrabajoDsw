@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from 'react';
-
 import ClienteList from './Cliente/ClienteList';
-
 import HotelList from './Hotel/HotelList';
 import HotelForm from './Hotel/HotelForm';
-
 import CiudadList from './Ciudad/CiudadList';
 import CiudadForm from './Ciudad/CiudadForm';
 
@@ -12,19 +9,17 @@ import { Ciudad } from '../interface/ciudad';
 import { Cliente } from '../interface/cliente';
 import { Hotel } from '../interface/hotel';
 
-import { fetchEntities, updateEntity, deleteEntity } from '../services/crudService';
+import { fetchEntities, updateEntity, deleteEntity, createEntity } from '../services/crudService';
 
 import '../styles/VistaAdmin.css';
 
 const VistaAdmin: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-
   const [clientes, setClientes] = useState<Cliente[]>([]);
   const [hoteles, setHoteles] = useState<Hotel[]>([]);
   const [ciudades, setCiudades] = useState<Ciudad[]>([]);
 
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-
   const [ciudadEditada, setCiudadEditada] = useState<Ciudad | null>(null);
   const [hotelEditado, setHotelEditado] = useState<Hotel | null>(null);
 
@@ -40,7 +35,37 @@ const VistaAdmin: React.FC = () => {
       setState(data);
     } catch (error) {
       console.error(`Error fetching data from ${endpoint}:`, error);
+      setErrorMessage('Error al cargar los datos.');
     }
+  };
+
+  const handleCrearHotel = async () => {
+    const nuevoHotel: Hotel = {
+      id: 0, // Asumiendo que el ID será generado en el backend
+      nombre: '',
+      direccion: '',
+      descripcion: '',
+      telefono: '',
+      email: '',
+      estrellas: 0,
+      id_ciudad: 0, // Esto será seleccionado por el usuario
+    };
+
+    setHotelEditado(nuevoHotel); // Establece el nuevo hotel para editar
+  };
+
+  const handleCrearCiudad = async () => {
+    const nuevaCiudad: Ciudad = {
+      id: 0, // Asumiendo que el ID será generado en el backend
+      nombre: '',
+      descripcion:'', 
+      pais: '', 
+      latitud:'', 
+      longitud:''
+      // Agrega otros atributos necesarios para Ciudad
+    };
+
+    setCiudadEditada(nuevaCiudad); // Establece la nueva ciudad para editar
   };
 
   const handleEditar = async (entity: any, endpoint: string) => {
@@ -106,21 +131,44 @@ const VistaAdmin: React.FC = () => {
       </div>
       <div>{errorMessage && <p className="error-message">{errorMessage}</p>}</div>
       <div>{renderList()}</div>
-      <div>{hotelEditado && (
+
+      {/* Mostrar el botón Crear Ciudad solo si la categoría seleccionada es 'ciudades' */}
+      {selectedCategory === 'ciudades' && (
+        <button onClick={handleCrearCiudad}>Crear Ciudad</button>
+      )}
+
+      {/* Mostrar el botón Crear Hotel solo si la categoría seleccionada es 'hoteles' */}
+      {selectedCategory === 'hoteles' && (
+        <button onClick={handleCrearHotel}>Crear Hotel</button>
+      )}
+
+      <div>
+        {hotelEditado && (
           <HotelForm
             hotelEditado={hotelEditado}
+            ciudades={ciudades} // Pasamos las ciudades al formulario
             onChange={setHotelEditado}
             onCancel={() => setHotelEditado(null)}
-            onSave={() => handleEditar(hotelEditado, '/api/hotel')}
+            onSave={async () => {
+              await createEntity('/api/hotel', hotelEditado); // Aquí utilizamos POST para crear el hotel
+              await loadEntities('/api/hotel', setHoteles); // Recargar los hoteles
+              setHotelEditado(null); // Limpiar la edición
+            }}
           />
         )}
       </div>
-      <div>{ciudadEditada && (
+      
+      <div>
+        {ciudadEditada && (
           <CiudadForm
             ciudadEditada={ciudadEditada}
             onChange={setCiudadEditada}
             onCancel={() => setCiudadEditada(null)}
-            onSave={() => handleEditar(ciudadEditada, '/api/ciudad')}
+            onSave={async () => {
+              await createEntity('/api/ciudad', ciudadEditada); // Aquí utilizamos POST para crear la ciudad
+              await loadEntities('/api/ciudad', setCiudades); // Recargar las ciudades
+              setCiudadEditada(null); // Limpiar la edición
+            }}
           />
         )}
       </div>
