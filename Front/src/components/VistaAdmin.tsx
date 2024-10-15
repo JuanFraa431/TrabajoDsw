@@ -75,7 +75,6 @@ const VistaAdmin: React.FC = () => {
 
   const handleEliminar = async (id: number, endpoint: string, entityName: string, setState: React.Dispatch<React.SetStateAction<any[]>>) => {
     const confirmacion = window.confirm(`¿Seguro que deseas eliminar el ${entityName} con id ${id}?`);
-
     if (!confirmacion) {
       return;
     }
@@ -153,7 +152,7 @@ const VistaAdmin: React.FC = () => {
       )}
 
       {selectedCategory === 'clientes' && (
-      <button onClick={() => setClienteEditado({ id: 0, nombre: '', apellido: '', dni: '', email: '', fecha_nacimiento: '', estado: '' })}>
+      <button onClick={() => setClienteEditado({ id: 0, nombre: '', apellido: '', dni: '', email: '', fecha_nacimiento: '', estado: '', username: '', password: '', tipo_usuario: 'cliente'})}>
         Crear Cliente
       </button>
       )}

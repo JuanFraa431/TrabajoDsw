@@ -22,8 +22,20 @@ export class ClienteRepository implements Repository<Cliente>{
     }
 
     public async save(item: Cliente): Promise<Cliente> {
-        const [result] = await pool.query('INSERT INTO clientes (nombre, apellido, DNI, email, fecha_nacimiento, estado) VALUES (?, ?, ?, ?, ?, ?)',
-            [item.nombre, item.apellido, item.dni, item.email, item.fechaNacimiento,item.estado]) as RowDataPacket[]
+        const [result] = (await pool.query(
+          'INSERT INTO clientes (nombre, apellido, DNI, email, fecha_nacimiento, estado, username, password, tipo_usuario) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+          [
+            item.nombre,
+            item.apellido,
+            item.dni,
+            item.email,
+            item.fechaNacimiento,
+            item.estado,
+            item.username,
+            item.password,
+            item.tipo_usuario
+          ]
+        )) as RowDataPacket[];
         const affectedRows = (result as any).affectedRows
         if(affectedRows == 1){
             return item
@@ -35,7 +47,7 @@ export class ClienteRepository implements Repository<Cliente>{
     public async update(item: {id:string}, cliente: Cliente): Promise<Cliente | undefined> {
         const id = Number.parseInt(item.id)
         const [result] = (await pool.query(
-          'UPDATE clientes SET nombre = ?, apellido = ?, dni = ?, email = ?, fecha_nacimiento = ?, estado = ? WHERE id = ?',
+          'UPDATE clientes SET nombre = ?, apellido = ?, dni = ?, email = ?, fecha_nacimiento = ?, estado = ?, username = ?, password = ?, tipo_usuario = ? WHERE id = ?',
           [
             cliente.nombre,
             cliente.apellido,
@@ -43,7 +55,10 @@ export class ClienteRepository implements Repository<Cliente>{
             cliente.email,
             cliente.fechaNacimiento,
             cliente.estado,
-            id,
+            cliente.username,
+            cliente.password,
+            cliente.tipo_usuario,
+            id
           ]
         )) as RowDataPacket[];
         const affectedRows = (result as any).affectedRows
@@ -62,5 +77,15 @@ export class ClienteRepository implements Repository<Cliente>{
         if(affectedRows == 0){
             throw new Error('No se ha podido borrar el cliente')
         }
+    }
+
+    public async login(username: string, password: string): Promise<Cliente | undefined> {
+        const [clientes] = await pool.query<RowDataPacket[]>('SELECT * FROM clientes where username = ? and password = ?',
+            [username, password])
+        if(clientes.length == 0){
+            return undefined
+        }
+        const cliente = clientes[0] as Cliente 
+        return cliente
     }
 }

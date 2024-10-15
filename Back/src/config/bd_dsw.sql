@@ -62,7 +62,11 @@ CREATE TABLE clientes (
     dni VARCHAR(50) NOT NULL,
     email VARCHAR(255) NOT NULL,
     fecha_nacimiento DATE NOT NULL,
-    estado BOOLEAN NOT NULL
+    estado BOOLEAN NOT NULL,
+    username VARCHAR(100) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    tipo_usuario VARCHAR(50) NOT NULL,
+    unique(username)
 );
 
 -- Tabla excursiones
@@ -212,11 +216,12 @@ VALUES
 (true, 'Viaje a Santiago con tour a Valparaíso', 950.00, '2025-01-06', '2025-01-14', "https://www.hotelinfo.com.ar/uploads/6614492b47650.jpg");
 
 -- Inserciones en tabla 'clientes'
-INSERT INTO clientes (nombre, apellido, dni, email, fecha_nacimiento, estado)
+INSERT INTO clientes (nombre, apellido, dni, email, fecha_nacimiento, estado, username, password, tipo_usuario)
 VALUES
-('Juan', 'Pérez', '12345678', 'juan.perez@mail.com', '1980-05-15', true),
-('María', 'Gómez', '87654321', 'maria.gomez@mail.com', '1990-03-10', true),
-('Pedro', 'Fernández', '45678912', 'pedro.fernandez@mail.com', '1985-07-20', false);
+('Juan', 'Pérez', '12345678', 'juan.perez@mail.com', '1980-05-15', true, 'juanperez', '123456', 'cliente'),
+('María', 'Gómez', '87654321', 'maria.gomez@mail.com', '1990-03-10', true, 'mariagomez', '123456', 'cliente'),
+('Pedro', 'Fernández', '45678912', 'pedro.fernandez@mail.com', '1985-07-20', false, 'pedrofernandez', '123456', 'cliente'),
+('Admin', 'Admin', '12345678', 'admin@admin', '1980-05-15', true, 'admin', 'admin', 'admin');
 
 -- Inserciones en tabla 'excursiones'
 INSERT INTO excursiones (nombre, tipo, descripcion, horario, nro_personas_max, nombre_empresa, mail_empresa, precio, id_ciudad)

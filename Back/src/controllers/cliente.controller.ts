@@ -27,7 +27,7 @@ async function findOne(req: Request, res: Response) {
 
 async function create(req: Request, res: Response) {
     try {
-        const cliente = new Cliente(req.body.id,req.body.nombre, req.body.apellido, req.body.dni, req.body.email, req.body.fecha_nacimiento, req.body.estado);
+        const cliente = new Cliente(req.body.id,req.body.nombre, req.body.apellido, req.body.dni, req.body.email, req.body.fecha_nacimiento, req.body.estado, req.body.username, req.body.password, req.body.tipo_usuario);
         const result = await repository.save(cliente);
         res.json(result);
     } catch (error: any) {
@@ -39,7 +39,7 @@ async function create(req: Request, res: Response) {
 async function update(req: Request, res: Response) {
     try {
         const { id } = req.params;
-        const cliente = new Cliente(req.body.id,req.body.nombre, req.body.apellido, req.body.dni, req.body.email, req.body.fecha_nacimiento, req.body.estado);
+        const cliente = new Cliente(req.body.id,req.body.nombre, req.body.apellido, req.body.dni, req.body.email, req.body.fecha_nacimiento, req.body.estado, req.body.username, req.body.password, req.body.tipo_usuario);
         const result = await repository.update({ id }, cliente);
         res.json(result);
     } catch (error: any) {
@@ -51,7 +51,7 @@ async function update(req: Request, res: Response) {
 async function remove(req: Request, res: Response) {
     try {
         const { id } = req.params;
-        const result = await repository.remove({ id });
+        await repository.remove({ id });
         res.json({ message: 'Cliente eliminado' });
     } catch (error: any) {
         const errorMessage = error.message || 'Error desconocido';
@@ -59,4 +59,19 @@ async function remove(req: Request, res: Response) {
     }
 }
 
-export { findAll, findOne, create, update, remove };
+async function login(req: Request, res: Response) {
+    try {
+        const { username, password } = req.body;
+        const cliente = await repository.login(username, password);
+        if (cliente) {
+            res.json(cliente);
+        } else {
+            res.status(404).json({ message: 'Cliente no encontrado' });
+        }
+    } catch (error: any) {
+        const errorMessage = error.message || 'Error desconocido';
+        res.status(500).json({ message: 'Error al obtener el cliente', errorMessage });
+    }
+}
+
+export { findAll, findOne, create, update, remove, login };

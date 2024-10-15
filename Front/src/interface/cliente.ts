@@ -6,4 +6,7 @@ export interface Cliente {
   email: string;
   fecha_nacimiento: string;
   estado: string;
+  username: string;
+  password: string;
+  tipo_usuario: string;
 }

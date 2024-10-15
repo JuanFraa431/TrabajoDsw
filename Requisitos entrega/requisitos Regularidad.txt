@@ -18,7 +18,7 @@ Requisitos del FrontEnd:
 5) visualizar la app correctamente en al menos 3 diferentes breackpoints: sm md lg 🟥 
 6) buenas practicas UX 🟩 
 7) manejo de eventos y de errores de forma amigable para el usuario 🟩
-8) implementar al menos un servicio 🟥
+8) implementar al menos un servicio 🟨
 9) modelo de datos, interfaces y tipos de datos custom 🟩
 10) implementar un patron de diseño orientado a objetos 🟨
 11) Package.json 🟩
@@ -28,7 +28,7 @@ Requisitos Funcionales:
 2) 1 CRUD dependiente cada 2 integrantes 🟩
 3) 1 listado con filtro cada 2 integrantes 🟨
 4) para cada listado mostrar un detalle 🟥
-5) 1 CUU con valor para el negocio cada 2 integrantes 🟥
+5) 1 CUU con valor para el negocio cada 2 integrantes 🟨
 
 Requisitos preentrega: 
 1) README.md 🟨

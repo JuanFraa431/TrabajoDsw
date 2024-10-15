@@ -68,6 +68,32 @@ const ClienteForm: React.FC<Props> = ({ clienteEditado, onChange, onCancel, onSa
         onChange={(e) => onChange({ ...clienteEditado, estado: e.target.value })}
         required
       />
+      <label htmlFor="username">Username:</label>
+      <input
+        id="username"
+        type="text"
+        value={clienteEditado.username}
+        onChange={(e) => onChange({ ...clienteEditado, username: e.target.value })}
+        required
+      />
+      <label htmlFor="password">Password:</label>
+      <input
+        id="password"
+        type="password"
+        value={clienteEditado.password}
+        onChange={(e) => onChange({ ...clienteEditado, password: e.target.value })}
+        required
+      />
+      <label htmlFor="tipo_usuario">Tipo de Usuario:</label>
+      <select
+        id="tipo_usuario"
+        value={clienteEditado.tipo_usuario}
+        onChange={(e) => onChange({ ...clienteEditado, tipo_usuario: e.target.value })}
+        required
+        >
+        <option value="admin">Admin</option>
+        <option value="cliente">Cliente</option>
+      </select>
 
       <button type="submit">Guardar cambios</button>
       <button type="button" onClick={onCancel}>Cancelar</button>

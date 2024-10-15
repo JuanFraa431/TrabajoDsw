@@ -12,6 +12,8 @@ import CardDetail from './components/CardDetail';
 import Paquetes from './components/Paquete';
 import Filtro from './components/Filtro';
 import VistaAdmin from './components/VistaAdmin';
+import Login from './components/Login';
+import DetalleCliente from './components/Cliente/DetalleCliente';
 
 const flightDetails = {
     destino: 'Madrid',
@@ -83,6 +85,16 @@ const App: React.FC = () => {
                     <Route path='/vistaAdmin' element = {
                         <motion.div {...pageTransition}>
                             <VistaAdmin/>
+                        </motion.div>
+                    }/>
+                    <Route path = '/login' element = {
+                        <motion.div {...pageTransition}>
+                            <Login/>
+                        </motion.div>
+                    }/>
+                    <Route path = '/detalleCliente' element = {
+                        <motion.div {...pageTransition}>
+                            <DetalleCliente/>
                         </motion.div>
                     }/>
                 </Routes>
