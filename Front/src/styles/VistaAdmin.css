@@ -1,0 +1,209 @@
+/* VistaAdmin.css */
+body {
+    font-family: "Roboto", sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 0;
+}
+
+.vista-admin {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+    font-size: 2.4rem;
+}
+
+.category-buttons {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.category-buttons button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin: 0 10px;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.category-buttons button:hover {
+    background-color: #0056b3;
+}
+
+.category-buttons button:focus {
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.8);
+}
+
+.error-message {
+    color: red;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* Estilo de las tarjetas (cards) */
+.card-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+.card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+.card h3 {
+    margin-top: 0;
+    font-size: 1.5rem;
+    color: #007bff;
+}
+
+.card p {
+    margin: 10px 0;
+    font-size: 1rem;
+    color: #555;
+}
+
+.card-actions {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+button.crear-btn {
+    background-color: #28a745;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    margin: 10px 0;
+    display: block;
+    transition: background-color 0.3s ease;
+}
+
+button.crear-btn:hover {
+    background-color: #218838;
+}
+
+button.editar-btn,
+button.eliminar-btn {
+    background-color: #ffc107;
+    color: black;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    margin-right: 10px;
+    transition: background-color 0.3s ease;
+}
+
+button.editar-btn:hover {
+    background-color: #e0a800;
+}
+
+button.eliminar-btn {
+    background-color: #dc3545;
+}
+
+button.eliminar-btn:hover {
+    background-color: #c82333;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    margin: 20px 0;
+}
+
+form input,
+form select {
+    padding: 10px;
+    margin: 5px 0 15px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+form input:focus,
+form select:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.8);
+}
+
+form button {
+    padding: 10px;
+    font-size: 1rem;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+form button:hover {
+    background-color: #0056b3;
+}
+
+form .cancel-btn {
+    background-color: #6c757d;
+}
+
+form .cancel-btn:hover {
+    background-color: #5a6268;
+}
+
+@media (max-width: 768px) {
+    .category-buttons {
+        flex-direction: column;
+    }
+
+    .category-buttons button {
+        margin: 10px 0;
+        width: 100%;
+    }
+
+    form {
+        padding: 10px;
+    }
+}
+
+.boton-crear {
+    background-color: #007bff;
+    border: none;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.boton-crear:hover {
+    background-color: #0056b3;
+}
+

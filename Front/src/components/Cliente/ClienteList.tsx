@@ -1,28 +1,31 @@
 import React from 'react';
 import { Cliente } from '../../interface/cliente';
-import '../../styles/Cliente/ClienteList.css';
+import '../../styles/List.css';
 
-interface Props {
+interface ClienteListProps {
   clientes: Cliente[];
   onEdit: (cliente: Cliente) => void;
   onDelete: (cliente: Cliente) => void;
 }
 
-const ClienteList: React.FC<Props> = ({ clientes, onEdit, onDelete }) => {
+const ClienteList: React.FC<ClienteListProps> = ({ clientes, onEdit, onDelete }) => {
   return (
-    <ul>
-      {clientes.map(cliente => (
-        <li key={cliente.id}>
-          <h3>{cliente.nombre} {cliente.apellido}</h3>
-          <p><strong>DNI:</strong> {cliente.dni}</p>
-          <p className={cliente.estado == '1' ? 'p-activo' : 'p-inactivo'}>
-            <strong>Estado:</strong> {cliente.estado == '1' ? 'Activo' : 'Dado de baja'}
-          </p>
-          <button className="boton-editar" onClick={() => onEdit(cliente)}>Editar</button>
-          <button className='boton-eliminar' onClick={() => onDelete(cliente)}>Eliminar</button>
-        </li>
+    <div className="card-list">
+      {clientes.map((cliente) => (
+        <div key={cliente.id} className="card">
+          <div className="card-content">
+            <h3>{cliente.nombre} {cliente.apellido}</h3>
+            <p>Email: {cliente.email}</p>
+            <p>DNI: {cliente.dni}</p>
+            <p>Estado: {cliente.estado}</p>
+          </div>
+          <div className="card-actions">
+            <button onClick={() => onEdit(cliente)}>Editar</button>
+            <button onClick={() => onDelete(cliente)}>Eliminar</button>
+          </div>
+        </div>
       ))}
-    </ul>
+    </div>
   );
 };
 

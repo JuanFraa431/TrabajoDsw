@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import '../styles/VistaAdmin.css';
 
 import ClienteList from './Cliente/ClienteList';
 import ClienteForm from './Cliente/ClienteForm';
@@ -140,25 +141,25 @@ const VistaAdmin: React.FC = () => {
       <div>{renderList()}</div>
 
       {selectedCategory === 'ciudades' && (
-        <button onClick={() => setCiudadEditada({ id: 0, nombre: '', descripcion: '', pais: '', latitud: '', longitud: '' })}>
+        <button className='boton-crear' onClick={() => setCiudadEditada({ id: 0, nombre: '', descripcion: '', pais: '', latitud: '', longitud: '' })}>
           Crear Ciudad
         </button>
       )}
 
       {selectedCategory === 'hoteles' && (
-        <button onClick={() => setHotelEditado({ id: 0, nombre: '', direccion: '', descripcion: '', telefono: '', email: '', estrellas: 0, id_ciudad: 0 })}>
+        <button className='boton-crear' onClick={() => setHotelEditado({ id: 0, nombre: '', direccion: '', descripcion: '', telefono: '', email: '', estrellas: 0, id_ciudad: 0 })}>
           Crear Hotel
         </button>
       )}
 
       {selectedCategory === 'clientes' && (
-      <button onClick={() => setClienteEditado({ id: 0, nombre: '', apellido: '', dni: '', email: '', fecha_nacimiento: '', estado: '', username: '', password: '', tipo_usuario: 'cliente'})}>
+      <button className='boton-crear' onClick={() => setClienteEditado({ id: 0, nombre: '', apellido: '', dni: '', email: '', fecha_nacimiento: '', estado: '', username: '', password: '', tipo_usuario: 'cliente'})}>
         Crear Cliente
       </button>
       )}
 
       {selectedCategory === 'excursiones' && (
-        <button onClick={() => setExcursionEditada({ id: 0, nombre: '', descripcion: '', tipo: '', horario: '', nro_personas_max: 0, nombre_empresa: '', mail_empresa: '', precio: 0, id_ciudad: 0 })}>
+        <button className='boton-crear' onClick={() => setExcursionEditada({ id: 0, nombre: '', descripcion: '', tipo: '', horario: '', nro_personas_max: 0, nombre_empresa: '', mail_empresa: '', precio: 0, id_ciudad: 0 })}>
           Crear Excursión
         </button>
       )}

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Hotel } from '../../interface/hotel';
+import '../../styles/Card.css';
 
 interface HotelListProps {
   hoteles: Hotel[];
@@ -9,16 +10,23 @@ interface HotelListProps {
 
 const HotelList: React.FC<HotelListProps> = ({ hoteles, onEdit, onDelete }) => {
   return (
-    <ul>
+    <div className="card-list">
       {hoteles.map((hotel) => (
-        <li key={hotel.id}>
-          <h3>{hotel.nombre}</h3>
-          <p><strong>Descripción:</strong> {hotel.descripcion}</p>
-          <button className="boton-editar" onClick={() => onEdit(hotel)}>Editar</button>
-          <button className="boton-eliminar" onClick={() => onDelete(hotel)}>Eliminar</button>
-        </li>
+        <div key={hotel.id} className="card">
+          <div className="card-content">
+            <h3>{hotel.nombre}</h3>
+            <p>Dirección: {hotel.direccion}</p>
+            <p>Estrellas: {hotel.estrellas}</p>
+            <p>Teléfono: {hotel.telefono}</p>
+            <p>Email: {hotel.email}</p>
+          </div>
+          <div className="card-actions">
+            <button onClick={() => onEdit(hotel)}>Editar</button>
+            <button onClick={() => onDelete(hotel)}>Eliminar</button>
+          </div>
+        </div>
       ))}
-    </ul>
+    </div>
   );
 };
 

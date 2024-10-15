@@ -105,7 +105,6 @@ const BuscadorVuelos: React.FC = () => {
                                 id="price"
                                 min="200000"
                                 max="10000000"
-                                
                                 value={price}
                                 onChange={handlePriceChange}
                             />

@@ -1,26 +1,31 @@
 import React from 'react';
 import { Ciudad } from '../../interface/ciudad';
+import '../../styles/Card.css';
 
-interface Props {
+interface CiudadListProps {
   ciudades: Ciudad[];
   onEdit: (ciudad: Ciudad) => void;
   onDelete: (ciudad: Ciudad) => void;
 }
 
-const CiudadList: React.FC<Props> = ({ ciudades, onEdit, onDelete }) => {
+const CiudadList: React.FC<CiudadListProps> = ({ ciudades, onEdit, onDelete }) => {
   return (
-    <ul>
-      {ciudades.map(ciudad => (
-        <div className="ciudad-card" key={ciudad.id}>
-          <div className="ciudad-info">
+    <div className="card-list">
+      {ciudades.map((ciudad) => (
+        <div key={ciudad.id} className="card">
+          <div className="card-content">
             <h3>{ciudad.nombre}</h3>
-            <p><strong>Descripcion:</strong> {ciudad.descripcion}</p>
-            <button className="boton-editar" onClick={() => onEdit(ciudad)}>Editar</button>
-            <button className='boton-eliminar' onClick={() => onDelete(ciudad)}>Eliminar</button>
+            <p>País: {ciudad.pais}</p>
+            <p>Descripción: {ciudad.descripcion}</p>
+            <p>Coordenadas: {ciudad.latitud}, {ciudad.longitud}</p>
+          </div>
+          <div className="card-actions">
+            <button onClick={() => onEdit(ciudad)}>Editar</button>
+            <button onClick={() => onDelete(ciudad)}>Eliminar</button>
           </div>
         </div>
       ))}
-    </ul>
+    </div>
   );
 };
 
