@@ -9,9 +9,13 @@ import HotelForm from './Hotel/HotelForm';
 import CiudadList from './Ciudad/CiudadList';
 import CiudadForm from './Ciudad/CiudadForm';
 
+import ExcursionList from './Excursion/ExcursionList';
+import ExcursionForm from './Excursion/ExcursionForm';
+
 import { Ciudad } from '../interface/ciudad';
 import { Cliente } from '../interface/cliente';
 import { Hotel } from '../interface/hotel';
+import { Excursion } from '../interface/excursion';
 
 import { fetchEntities, updateEntity, deleteEntity, createEntity } from '../services/crudService';
 
@@ -23,17 +27,20 @@ const VistaAdmin: React.FC = () => {
   const [clientes, setClientes] = useState<Cliente[]>([]);
   const [hoteles, setHoteles] = useState<Hotel[]>([]);
   const [ciudades, setCiudades] = useState<Ciudad[]>([]);
+  const [excursiones, setExcursiones] = useState<Excursion[]>([]);
 
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   const [ciudadEditada, setCiudadEditada] = useState<Ciudad | null>(null);
   const [hotelEditado, setHotelEditado] = useState<Hotel | null>(null);
   const [clienteEditado, setClienteEditado] = useState<Cliente | null>(null);
+  const [excursionEditada, setExcursionEditada] = useState<Excursion | null>(null);
 
   useEffect(() => {
     loadEntities('/api/cliente', setClientes);
     loadEntities('/api/hotel', setHoteles);
     loadEntities('/api/ciudad', setCiudades);
+    loadEntities('/api/excursion', setExcursiones);
   }, []);
 
   const loadEntities = async (endpoint: string, setState: React.Dispatch<React.SetStateAction<any[]>>) => {
@@ -108,6 +115,14 @@ const VistaAdmin: React.FC = () => {
             onDelete={(ciudad) => handleEliminar(ciudad.id, '/api/ciudad', 'ciudad', setCiudades)}
           />
         );
+      case 'excursiones':
+        return (
+          <ExcursionList
+            excursiones={excursiones}
+            onEdit={(excursion) => setExcursionEditada(excursion)}
+            onDelete={(excursion) => handleEliminar(excursion.id, '/api/excursion', 'excursión', setExcursiones)}
+          />
+        );
       default:
         return <p>Selecciona una categoría para ver los registros.</p>;
     }
@@ -120,6 +135,7 @@ const VistaAdmin: React.FC = () => {
         <button onClick={() => setSelectedCategory('clientes')}>Clientes</button>
         <button onClick={() => setSelectedCategory('hoteles')}>Hoteles</button>
         <button onClick={() => setSelectedCategory('ciudades')}>Ciudades</button>
+        <button onClick={() => setSelectedCategory('excursiones')}>Excursiones</button>
       </div>
       <div>{errorMessage && <p className="error-message">{errorMessage}</p>}</div>
       <div>{renderList()}</div>
@@ -140,7 +156,13 @@ const VistaAdmin: React.FC = () => {
       <button onClick={() => setClienteEditado({ id: 0, nombre: '', apellido: '', dni: '', email: '', fecha_nacimiento: '', estado: '' })}>
         Crear Cliente
       </button>
-)}
+      )}
+
+      {selectedCategory === 'excursiones' && (
+        <button onClick={() => setExcursionEditada({ id: 0, nombre: '', descripcion: '', tipo: '', horario: '', nro_personas_max: 0, nombre_empresa: '', mail_empresa: '', precio: 0, id_ciudad: 0 })}>
+          Crear Excursión
+        </button>
+      )}
 
       <div>
         {hotelEditado && (
@@ -191,6 +213,24 @@ const VistaAdmin: React.FC = () => {
                 await handleEditar(clienteEditado, '/api/cliente', setClientes);
               }
               setClienteEditado(null);
+            }}
+          />
+        )}
+      </div>
+      <div>
+        {excursionEditada && (
+          <ExcursionForm
+            excursionEditada={excursionEditada}
+            ciudades={ciudades}
+            onChange={setExcursionEditada}
+            onCancel={() => setExcursionEditada(null)}
+            onSave={async () => {
+              if (excursionEditada.id === 0) {
+                await handleCrear(excursionEditada, '/api/excursion', setExcursiones);
+              } else {
+                await handleEditar(excursionEditada, '/api/excursion', setExcursiones);
+              }
+              setExcursionEditada(null);
             }}
           />
         )}

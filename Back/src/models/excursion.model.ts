@@ -1,5 +1,3 @@
-import { Ciudad } from './ciudad.model.js';
-
 export class Excursion {
   constructor(
     public id: number,
