@@ -1,3 +1,9 @@
+CREATE USER IF NOT EXISTS 'dsw'@'%' IDENTIFIED BY 'dsw';
+
+GRANT ALL PRIVILEGES ON agenciadeviajes.* TO 'dsw'@'%';
+
+FLUSH PRIVILEGES;
+
 DROP DATABASE IF EXISTS agenciadeviajes;
 
 -- Crear la base de datos
