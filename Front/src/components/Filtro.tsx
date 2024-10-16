@@ -11,7 +11,7 @@ const Filtro: React.FC = () => {
     tomorrow.setDate(today.getDate() + 1);
 
     const location = useLocation();
-    const { paquetes, filters } = location.state || { paquetes: [], filters: {} };
+    const { paquetes, filters = {} } = location.state || { paquetes: [], filters: {} };
 
     const defaultFilters = {
         price: 5000,
@@ -20,10 +20,11 @@ const Filtro: React.FC = () => {
         destination: ''
     };
 
-    const [price, setPrice] = useState<number>(filters.price || defaultFilters.price);
+    // Utilizando los valores predeterminados si `filters` no los proporciona
+    const [price, setPrice] = useState<number>(filters.price ?? defaultFilters.price);
     const [startDate, setStartDate] = useState<Date | null>(filters.startDate ? new Date(filters.startDate) : defaultFilters.startDate);
     const [endDate, setEndDate] = useState<Date | null>(filters.endDate ? new Date(filters.endDate) : defaultFilters.endDate);
-    const [destination, setDestination] = useState<string>(filters.destination || defaultFilters.destination);
+    const [destination, setDestination] = useState<string>(filters.destination ?? defaultFilters.destination);
     const navigate = useNavigate();
 
     const handlePriceChange = (event: React.ChangeEvent<HTMLInputElement>) => {

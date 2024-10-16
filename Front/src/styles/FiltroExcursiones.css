@@ -41,3 +41,27 @@
   display: flex;
   justify-content: center;
 }
+
+
+.filter-item {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.filter-item input{
+  margin-right: 10px; 
+}
+
+.container-filters {
+  width: 95%;
+  padding: 20px;
+  background-color: #ffffff;
+  border: 1px solid #dbdbdb;
+  border-radius: 10px;
+  align-self: start;
+  height: auto;
+  margin-top: 20px;
+  margin-left: 10px;
+}

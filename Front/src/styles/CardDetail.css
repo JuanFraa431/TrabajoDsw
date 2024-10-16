@@ -1,73 +1,201 @@
-.container-detail {
-    width: 80%;
-    margin: 20px auto;
-}
 
-.card-detail {
-    background: #fff;
-    border-radius: 10px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
+.card-detail-container {
+    max-width: 1200px;
+    margin: 50px auto;
+    padding: 20px;
     display: flex;
     flex-direction: column;
-    text-align: left;
 }
 
-.card-detail-img {
-    width: 100%;
-    height: 250px;
-    object-fit: cover;
+.title {
+    font-size: 2rem;
+    margin-bottom: 20px;
 }
 
-.card-detail-body {
-    padding: 20px;
-}
-
-.card-detail-body h2 {
-    font-size: 24px;
+.package-id {
+    font-size: 1.2rem;
     margin-bottom: 10px;
 }
 
-.card-detail-origen {
-    font-size: 18px;
-    color: #888;
+/* Layout de imagen y detalles */
+.detail-layout {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
 }
 
-.card-detail-info {
-    margin: 20px 0;
+/* Contenedor de la imagen */
+.image-container {
+    flex: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.card-detail-info p {
-    margin: 5px 0;
-    font-size: 16px;
+.package-image {
+    width: 400px; 
+    height: 300px; 
+    object-fit: cover; 
+    border-radius: 8px;
 }
 
-.card-detail-footer {
-    margin-top: 20px;
+/* Contenedor de los detalles */
+.info-container {
+    flex: 3;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
-.price-label {
-    font-size: 16px;
-    color: #888;
-    margin-bottom: 5px;
+/* Detalles del paquete */
+.details {
+    margin-bottom: 20px;
 }
 
-h3 {
-    font-size: 28px;
+.details p {
+    font-size: 1.1rem;
+    margin: 10px 0;
+}
+
+.price {
+    font-size: 1.5rem;
     font-weight: bold;
     color: #333;
 }
 
-.back-button {
-    display: inline-block;
-    margin-top: 20px;
-    padding: 10px 20px;
-    background: #007bff;
-    color: #fff;
-    text-decoration: none;
-    border-radius: 5px;
+/* Caja de precio y botón */
+.price-box {
+    background-color: #f9f9f9;
+    border: 1px solid #e0e0e0;
+    padding: 20px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
 }
 
-.back-button:hover {
-    background: #0056b3;
+.price-per-night {
+    font-size: 1.2rem;
+    margin-bottom: 5px;
+    color: #555;
 }
+
+.price-total {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* Botón de reserva */
+.reserve-button {
+    background-color: #f36f21;
+    color: #fff;
+    padding: 10px 20px;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.reserve-button:hover {
+    background-color: #e55b1a;
+}
+
+/* Estilos para la sección de comentarios */
+.comments-section {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #f7f7f7;
+    border-radius: 8px;
+}
+
+.comments-section h3 {
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+}
+
+.comments-list {
+    margin-bottom: 20px;
+}
+
+.comment {
+    padding: 10px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.comment p {
+    font-size: 1rem;
+    margin: 5px 0;
+}
+
+/* Formulario para agregar un nuevo comentario */
+.add-comment {
+    display: flex;
+    flex-direction: column;
+}
+
+.add-comment textarea {
+    width: 100%;
+    height: 100px;
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    resize: none;
+}
+
+.add-comment-button {
+    align-self: flex-start;
+    padding: 10px 20px;
+    font-size: 1rem;
+    background-color: #007bbf; /* Cambiado a tu color principal */
+    color: #fff;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.add-comment-button:hover {
+    background-color: #005f99; /* Un azul más oscuro para el hover */
+}
+
+/* Botón de reserva (cambiado al azul principal) */
+.reserve-button {
+    padding: 10px 20px;
+    font-size: 1.2rem;
+    background-color: #007bbf; /* Cambiado a tu color principal */
+    color: #fff;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.reserve-button:hover {
+    background-color: #005f99; /* Un azul más oscuro para el hover */
+}
+
+/* Sección de Descripción */
+.description-section {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #f7f7f7;
+    border-radius: 8px;
+}
+
+.description-section h3 {
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+}
+
+.description-section p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+
+

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import '../styles/FiltroVertical.css'; // Estilos del filtro
+import '../styles/FiltroExcursiones.css';
 
 interface FiltroVerticalExcursionesProps {
     onFiltrar: (filtros: { tipos: string[] }) => void;
@@ -46,7 +46,7 @@ const FiltroVerticalExcursiones: React.FC<FiltroVerticalExcursionesProps> = ({ o
     };
 
     return (
-        <div className="filters">
+        <div className="container-filters">
             <div className="filter-section">
                 <h3>Tipo de Excursión</h3>
                 {tiposExcursion.map((tipoObj, index) => (

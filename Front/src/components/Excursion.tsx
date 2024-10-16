@@ -30,7 +30,7 @@ const Excursiones: React.FC = () => {
                                 <h3>{excursion.nombre}</h3>
                                 <p className="p-footer">{excursion.descripcion}</p>
                                 <p>Precio: ${excursion.precio}</p>
-                                <div className="prueba">
+                                <div className="prueba2">
                                     <button className="boton-ver">Ver Excursión</button>
                                 </div>
                             </div>

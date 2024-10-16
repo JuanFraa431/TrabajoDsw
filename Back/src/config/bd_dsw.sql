@@ -1,6 +1,7 @@
 CREATE USER IF NOT EXISTS 'dsw' @'%' IDENTIFIED BY 'dsw';
 GRANT ALL PRIVILEGES ON agenciadeviajes.* TO 'dsw' @'%';
 FLUSH PRIVILEGES;
+
 DROP DATABASE IF EXISTS agenciadeviajes;
 -- Crear la base de datos
 CREATE DATABASE agenciadeviajes;
@@ -39,7 +40,7 @@ CREATE TABLE hoteles (
 CREATE TABLE paquetes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     estado BOOLEAN NOT NULL,
-    descripcion VARCHAR(255) NOT NULL,
+    descripcion TEXT NOT NULL,
     precio DECIMAL(10, 2) NOT NULL,
     fecha_ini DATE NOT NULL,
     fecha_fin DATE NOT NULL,

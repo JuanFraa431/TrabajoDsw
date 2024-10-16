@@ -1,11 +1,3 @@
-/* VistaAdmin.css */
-body {
-    font-family: "Roboto", sans-serif;
-    background-color: #f4f4f9;
-    margin: 0;
-    padding: 0;
-}
-
 .vista-admin {
     max-width: 1200px;
     margin: 40px auto;

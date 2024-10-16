@@ -48,6 +48,7 @@
   .hotel-card {
     display: flex;
     justify-content: space-between;
+    position: relative;
     background-color: #fff;
     border: 1px solid #dbdbdb;
     border-radius: 10px;
@@ -56,7 +57,26 @@
     width: 100%;
     margin-left: 20px;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
+}
+
+    .price-container {
+      position: absolute;
+      top: 20px; 
+      right: 20px; 
+      text-align: right; 
+    }
+
+    .price-label {
+      font-size: 14px;
+      color: #333; 
+      margin: 0; 
+    }
+
+    .price-large {
+      font-size: 28px; 
+      font-weight: bold;
+      color: #007bffc5; 
+    }
   
   .hotel-card:hover {
     transform: scale(1.01);

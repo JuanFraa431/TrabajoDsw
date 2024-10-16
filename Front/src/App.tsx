@@ -62,7 +62,7 @@ const App: React.FC = () => {
                         element={
                             <motion.div {...pageTransition}>
                                 <Header/>
-                                <CardDetail {...flightDetails}/>
+                                <CardDetail/>
                             </motion.div>
                         }
                     />

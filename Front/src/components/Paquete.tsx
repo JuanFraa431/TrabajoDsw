@@ -1,12 +1,19 @@
 import React from 'react';
 import '../styles/Paquete.css';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom'; // Importa useNavigate
 import { Paquete } from '../interface/paquete';
-import Filtros from './FiltroVertical'; // Importar el componente de filtros
+import Filtros from './FiltroVertical';
 
 const Paquetes: React.FC = () => {
     const location = useLocation();
+    const navigate = useNavigate(); // Usa useNavigate para la redirección
     const { paquetes } = location.state || { paquetes: [] };
+
+    const handleViewPackage = (id: string) => {
+        // Redirige a /cardDetail y pasa el id del paquete como parte del estado
+        navigate(`/cardDetail`, { state: { id } });
+    };
+
     return (
         <div className="container2">
             <Filtros />
@@ -17,12 +24,23 @@ const Paquetes: React.FC = () => {
                             <img src={paquete.imagen} alt={paquete.nombre} className="card-img" />
                             <div className="hotel-info">
                                 <h3>{paquete.nombre}</h3>
-                                <p className="p-footer">Precio por persona</p>
-                                <p>${paquete.precio}</p>
                                 <p>{paquete.descripcion}</p>
-                                <div className='prueba'>
-                                    <button className="boton-ver">Ver Alojamiento</button>
+                                <div className="package-features">
+                                    <p><strong>Duración:</strong> 5 días</p>
+                                    <p><strong>Actividades incluidas:</strong> Tour guiado, comidas, transporte.</p>
                                 </div>
+                                <div className='prueba'>
+                                    <button 
+                                        className="boton-ver" 
+                                        onClick={() => handleViewPackage(paquete.id.toString())} // Usa onClick para redirigir
+                                    >
+                                        Ver Alojamiento
+                                    </button>
+                                </div>
+                            </div>
+                            <div className="price-container">
+                                <p className="price-label">Precio x persona</p>
+                                <p className="price-large">${paquete.precio}</p>
                             </div>
                         </div>
                     ))
