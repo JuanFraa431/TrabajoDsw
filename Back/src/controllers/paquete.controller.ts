@@ -27,7 +27,7 @@ async function findOne(req: Request, res: Response) {
 
 async function create(req: Request, res: Response) {
     try {
-        const paquete = new Paquete(req.body.id,req.body.estado, req.body.descripcion, req.body.precio, req.body.fecha_ini, req.body.fecha_fin, req.body.imagen);
+        const paquete = new Paquete(req.body.id,req.body.estado, req.body.descripcion, req.body.detalle, req.body.precio, req.body.fecha_ini, req.body.fecha_fin, req.body.imagen);
         const result = await repository.save(paquete);
         res.json(result);
     } catch (error: any) {
@@ -39,7 +39,7 @@ async function create(req: Request, res: Response) {
 async function update(req: Request, res: Response) {
     try {
         const { id } = req.params;
-        const paquete = new Paquete(req.body.id,req.body.estado, req.body.descripcion, req.body.precio, req.body.fecha_ini, req.body.fecha_fin, req.body.imagen);
+        const paquete = new Paquete(req.body.id,req.body.estado, req.body.descripcion, req.body.detalle, req.body.precio, req.body.fecha_ini, req.body.fecha_fin, req.body.imagen);
         const result = await repository.update({ id }, paquete);
         res.json(result);
     } catch (error: any) {

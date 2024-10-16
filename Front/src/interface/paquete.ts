@@ -2,6 +2,7 @@ export interface Paquete {
     id: number; 
     nombre: string;
     descripcion: string;
+    detalle: string;
     latitud: string;
     longitud: string;
     precio: number;

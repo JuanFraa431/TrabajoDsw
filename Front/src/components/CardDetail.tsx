@@ -10,7 +10,6 @@ const CardDetail: React.FC = () => {
     const [comentarios, setComentarios] = useState<any[]>([]);
     const [nuevoComentario, setNuevoComentario] = useState<string>("");
 
-    // Estado para controlar la visualización de la descripción
     const [mostrarDescripcionCompleta, setMostrarDescripcionCompleta] = useState<boolean>(false);
 
     useEffect(() => {
@@ -44,7 +43,6 @@ const CardDetail: React.FC = () => {
         }
     };
 
-    // Función para alternar entre mostrar o no la descripción completa
     const toggleDescripcion = () => {
         setMostrarDescripcionCompleta(!mostrarDescripcionCompleta);
     };
@@ -59,7 +57,6 @@ const CardDetail: React.FC = () => {
     return (
         <div className="card-detail-container">
             <h2 className="title">Detalles del Paquete</h2>
-            <p className="package-id">ID del paquete: {id}</p>
             {
                 paquete && (
                     <div className="detail-layout">
@@ -68,8 +65,9 @@ const CardDetail: React.FC = () => {
                         </div>
                         <div className="info-container">
                             <div className="details">
-                                <p><strong>Detalles:</strong> {/* {paquete.descripcion} */}</p>
-                                <p className="price"><strong>Precio:</strong> ${paquete.precio}</p>
+                                <p><strong>Detalles:</strong> {paquete.detalle}</p>
+                                <p className="price"><strong>Desde:</strong> {new Date(paquete.fecha_ini).toISOString().split('T')[0]}</p>
+                                <p className='price'><strong>Hasta:</strong> {new Date(paquete.fecha_fin).toISOString().split('T')[0]} </p>
                             </div>
                             <div className="price-box">
                                 <p className="price-per-night">Precio por noche</p>
@@ -81,7 +79,6 @@ const CardDetail: React.FC = () => {
                 )
             }
 
-            {/* Sección de descripción con "Ver más" */}
             <div className="description-section">
                 <h3>Descripción</h3>
                 <p>
@@ -94,7 +91,6 @@ const CardDetail: React.FC = () => {
                 </button>
             </div>
 
-            {/* Sección de comentarios */}
             <div className="comments-section">
                 <h3>Comentarios</h3>
                 <div className="comments-list">

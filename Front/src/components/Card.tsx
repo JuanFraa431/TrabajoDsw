@@ -1,21 +1,18 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import '../styles/Card.css';
+import { Paquete } from '../interface/paquete';
 
-// Define la interfaz para las propiedades de Card
-interface CardProps {
-    destino: string;
-    origen: string;
-    precio: string;
-    imagen: string;
-}
 
-const Card: React.FC<CardProps> = ({ destino, origen, precio, imagen }) => {
+
+
+const Card: React.FC<Paquete> = ({ id, nombre, descripcion, detalle, latitud, longitud, precio, fecha_ini, fecha_fin, imagen }) => {
     return (
         <div className="card">
-            <img src={imagen} alt={destino} className="card-img" />
+            <img src={imagen} alt={nombre} className="card-img" />
             <div className="card-body">
-                <h2>{destino}</h2>
-                <p className='p-body'>{origen}</p>
+                <h2>{nombre}</h2>
+                <p className='p-body'>{detalle}</p>
                 <div className="card-footer">
                     <p className='p-footer'>Precio por persona</p>
                     <h4>${precio}</h4>
@@ -26,24 +23,35 @@ const Card: React.FC<CardProps> = ({ destino, origen, precio, imagen }) => {
     );
 };
 
-// Define la interfaz para los datos de vuelo
-interface Vuelo {
-    destino: string;
-    origen: string;
-    precio: string;
-    imagen: string;
-}
 
-// Lista de vuelos
-const vuelos: Vuelo[] = [
-    { destino: 'Miami', origen: 'Buenos Aires', precio: '908.467', imagen: 'https://images.almundo.com/205/image/upload/v1568744850/home-v3/flights/photo-1568390559.jpg' },
-    { destino: 'Madrid', origen: 'Buenos Aires', precio: '1.341.920', imagen: 'https://images.almundo.com/205/image/upload/v1568324811/home-v3/flights/photo-1483450388369-9ed95738483c.jpeg' },
-    { destino: 'Cancún', origen: 'Buenos Aires', precio: '782.981', imagen: 'https://images.almundo.com/205/image/upload/v1568324811/home-v3/flights/photo-1517400508447-f8dd518b86db-2.jpeg' },
-    { destino: 'Río de Janeiro', origen: 'Buenos Aires', precio: '363.780', imagen: 'https://images.almundo.com/205/image/upload/v1568324811/home-v3/flights/photo-1530521954074-e64f6810b32d.jpeg' },
-];
-
-// Componente CardList
 const CardList: React.FC = () => {
+    const [paquetes, setPaquetes] = useState<Paquete[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        const fetchPaquetes = async () => {
+            try {
+                const response = await axios.get('/api/paquete');
+                setPaquetes(response.data);
+            } catch (err) {
+                setError(err instanceof Error ? err.message : 'Error desconocido');
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchPaquetes();
+    }, []);
+
+    if (loading) {
+        return <div>Cargando paquetes...</div>;
+    }
+
+    if (error) {
+        return <div>Error: {error}</div>;
+    }
+
     return (
         <div className="container">
             <div className="offer-container">
@@ -51,8 +59,8 @@ const CardList: React.FC = () => {
                 <a href="#" className="view-more-button">VER MÁS</a>
             </div>
             <div className="card-list">
-                {vuelos.map((vuelo, index) => (
-                    <Card key={index} {...vuelo} />
+                {paquetes.map((paquete, index) => (
+                    <Card key={index} {...paquete} />
                 ))}
             </div>
         </div>

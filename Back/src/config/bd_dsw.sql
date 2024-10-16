@@ -41,6 +41,7 @@ CREATE TABLE paquetes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     estado BOOLEAN NOT NULL,
     descripcion TEXT NOT NULL,
+    detalle VARCHAR(255) NOT NULL,
     precio DECIMAL(10, 2) NOT NULL,
     fecha_ini DATE NOT NULL,
     fecha_fin DATE NOT NULL,
@@ -358,6 +359,7 @@ VALUES (
 -- Inserciones en tabla 'paquetes'
 INSERT INTO paquetes (
         estado,
+        detalle,
         descripcion,
         precio,
         fecha_ini,
@@ -366,7 +368,8 @@ INSERT INTO paquetes (
     )
 VALUES (
         true,
-        'Paquete completo a Buenos Aires',
+        'Paquete turístico a Buenos Aires',
+        'Disfruta de un paquete completo que incluye alojamiento en un hotel de tres estrellas ubicado en el centro de Buenos Aires. Comienza tus días con un delicioso desayuno buffet. Durante tu estancia, explorarás los principales atractivos turísticos como la Plaza de Mayo, el barrio de San Telmo, y la famosa calle Caminito en La Boca. Además, tendrás la oportunidad de asistir a un espectáculo de tango en vivo, sumergiéndote en la cultura local.',
         1200.50,
         '2024-11-01',
         '2024-11-05',
@@ -375,6 +378,7 @@ VALUES (
     (
         true,
         'Paquete turístico a Madrid',
+        'Este paquete te ofrece una experiencia única en Madrid, donde podrás disfrutar de 5 noches en un hotel céntrico con desayuno incluido. Tendrás acceso a un tour guiado por el Palacio Real, la Puerta del Sol, y el Parque del Retiro. También incluimos entradas a los museos más importantes, como el Museo del Prado y el Reina Sofía, para que puedas admirar obras maestras de artistas como Goya y Picasso. Al finalizar el día, relájate en una de las muchas terrazas con vistas a la ciudad.',
         1500.75,
         '2024-12-01',
         '2024-12-06',
@@ -383,6 +387,7 @@ VALUES (
     (
         false,
         'Paquete de lujo a Nueva York',
+        'Este exclusivo paquete incluye 7 noches de alojamiento en un hotel de lujo en el corazón de Manhattan, con todas las comodidades. Disfruta de un acceso VIP a las atracciones más populares de la ciudad, como el Empire State Building, Central Park y un recorrido en barco por la Estatua de la Libertad. También tendrás la oportunidad de asistir a un espectáculo de Broadway. Además, se incluye un servicio de conserjería personal que te ayudará a planificar tu itinerario para que aproveches al máximo tu visita a la Gran Manzana.',
         3000.00,
         '2025-01-01',
         '2025-01-07',
@@ -391,6 +396,7 @@ VALUES (
     (
         true,
         'Paquete a Río de Janeiro con hotel y excursión',
+        'Este paquete ofrece una experiencia inolvidable en Río de Janeiro, con 8 noches de alojamiento en un hotel frente a la playa de Copacabana. El paquete incluye un desayuno diario y un tour guiado a las principales atracciones como el Cristo Redentor y el Pan de Azúcar. Además, podrás disfrutar de un día de excursión a las impresionantes playas de Búzios. También incluimos una cena típica brasileña en una churrasquería local, donde podrás disfrutar de los mejores cortes de carne.',
         1200.00,
         '2025-01-06',
         '2025-01-14',
@@ -399,6 +405,7 @@ VALUES (
     (
         true,
         'Escapada a Lima con clases de cocina',
+        'Vive una experiencia única en Lima, donde pasarás 7 noches en un hotel boutique con desayuno incluido. Este paquete incluye una clase de cocina peruana donde aprenderás a preparar platos típicos como el ceviche y el lomo saltado. Además, disfrutarás de un tour por el centro histórico de Lima, visitando lugares emblemáticos como la Plaza Mayor y la Catedral de Lima. Para completar tu experiencia, tendrás una cena en un restaurante de renombre, degustando la exquisita gastronomía local.',
         850.00,
         '2025-01-06',
         '2025-01-14',
@@ -407,6 +414,7 @@ VALUES (
     (
         true,
         'Vacaciones en Cancún con snorkel y hotel',
+        'Disfruta de unas vacaciones soñadas en Cancún con este paquete que incluye 7 noches de alojamiento en un resort todo incluido. Este paquete te permitirá explorar los impresionantes arrecifes de coral de la Riviera Maya con un tour de snorkel. También disfrutarás de actividades acuáticas como kayak y paddleboarding. Cada día, podrás degustar una variedad de comidas en los múltiples restaurantes del resort y relajarte en la playa con un cóctel en la mano.',
         1400.00,
         '2025-01-06',
         '2025-01-14',
@@ -415,6 +423,7 @@ VALUES (
     (
         true,
         'Tour cultural en Barcelona',
+        'Embárcate en un tour cultural de 8 días en Barcelona. Este paquete incluye alojamiento en un hotel de cuatro estrellas con desayuno incluido. Explora la Sagrada Familia, el Parque Güell y el barrio gótico con un guía experto. Tendrás la oportunidad de participar en una clase de flamenco y disfrutar de una cena tradicional española. Además, se incluye un día libre para que explores la ciudad a tu ritmo, visitando tiendas, museos y cafeterías locales.',
         1100.00,
         '2025-01-06',
         '2025-01-14',
@@ -423,11 +432,14 @@ VALUES (
     (
         true,
         'Viaje a Santiago con tour a Valparaíso',
+        'Descubre la vibrante cultura de Santiago y Valparaíso con este paquete de 8 días. Incluye alojamiento en un hotel céntrico y un tour guiado a los puntos más emblemáticos de Santiago, como el Cerro San Cristóbal y el Mercado Central. Además, disfrutarás de un día completo en Valparaíso, conocido por su arte callejero y arquitectura colorida. Al finalizar el viaje, disfrutarás de una cena de despedida en un restaurante local, degustando la gastronomía chilena.',
         950.00,
         '2025-01-06',
         '2025-01-14',
         "https://www.hotelinfo.com.ar/uploads/6614492b47650.jpg"
     );
+
+
 -- Inserciones en tabla 'clientes'
 INSERT INTO clientes (
         nombre,

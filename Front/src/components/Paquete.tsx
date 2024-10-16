@@ -1,16 +1,15 @@
 import React from 'react';
 import '../styles/Paquete.css';
-import { useLocation, useNavigate } from 'react-router-dom'; // Importa useNavigate
+import { useLocation, useNavigate } from 'react-router-dom'; 
 import { Paquete } from '../interface/paquete';
 import Filtros from './FiltroVertical';
 
 const Paquetes: React.FC = () => {
     const location = useLocation();
-    const navigate = useNavigate(); // Usa useNavigate para la redirección
+    const navigate = useNavigate(); 
     const { paquetes } = location.state || { paquetes: [] };
 
     const handleViewPackage = (id: string) => {
-        // Redirige a /cardDetail y pasa el id del paquete como parte del estado
         navigate(`/cardDetail`, { state: { id } });
     };
 
@@ -24,7 +23,7 @@ const Paquetes: React.FC = () => {
                             <img src={paquete.imagen} alt={paquete.nombre} className="card-img" />
                             <div className="hotel-info">
                                 <h3>{paquete.nombre}</h3>
-                                <p>{paquete.descripcion}</p>
+                                <p>{paquete.detalle}</p>
                                 <div className="package-features">
                                     <p><strong>Duración:</strong> 5 días</p>
                                     <p><strong>Actividades incluidas:</strong> Tour guiado, comidas, transporte.</p>
@@ -32,7 +31,7 @@ const Paquetes: React.FC = () => {
                                 <div className='prueba'>
                                     <button 
                                         className="boton-ver" 
-                                        onClick={() => handleViewPackage(paquete.id.toString())} // Usa onClick para redirigir
+                                        onClick={() => handleViewPackage(paquete.id.toString())} 
                                     >
                                         Ver Alojamiento
                                     </button>

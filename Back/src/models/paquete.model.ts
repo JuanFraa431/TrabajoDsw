@@ -3,6 +3,7 @@ export class Paquete {
     public id: number,
     public estado: string,
     public descripcion: string,
+    public detalle: string,
     public precio: number,
     public fecha_ini : string,
     public fecha_fin : string,
