@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import logo from "../images/logoFinal2.png";
 import '../styles/Login.css';
 
 const Login: React.FC = () => {
@@ -35,6 +36,9 @@ const Login: React.FC = () => {
 
   return (
     <div className='container-session'>
+      <div className='container-image'>
+        <Link to="/"><img src={logo} alt="Logo"/></Link>
+      </div>
       <div className='form-session'>
       <h2>Login</h2>
         <form onSubmit={handleLogin}>

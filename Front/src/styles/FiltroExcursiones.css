@@ -1,18 +1,16 @@
 .filtro-excursiones {
   display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
+  gap: 2vh;
+  margin-top: 3vh;
+  margin-bottom: 3vh;
   width: 100%;
-  /* Para que ocupe todo el ancho */
   justify-content: center;
-  /* Centrar los elementos dentro del filtro */
 }
 
 .filtro-item {
   display: flex;
   flex-direction: column;
   width: 200px;
-  /* Ajusta el ancho según necesites */
 }
 
 .filtro-item label {
@@ -27,7 +25,7 @@
 }
 
 .filtro-boton {
-  padding: 10px 20px;
+  padding: 0px 10px 0px 10px;
   background-color: #0056b3;
   color: white;
   border: none;
@@ -39,11 +37,7 @@
   background-color: #003d80;
 }
 
-/* Añadir un contenedor para centrar el filtro en Excursiones.css */
 .container-filtro {
   display: flex;
   justify-content: center;
-  /* Centrar el filtro */
-  margin-bottom: 20px;
-  /* Espacio entre el filtro y la lista de excursiones */
 }

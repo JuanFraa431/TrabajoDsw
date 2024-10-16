@@ -1,11 +1,18 @@
 .container-session{
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     height: 70vh;
     background-color: #f5f5f5;
 }
 
+
+.container-image img{
+    width: 400px;
+    padding-top: 20vh;
+    padding-bottom: 30px;
+}
 
 .form-session{
     width: 300px;

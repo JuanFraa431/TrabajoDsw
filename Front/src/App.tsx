@@ -15,6 +15,7 @@ import Filtro from './components/Filtro';
 import VistaAdmin from './components/VistaAdmin';
 import Login from './components/Login';
 import DetalleCliente from './components/Cliente/DetalleCliente';
+import { divider } from '@nextui-org/react';
 
 const flightDetails = {
     destino: 'Madrid',
@@ -39,24 +40,28 @@ const App: React.FC = () => {
 
     return (
         <>
-            <Header />
             <AnimatePresence mode="wait">
                 <Routes location={location} key={location.pathname}>
                     <Route
                         path="/"
                         element={
-                            <motion.div {...pageTransition}>
-                                <Body/>
-                                <CardList/>
-                                <PreFooter/>
-                                <Footer/>
-                            </motion.div>
+                            <div>
+                                <Header/>
+                                <motion.div {...pageTransition}>
+                                    <Body/>
+                                    <CardList/>
+                                    <PreFooter/>
+                                    <Footer/>
+                                </motion.div>
+                            </div>
                         }
+                        
                     />
                     <Route
                         path="/cardDetail"
                         element={
                             <motion.div {...pageTransition}>
+                                <Header/>
                                 <CardDetail {...flightDetails}/>
                             </motion.div>
                         }
@@ -78,20 +83,30 @@ const App: React.FC = () => {
                         }
                     />
                     <Route path="/paquetes" element={
-                        <motion.div {...pageTransition}>
-                            <Filtro/>
-                            <Paquetes/>
-                        </motion.div>
+                        <div>
+                            <Header/>
+                            <motion.div {...pageTransition}>
+                                <Filtro/>
+                                <Paquetes/>
+                            </motion.div>
+                        </div>
                         } />
-                        <Route path="/excursiones" element={
-                        <motion.div {...pageTransition}>
-                            <Excursiones/>
-                        </motion.div>
+                    <Route path="/excursiones" element={
+                        <div>
+                            <Header/>
+                            <motion.div {...pageTransition}>
+                                <Excursiones/>
+                            </motion.div>
+                        </div>
                         } />
                     <Route path='/vistaAdmin' element = {
-                        <motion.div {...pageTransition}>
-                            <VistaAdmin/>
-                        </motion.div>
+                        <div>
+                            <Header/>
+                            <motion.div {...pageTransition}>
+                                <VistaAdmin/>
+                            </motion.div>   
+                        </div>
+                        
                     }/>
                     <Route path = '/login' element = {
                         <motion.div {...pageTransition}>
@@ -99,9 +114,12 @@ const App: React.FC = () => {
                         </motion.div>
                     }/>
                     <Route path = '/detalleCliente' element = {
-                        <motion.div {...pageTransition}>
-                            <DetalleCliente/>
-                        </motion.div>
+                        <div>
+                            <Header/>
+                            <motion.div {...pageTransition}>
+                                <DetalleCliente/>
+                            </motion.div>
+                        </div>
                     }/>
                 </Routes>
             </AnimatePresence>
