@@ -1,6 +1,8 @@
 import express from 'express';
 import path from 'path';
 import cors from 'cors';
+import session from 'express-session';
+import bcrypt from 'bcrypt';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 
@@ -17,6 +19,15 @@ import { routerEstadia } from './routes/estadia.routes.js';
 import { routerComentario } from './routes/comentario.routes.js';
 
 const app = express();
+
+app.use(
+  session({
+    secret: 'juamaqbrujan', 
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: false },
+  })
+);
 
 app.use(cors({
     origin: 'http://localhost:8080'

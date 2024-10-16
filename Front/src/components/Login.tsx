@@ -8,44 +8,56 @@ const Login: React.FC = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const navigate = useNavigate();  // Hook para redireccionar
+  const navigate = useNavigate();
 
-  const handleLogin = async (event: React.FormEvent) => {
-    event.preventDefault();
+  async function handleLogin(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();  // Prevents the default form submission
+
     try {
-      const response = await axios.post('http://localhost:3000/api/cliente/login/', { username, password });
-      const cliente = response.data;
+      // Send a login request to the backend
+      const response = await axios.post('/api/cliente/login', { username, password });
+      console.log(response);
 
-      if (cliente.estado === 1) {
-        console.log('Login successful:', cliente);
-        setError('');
+      if (response.status === 200) {
+        const { cliente, token } = response.data;
 
-        if (cliente.tipo_usuario === 'admin') {
-          navigate('/vistaAdmin', { state: { cliente } });
+        if (cliente.estado === 1) {
+          console.log('Login successful:', cliente);
+          setError('');
+
+          localStorage.setItem('token', token);
+          localStorage.setItem('user', JSON.stringify(cliente));
+
+          if (cliente.tipo_usuario === 'admin') {
+            navigate('/vistaAdmin', { state: { cliente } });
+          } else {
+            navigate('/', { state: { cliente } });
+          }
         } else {
-          navigate('/', { state: { cliente } });
+          setError('La cuenta ha sido deshabilitada.');
         }
       } else {
-        setError('La cuenta ha sido deshabilitada.');
+        setError('Usuario o contraseña incorrectos.');
       }
-    } catch (err) {
-      setError('Usuario o contraseña incorrectos.');
-      console.error('Login error:', err);
+    } catch (error) {
+      console.error('Login failed:', error);
+      setError('Error al iniciar sesión, por favor intente nuevamente.');
     }
-  };
+  }
 
   return (
     <div className='container-session'>
       <div className='container-image'>
-        <Link to="/"><img src={logo} alt="Logo"/></Link>
+        <Link to="/"><img src={logo} alt="Logo" /></Link>
       </div>
       <div className='form-session'>
-      <h2>Login</h2>
+        <h2>Login</h2>
         <form onSubmit={handleLogin}>
           <div>
             <label>Username:</label>
             <input
               type="text"
+              name="username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
@@ -55,14 +67,15 @@ const Login: React.FC = () => {
             <label>Password:</label>
             <input
               type="password"
+              name="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
             />
           </div>
-          {error && <p>{error}</p>}
+          {error && <p className="error-message">{error}</p>}
           <div className='container-button'>
-              <button type="submit">Login</button>
+            <button type="submit">Login</button>
           </div>
         </form>
       </div>

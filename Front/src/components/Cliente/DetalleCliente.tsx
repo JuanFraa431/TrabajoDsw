@@ -22,6 +22,13 @@ const DetalleCliente: React.FC = () => {
     }
   };
 
+  const handleCerrarSesion = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+
+    navigate('/');
+  };
+
   return (
     <div>
       <h1>Detalle del Cliente</h1>
@@ -34,6 +41,11 @@ const DetalleCliente: React.FC = () => {
       <div>
         <button onClick={handleDarseDeBaja}>
           Darse De Baja
+        </button>
+      </div>
+      <div>
+        <button onClick={handleCerrarSesion}>
+          Cerrar Sesión
         </button>
       </div>
     </div>

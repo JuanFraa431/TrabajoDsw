@@ -1,15 +1,22 @@
 import React from "react";
+import { useState, useEffect } from 'react';
 import "../styles/Header.css";
 import userIcon from "../images/user-icon.png";
 import logo from "../images/logoFinal2.png";
 import { Link, useNavigate } from "react-router-dom";
-import { useLocation } from "react-router-dom";
 import { handleLinkClick } from "../services/searchService";
+import { Cliente } from "../interface/cliente.js";
 
 const Header = () => {
     
-    const location = useLocation();
-    const cliente = location.state?.cliente;
+    const [cliente, setCliente] = useState<Cliente | null>(null);
+
+    useEffect(() => {
+        const storedCliente = localStorage.getItem('user');
+        if (storedCliente) {
+            setCliente(JSON.parse(storedCliente));
+        }
+    }, []);
 
     const navigate = useNavigate();
 
