@@ -1,39 +1,35 @@
 import React, { useState } from 'react';
-import '../styles/Excursiones.css';
+import '../styles/Excursiones.css'; // Asegúrate de tener estilos apropiados
 import { useLocation } from 'react-router-dom';
 import { Excursion } from '../interface/excursion'; // Importa la interfaz de excursiones
-import FiltroExcursiones from './FiltroExcursion'; // Asegúrate de que el nombre sea correcto
+import FiltroVerticalExcursiones from './FiltroExcursion'; // Adaptar el filtro
 
 const Excursiones: React.FC = () => {
     const location = useLocation();
-    const { excursiones = [] } = location.state || {};
+    const { excursiones } = location.state || { excursiones: [] }; // Cargar excursiones desde el estado
+    const [filtros, setFiltros] = useState<{ tipos: string[] }>({ tipos: [] });
 
-    const [filtros, setFiltros] = useState({ tipo: '' }); // Solo filtrar por tipo
-
-    const manejarFiltrado = ({ tipo }: { tipo: string }) => {
-        setFiltros({ tipo });
+    const manejarFiltrado = ({ tipos }: { tipos: string[] }) => {
+        setFiltros({ tipos });
     };
 
     const excursionesFiltradas = excursiones.filter((excursion: Excursion) => {
-        return (
-            (filtros.tipo === '' || excursion.tipo === filtros.tipo) // Filtra solo por tipo
-        );
+        // Si no hay filtros seleccionados, mostrar todas; si hay filtros, filtrar por tipo
+        return filtros.tipos.length === 0 || filtros.tipos.includes(excursion.tipo);
     });
 
     return (
-        <div className="container-excursiones">
-            {/* Contenedor para el filtro */}
-            <div className="container-filtro">
-                <FiltroExcursiones onFiltrar={manejarFiltrado} />
-            </div>
+        <div className="container2">
+            <FiltroVerticalExcursiones onFiltrar={manejarFiltrado} />
             <div className="excursiones-list">
-                {excursionesFiltradas.length > 0 ? ( // Muestra excursiones filtradas
+                {excursionesFiltradas.length > 0 ? (
                     excursionesFiltradas.map((excursion: Excursion) => (
                         <div className="excursion-card" key={excursion.id}>
                             <img src={excursion.imagen} alt={excursion.nombre} className="card-img" />
                             <div className="excursion-info">
                                 <h3>{excursion.nombre}</h3>
-                                <p>{excursion.descripcion}</p>
+                                <p className="p-footer">{excursion.descripcion}</p>
+                                <p>Precio: ${excursion.precio}</p>
                                 <div className="prueba">
                                     <button className="boton-ver">Ver Excursión</button>
                                 </div>

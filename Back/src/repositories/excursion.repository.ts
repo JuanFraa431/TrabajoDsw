@@ -85,10 +85,13 @@ export class ExcursionRepository implements Repository<Excursion> {
     );
     return excursiones as Excursion[];
   }
-  public async findTypes(): Promise<string[]> {
-    const [tipos] = await pool.query<RowDataPacket[]>(
-      'SELECT DISTINCT tipo FROM excursiones'
-    );
-    return tipos.map((tipo) => tipo.tipo);
+  public async findTypes(): Promise<{ tipo: string; cantidad: number }[]> {
+      const [tipos] = await pool.query<RowDataPacket[]>(
+        'SELECT tipo, COUNT(*) as cantidad FROM excursiones GROUP BY tipo'
+      );
+      return tipos.map((row) => ({
+        tipo: row.tipo,
+        cantidad: row.cantidad
+      }));
   }
 }

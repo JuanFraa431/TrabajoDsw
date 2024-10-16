@@ -1,61 +1,69 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import '../styles/FiltroExcursiones.css';
+import '../styles/FiltroVertical.css'; // Estilos del filtro
 
-interface FiltroExcursionesProps {
-    onFiltrar: (filtros: { tipo: string }) => void;
+interface FiltroVerticalExcursionesProps {
+    onFiltrar: (filtros: { tipos: string[] }) => void;
 }
 
-const FiltroExcursiones: React.FC<FiltroExcursionesProps> = ({ onFiltrar }) => {
-    const [tipo, setTipo] = useState('');
-    const [tiposExcursion, setTiposExcursion] = useState<string[]>([]); // Estado para los tipos
-    const [cargando, setCargando] = useState(true); // Estado de carga
+interface TipoExcursion {
+    tipo: string;
+    cantidad: number;
+}
 
-    // Efecto para obtener los tipos de excursión
+const FiltroVerticalExcursiones: React.FC<FiltroVerticalExcursionesProps> = ({ onFiltrar }) => {
+    const [tiposExcursion, setTiposExcursion] = useState<TipoExcursion[]>([]); // Almacenar tipos de excursión con cantidad
+    const [selectedTipos, setSelectedTipos] = useState<string[]>([]); // Tipos seleccionados
+
     useEffect(() => {
-        const obtenerTipos = async () => {
+        const obtenerTiposExcursion = async () => {
             try {
-                const response = await axios.get('http://localhost:8080/api/excursion/tipo'); // Cambia la URL según tu API
-                setTiposExcursion(response.data); // Suponiendo que response.data es un array de tipos
+                const response = await axios.get('http://localhost:8080/api/excursion/tipo');
+                setTiposExcursion(response.data); // Asume que es un array con tipo y cantidad
             } catch (error) {
                 console.error('Error al obtener tipos de excursión:', error);
-            } finally {
-                setCargando(false); // Finaliza la carga
             }
         };
 
-        obtenerTipos();
-    }, []); // Ejecutar solo al montar el componente
+        obtenerTiposExcursion();
+    }, []);
 
-    const manejarFiltro = () => {
-        onFiltrar({ tipo });
+    const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { value, checked } = e.target;
+
+        let updatedSelectedTipos = [...selectedTipos];
+
+        if (checked) {
+            // Si se selecciona el checkbox, agregar el tipo a la lista
+            updatedSelectedTipos.push(value);
+        } else {
+            // Si se deselecciona, removerlo
+            updatedSelectedTipos = updatedSelectedTipos.filter(tipo => tipo !== value);
+        }
+
+        setSelectedTipos(updatedSelectedTipos);
+        onFiltrar({ tipos: updatedSelectedTipos }); // Pasar los filtros actualizados al componente padre
     };
 
     return (
-        <div className="filtro-excursiones">
-            {cargando ? ( // Mostrar un mensaje de carga mientras se obtienen los tipos
-                <p>Cargando tipos de excursión...</p>
-            ) : (
-                <>
-                    <div className="filtro-item">
-                        <label htmlFor="tipo">Tipo de Excursión:</label>
-                        <select
-                            id="tipo"
-                            value={tipo}
-                            onChange={(e) => setTipo(e.target.value)}
-                        >
-                            <option value="">Todos</option>
-                            {tiposExcursion.map((tipoExcursion, index) => (
-                                <option key={index} value={tipoExcursion}>{tipoExcursion}</option>
-                            ))}
-                        </select>
+        <div className="filters">
+            <div className="filter-section">
+                <h3>Tipo de Excursión</h3>
+                {tiposExcursion.map((tipoObj, index) => (
+                    <div className="filter-item" key={index}>
+                        <input
+                            type="checkbox"
+                            name="tipoExcursion"
+                            value={tipoObj.tipo}
+                            checked={selectedTipos.includes(tipoObj.tipo)}
+                            onChange={handleCheckboxChange}
+                        />
+                        <label>{tipoObj.tipo} ({tipoObj.cantidad})</label>
                     </div>
-
-                    <button className="filtro-boton" onClick={manejarFiltro}>Aplicar Filtro</button>
-                </>
-            )}
+                ))}
+            </div>
         </div>
     );
 };
 
-export default FiltroExcursiones;
+export default FiltroVerticalExcursiones;
