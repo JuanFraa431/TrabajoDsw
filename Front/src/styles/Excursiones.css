@@ -1,0 +1,107 @@
+.container2 {
+  display: grid;
+  grid-template-columns: 1fr 4fr;
+  width: 100%;
+  padding-bottom: 10px;
+}
+
+.filters {
+  width: 100%;
+  padding: 20px;
+  background-color: #ffffff;
+  border: 1px solid #dbdbdb;
+  border-radius: 10px;
+  align-self: start;
+  height: auto;
+  margin-top: 20px;
+  margin-left: 10px;
+}
+
+.filters h2 {
+  margin-bottom: 20px;
+}
+
+.filter-item {
+  margin-bottom: 20px;
+}
+
+.filter-item label {
+  font-weight: bold;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.price-range {
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.excursions-list {
+  display: flex;
+  flex-direction: column;
+  width: 90%;
+  margin-left: 50px;
+  margin-top: 20px;
+}
+
+.excursion-card {
+  display: flex;
+  justify-content: space-between;
+  background-color: #fff;
+  border: 1px solid #dbdbdb;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  padding: 20px;
+  width: 100%;
+  margin-left: 20px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.excursion-card:hover {
+  transform: scale(1.01);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.excursion-info {
+  flex-grow: 1;
+  margin-left: 20px;
+}
+
+.excursion-info h3 {
+  margin: 0;
+}
+
+.excursion-info p {
+  margin: 10px 0;
+}
+
+.boton-ver {
+  font-family: 'Poppins', sans-serif;
+  display: inline-block;
+  padding: 8px 16px;
+  border: 1px solid#0056b3;
+  border-radius: 20px;
+  text-decoration: none;
+  background: rgba(255, 255, 255, 0.6);
+  font-weight: bold;
+  transition: background-color 0.3s, color 0.3s;
+  color: #333;
+  cursor: pointer;
+}
+
+.boton-ver:hover {
+  background-color: #0056b3;
+  color: white;
+}
+
+.prueba {
+  display: flex;
+  width: 100%;
+  justify-content: flex-end;
+}
+
+.fail {
+  font-size: 20px;
+  text-align: center;
+  margin-top: 100px;
+}

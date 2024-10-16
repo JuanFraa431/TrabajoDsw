@@ -10,6 +10,7 @@ import CardList from './components/Card';
 import PreFooter from './components/PreFooter';
 import CardDetail from './components/CardDetail';
 import Paquetes from './components/Paquete';
+import Excursiones from './components/Excursion';
 import Filtro from './components/Filtro';
 import VistaAdmin from './components/VistaAdmin';
 import Login from './components/Login';
@@ -80,6 +81,12 @@ const App: React.FC = () => {
                         <motion.div {...pageTransition}>
                             <Filtro/>
                             <Paquetes/>
+                        </motion.div>
+                        } />
+                        <Route path="/excursiones" element={
+                        <motion.div {...pageTransition}>
+                            <Filtro/>
+                            <Excursiones/>
                         </motion.div>
                         } />
                     <Route path='/vistaAdmin' element = {

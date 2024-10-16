@@ -12,18 +12,18 @@ const Header = () => {
     const cliente = location.state?.cliente;
 
     const navigate = useNavigate();
-
-    const handleLinkClick = async (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+    
+    const handleLinkClick = async (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>, endpoint: string, route: string) => {
         event.preventDefault();
-        
-        try {
-            // Hacer la solicitud al backend para obtener todos los paquetes
-            const response = await axios.get('http://localhost:3000/api/paquete');
 
-            // Redirigir a la página de paquetes con los datos obtenidos
-            navigate('/paquetes', { state: { paquetes: response.data } });
+        try {
+            // Hacer la solicitud al backend usando el endpoint proporcionado
+            const response = await axios.get(`http://localhost:3000/api/${endpoint}`);
+
+            // Redirigir a la página correspondiente con los datos obtenidos
+            navigate(`/${route}`, { state: { [route]: response.data } });
         } catch (error) {
-            console.error('Error al obtener paquetes:', error);
+            console.error(`Error al obtener ${endpoint}:`, error);
         }
     };
 
@@ -38,13 +38,13 @@ const Header = () => {
                         <Link to="/hoteles" >Hoteles</Link>
                     </li>
                     <li>
-                        <Link to="/paquetes" onClick={handleLinkClick} >Paquetes</Link>
+                        <Link to="/paquetes" onClick={(event) => handleLinkClick(event, 'paquete', 'paquetes')}>Paquetes</Link>
                     </li>
                     <li>
-                        <a href="#excursiones">Excursiones</a>
+                        <Link to="/excursiones" onClick={(event) => handleLinkClick(event, 'excursion', 'excursiones')}>Excursiones</Link>
                     </li>
                     <li>
-                        <a href="#transporte">Transporte</a>
+                        <a href="#transporse">Transporte</a>
                     </li>
                     <li>
                         <a href="#nosotros">Nosotros</a>
