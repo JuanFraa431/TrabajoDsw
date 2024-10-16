@@ -159,7 +159,7 @@ const VistaAdmin: React.FC = () => {
       )}
 
       {selectedCategory === 'excursiones' && (
-        <button className='boton-crear' onClick={() => setExcursionEditada({ id: 0, nombre: '', descripcion: '', tipo: '', horario: '', nro_personas_max: 0, nombre_empresa: '', mail_empresa: '', precio: 0, id_ciudad: 0 })}>
+        <button className='boton-crear' onClick={() => setExcursionEditada({ id: 0, nombre: '', descripcion: '', tipo: '', horario: '', nro_personas_max: 0, nombre_empresa: '', mail_empresa: '', precio: 0, id_ciudad: 0, imagen: ''})}>
           Crear Excursión
         </button>
       )}

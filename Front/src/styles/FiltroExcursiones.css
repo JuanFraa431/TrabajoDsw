@@ -1,0 +1,49 @@
+.filtro-excursiones {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  width: 100%;
+  /* Para que ocupe todo el ancho */
+  justify-content: center;
+  /* Centrar los elementos dentro del filtro */
+}
+
+.filtro-item {
+  display: flex;
+  flex-direction: column;
+  width: 200px;
+  /* Ajusta el ancho según necesites */
+}
+
+.filtro-item label {
+  font-weight: bold;
+}
+
+.filtro-item input,
+.filtro-item select {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.filtro-boton {
+  padding: 10px 20px;
+  background-color: #0056b3;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.filtro-boton:hover {
+  background-color: #003d80;
+}
+
+/* Añadir un contenedor para centrar el filtro en Excursiones.css */
+.container-filtro {
+  display: flex;
+  justify-content: center;
+  /* Centrar el filtro */
+  margin-bottom: 20px;
+  /* Espacio entre el filtro y la lista de excursiones */
+}

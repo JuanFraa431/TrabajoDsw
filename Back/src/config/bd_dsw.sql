@@ -491,17 +491,6 @@ INSERT INTO excursiones (
         nombre_empresa,
         mail_empresa,
         precio,
-        id_ciudad imagen
-    )
-INSERT INTO excursiones (
-        nombre,
-        tipo,
-        descripcion,
-        horario,
-        nro_personas_max,
-        nombre_empresa,
-        mail_empresa,
-        precio,
         id_ciudad,
         imagen
     )

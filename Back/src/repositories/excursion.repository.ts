@@ -85,5 +85,10 @@ export class ExcursionRepository implements Repository<Excursion> {
     );
     return excursiones as Excursion[];
   }
-
+  public async findTypes(): Promise<string[]> {
+    const [tipos] = await pool.query<RowDataPacket[]>(
+      'SELECT DISTINCT tipo FROM excursiones'
+    );
+    return tipos.map((tipo) => tipo.tipo);
+  }
 }
