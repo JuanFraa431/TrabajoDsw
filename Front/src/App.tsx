@@ -82,6 +82,11 @@ const App: React.FC = () => {
                             </motion.div>
                         }
                     />
+                    <Route path="/hoteles" element={
+                        <div>
+                            <Header/>
+                        </div>
+                        } />
                     <Route path="/paquetes" element={
                         <div>
                             <Header/>
@@ -97,6 +102,16 @@ const App: React.FC = () => {
                             <motion.div {...pageTransition}>
                                 <Excursiones/>
                             </motion.div>
+                        </div>
+                        } />
+                    <Route path="/transportes" element={
+                        <div>
+                            <Header/>
+                        </div>
+                        } />
+                    <Route path="/nosotros" element={
+                        <div>
+                            <Header/>
                         </div>
                         } />
                     <Route path='/vistaAdmin' element = {

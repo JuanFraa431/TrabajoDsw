@@ -6,7 +6,7 @@ import video from '../images/esteEs.mp4';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-const BuscadorVuelos: React.FC = () => {
+const BuscadorPaquetes: React.FC = () => {
     const today = new Date();
     const tomorrow = new Date(today);
     tomorrow.setDate(today.getDate() + 1);
@@ -37,14 +37,13 @@ const BuscadorVuelos: React.FC = () => {
                 }
             });
 
-            // Navegar a la página de paquetes pasando el estado con los datos ingresados
             navigate('/paquetes', { 
                 state: { 
                     paquetes: response.data,
-                    searchParams: {
+                    filters: {
                         destination,
-                        startDate,
-                        endDate,
+                        startDate: formattedStartDate,
+                        endDate: formattedEndDate,
                         price
                     }
                 }
@@ -118,4 +117,4 @@ const BuscadorVuelos: React.FC = () => {
     );
 };
 
-export default BuscadorVuelos;
+export default BuscadorPaquetes;

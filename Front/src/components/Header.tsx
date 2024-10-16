@@ -37,10 +37,10 @@ const Header = () => {
                         <Link to="/excursiones" onClick={(event) => handleLinkClick(event, 'excursion', 'excursiones', navigate)}>Excursiones</Link>
                     </li>
                     <li>
-                        <a href="#transporse">Transporte</a>
+                        <Link to="/transportes">Transportes</Link>
                     </li>
                     <li>
-                        <a href="#nosotros">Nosotros</a>
+                        <Link to="/nosotros">Nosotros</Link>    
                     </li>
                 </ul>
             </nav>

@@ -11,8 +11,6 @@ interface Props {
 const ClienteForm: React.FC<Props> = ({ clienteEditado, onChange, onCancel, onSave }) => {
   if (!clienteEditado) return null;
 
-  const limpiarFecha = (fecha: string) => fecha.split('T')[0];
-
   return (
     <form onSubmit={(e) => { e.preventDefault(); onSave(); }}>
       <label htmlFor="nombre">Nombre:</label>
@@ -55,19 +53,21 @@ const ClienteForm: React.FC<Props> = ({ clienteEditado, onChange, onCancel, onSa
       <input
         id="fecha_nacimiento"
         type="date"
-        value={clienteEditado.fecha_nacimiento}
-        onChange={(e) => onChange({ ...clienteEditado,  fecha_nacimiento: limpiarFecha(e.target.value),})}
+        value={clienteEditado.fecha_nacimiento ? clienteEditado.fecha_nacimiento.split('T')[0] : ''}
+        onChange={(e) => onChange({ ...clienteEditado, fecha_nacimiento: e.target.value })}
         required
       />
       
       <label htmlFor="estado">Estado:</label>
-      <input
+      <select
         id="estado"
-        type="text"
         value={clienteEditado.estado}
-        onChange={(e) => onChange({ ...clienteEditado, estado: e.target.value })}
+        onChange={(e) => onChange({ ...clienteEditado, estado: parseInt(e.target.value) })}
         required
-      />
+      >
+        <option value="1">Habilitado</option>
+        <option value="0">Deshabilitado</option>
+      </select>
       <label htmlFor="username">Username:</label>
       <input
         id="username"
@@ -76,6 +76,7 @@ const ClienteForm: React.FC<Props> = ({ clienteEditado, onChange, onCancel, onSa
         onChange={(e) => onChange({ ...clienteEditado, username: e.target.value })}
         required
       />
+      
       <label htmlFor="password">Password:</label>
       <input
         id="password"
@@ -84,13 +85,14 @@ const ClienteForm: React.FC<Props> = ({ clienteEditado, onChange, onCancel, onSa
         onChange={(e) => onChange({ ...clienteEditado, password: e.target.value })}
         required
       />
+      
       <label htmlFor="tipo_usuario">Tipo de Usuario:</label>
       <select
         id="tipo_usuario"
         value={clienteEditado.tipo_usuario}
         onChange={(e) => onChange({ ...clienteEditado, tipo_usuario: e.target.value })}
         required
-        >
+      >
         <option value="admin">Admin</option>
         <option value="cliente">Cliente</option>
       </select>

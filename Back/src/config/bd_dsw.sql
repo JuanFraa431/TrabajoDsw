@@ -207,6 +207,7 @@ VALUES (
         '-70.6693'
     );
 -- Inserciones en tabla 'transportes'
+/*
 INSERT INTO transportes (
         descripcion,
         capacidad,
@@ -270,6 +271,7 @@ VALUES (
         'Transportes Santiago',
         'reservas@transportessantiago.com'
     );
+*/
 -- Inserciones en tabla 'hoteles'
 INSERT INTO hoteles (
         nombre,
@@ -469,16 +471,15 @@ VALUES (
         'pedrofernandez',
         '123456',
         'cliente'
-    ),
-    (
+    ), (
         'Admin',
-        'Admin',
-        '12345678',
+        '',
+        '1',
         'admin@admin',
         '1980-05-15',
         true,
         'admin',
-        'admin',
+        '$2b$10$WUe5775fiXJbqywxe7C1LOCTZNo9jhyQTxms06Mb5woYwTzWDTd2e',
         'admin'
     );
 -- Inserciones en tabla 'excursiones'
@@ -591,6 +592,7 @@ VALUES (
         'https://media-cdn.tripadvisor.com/media/attractions-splice-spp-674x446/06/6f/45/eb.jpg'
     );
 -- Inserciones en tabla 'paquete_excursion'
+/*
 INSERT INTO paquete_excursion (id_paquete, id_excursion, fecha)
 VALUES (1, 1, '2024-11-01'),
     (2, 2, '2024-12-01'),
@@ -600,6 +602,7 @@ VALUES (1, 1, '2024-11-01'),
     (6, 6, '2025-01-06'),
     (7, 7, '2025-01-06'),
     (8, 8, '2025-01-06');
+
 -- Inserciones en tabla 'reserva_excursion'
 INSERT INTO reserva_excursion (
         id_cliente,
@@ -611,6 +614,7 @@ INSERT INTO reserva_excursion (
 VALUES (1, 1, 1, '2024-11-01', 1),
     (2, 2, 2, '2024-12-01', 2),
     (3, 3, 3, '2025-01-01', 3);
+*/
 -- Inserciones en tabla 'estadias'
 INSERT INTO estadias (
         id_paquete,
@@ -627,6 +631,7 @@ VALUES (1, 1, '2024-11-01', '2024-11-05', 500.00),
     (6, 6, '2025-01-06', '2025-01-14', 200.00),
     (7, 7, '2025-01-06', '2025-01-14', 250.00),
     (8, 8, '2025-01-06', '2025-01-14', 300.00);
+/*
 -- Inserciones en tabla 'reserva_estadias'
 INSERT INTO reserva_estadias (id_cliente, id_estadia, nro_habitacion)
 VALUES (2, 2, '101'),
@@ -637,6 +642,7 @@ VALUES (2, 2, '101'),
     (3, 6, '606'),
     (1, 7, '707'),
     (2, 8, '808');
+*/
 -- Inserciones en tabla 'comentarios'
 INSERT INTO comentarios (
         fecha,
@@ -694,6 +700,7 @@ VALUES (
         4,
         3
     );
+/*
 -- Inserciones en tabla 'paquete_transporte'
 INSERT INTO paquete_transporte (
         id_paquete,
@@ -772,3 +779,4 @@ INSERT INTO reserva_transporte (id_cliente, id_paquete, id_transporte, fecha)
 VALUES (1, 1, 1, '2024-11-01'),
     (2, 2, 2, '2024-12-01'),
     (3, 3, 3, '2025-01-01');
+*/

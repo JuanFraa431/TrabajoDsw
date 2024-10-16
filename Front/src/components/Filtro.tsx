@@ -4,21 +4,26 @@ import 'react-datepicker/dist/react-datepicker.css';
 import '../styles/Filtro.css';
 import axios from 'axios';
 import { useNavigate, useLocation } from 'react-router-dom';
-import video from '../images/esteEs.mp4';
-
 
 const Filtro: React.FC = () => {
-    const today = new Date(); 
-    const tomorrow = new Date(today); 
-    tomorrow.setDate(today.getDate() + 1); 
-
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 1);
 
     const location = useLocation();
-    const { paquetes } = location.state || { paquetes: [] };
-    const [price, setPrice] = useState<number>(5000);
-    const [startDate, setStartDate] = useState<Date | null>(today); 
-    const [endDate, setEndDate] = useState<Date | null>(tomorrow);
-    const [destination, setDestination] = useState<string>(''); 
+    const { paquetes, filters } = location.state || { paquetes: [], filters: {} };
+
+    const defaultFilters = {
+        price: 5000,
+        startDate: today,
+        endDate: tomorrow,
+        destination: ''
+    };
+
+    const [price, setPrice] = useState<number>(filters.price || defaultFilters.price);
+    const [startDate, setStartDate] = useState<Date | null>(filters.startDate ? new Date(filters.startDate) : defaultFilters.startDate);
+    const [endDate, setEndDate] = useState<Date | null>(filters.endDate ? new Date(filters.endDate) : defaultFilters.endDate);
+    const [destination, setDestination] = useState<string>(filters.destination || defaultFilters.destination);
     const navigate = useNavigate();
 
     const handlePriceChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -27,21 +32,32 @@ const Filtro: React.FC = () => {
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        
-        const formattedStartDate = startDate?.toLocaleDateString('en-CA'); 
-        const formattedEndDate = endDate?.toLocaleDateString('en-CA'); 
-        
+
+        const formattedStartDate = startDate?.toLocaleDateString('en-CA');
+        const formattedEndDate = endDate?.toLocaleDateString('en-CA');
+
         try {
             const response = await axios.get(`http://localhost:3000/api/paquete/search`, {
                 params: {
                     ciudad: destination,
                     fechaInicio: formattedStartDate,
                     fechaFin: formattedEndDate,
-                    precioMaximo: price 
+                    precioMaximo: price
                 }
             });
 
-            navigate('/paquetes', { state: { paquetes: response.data } });
+            navigate('/paquetes', {
+                state: {
+                    paquetes: response.data,
+                    filters: {
+                        destination,
+                        startDate: formattedStartDate,
+                        endDate: formattedEndDate,
+                        price
+                    }
+                }
+            });
+
         } catch (error) {
             console.error('Error al buscar paquetes:', error);
         }
@@ -59,7 +75,7 @@ const Filtro: React.FC = () => {
                                 id="destination"
                                 placeholder="Nombre del destino..."
                                 value={destination}
-                                onChange={(e) => setDestination(e.target.value)} 
+                                onChange={(e) => setDestination(e.target.value)}
                             />
                         </div>
                     </div>
@@ -72,8 +88,8 @@ const Filtro: React.FC = () => {
                                 dateFormat="dd/MM/yyyy"
                                 placeholderText="Fecha de inicio"
                                 className="datepicker-input"
-                                minDate={today} 
-                                portalId="root-portal" /* Asegura que el calendario esté en un contenedor específico */
+                                minDate={today}
+                                portalId="root-portal"
                             />
                             <span> - </span>
                             <DatePicker

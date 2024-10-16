@@ -1,5 +1,6 @@
 import React from 'react';
 import { Cliente } from '../../interface/cliente';
+import '../../styles/Cliente/ClienteList.css';
 import '../../styles/List.css';
 
 interface ClienteListProps {
@@ -14,10 +15,15 @@ const ClienteList: React.FC<ClienteListProps> = ({ clientes, onEdit, onDelete })
       {clientes.map((cliente) => (
         <div key={cliente.id} className="card">
           <div className="card-content">
-            <h3>{cliente.nombre} {cliente.apellido}</h3>
-            <p>Email: {cliente.email}</p>
+            <h3>
+              {cliente.nombre} {cliente.apellido}
+                {cliente.estado === 1 ? (
+                <span className="circulo-verde"></span>
+                ) : (
+                <span className="circulo-rojo"></span>
+                )}
+            </h3>
             <p>DNI: {cliente.dni}</p>
-            <p>Estado: {cliente.estado}</p>
           </div>
           <div className="card-actions">
             <button onClick={() => onEdit(cliente)}>Editar</button>

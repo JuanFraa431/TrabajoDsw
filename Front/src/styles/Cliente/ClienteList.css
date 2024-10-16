@@ -1,8 +1,19 @@
-
-.p-activo {
-    color: green;
+.circulo-verde {
+    width: 15px;
+    height: 15px;
+    background-color: green;
+    border-radius: 50%;
+    display: inline-block;
+    margin-left: 10px;
 }
 
-.p-inactivo {
-    color: red;
+.circulo-rojo {
+    width: 15px;
+    height: 15px;
+    background-color: #ff0000;
+    border-radius: 50%;
+    display: inline-block;
+    margin-left: 10px;
+    position: relative;
+    border: 1px solid #6d0202;
 }
