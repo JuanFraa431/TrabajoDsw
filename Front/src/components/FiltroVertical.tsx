@@ -17,7 +17,6 @@ const FiltroVertical: React.FC = () => {
 
     const location = useLocation();
     const { paquetes } = location.state || { paquetes: [] };
-    console.log(paquetes, "este es")
 
     const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, checked } = e.target;
