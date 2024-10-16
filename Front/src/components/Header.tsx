@@ -45,7 +45,7 @@ const Header = () => {
                 </ul>
             </nav>
             <div className="user">
-                <img src={userIcon} alt="User Icon" className="user-icon" />
+                <img src={cliente ? cliente.imagen : userIcon} alt="User Icon" className="user-icon" />
                 {cliente ? (
                     <a
                         href="/detalleCliente"

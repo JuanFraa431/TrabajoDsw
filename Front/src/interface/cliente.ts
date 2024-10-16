@@ -9,4 +9,5 @@ export interface Cliente {
   username: string;
   password: string;
   tipo_usuario: string;
+  imagen: string;
 }

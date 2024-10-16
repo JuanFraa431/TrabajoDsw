@@ -153,7 +153,7 @@ const VistaAdmin: React.FC = () => {
       )}
 
       {selectedCategory === 'clientes' && (
-      <button className='boton-crear' onClick={() => setClienteEditado({ id: 0, nombre: '', apellido: '', dni: '', email: '', fecha_nacimiento: '', estado: 1, username: '', password: '', tipo_usuario: 'cliente'})}>
+      <button className='boton-crear' onClick={() => setClienteEditado({ id: 0, nombre: '', apellido: '', dni: '', email: '', fecha_nacimiento: '', estado: 1, username: '', password: '', tipo_usuario: 'cliente', imagen: ''})}>
         Crear Cliente
       </button>
       )}

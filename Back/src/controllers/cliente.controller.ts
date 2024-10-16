@@ -42,7 +42,8 @@ async function create(req: Request, res: Response) {
             req.body.estado,
             req.body.username,
             hashedPassword, // Guarda la contraseña encriptada
-            req.body.tipo_usuario
+            req.body.tipo_usuario,
+            req.body.imagen
         );
         const result = await repository.save(cliente);
         res.json(result);
@@ -67,7 +68,8 @@ async function update(req: Request, res: Response) {
             req.body.estado,
             req.body.username,
             req.body.password,
-            req.body.tipo_usuario
+            req.body.tipo_usuario,
+            req.body.imagen
         );
         const result = await repository.update({ id }, cliente);
         res.json(result);

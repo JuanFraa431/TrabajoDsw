@@ -2,6 +2,7 @@ import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Cliente } from '../../interface/cliente';
+import '../../styles/Cliente/DetalleCliente.css';
 
 const DetalleCliente: React.FC = () => {
   const location = useLocation();
@@ -25,26 +26,37 @@ const DetalleCliente: React.FC = () => {
   const handleCerrarSesion = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-
     navigate('/');
   };
 
   return (
-    <div>
-      <h1>Detalle del Cliente</h1>
-      <p><strong>Nombre:</strong> {cliente.nombre}</p>
-      <p><strong>Apellido:</strong> {cliente.apellido}</p>
-      <p><strong>DNI:</strong> {cliente.dni}</p>
-      <p><strong>Email:</strong> {cliente.email}</p>
-      <p><strong>Fecha de Nacimiento:</strong> {cliente.fecha_nacimiento}</p>
-      <p><strong>Username:</strong> {cliente.username}</p>
-      <div>
-        <button onClick={handleDarseDeBaja}>
+    <div className="profile-container">
+      <div className="profile-header">
+        <div className="profile-pic">
+          <img 
+            src={cliente.imagen}
+            alt="Perfil" 
+          />
+        </div>
+        <div className="profile-info">
+          <h1>¡Hola, {cliente.nombre}!</h1>
+        </div>
+      </div>
+
+      <div className="personal-info">
+        <p><strong>Nombre:</strong> {cliente.nombre}</p>
+        <p><strong>Apellido:</strong> {cliente.apellido}</p>
+        <p><strong>DNI:</strong> {cliente.dni}</p>
+        <p><strong>Email:</strong> {cliente.email}</p>
+        <p><strong>Fecha de Nacimiento:</strong> {cliente.fecha_nacimiento}</p>
+        <p><strong>Username:</strong> {cliente.username}</p>
+      </div>
+
+      <div className="action-buttons">
+        <button onClick={handleDarseDeBaja} className="btn danger">
           Darse De Baja
         </button>
-      </div>
-      <div>
-        <button onClick={handleCerrarSesion}>
+        <button onClick={handleCerrarSesion} className="btn logout">
           Cerrar Sesión
         </button>
       </div>

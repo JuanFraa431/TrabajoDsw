@@ -24,7 +24,7 @@ export class ClienteRepository implements Repository<Cliente> {
 
     public async save(item: Cliente): Promise<Cliente> {
         const [result] = (await pool.query(
-            'INSERT INTO clientes (nombre, apellido, DNI, email, fecha_nacimiento, estado, username, password, tipo_usuario) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            'INSERT INTO clientes (nombre, apellido, DNI, email, fecha_nacimiento, estado, username, password, tipo_usuario, imagen) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
             [
                 item.nombre,
                 item.apellido,
@@ -35,6 +35,7 @@ export class ClienteRepository implements Repository<Cliente> {
                 item.username,
                 item.password,
                 item.tipo_usuario,
+                item.imagen,
             ]
         )) as RowDataPacket[];
         const affectedRows = (result as any).affectedRows;
@@ -51,7 +52,7 @@ export class ClienteRepository implements Repository<Cliente> {
     ): Promise<Cliente | undefined> {
         const id = Number.parseInt(item.id);
         const [result] = (await pool.query(
-            'UPDATE clientes SET nombre = ?, apellido = ?, dni = ?, email = ?, fecha_nacimiento = ?, estado = ?, username = ?, password = ?, tipo_usuario = ? WHERE id = ?',
+            'UPDATE clientes SET nombre = ?, apellido = ?, dni = ?, email = ?, fecha_nacimiento = ?, estado = ?, username = ?, password = ?, tipo_usuario = ?, imagen = ? WHERE id = ?',
             [
                 cliente.nombre,
                 cliente.apellido,
@@ -62,6 +63,7 @@ export class ClienteRepository implements Repository<Cliente> {
                 cliente.username,
                 cliente.password,
                 cliente.tipo_usuario,
+                cliente.imagen,
                 id,
             ]
         )) as RowDataPacket[];

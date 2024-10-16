@@ -9,7 +9,8 @@ export class Cliente {
     public estado: string,
     public username: string,
     public password: string,
-    public tipo_usuario: string
+    public tipo_usuario: string,
+    public imagen: string,
   ) {}
 }
 
