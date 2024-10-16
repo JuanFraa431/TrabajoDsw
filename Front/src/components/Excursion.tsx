@@ -8,27 +8,23 @@ const Excursiones: React.FC = () => {
     const { excursiones = [] } = location.state || {};
 
     return (
-        <div className="container2">
-            <div className="hotels-list">
+        <div className="container-excursiones">
+            <div className="excursiones-list">
                 {excursiones.length > 0 ? (
                     excursiones.map((excursion: Excursion) => (
-                        <div className="hotel-card" key={excursion.id}>
-                            <div className="hotel-info">
+                        <div className="excursion-card" key={excursion.id}>
+                            <img src={excursion.imagen} alt={excursion.nombre} className="card-img" />
+                            <div className="excursion-info">
                                 <h3>{excursion.nombre}</h3>
-                                <p>Tipo: {excursion.tipo}</p>
-                                <p>Descripción: {excursion.descripcion}</p>
-                                <p>Horario: {excursion.horario}</p>
-                                <p>Precio: ${excursion.precio}</p>
-                                <p>Empresa: {excursion.nombre_empresa}</p>
-                                <p>Maximo de personas: {excursion.nro_personas_max}</p>
-                                <div className='prueba'>
+                                <p>{excursion.descripcion}</p>
+                                <div className="prueba">
                                     <button className="boton-ver">Ver Excursión</button>
                                 </div>
                             </div>
                         </div>
                     ))
                 ) : (
-                    <div className='fail'>
+                    <div className="fail">
                         <p>No se encontraron excursiones que coincidan con la búsqueda.</p>
                     </div>
                 )}

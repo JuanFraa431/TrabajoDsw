@@ -10,5 +10,6 @@ export class Excursion {
     public mail_empresa: string,
     public precio: number,
     public id_ciudad: number,
+    public imagen: string
   ) {}
 }

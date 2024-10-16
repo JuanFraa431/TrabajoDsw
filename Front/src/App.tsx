@@ -85,7 +85,6 @@ const App: React.FC = () => {
                         } />
                         <Route path="/excursiones" element={
                         <motion.div {...pageTransition}>
-                            <Filtro/>
                             <Excursiones/>
                         </motion.div>
                         } />
