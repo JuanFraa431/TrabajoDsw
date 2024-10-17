@@ -1,9 +1,11 @@
-import { findAll, findOne, create, update, remove, search } from "../controllers/paquete.controller.js";
+import { findAll, findOne, create, update, remove, search, findAllUser } from "../controllers/paquete.controller.js";
 import { Router } from "express";
 
 export const routerPaquete = Router();
 
 routerPaquete.get('/search', search);
+
+routerPaquete.get('/user', findAllUser);
 
 routerPaquete.get('/', findAll);
 

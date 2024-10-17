@@ -81,11 +81,10 @@ const ClienteForm: React.FC<Props> = ({ clienteEditado, onChange, onCancel, onSa
       <input
         id="password"
         type="password"
-        value={clienteEditado.password}
         onChange={(e) => onChange({ ...clienteEditado, password: e.target.value })}
         required
       />
-      
+
       <label htmlFor="tipo_usuario">Tipo de Usuario:</label>
       <select
         id="tipo_usuario"

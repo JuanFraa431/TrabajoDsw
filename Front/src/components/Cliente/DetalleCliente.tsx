@@ -40,6 +40,11 @@ const DetalleCliente: React.FC = () => {
         </div>
         <div className="profile-info">
           <h1>¡Hola, {cliente.nombre}!</h1>
+          {cliente.tipo_usuario === 'admin' && (
+            <button onClick={() => navigate('/vistaAdmin')} className="btn-admin">
+              Administración
+            </button>
+          )}
         </div>
       </div>
 

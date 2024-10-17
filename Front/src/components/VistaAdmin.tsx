@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/VistaAdmin.css';
 
+import PaqueteList from './Paquete/PaqueteList';
+import PaqueteForm from './Paquete/PaqueteForm';
+
 import ClienteList from './Cliente/ClienteList';
 import ClienteForm from './Cliente/ClienteForm';
 
@@ -17,6 +20,7 @@ import { Ciudad } from '../interface/ciudad';
 import { Cliente } from '../interface/cliente';
 import { Hotel } from '../interface/hotel';
 import { Excursion } from '../interface/excursion';
+import { Paquete } from '../interface/paquete';
 
 import { fetchEntities, updateEntity, deleteEntity, createEntity } from '../services/crudService';
 
@@ -29,6 +33,7 @@ const VistaAdmin: React.FC = () => {
   const [hoteles, setHoteles] = useState<Hotel[]>([]);
   const [ciudades, setCiudades] = useState<Ciudad[]>([]);
   const [excursiones, setExcursiones] = useState<Excursion[]>([]);
+  const [paquetes, setPaquetes] = useState<Paquete[]>([]);
 
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
@@ -36,12 +41,14 @@ const VistaAdmin: React.FC = () => {
   const [hotelEditado, setHotelEditado] = useState<Hotel | null>(null);
   const [clienteEditado, setClienteEditado] = useState<Cliente | null>(null);
   const [excursionEditada, setExcursionEditada] = useState<Excursion | null>(null);
+  const [paqueteEditado, setPaqueteEditado] = useState<Paquete | null>(null);
 
   useEffect(() => {
     loadEntities('/api/cliente', setClientes);
     loadEntities('/api/hotel', setHoteles);
     loadEntities('/api/ciudad', setCiudades);
     loadEntities('/api/excursion', setExcursiones);
+    loadEntities('/api/paquete', setPaquetes);
   }, []);
 
   const loadEntities = async (endpoint: string, setState: React.Dispatch<React.SetStateAction<any[]>>) => {
@@ -123,6 +130,14 @@ const VistaAdmin: React.FC = () => {
             onDelete={(excursion) => handleEliminar(excursion.id, '/api/excursion', 'excursión', setExcursiones)}
           />
         );
+      case 'paquetes':
+        return (
+          <PaqueteList
+            paquetes={paquetes}
+            onEdit={(paquete) => setPaqueteEditado(paquete)}
+            onDelete={(paquete) => handleEliminar(paquete.id, '/api/paquete', 'paquete', setPaquetes)}
+          />
+        );
       default:
         return <p>Selecciona una categoría para ver los registros.</p>;
     }
@@ -136,6 +151,7 @@ const VistaAdmin: React.FC = () => {
         <button onClick={() => setSelectedCategory('hoteles')}>Hoteles</button>
         <button onClick={() => setSelectedCategory('ciudades')}>Ciudades</button>
         <button onClick={() => setSelectedCategory('excursiones')}>Excursiones</button>
+        <button onClick={() => setSelectedCategory('paquetes')}>Paquetes</button>
       </div>
       <div>{errorMessage && <p className="error-message">{errorMessage}</p>}</div>
       <div>{renderList()}</div>
@@ -161,6 +177,12 @@ const VistaAdmin: React.FC = () => {
       {selectedCategory === 'excursiones' && (
         <button className='boton-crear' onClick={() => setExcursionEditada({ id: 0, nombre: '', descripcion: '', tipo: '', horario: '', nro_personas_max: 0, nombre_empresa: '', mail_empresa: '', precio: 0, id_ciudad: 0, imagen: ''})}>
           Crear Excursión
+        </button>
+      )}
+
+      {selectedCategory === 'paquetes' && (
+        <button className='boton-crear' onClick={() => setPaqueteEditado({ id: 0, nombre: '', descripcion: '', detalle: '', precio: 0, fecha_ini: '', fecha_fin: '', imagen: ''})}>
+          Crear Paquete
         </button>
       )}
 
@@ -231,6 +253,23 @@ const VistaAdmin: React.FC = () => {
                 await handleEditar(excursionEditada, '/api/excursion', setExcursiones);
               }
               setExcursionEditada(null);
+            }}
+          />
+        )}
+      </div>
+      <div>
+        {paqueteEditado && (
+          <PaqueteForm
+            paqueteEditado={paqueteEditado}
+            onChange={setPaqueteEditado}
+            onCancel={() => setPaqueteEditado(null)}
+            onSave={async () => {
+              if (paqueteEditado.id === 0) {
+                await handleCrear(paqueteEditado, '/api/paquete', setPaquetes);
+              } else {
+                await handleEditar(paqueteEditado, '/api/paquete', setPaquetes);
+              }
+              setPaqueteEditado(null);
             }}
           />
         )}

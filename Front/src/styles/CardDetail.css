@@ -17,14 +17,12 @@
     margin-bottom: 10px;
 }
 
-/* Layout de imagen y detalles */
 .detail-layout {
     display: flex;
     justify-content: space-between;
     gap: 20px;
 }
 
-/* Contenedor de la imagen */
 .image-container {
     flex: 2;
     display: flex;
@@ -39,7 +37,6 @@
     border-radius: 8px;
 }
 
-/* Contenedor de los detalles */
 .info-container {
     flex: 3;
     display: flex;
@@ -47,7 +44,6 @@
     justify-content: space-between;
 }
 
-/* Detalles del paquete */
 .details {
     margin-bottom: 20px;
 }
@@ -63,7 +59,6 @@
     color: #333;
 }
 
-/* Caja de precio y botón */
 .price-box {
     background-color: #f9f9f9;
     border: 1px solid #e0e0e0;
@@ -132,9 +127,9 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     display: flex;
     gap: 20px;
-}
+}   
 
-.comment p {
+.comentario-p {
     margin: 5px 0;
     font-size: 1rem;
     color: #555;
@@ -148,14 +143,16 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     width: 100px;
+    height: 100px;
 }
 
 .client-image {
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    margin-bottom: 10px;
+    object-fit: cover;
 }
 
 .add-comment {
@@ -179,7 +176,7 @@
     align-self: flex-start;
     padding: 10px 20px;
     font-size: 1rem;
-    background-color: #007bbf;
+    background-color: #007bbd;
     color: #fff;
     border: none;
     border-radius: 25px;
@@ -209,16 +206,14 @@
 }
 
 .stars-display {
-    color: #f36f21;
+    color: #007bbd;
     font-size: 1.2rem;
 }
 
-
-/* Botón de reserva (cambiado al azul principal) */
 .reserve-button {
     padding: 10px 20px;
     font-size: 1.2rem;
-    background-color: #007bbf; /* Cambiado a tu color principal */
+    background-color: #007bbf;
     color: #fff;
     border: none;
     border-radius: 25px;
@@ -227,10 +222,9 @@
 }
 
 .reserve-button:hover {
-    background-color: #005f99; /* Un azul más oscuro para el hover */
+    background-color: #005f99;
 }
 
-/* Sección de Descripción */
 .description-section {
     margin-top: 20px;
     padding: 20px;
@@ -248,4 +242,13 @@
     line-height: 1.6;
 }
 
+.nombre-fecha-comentario {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
 
+.comment-details {
+    width: 100%;
+}

@@ -9,6 +9,16 @@ async function findAll(req: Request, res: Response) {
     res.json(paquetes); 
 }
 
+async function findAllUser(req: Request, res: Response) {
+    try {
+        const paquetes = await repository.findAllUser();
+        res.json(paquetes);
+    } catch (error: any) {
+        const errorMessage = error.message || 'Error desconocido';
+        res.status(500).json({ message: 'Error al obtener los paquetes de usuario', errorMessage });
+    }
+}
+
 
 async function findOne(req: Request, res: Response) {
     try {
@@ -77,4 +87,4 @@ async function search(req: Request, res: Response) {
     }
 }
 
-export { findAll, findOne, create, update, remove, search };
+export { findAll, findOne, create, update, remove, search, findAllUser };

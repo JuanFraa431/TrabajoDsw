@@ -4,7 +4,7 @@ import { pool } from '../shared/conn.js';
 import { RowDataPacket } from 'mysql2';
 
 export class PaqueteRepository implements Repository<Paquete> {
-    public async findAll(): Promise<Paquete[] | undefined> {
+    public async findAllUser(): Promise<Paquete[] | undefined> {
         const [paquetes] = await pool.query(`
             SELECT p.*, c.nombre
             FROM 
@@ -20,7 +20,7 @@ export class PaqueteRepository implements Repository<Paquete> {
         return paquetes as Paquete[];
     }
 
-    public async FindAllByOwner(id: number): Promise<Paquete[] | undefined> {
+    public async findAll(): Promise<Paquete[] | undefined> {
         const [paquetes] = await pool.query(`
             SELECT p.*, c.nombre
             FROM 
@@ -30,8 +30,7 @@ export class PaqueteRepository implements Repository<Paquete> {
                 INNER JOIN
                     hoteles AS h ON e.id_hotel = h.id
                 INNER JOIN 
-                    ciudades AS c ON h.id_ciudad = c.id
-        `);
+                    ciudades AS c ON h.id_ciudad = c.id`);
         return paquetes as Paquete[];
     }
 

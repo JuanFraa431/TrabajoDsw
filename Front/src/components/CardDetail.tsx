@@ -99,8 +99,8 @@ const CardDetail: React.FC = () => {
                         <div className="info-container">
                             <div className="details">
                                 <p><strong>Detalles:</strong> {paquete.detalle}</p>
-                                <p className="price"><strong>Desde:</strong> {new Date(paquete.fecha_ini).toISOString().split('T')[0]}</p>
-                                <p className='price'><strong>Hasta:</strong> {new Date(paquete.fecha_fin).toISOString().split('T')[0]} </p>
+                                <p className="price"><strong>Desde:</strong> {new Date(paquete.fecha_ini).toLocaleDateString('es-ES')}</p>
+                                <p className='price'><strong>Hasta:</strong> {new Date(paquete.fecha_fin).toLocaleDateString('es-ES')} </p>
                             </div>
                             <div className="price-box">
                                 <p className="price-per-night">Precio por noche</p>
@@ -137,12 +137,14 @@ const CardDetail: React.FC = () => {
                                         alt={comentario.cliente?.username}
                                         onError={(e) => { e.currentTarget.src = userIcon; }}
                                     />
-                                    <p><strong>{comentario.cliente?.username}</strong></p>
                                 </div>
                                 <div className="comment-details">
-                                    <p><strong>Fecha:</strong> {new Date(comentario.fecha).toISOString().split('T')[0]}</p>
-                                    <p>{comentario.descripcion}</p>
-                                    <p className="stars-display">{renderEstrellas(comentario.estrellas)}</p>
+                                    <div className='nombre-fecha-comentario'>
+                                        <p className='comentario-p'><strong>{comentario.cliente?.username}</strong></p>
+                                        <p className='fecha-comentario comentario-p'>{new Date(comentario.fecha).toISOString().split('T')[0]}</p>
+                                    </div>
+                                    <p className='comentario-p'>{comentario.descripcion}</p>
+                                    <p className="stars-display comentario-p">{renderEstrellas(comentario.estrellas)}</p>
                                 </div>
                             </div>
                         ))

@@ -14,6 +14,7 @@
   background-color: #007bff;
   color: white;
   border-radius: 10px 10px 0 0;
+  width: 100%;
 }
 
 .profile-pic {
@@ -24,6 +25,16 @@
   border-radius: 50%;
   width: 100px;
   height: 100px;
+  object-fit: cover;
+  border: 2px solid #cecece;
+}
+
+.profile-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #007bff;
+  width: 100%;
 }
 
 .profile-info h1 {
@@ -70,4 +81,14 @@
 
 .btn:hover {
   opacity: 0.9;
+}
+
+.btn-admin {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: #ffffff;
+  color: #007bff;
 }
