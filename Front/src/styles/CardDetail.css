@@ -88,9 +88,10 @@
     margin-bottom: 20px;
 }
 
-/* Botón de reserva */
-.reserve-button {
-    background-color: #f36f21;
+
+.verMas-button {
+    margin-top: 10px;
+    background-color: #007bbf;;
     color: #fff;
     padding: 10px 20px;
     font-size: 1.2rem;
@@ -100,39 +101,65 @@
     transition: background-color 0.3s;
 }
 
-.reserve-button:hover {
-    background-color: #e55b1a;
+.verMas-button:hover {
+    background-color: #005f99;
 }
 
-/* Estilos para la sección de comentarios */
 .comments-section {
     margin-top: 30px;
     padding: 20px;
     background-color: #f7f7f7;
     border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .comments-section h3 {
     font-size: 1.8rem;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
+    color: #333;
 }
 
 .comments-list {
-    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
 .comment {
-    padding: 10px;
-    border-bottom: 1px solid #e0e0e0;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    gap: 20px;
 }
 
 .comment p {
-    font-size: 1rem;
     margin: 5px 0;
+    font-size: 1rem;
+    color: #555;
 }
 
-/* Formulario para agregar un nuevo comentario */
+.comment strong {
+    color: #333;
+}
+
+.client-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100px;
+}
+
+.client-image {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+}
+
 .add-comment {
+    margin-top: 30px;
     display: flex;
     flex-direction: column;
 }
@@ -152,7 +179,7 @@
     align-self: flex-start;
     padding: 10px 20px;
     font-size: 1rem;
-    background-color: #007bbf; /* Cambiado a tu color principal */
+    background-color: #007bbf;
     color: #fff;
     border: none;
     border-radius: 25px;
@@ -161,8 +188,31 @@
 }
 
 .add-comment-button:hover {
-    background-color: #005f99; /* Un azul más oscuro para el hover */
+    background-color: #005f99;
 }
+
+.rating-section {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.rating-section select {
+    margin-left: 10px;
+    padding: 5px;
+    border-radius: 8px;
+}
+
+.rating-section label {
+    font-size: 1.1rem;
+    color: #555;
+}
+
+.stars-display {
+    color: #f36f21;
+    font-size: 1.2rem;
+}
+
 
 /* Botón de reserva (cambiado al azul principal) */
 .reserve-button {

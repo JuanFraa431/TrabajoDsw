@@ -12,7 +12,7 @@ const CardDetail: React.FC = () => {
     const [paquete, setPaquete] = useState<any>(null);
     const [comentarios, setComentarios] = useState<Comentario[]>([]);
     const [nuevoComentario, setNuevoComentario] = useState<string>("");
-    const [estrellas, setEstrellas] = useState<number>(0);  // New state for star rating
+    const [estrellas, setEstrellas] = useState<number>(0);
     const [mostrarDescripcionCompleta, setMostrarDescripcionCompleta] = useState<boolean>(false);
 
     useEffect(() => {
@@ -83,6 +83,10 @@ const CardDetail: React.FC = () => {
         return descripcion;
     };
 
+    const renderEstrellas = (estrellas: number) => {
+        return '★'.repeat(estrellas) + '☆'.repeat(5 - estrellas);
+    };
+
     return (
         <div className="card-detail-container">
             <h2 className="title">Detalles del Paquete</h2>
@@ -115,7 +119,7 @@ const CardDetail: React.FC = () => {
                         ? paquete?.descripcion
                         : descripcionTruncada(paquete?.descripcion || "", 100)}
                 </p>
-                <button onClick={toggleDescripcion} className="reserve-button">
+                <button onClick={toggleDescripcion} className="verMas-button">
                     {mostrarDescripcionCompleta ? "Ver menos" : "Ver más"}
                 </button>
             </div>
@@ -126,20 +130,20 @@ const CardDetail: React.FC = () => {
                     {comentarios.length > 0 ? (
                         comentarios.map((comentario) => (
                             <div key={comentario.id} className="comment">
-                                <p><strong>Cliente:</strong> {comentario.cliente.username}</p>
-                                <p><strong>Fecha:</strong> {new Date(comentario.fecha).toISOString().split('T')[0]}</p>
-                                <p>{comentario.descripcion}</p>
-                                <p><strong>Estrellas:</strong> {comentario.estrellas}</p>
-                                {comentario.cliente && (
-                                    <div className="client-info">
-                                        <img
-                                            src={comentario.cliente.imagen || userIcon}
-                                            className="client-image"
-                                            alt={comentario.cliente.username}
-                                            onError={(e) => { e.currentTarget.src = userIcon; }}
-                                        />
-                                    </div>
-                                )}
+                                <div className="client-info">
+                                    <img
+                                        src={comentario.cliente?.imagen || userIcon}
+                                        className="client-image"
+                                        alt={comentario.cliente?.username}
+                                        onError={(e) => { e.currentTarget.src = userIcon; }}
+                                    />
+                                    <p><strong>{comentario.cliente?.username}</strong></p>
+                                </div>
+                                <div className="comment-details">
+                                    <p><strong>Fecha:</strong> {new Date(comentario.fecha).toISOString().split('T')[0]}</p>
+                                    <p>{comentario.descripcion}</p>
+                                    <p className="stars-display">{renderEstrellas(comentario.estrellas)}</p>
+                                </div>
                             </div>
                         ))
                     ) : (
