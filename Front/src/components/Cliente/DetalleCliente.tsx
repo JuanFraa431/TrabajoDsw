@@ -48,7 +48,7 @@ const DetalleCliente: React.FC = () => {
         <p><strong>Apellido:</strong> {cliente.apellido}</p>
         <p><strong>DNI:</strong> {cliente.dni}</p>
         <p><strong>Email:</strong> {cliente.email}</p>
-        <p><strong>Fecha de Nacimiento:</strong> {cliente.fecha_nacimiento}</p>
+        <p><strong>Fecha de Nacimiento:</strong> {new Date(cliente.fecha_nacimiento).toISOString().split('T')[0]}</p>
         <p><strong>Username:</strong> {cliente.username}</p>
       </div>
 
