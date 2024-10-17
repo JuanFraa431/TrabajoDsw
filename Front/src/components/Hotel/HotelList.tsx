@@ -17,8 +17,6 @@ const HotelList: React.FC<HotelListProps> = ({ hoteles, onEdit, onDelete }) => {
             <h3>{hotel.nombre}</h3>
             <p>Dirección: {hotel.direccion}</p>
             <p>Estrellas: {hotel.estrellas}</p>
-            <p>Teléfono: {hotel.telefono}</p>
-            <p>Email: {hotel.email}</p>
           </div>
           <div className="card-actions">
             <button onClick={() => onEdit(hotel)}>Editar</button>

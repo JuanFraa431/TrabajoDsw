@@ -2,14 +2,17 @@ import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import '../styles/CardDetail.css';
+import { Comentario } from '../interface/comentario';
+import userIcon from "../images/user-icon.png";
 
 const CardDetail: React.FC = () => {
     const location = useLocation();
+    const clienteLogueado = localStorage.getItem('user');
     const { id } = location.state || { id: null };
     const [paquete, setPaquete] = useState<any>(null);
-    const [comentarios, setComentarios] = useState<any[]>([]);
+    const [comentarios, setComentarios] = useState<Comentario[]>([]);
     const [nuevoComentario, setNuevoComentario] = useState<string>("");
-
+    const [estrellas, setEstrellas] = useState<number>(0);  // New state for star rating
     const [mostrarDescripcionCompleta, setMostrarDescripcionCompleta] = useState<boolean>(false);
 
     useEffect(() => {
@@ -18,28 +21,54 @@ const CardDetail: React.FC = () => {
             setPaquete(response.data);
         };
 
+        const fetchComentarios = async () => {
+            const response = await axios.get(`http://localhost:3000/api/comentario/paquete/${id}`);
+            const comentariosConCliente = await Promise.all(response.data.map(async (comentario: Comentario) => {
+                const cliente = await fetchClienteComentario(comentario.id_cliente);
+                return { ...comentario, cliente };
+            }));
+            setComentarios(comentariosConCliente);
+        };
+
         if (id) {
             fetchPaquete();
             fetchComentarios();
         }
     }, [id]);
 
-    const fetchComentarios = () => {
-        setComentarios([
-            { id: 1, usuario: "Juan", comentario: "Excelente paquete, me encantó." },
-            { id: 2, usuario: "Ana", comentario: "El lugar es muy bonito, lo recomiendo." }
-        ]);
+    const fetchClienteComentario = async (clienteId: number) => {
+        try {
+            const response = await axios.get(`http://localhost:3000/api/cliente/${clienteId}`);
+            return response.data;
+        } catch (error) {
+            console.error("Error fetching cliente:", error);
+            return null;
+        }
     };
 
-    const agregarComentario = () => {
-        if (nuevoComentario.trim()) {
-            const nuevo = {
-                id: comentarios.length + 1,
-                usuario: "Usuario anónimo",
-                comentario: nuevoComentario
+    const agregarComentario = async () => {
+        if (!nuevoComentario.trim() || estrellas === 0) {
+            alert('Por favor, completa el comentario y selecciona una calificación.');
+            return;
+        }
+
+        try {
+            const newComentario = {
+                id_cliente: clienteLogueado ? JSON.parse(clienteLogueado).id : null,
+                id_paquete: id,
+                fecha: new Date().toISOString().split('T')[0],
+                descripcion: nuevoComentario,
+                estrellas
             };
-            setComentarios([...comentarios, nuevo]);
+
+            const response = await axios.post('http://localhost:3000/api/comentario', newComentario);
+
+            const cliente = clienteLogueado ? await fetchClienteComentario(JSON.parse(clienteLogueado).id) : null;
+            setComentarios([...comentarios, { ...newComentario, cliente, id: response.data.id }]);
             setNuevoComentario("");
+            setEstrellas(0);
+        } catch (error) {
+            console.error("Error adding comentario:", error);
         }
     };
 
@@ -97,21 +126,47 @@ const CardDetail: React.FC = () => {
                     {comentarios.length > 0 ? (
                         comentarios.map((comentario) => (
                             <div key={comentario.id} className="comment">
-                                <p><strong>{comentario.usuario}:</strong> {comentario.comentario}</p>
+                                <p><strong>Cliente:</strong> {comentario.cliente.username}</p>
+                                <p><strong>Fecha:</strong> {new Date(comentario.fecha).toISOString().split('T')[0]}</p>
+                                <p>{comentario.descripcion}</p>
+                                <p><strong>Estrellas:</strong> {comentario.estrellas}</p>
+                                {comentario.cliente && (
+                                    <div className="client-info">
+                                        <img
+                                            src={comentario.cliente.imagen || userIcon}
+                                            className="client-image"
+                                            alt={comentario.cliente.username}
+                                            onError={(e) => { e.currentTarget.src = userIcon; }}
+                                        />
+                                    </div>
+                                )}
                             </div>
                         ))
                     ) : (
                         <p>No hay comentarios aún. ¡Sé el primero en comentar!</p>
                     )}
                 </div>
-                <div className="add-comment">
-                    <textarea
-                        value={nuevoComentario}
-                        onChange={(e) => setNuevoComentario(e.target.value)}
-                        placeholder="Escribe tu comentario aquí..."
-                    />
-                    <button onClick={agregarComentario} className="add-comment-button">Agregar comentario</button>
-                </div>
+                {clienteLogueado ? (
+                    <div className="add-comment">
+                        <textarea
+                            value={nuevoComentario}
+                            onChange={(e) => setNuevoComentario(e.target.value)}
+                            placeholder="Escribe tu comentario aquí..."
+                        />
+                        <div className="rating-section">
+                            <label>Estrellas: </label>
+                            <select value={estrellas} onChange={(e) => setEstrellas(Number(e.target.value))}>
+                                <option value={0}>Seleccione</option>
+                                {[1, 2, 3, 4, 5].map(star => (
+                                    <option key={star} value={star}>{star}</option>
+                                ))}
+                            </select>
+                        </div>
+                        <button onClick={agregarComentario} className="add-comment-button">Agregar comentario</button>
+                    </div>
+                ) : (
+                    <p>Debes estar logueado para agregar un comentario.</p>
+                )}
             </div>
         </div>
     );

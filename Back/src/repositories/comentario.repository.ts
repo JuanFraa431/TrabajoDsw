@@ -3,7 +3,7 @@ import { Comentario } from '../models/comentario.model.js';
 import { pool } from '../shared/conn.js';
 import { RowDataPacket } from 'mysql2';
 
-export class ClienteRepository implements Repository<Comentario> {
+export class ComentarioRepository implements Repository<Comentario> {
   public async findAll(): Promise<Comentario[] | undefined> {
     const [comentarios] = await pool.query('SELECT * FROM comentarios');
     return comentarios as Comentario[];
@@ -74,5 +74,13 @@ export class ClienteRepository implements Repository<Comentario> {
     if (affectedRows == 0) {
       throw new Error('No se ha podido borrar el comentario');
     }
+  }
+
+  public async findByPaquete(id: string): Promise<Comentario[] | undefined> {
+    const [comentarios] = await pool.query<RowDataPacket[]>(
+      'SELECT * FROM comentarios where id_paquete = ?',
+      [id]
+    );
+    return comentarios as Comentario[];
   }
 }

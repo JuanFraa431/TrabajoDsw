@@ -15,9 +15,7 @@ const CiudadList: React.FC<CiudadListProps> = ({ ciudades, onEdit, onDelete }) =
         <div key={ciudad.id} className="card">
           <div className="card-content">
             <h3>{ciudad.nombre}</h3>
-            <p>País: {ciudad.pais}</p>
             <p>Descripción: {ciudad.descripcion}</p>
-            <p>Coordenadas: {ciudad.latitud}, {ciudad.longitud}</p>
           </div>
           <div className="card-actions">
             <button onClick={() => onEdit(ciudad)}>Editar</button>

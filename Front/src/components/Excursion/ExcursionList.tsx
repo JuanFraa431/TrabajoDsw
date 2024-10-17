@@ -16,9 +16,6 @@ const ExcursionList: React.FC<ExcursionListProps> = ({ excursiones, onEdit, onDe
           <div className="card-content">
             <h3>{excursion.nombre}</h3>
             <p>Tipo: {excursion.tipo}</p>
-            <p>Horario: {excursion.horario}</p>
-            <p>Precio: ${excursion.precio}</p>
-            <p>Empresa: {excursion.nombre_empresa} (Email: {excursion.mail_empresa})</p>
           </div>
           <div className="card-actions">
             <button onClick={() => onEdit(excursion)}>Editar</button>

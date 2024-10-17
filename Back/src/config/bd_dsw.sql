@@ -59,6 +59,7 @@ CREATE TABLE clientes (
     username VARCHAR(100) NOT NULL,
     password VARCHAR(255) NOT NULL,
     tipo_usuario VARCHAR(50) NOT NULL,
+    imagen VARCHAR(1000),
     unique(username)
 );
 -- Tabla excursiones
@@ -450,7 +451,8 @@ INSERT INTO clientes (
         estado,
         username,
         password,
-        tipo_usuario
+        tipo_usuario,
+        imagen
     )
 VALUES (
         'Juan',
@@ -461,7 +463,8 @@ VALUES (
         true,
         'juanperez',
         '123456',
-        'cliente'
+        'cliente',
+        'https://www.cajabambaperu.com/wp-content/uploads/2018/06/juan-perez.jpg'
     ),
     (
         'María',
@@ -472,7 +475,8 @@ VALUES (
         true,
         'mariagomez',
         '123456',
-        'cliente'
+        'cliente',
+        ''
     ),
     (
         'Pedro',
@@ -483,7 +487,8 @@ VALUES (
         false,
         'pedrofernandez',
         '123456',
-        'cliente'
+        'cliente',
+        ''
     ), (
         'Admin',
         '',
@@ -493,7 +498,8 @@ VALUES (
         true,
         'admin',
         '$2b$10$WUe5775fiXJbqywxe7C1LOCTZNo9jhyQTxms06Mb5woYwTzWDTd2e',
-        'admin'
+        'admin',
+        'https://cdn.discordapp.com/attachments/1041463155680874618/1296256493083037766/imagen_admin.jpg?ex=6711a06f&is=67104eef&hm=75a60090424a5bcc0fbf4169a4aa6f1e93015f13b2a1c64d63e9b35d59c7c6bd&'
     );
 -- Inserciones en tabla 'excursiones'
 INSERT INTO excursiones (
