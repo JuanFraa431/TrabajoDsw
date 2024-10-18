@@ -31,7 +31,7 @@ const Header = () => {
                         <Link to="/hoteles" >Hoteles</Link>
                     </li>
                     <li>
-                        <Link to="/paquetes" onClick={(event) => handleLinkClick(event, 'paquete', 'paquetes', navigate)}>Paquetes</Link>
+                        <Link to="/paquetes" onClick={(event) => handleLinkClick(event, 'paquete/user', 'paquetes', navigate)}>Paquetes</Link>
                     </li>
                     <li>
                         <Link to="/excursiones" onClick={(event) => handleLinkClick(event, 'excursion', 'excursiones', navigate)}>Excursiones</Link>

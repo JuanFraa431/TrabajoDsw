@@ -6,7 +6,7 @@ import { Paquete } from '../interface/paquete';
 
 
 
-const Card: React.FC<Paquete> = ({ id, nombre, descripcion, detalle, latitud, longitud, precio, fecha_ini, fecha_fin, imagen }) => {
+const Card: React.FC<Paquete> = ({ id, nombre, descripcion, detalle, precio, fecha_ini, fecha_fin, imagen }) => {
     return (
         <div className="card">
             <img src={imagen} alt={nombre} className="card-img" />
@@ -32,7 +32,7 @@ const CardList: React.FC = () => {
     useEffect(() => {
         const fetchPaquetes = async () => {
             try {
-                const response = await axios.get('/api/paquete');
+                const response = await axios.get('/api/paquete/user');
                 setPaquetes(response.data);
             } catch (err) {
                 setError(err instanceof Error ? err.message : 'Error desconocido');
