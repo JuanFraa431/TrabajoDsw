@@ -28,6 +28,7 @@ const PaqueteList: React.FC<PaqueteListProps> = ({ paquetes, onEdit, onDelete })
           <div className="card-actions">
             <button onClick={() => onEdit(paquete)}>Editar</button>
             <button onClick={() => onDelete(paquete)}>Eliminar</button>
+            <button>Ver Estadias</button>
           </div>
         </div>
       ))}

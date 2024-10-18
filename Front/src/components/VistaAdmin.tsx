@@ -181,7 +181,7 @@ const VistaAdmin: React.FC = () => {
       )}
 
       {selectedCategory === 'paquetes' && (
-        <button className='boton-crear' onClick={() => setPaqueteEditado({ id: 0, nombre: '', descripcion: '', detalle: '', precio: 0, fecha_ini: '', fecha_fin: '', imagen: ''})}>
+        <button className='boton-crear' onClick={() => setPaqueteEditado({ id: 0, estado: 1, nombre: '', descripcion: '', detalle: '', precio: 0, fecha_ini: '', fecha_fin: '', imagen: ''})}>
           Crear Paquete
         </button>
       )}

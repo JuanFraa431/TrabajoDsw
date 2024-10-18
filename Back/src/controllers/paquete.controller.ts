@@ -1,12 +1,12 @@
-import {Request, Response, NextFunction} from 'express'
+import { Request, Response, NextFunction } from 'express'
 import { PaqueteRepository } from '../repositories/paquete.repository.js'
 import { Paquete } from '../models/paquete.model.js'
 
 const repository = new PaqueteRepository()
 
 async function findAll(req: Request, res: Response) {
-    const paquetes = await repository.findAll(); 
-    res.json(paquetes); 
+    const paquetes = await repository.findAll();
+    res.json(paquetes);
 }
 
 async function findAllUser(req: Request, res: Response) {
@@ -23,7 +23,7 @@ async function findAllUser(req: Request, res: Response) {
 async function findOne(req: Request, res: Response) {
     try {
         const { id } = req.params;
-        const paquete = await repository.findOne({ id }); 
+        const paquete = await repository.findOne({ id });
         if (paquete) {
             res.json(paquete);
         } else {
@@ -37,7 +37,26 @@ async function findOne(req: Request, res: Response) {
 
 async function create(req: Request, res: Response) {
     try {
-        const paquete = new Paquete(req.body.id,req.body.estado, req.body.descripcion, req.body.detalle, req.body.precio, req.body.fecha_ini, req.body.fecha_fin, req.body.imagen);
+
+        let fecha_ini = req.body.fecha_ini;
+        if (fecha_ini) {
+            fecha_ini = fecha_ini.split('T')[0];
+        }
+
+        let fecha_fin = req.body.fecha_fin;
+        if (fecha_fin) {
+            fecha_fin = fecha_fin.split('T')[0];
+        }
+
+        const paquete = new Paquete(
+            req.body.id, req.body.estado,
+            req.body.descripcion,
+            req.body.detalle,
+            req.body.precio,
+            fecha_ini,
+            fecha_fin,
+            req.body.imagen
+        );
         const result = await repository.save(paquete);
         res.json(result);
     } catch (error: any) {
@@ -49,7 +68,27 @@ async function create(req: Request, res: Response) {
 async function update(req: Request, res: Response) {
     try {
         const { id } = req.params;
-        const paquete = new Paquete(req.body.id,req.body.estado, req.body.descripcion, req.body.detalle, req.body.precio, req.body.fecha_ini, req.body.fecha_fin, req.body.imagen);
+
+        let fecha_ini = req.body.fecha_ini;
+        if (fecha_ini) {
+            fecha_ini = fecha_ini.split('T')[0];
+        }
+
+        let fecha_fin = req.body.fecha_fin;
+        if (fecha_fin) {
+            fecha_fin = fecha_fin.split('T')[0];
+        }
+
+        const paquete = new Paquete(
+            req.body.id,
+            req.body.estado,
+            req.body.descripcion,
+            req.body.detalle,
+            req.body.precio,
+            fecha_ini,
+            fecha_fin,
+            req.body.imagen
+        );
         const result = await repository.update({ id }, paquete);
         res.json(result);
     } catch (error: any) {
