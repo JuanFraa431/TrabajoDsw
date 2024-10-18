@@ -57,8 +57,9 @@ const FiltroVerticalExcursiones: React.FC<FiltroVerticalExcursionesProps> = ({ o
                             value={tipoObj.tipo}
                             checked={selectedTipos.includes(tipoObj.tipo)}
                             onChange={handleCheckboxChange}
+                            id={`tipoExcursion-${index}`}
                         />
-                        <label>{tipoObj.tipo} ({tipoObj.cantidad})</label>
+                        <label htmlFor={`tipoExcursion-${index}`}>{tipoObj.tipo} ({tipoObj.cantidad})</label>
                     </div>
                 ))}
             </div>
