@@ -174,7 +174,7 @@ const CardDetail: React.FC = () => {
                                     <p className='comentario-p'>{comentario.descripcion}</p>
                                     <p className="stars-display comentario-p">{renderEstrellas(comentario.estrellas)}</p>
 
-                                    {isAdmin && (
+                                    {(isAdmin || (comentario.cliente?.id === userData.id)) && (
                                         <button 
                                             className="delete-button" 
                                             onClick={() => handleDeleteComentario(comentario.id)}

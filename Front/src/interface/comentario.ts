@@ -6,6 +6,7 @@ export interface Comentario {
   descripcion: string;
   estrellas: number;
   cliente: {
+    id: number;
     username: string;
     imagen: string;
   };
