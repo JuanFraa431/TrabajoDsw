@@ -252,3 +252,19 @@
 .comment-details {
     width: 100%;
 }
+
+/* Estilos para el botón de borrar comentario */
+.delete-button {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    margin-left: 10px;
+    border-radius: 5px;
+    font-size: 12px;
+}
+
+.delete-button:hover {
+    background-color: darkred;
+}

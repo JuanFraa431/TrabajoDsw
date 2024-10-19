@@ -8,6 +8,8 @@ import userIcon from "../images/user-icon.png";
 const CardDetail: React.FC = () => {
     const location = useLocation();
     const clienteLogueado = localStorage.getItem('user');
+    const userData = clienteLogueado ? JSON.parse(clienteLogueado) : null;
+    const isAdmin = userData && userData.tipo_usuario === 'admin';
     const { id } = location.state || { id: null };
     const [paquete, setPaquete] = useState<any>(null);
     const [comentarios, setComentarios] = useState<Comentario[]>([]);
@@ -17,24 +19,32 @@ const CardDetail: React.FC = () => {
 
     useEffect(() => {
         const fetchPaquete = async () => {
-            const response = await axios.get(`http://localhost:3000/api/paquete/${id}`);
-            setPaquete(response.data);
+            try {
+                const response = await axios.get(`http://localhost:3000/api/paquete/${id}`);
+                setPaquete(response.data);
+            } catch (error) {
+                console.error("Error fetching paquete:", error);
+            }
         };
 
-        const fetchComentarios = async () => {
+        if (id) {
+            fetchPaquete();
+            fetchComentarios(); // Carga comentarios al inicializar
+        }
+    }, [id]);
+
+    const fetchComentarios = async () => {
+        try {
             const response = await axios.get(`http://localhost:3000/api/comentario/paquete/${id}`);
             const comentariosConCliente = await Promise.all(response.data.map(async (comentario: Comentario) => {
                 const cliente = await fetchClienteComentario(comentario.id_cliente);
                 return { ...comentario, cliente };
             }));
             setComentarios(comentariosConCliente);
-        };
-
-        if (id) {
-            fetchPaquete();
-            fetchComentarios();
+        } catch (error) {
+            console.error("Error fetching comentarios:", error);
         }
-    }, [id]);
+    };
 
     const fetchClienteComentario = async (clienteId: number) => {
         try {
@@ -61,14 +71,34 @@ const CardDetail: React.FC = () => {
                 estrellas
             };
 
+            // Guardamos el comentario en el backend
             const response = await axios.post('http://localhost:3000/api/comentario', newComentario);
-
-            const cliente = clienteLogueado ? await fetchClienteComentario(JSON.parse(clienteLogueado).id) : null;
-            setComentarios([...comentarios, { ...newComentario, cliente, id: response.data.id }]);
+            
+            // Asegúrate de que response.data contenga el ID correcto
+            const comentarioCreado = { 
+                ...newComentario, 
+                id: response.data.id,
+                cliente: userData // Assuming userData contains the client information
+            }; 
+            setComentarios(prev => [...prev, comentarioCreado]); // Agrega el nuevo comentario a la lista
             setNuevoComentario("");
             setEstrellas(0);
         } catch (error) {
             console.error("Error adding comentario:", error);
+        }
+    };
+
+    const handleDeleteComentario = async (comentarioId: number) => {
+        const confirmacion = window.confirm("¿Estás seguro que deseas borrar este comentario?");
+        if (!confirmacion) {
+            return; // El usuario canceló la acción
+        }
+
+        try {
+            await axios.delete(`http://localhost:3000/api/comentario/${comentarioId}`);
+            setComentarios(prev => prev.filter(comentario => comentario.id !== comentarioId)); // Actualiza la lista de comentarios
+        } catch (error) {
+            console.error("Error al borrar el comentario:", error);
         }
     };
 
@@ -90,27 +120,25 @@ const CardDetail: React.FC = () => {
     return (
         <div className="card-detail-container">
             <h2 className="title">Detalles del Paquete</h2>
-            {
-                paquete && (
-                    <div className="detail-layout">
-                        <div className="image-container">
-                            <img src={paquete.imagen} alt={paquete.nombre} className="package-image" />
+            {paquete && (
+                <div className="detail-layout">
+                    <div className="image-container">
+                        <img src={paquete.imagen} alt={paquete.nombre} className="package-image" />
+                    </div>
+                    <div className="info-container">
+                        <div className="details">
+                            <p><strong>Detalles:</strong> {paquete.detalle}</p>
+                            <p className="price"><strong>Desde:</strong> {new Date(paquete.fecha_ini).toLocaleDateString('es-ES')}</p>
+                            <p className='price'><strong>Hasta:</strong> {new Date(paquete.fecha_fin).toLocaleDateString('es-ES')} </p>
                         </div>
-                        <div className="info-container">
-                            <div className="details">
-                                <p><strong>Detalles:</strong> {paquete.detalle}</p>
-                                <p className="price"><strong>Desde:</strong> {new Date(paquete.fecha_ini).toLocaleDateString('es-ES')}</p>
-                                <p className='price'><strong>Hasta:</strong> {new Date(paquete.fecha_fin).toLocaleDateString('es-ES')} </p>
-                            </div>
-                            <div className="price-box">
-                                <p className="price-per-night">Precio por noche</p>
-                                <p className="price-total">${paquete.precio}</p>
-                                <button className="reserve-button">Reservar Ahora</button>
-                            </div>
+                        <div className="price-box">
+                            <p className="price-per-night">Precio por noche</p>
+                            <p className="price-total">${paquete.precio}</p>
+                            <button className="reserve-button">Reservar Ahora</button>
                         </div>
                     </div>
-                )
-            }
+                </div>
+            )}
 
             <div className="description-section">
                 <h3>Descripción</h3>
@@ -145,6 +173,15 @@ const CardDetail: React.FC = () => {
                                     </div>
                                     <p className='comentario-p'>{comentario.descripcion}</p>
                                     <p className="stars-display comentario-p">{renderEstrellas(comentario.estrellas)}</p>
+
+                                    {isAdmin && (
+                                        <button 
+                                            className="delete-button" 
+                                            onClick={() => handleDeleteComentario(comentario.id)}
+                                        >
+                                            Borrar
+                                        </button>
+                                    )}
                                 </div>
                             </div>
                         ))

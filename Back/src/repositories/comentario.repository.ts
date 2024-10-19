@@ -22,24 +22,27 @@ export class ComentarioRepository implements Repository<Comentario> {
     return comentario;
   }
 
-  public async save(item: Comentario): Promise<Comentario> {
-    const [result] = (await pool.query(
-      'INSERT INTO comentarios (id_cliente, id_paquete, fecha, descripcion, estrellas) VALUES (?, ?, ?, ?, ?)',
-      [
-        item.id_cliente, 
-        item.id_paquete, 
-        item.fecha, 
-        item.descripcion, 
-        item.estrellas
-      ]
-    )) as RowDataPacket[];
+public async save(item: Comentario): Promise<Comentario> {
+    const [result] = await pool.query(
+        'INSERT INTO comentarios (id_cliente, id_paquete, fecha, descripcion, estrellas) VALUES (?, ?, ?, ?, ?)',
+        [
+            item.id_cliente, 
+            item.id_paquete, 
+            item.fecha, 
+            item.descripcion, 
+            item.estrellas
+        ]
+    ) as RowDataPacket[];
+
     const affectedRows = (result as any).affectedRows;
-    if (affectedRows == 1) {
-      return item;
+    const insertId = (result as any).insertId;
+    if (affectedRows === 1) {
+        return { ...item, id: insertId };
     } else {
-      throw new Error('No se ha podido insertar el comentario');
+        throw new Error('No se ha podido insertar el comentario');
     }
-  }
+}
+
 
   public async update(
     item: { id: string },
