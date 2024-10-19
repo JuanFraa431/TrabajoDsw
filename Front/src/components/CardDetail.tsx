@@ -4,6 +4,7 @@ import { useLocation } from 'react-router-dom';
 import '../styles/CardDetail.css';
 import { Comentario } from '../interface/comentario';
 import userIcon from "../images/user-icon.png";
+import { FaTrash } from 'react-icons/fa';
 
 const CardDetail: React.FC = () => {
     const location = useLocation();
@@ -179,7 +180,7 @@ const CardDetail: React.FC = () => {
                                             className="delete-button" 
                                             onClick={() => handleDeleteComentario(comentario.id)}
                                         >
-                                            Borrar
+                                            <FaTrash className="trash-icon"/>Borrar
                                         </button>
                                     )}
                                 </div>
