@@ -30,7 +30,7 @@ const CardDetail: React.FC = () => {
 
         if (id) {
             fetchPaquete();
-            fetchComentarios(); // Carga comentarios al inicializar
+            fetchComentarios();
         }
     }, [id]);
 
@@ -72,16 +72,16 @@ const CardDetail: React.FC = () => {
                 estrellas
             };
 
-            // Guardamos el comentario en el backend
+            
             const response = await axios.post('http://localhost:3000/api/comentario', newComentario);
             
-            // Asegúrate de que response.data contenga el ID correcto
+            
             const comentarioCreado = { 
                 ...newComentario, 
                 id: response.data.id,
-                cliente: userData // Assuming userData contains the client information
+                cliente: userData 
             }; 
-            setComentarios(prev => [...prev, comentarioCreado]); // Agrega el nuevo comentario a la lista
+            setComentarios(prev => [...prev, comentarioCreado]);
             setNuevoComentario("");
             setEstrellas(0);
         } catch (error) {
@@ -92,12 +92,12 @@ const CardDetail: React.FC = () => {
     const handleDeleteComentario = async (comentarioId: number) => {
         const confirmacion = window.confirm("¿Estás seguro que deseas borrar este comentario?");
         if (!confirmacion) {
-            return; // El usuario canceló la acción
+            return; 
         }
 
         try {
             await axios.delete(`http://localhost:3000/api/comentario/${comentarioId}`);
-            setComentarios(prev => prev.filter(comentario => comentario.id !== comentarioId)); // Actualiza la lista de comentarios
+            setComentarios(prev => prev.filter(comentario => comentario.id !== comentarioId)); 
         } catch (error) {
             console.error("Error al borrar el comentario:", error);
         }
