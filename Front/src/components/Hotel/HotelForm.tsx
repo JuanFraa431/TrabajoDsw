@@ -4,7 +4,7 @@ import { Ciudad } from '../../interface/ciudad';
 
 interface Props {
   hotelEditado: Hotel | null;
-  ciudades: Ciudad[]; // Agregamos el tipo de ciudades
+  ciudades: Ciudad[];
   onChange: (hotel: Hotel) => void;
   onCancel: () => void;
   onSave: () => void;

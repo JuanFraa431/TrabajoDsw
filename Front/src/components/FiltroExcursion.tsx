@@ -12,14 +12,14 @@ interface TipoExcursion {
 }
 
 const FiltroVerticalExcursiones: React.FC<FiltroVerticalExcursionesProps> = ({ onFiltrar }) => {
-    const [tiposExcursion, setTiposExcursion] = useState<TipoExcursion[]>([]); // Almacenar tipos de excursión con cantidad
-    const [selectedTipos, setSelectedTipos] = useState<string[]>([]); // Tipos seleccionados
+    const [tiposExcursion, setTiposExcursion] = useState<TipoExcursion[]>([]); 
+    const [selectedTipos, setSelectedTipos] = useState<string[]>([]); 
 
     useEffect(() => {
         const obtenerTiposExcursion = async () => {
             try {
                 const response = await axios.get('http://localhost:8080/api/excursion/tipo');
-                setTiposExcursion(response.data); // Asume que es un array con tipo y cantidad
+                setTiposExcursion(response.data);
             } catch (error) {
                 console.error('Error al obtener tipos de excursión:', error);
             }
@@ -34,15 +34,13 @@ const FiltroVerticalExcursiones: React.FC<FiltroVerticalExcursionesProps> = ({ o
         let updatedSelectedTipos = [...selectedTipos];
 
         if (checked) {
-            // Si se selecciona el checkbox, agregar el tipo a la lista
             updatedSelectedTipos.push(value);
         } else {
-            // Si se deselecciona, removerlo
             updatedSelectedTipos = updatedSelectedTipos.filter(tipo => tipo !== value);
         }
 
         setSelectedTipos(updatedSelectedTipos);
-        onFiltrar({ tipos: updatedSelectedTipos }); // Pasar los filtros actualizados al componente padre
+        onFiltrar({ tipos: updatedSelectedTipos }); 
     };
 
     return (

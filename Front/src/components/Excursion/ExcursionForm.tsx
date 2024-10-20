@@ -4,7 +4,7 @@ import { Ciudad } from '../../interface/ciudad';
 
 interface Props {
   excursionEditada: Excursion | null;
-  ciudades: Ciudad[]; // Agregamos el tipo de ciudades
+  ciudades: Ciudad[];
   onChange: (excursion: Excursion) => void;
   onCancel: () => void;
   onSave: () => void;

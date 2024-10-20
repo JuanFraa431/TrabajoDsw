@@ -17,17 +17,7 @@ import Login from './components/Login';
 import DetalleCliente from './components/Cliente/DetalleCliente';
 import { divider } from '@nextui-org/react';
 
-const flightDetails = {
-    destino: 'Madrid',
-    origen: 'Buenos Aires',
-    precio: '1.341.920',
-    imagen: 'https://images.almundo.com/205/image/upload/v1568324811/home-v3/flights/photo-1483450388369-9ed95738483c.jpeg',
-    descripcion: 'Disfruta de un vuelo cómodo y seguro con las mejores aerolíneas.',
-    duracion: '11 horas',
-    equipaje: 'Equipaje de mano y una maleta de hasta 23kg'
-};
 
-//App component
 const pageTransition = {
     initial: { opacity: 0 }, 
     animate: { opacity: 1 },

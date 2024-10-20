@@ -19,7 +19,7 @@ const CiudadForm: React.FC<Props> = ({ ciudadEditada, onChange, onCancel, onSave
         type="text"
         value={ciudadEditada.nombre}
         onChange={(e) => onChange({ ...ciudadEditada, nombre: e.target.value })}
-        required // Campo obligatorio
+        required 
       />
       
       <label htmlFor="descripcion">Descripción:</label>
@@ -28,7 +28,7 @@ const CiudadForm: React.FC<Props> = ({ ciudadEditada, onChange, onCancel, onSave
         type="text"
         value={ciudadEditada.descripcion}
         onChange={(e) => onChange({ ...ciudadEditada, descripcion: e.target.value })}
-        required // Campo obligatorio
+        required
       />
       
       <label htmlFor="pais">País:</label>
@@ -37,25 +37,25 @@ const CiudadForm: React.FC<Props> = ({ ciudadEditada, onChange, onCancel, onSave
         type="text"
         value={ciudadEditada.pais}
         onChange={(e) => onChange({ ...ciudadEditada, pais: e.target.value })}
-        required // Campo obligatorio
+        required 
       />
       
       <label htmlFor="latitud">Latitud:</label>
       <input
         id="latitud"
-        type="text" // Cambiado a tipo texto
+        type="text" 
         value={ciudadEditada.latitud}
         onChange={(e) => onChange({ ...ciudadEditada, latitud: e.target.value })}
-        required // Campo obligatorio
+        required 
       />
       
       <label htmlFor="longitud">Longitud:</label>
       <input
         id="longitud"
-        type="text" // Cambiado a tipo texto
+        type="text" 
         value={ciudadEditada.longitud}
         onChange={(e) => onChange({ ...ciudadEditada, longitud: e.target.value })}
-        required // Campo obligatorio
+        required 
       />
 
       <button type="submit">Guardar cambios</button>

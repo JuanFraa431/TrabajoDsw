@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import '../styles/Excursiones.css'; // Asegúrate de tener estilos apropiados
+import '../styles/Excursiones.css'; 
 import { useLocation } from 'react-router-dom';
-import { Excursion } from '../interface/excursion'; // Importa la interfaz de excursiones
-import FiltroVerticalExcursiones from './FiltroExcursion'; // Adaptar el filtro
+import { Excursion } from '../interface/excursion'; 
+import FiltroVerticalExcursiones from './FiltroExcursion'; 
 
 const Excursiones: React.FC = () => {
     const location = useLocation();
-    const { excursiones } = location.state || { excursiones: [] }; // Cargar excursiones desde el estado
+    const { excursiones } = location.state || { excursiones: [] }; 
     const [filtros, setFiltros] = useState<{ tipos: string[] }>({ tipos: [] });
 
     const manejarFiltrado = ({ tipos }: { tipos: string[] }) => {
@@ -14,7 +14,6 @@ const Excursiones: React.FC = () => {
     };
 
     const excursionesFiltradas = excursiones.filter((excursion: Excursion) => {
-        // Si no hay filtros seleccionados, mostrar todas; si hay filtros, filtrar por tipo
         return filtros.tipos.length === 0 || filtros.tipos.includes(excursion.tipo);
     });
 

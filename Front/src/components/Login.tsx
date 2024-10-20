@@ -11,10 +11,9 @@ const Login: React.FC = () => {
   const navigate = useNavigate();
 
   async function handleLogin(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();  // Prevents the default form submission
+    event.preventDefault();  
 
     try {
-      // Send a login request to the backend
       const response = await axios.post('/api/cliente/login', { username, password });
       console.log(response);
 

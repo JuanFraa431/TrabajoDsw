@@ -78,7 +78,7 @@
       color: #007bffc5; 
     }
   
-  .hotel-card:hover {
+.hotel-card:hover {
     /* transform: scale(1.01); */
     /* box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); */
 }
@@ -112,17 +112,17 @@
     text-decoration: none;
     background: rgba(255, 255, 255, 0.6);
     font-weight: bold;
-    transition: background-color 0.5s ease, color 0.5s ease, transform 0.5s ease; /* Suaviza las transiciones */
+    transition: background-color 0.5s ease, color 0.5s ease, transform 0.5s ease; 
     color: #333;
     cursor: pointer;
     animation: ease 1s;
-    transform: perspective(500px) translateZ(0); /* Añadimos perspectiva para un efecto más realista */
+    transform: perspective(500px) translateZ(0); 
 }
 
 .boton-ver:hover {
     background-color: #0056b3;
     color: white;
-    transform: perspective(500px) translateZ(10px); /* Simula un leve levantamiento más suave */
+    transform: perspective(500px) translateZ(10px);
 }
 
   

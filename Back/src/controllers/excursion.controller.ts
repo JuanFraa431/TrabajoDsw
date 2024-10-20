@@ -96,7 +96,7 @@ async function findByType(req: Request, res: Response) {
 async function findTypes(req: Request, res: Response) {
   try {
     const tipos = await repository.findTypes();
-    res.json(tipos); // Ahora devuelve tipos con cantidades
+    res.json(tipos);
   } catch (error: any) {
     const errorMessage = error.message || 'Error desconocido';
     res.status(500).json({ message: 'Error al obtener los tipos de excursiones', errorMessage });
