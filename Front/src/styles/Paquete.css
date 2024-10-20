@@ -79,8 +79,8 @@
     }
   
   .hotel-card:hover {
-    transform: scale(1.01);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    /* transform: scale(1.01); */
+    /* box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); */
 }
   
   .hotel-card img {
@@ -107,23 +107,27 @@
     font-family: 'Poppins', sans-serif;
     display: inline-block;
     padding: 8px 16px;
-    border: 1px solid#0056b3 ;
+    border: 1px solid #0056b3;
     border-radius: 20px;
     text-decoration: none;
     background: rgba(255, 255, 255, 0.6);
     font-weight: bold;
-    transition: background-color 0.3s, color 0.3s;
+    transition: background-color 0.5s ease, color 0.5s ease, transform 0.5s ease; /* Suaviza las transiciones */
     color: #333;
     cursor: pointer;
+    animation: ease 1s;
+    transform: perspective(500px) translateZ(0); /* Añadimos perspectiva para un efecto más realista */
 }
 
 .boton-ver:hover {
     background-color: #0056b3;
     color: white;
+    transform: perspective(500px) translateZ(10px); /* Simula un leve levantamiento más suave */
 }
 
-
+  
 .prueba {
+    animation: ease 1s;
     display: flex;
     width: 100%;
     justify-content:flex-end;
@@ -134,5 +138,3 @@
     text-align: center;
     margin-top: 100px;
 }
-
-  
