@@ -19,7 +19,7 @@ const Excursiones: React.FC = () => {
     });
 
     const handleViewExcursion = (id: string) => {
-        navigate(`/cardDetail`, { state: { id } });
+        navigate(`/cardDetailExcursion`, { state: { id } });
     };
 
     return (
