@@ -6,31 +6,13 @@ import { RowDataPacket } from 'mysql2';
 export class PaqueteRepository implements Repository<Paquete> {
     public async findAllUser(): Promise<Paquete[] | undefined> {
         const [paquetes] = await pool.query(`
-            SELECT p.*, c.nombre
-            FROM 
-                    paquetes AS p
-                INNER JOIN
-                    estadias AS e ON p.id = e.id_paquete
-                INNER JOIN
-                    hoteles AS h ON e.id_hotel = h.id
-                INNER JOIN 
-                    ciudades AS c ON h.id_ciudad = c.id
-                WHERE p.estado = 1
-        `);
+            SELECT * FROM paquetes WHERE estado = 1`);
         return paquetes as Paquete[];
     }
 
     public async findAll(): Promise<Paquete[] | undefined> {
         const [paquetes] = await pool.query(`
-            SELECT p.*, c.nombre
-            FROM 
-                    paquetes AS p
-                INNER JOIN
-                    estadias AS e ON p.id = e.id_paquete
-                INNER JOIN
-                    hoteles AS h ON e.id_hotel = h.id
-                INNER JOIN 
-                    ciudades AS c ON h.id_ciudad = c.id`);
+            SELECT * FROM paquetes`);
         return paquetes as Paquete[];
     }
 
@@ -48,22 +30,30 @@ export class PaqueteRepository implements Repository<Paquete> {
     }
 
     public async save(item: Paquete): Promise<Paquete> {
-        const [result] = (await pool.query(
-            'INSERT INTO paquetes (estado, descripcion, precio, fecha_ini, fecha_fin, imagen) VALUES (?, ?, ?, ?, ?, ?)',
-            [
-                item.estado,
-                item.descripcion,
-                item.precio,
-                item.fecha_ini,
-                item.fecha_fin,
-                item.imagen,
-            ]
-        )) as RowDataPacket[];
-        const affectedRows = (result as any).affectedRows;
-        if (affectedRows == 1) {
-            return item;
-        } else {
-            throw new Error('No se ha podido insertar el paquete');
+        try {
+            const [result] = (await pool.query(
+                'INSERT INTO paquetes (nombre, estado, descripcion, detalle, precio, fecha_ini, fecha_fin, imagen) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+                [
+                    item.nombre,
+                    item.estado,
+                    item.descripcion,
+                    item.detalle,
+                    item.precio,
+                    item.fecha_ini,
+                    item.fecha_fin,
+                    item.imagen,
+                ]
+            )) as RowDataPacket[];
+
+            const affectedRows = (result as any).affectedRows;
+            if (affectedRows === 1) {
+                return item;
+            } else {
+                throw new Error('No se ha podido insertar el paquete');
+            }
+        } catch (error: any) {
+            console.error('Error en la consulta SQL:', error.message);
+            throw error; // Re-lanzar para que el controlador pueda capturar y manejar el error
         }
     }
 
@@ -73,10 +63,12 @@ export class PaqueteRepository implements Repository<Paquete> {
     ): Promise<Paquete | undefined> {
         const id = Number.parseInt(item.id);
         const [result] = (await pool.query(
-            'UPDATE paquetes SET estado = ?, descripcion = ?, precio = ?, fecha_ini = ?, fecha_fin = ?, imagen = ? WHERE id = ? ',
+            'UPDATE paquetes SET nombre = ?, estado = ?, descripcion = ?, detalle = ?, precio = ?, fecha_ini = ?, fecha_fin = ?, imagen = ? WHERE id = ? ',
             [
+                paquete.nombre,
                 paquete.estado,
                 paquete.descripcion,
+                paquete.detalle,
                 paquete.precio,
                 paquete.fecha_ini,
                 paquete.fecha_fin,

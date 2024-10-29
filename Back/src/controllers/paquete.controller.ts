@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express'
+import { Request, Response } from 'express'
 import { PaqueteRepository } from '../repositories/paquete.repository.js'
 import { Paquete } from '../models/paquete.model.js'
 
@@ -49,7 +49,9 @@ async function create(req: Request, res: Response) {
         }
 
         const paquete = new Paquete(
-            req.body.id, req.body.estado,
+            req.body.id,
+            req.body.nombre,
+            req.body.estado,
             req.body.descripcion,
             req.body.detalle,
             req.body.precio,
@@ -81,6 +83,7 @@ async function update(req: Request, res: Response) {
 
         const paquete = new Paquete(
             req.body.id,
+            req.body.nombre,
             req.body.estado,
             req.body.descripcion,
             req.body.detalle,
