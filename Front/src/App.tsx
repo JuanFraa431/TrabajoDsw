@@ -59,9 +59,12 @@ const App: React.FC = () => {
                     <Route
                         path="/cardDetailExcursion"
                         element={
-                            <motion.div {...pageTransition}>
-                                <CardDetailExcursion/>
-                            </motion.div>
+                            <div>
+                                <Header/>
+                                <motion.div {...pageTransition}>
+                                    <CardDetailExcursion/>
+                                </motion.div>
+                            </div>
                         }
                     />
                     <Route

@@ -35,9 +35,9 @@ const CardDetailExcursion: React.FC = () => {
         return descripcion;
     };
 
-    // Función para obtener una fecha válida o una fecha inventada
-    const getValidDate = (date: string | null) => {
-        return date ? new Date(date).toLocaleDateString('es-ES') : "01/01/2025";
+    const formatHorario = (horario: string) => {
+        const [hours, minutes] = horario.split(":");
+        return `${hours}:${minutes} hs`;
     };
 
     return (
@@ -50,9 +50,9 @@ const CardDetailExcursion: React.FC = () => {
                     </div>
                     <div className="info-container">
                         <div className="details">
-                            <p><strong>Detalles:</strong> {excursion.detalle}</p>
-                            <p className="price"><strong>Desde:</strong> {getValidDate(excursion.fecha_ini)}</p>
-                            <p className='price'><strong>Hasta:</strong> {getValidDate(excursion.fecha_fin)}</p>
+                            <p><strong>Nombre:</strong> {excursion.nombre}</p>
+                            <p><strong>Descripcion:</strong> {excursion.descripcion} </p>
+                            <p><strong>Horario de inicio:</strong> {formatHorario(excursion.horario)}</p>
                         </div>
                         <div className="price-box">
                             <p className="price-per-night">Precio por noche</p>

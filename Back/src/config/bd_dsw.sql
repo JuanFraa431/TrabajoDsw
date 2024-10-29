@@ -503,21 +503,22 @@ VALUES (
     );
 -- Inserciones en tabla 'excursiones'
 INSERT INTO excursiones (
-        nombre,
-        tipo,
-        descripcion,
-        horario,
-        nro_personas_max,
-        nombre_empresa,
-        mail_empresa,
-        precio,
-        id_ciudad,
-        imagen
-    )
-VALUES (
+    nombre,
+    tipo,
+    descripcion,
+    horario,
+    nro_personas_max,
+    nombre_empresa,
+    mail_empresa,
+    precio,
+    id_ciudad,
+    imagen
+)
+VALUES 
+    (
         'City Tour Buenos Aires',
         'Cultural',
-        'Recorrido por los principales puntos turísticos',
+        'Explora Buenos Aires a través de un recorrido guiado que abarca los lugares más emblemáticos de la ciudad, como el Obelisco, el barrio de San Telmo y la moderna Puerto Madero. Sumérgete en la historia y cultura de la capital argentina con explicaciones detalladas y paradas en puntos icónicos.',
         '10:00:00',
         30,
         'Turismo BA',
@@ -529,7 +530,7 @@ VALUES (
     (
         'Tour por el Prado',
         'Museo',
-        'Visita guiada por el Museo del Prado',
+        'Descubre las maravillas del Museo del Prado en Madrid con una visita guiada que explora obras maestras de artistas como Goya y Velázquez. Esta excursión ofrece una experiencia enriquecedora en arte e historia española, ideal para amantes de la cultura y el patrimonio europeo.',
         '11:00:00',
         25,
         'Cultura Madrid',
@@ -541,7 +542,7 @@ VALUES (
     (
         'Tour Estatua de la Libertad',
         'Monumento',
-        'Excursión en barco hacia la Estatua de la Libertad',
+        'Navega hacia la icónica Estatua de la Libertad en Nueva York con este tour en barco que incluye paradas en Ellis Island. Aprende sobre su historia y simbolismo, y disfruta de vistas panorámicas de Manhattan. Una experiencia perfecta para aquellos interesados en el simbolismo de la libertad y la inmigración.',
         '09:00:00',
         50,
         'NYC Tours',
@@ -553,7 +554,7 @@ VALUES (
     (
         'Tour por el Cristo Redentor',
         'Cultural',
-        'Visita guiada al Cristo Redentor',
+        'Vive una experiencia inolvidable en el Cristo Redentor de Río de Janeiro. Con guía especializado, explora la historia y cultura detrás de este monumento, una de las Nuevas Siete Maravillas del Mundo, mientras disfrutas de vistas espectaculares de la ciudad desde lo alto del Corcovado.',
         '09:00:00',
         30,
         'Excursiones Río',
@@ -565,7 +566,7 @@ VALUES (
     (
         'Clase de cocina peruana',
         'Gastronomía',
-        'Aprende a cocinar platos típicos',
+        'Adéntrate en los sabores únicos de la cocina peruana con esta clase interactiva donde aprenderás a preparar platos icónicos como el ceviche y la causa limeña. Guiado por un chef local, esta actividad ofrece una inmersión cultural a través de los ingredientes y técnicas culinarias tradicionales.',
         '14:00:00',
         10,
         'Cocina Lima',
@@ -577,7 +578,7 @@ VALUES (
     (
         'Snorkel en Isla Mujeres',
         'Aventura',
-        'Excursión de snorkel en el Caribe',
+        'Disfruta de una experiencia de snorkel única en las aguas cristalinas del Caribe en Isla Mujeres. Descubre coloridos arrecifes de coral, peces tropicales y otras especies marinas, ideal para amantes de la aventura y la naturaleza. Actividad segura y divertida, perfecta para explorar la vida marina.',
         '10:00:00',
         25,
         'Aventuras del Caribe',
@@ -589,7 +590,7 @@ VALUES (
     (
         'Visita a La Sagrada Familia',
         'Cultural',
-        'Tour guiado por la Sagrada Familia',
+        'Sumérgete en la arquitectura de Antoni Gaudí con una visita guiada por la Sagrada Familia en Barcelona. Aprende sobre el diseño y simbolismo de esta impresionante basílica en constante evolución, una obra maestra que combina elementos góticos y art nouveau en un espacio único.',
         '11:00:00',
         20,
         'Excursiones Barcelona',
@@ -601,7 +602,7 @@ VALUES (
     (
         'Tour por Valparaíso',
         'Cultural',
-        'Recorrido por la ciudad y sus cerros',
+        'Descubre los encantos de Valparaíso, Chile, en un recorrido por sus famosos cerros y coloridas calles. Explora los murales, disfruta de vistas al Pacífico y aprende sobre su vibrante historia y cultura bohemia en un tour que destaca la esencia artística de esta ciudad costera.',
         '09:00:00',
         15,
         'Tours Santiago',
@@ -610,6 +611,7 @@ VALUES (
         5,
         'https://media-cdn.tripadvisor.com/media/attractions-splice-spp-674x446/06/6f/45/eb.jpg'
     );
+
 -- Inserciones en tabla 'paquete_excursion'
 /*
 INSERT INTO paquete_excursion (id_paquete, id_excursion, fecha)
