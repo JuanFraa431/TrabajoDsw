@@ -17,7 +17,7 @@ import VistaAdmin from './components/VistaAdmin';
 import Login from './components/Login';
 import DetalleCliente from './components/Cliente/DetalleCliente';
 import { divider } from '@nextui-org/react';
-
+import CardDetailExcursion from './components/CardDetailExcursion';
 
 const pageTransition = {
     initial: { opacity: 0 }, 
@@ -55,6 +55,17 @@ const App: React.FC = () => {
                                 <Header/>
                                 <CardDetail/>
                             </motion.div>
+                        }
+                    />
+                    <Route
+                        path="/cardDetailExcursion"
+                        element={
+                            <div>
+                                <Header/>
+                                <motion.div {...pageTransition}>
+                                    <CardDetailExcursion/>
+                                </motion.div>
+                            </div>
                         }
                     />
                     <Route

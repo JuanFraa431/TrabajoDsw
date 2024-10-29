@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import '../styles/Excursiones.css'; 
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Excursion } from '../interface/excursion'; 
 import FiltroVerticalExcursiones from './FiltroExcursion'; 
 
 const Excursiones: React.FC = () => {
     const location = useLocation();
+    const navigate = useNavigate(); 
     const { excursiones } = location.state || { excursiones: [] }; 
     const [filtros, setFiltros] = useState<{ tipos: string[] }>({ tipos: [] });
 
@@ -16,6 +17,10 @@ const Excursiones: React.FC = () => {
     const excursionesFiltradas = excursiones.filter((excursion: Excursion) => {
         return filtros.tipos.length === 0 || filtros.tipos.includes(excursion.tipo);
     });
+
+    const handleViewExcursion = (id: string) => {
+        navigate(`/cardDetailExcursion`, { state: { id } });
+    };
 
     return (
         <div className="container2">
@@ -30,7 +35,10 @@ const Excursiones: React.FC = () => {
                                 <p className="p-footer">{excursion.descripcion}</p>
                                 <p>Precio: ${excursion.precio}</p>
                                 <div className="prueba2">
-                                    <button className="boton-ver">Ver Excursión</button>
+                                    <button 
+                                        className="boton-ver"
+                                        onClick={() => handleViewExcursion(excursion.id.toString())}
+                                    >Ver Excursión</button>
                                 </div>
                             </div>
                         </div>
