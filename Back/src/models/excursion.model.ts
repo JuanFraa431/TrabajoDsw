@@ -3,6 +3,7 @@ export class Excursion {
     public id: number,
     public nombre: string,
     public descripcion: string,
+    public detalle: string,
     public tipo: string,
     public horario: string,
     public nro_personas_max: number,

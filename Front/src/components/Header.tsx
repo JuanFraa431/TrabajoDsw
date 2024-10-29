@@ -5,8 +5,8 @@ import userIcon from "../images/user-icon.png";
 import logo from "../images/logoFinal2.png";
 import { handleLinkClick } from "../services/searchService";
 import { Cliente } from "../interface/cliente.js";
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+//import 'bootstrap/dist/css/bootstrap.min.css';
+//import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 const Header = () => {
     const [cliente, setCliente] = useState<Cliente | null>(null);
@@ -56,7 +56,7 @@ const Header = () => {
                 )}
             </div>
 
-            <nav className="navbar navbar-expand-lg d-lg-none">
+            {/* <nav className="navbar navbar-expand-lg d-lg-none">
                 <button className="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
                     <span className="navbar-toggler-icon"></span>
                 </button>
@@ -91,7 +91,7 @@ const Header = () => {
                         </div>
                     </div>
                 </div>
-            </nav>
+            </nav> */}
         </header>
     );
 };

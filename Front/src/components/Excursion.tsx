@@ -32,7 +32,7 @@ const Excursiones: React.FC = () => {
                             <img src={excursion.imagen} alt={excursion.nombre} className="card-img" />
                             <div className="excursion-info">
                                 <h3>{excursion.nombre}</h3>
-                                <p className="p-footer">{excursion.descripcion}</p>
+                                <p className="p-footer">{excursion.detalle}</p>
                                 <p>Precio: ${excursion.precio}</p>
                                 <div className="prueba2">
                                     <button 

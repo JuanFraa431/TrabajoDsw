@@ -28,7 +28,7 @@ export class ExcursionRepository implements Repository<Excursion> {
 
   public async save(item: Excursion): Promise<Excursion | undefined> {
     const [result] = await pool.query<[RowDataPacket[], ResultSetHeader]>(
-      'INSERT INTO excursiones (nombre, tipo, descripcion, horario, nro_personas_max, nombre_empresa, mail_empresa, precio, id_ciudad) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      'INSERT INTO excursiones (nombre, tipo, descripcion, detalle, horario, nro_personas_max, nombre_empresa, mail_empresa, precio, id_ciudad) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
       [
         item.nombre,
         item.tipo,
@@ -55,11 +55,12 @@ export class ExcursionRepository implements Repository<Excursion> {
   ): Promise<Excursion | undefined> {
     const id = Number.parseInt(item.id);
     await pool.query(
-      'UPDATE excursiones SET nombre = ?, tipo = ?, descripcion = ?, horario = ?, nro_personas_max = ?, nombre_empresa = ?, mail_empresa = ?, precio = ?, id_ciudad = ? WHERE id = ?',
+      'UPDATE excursiones SET nombre = ?, tipo = ?, descripcion = ?, detalle = ?, horario = ?, nro_personas_max = ?, nombre_empresa = ?, mail_empresa = ?, precio = ?, id_ciudad = ? WHERE id = ?',
       [
         excursion.nombre,
         excursion.tipo,
         excursion.descripcion,
+        excursion.detalle,
         excursion.horario,
         excursion.nro_personas_max,
         excursion.nombre_empresa,

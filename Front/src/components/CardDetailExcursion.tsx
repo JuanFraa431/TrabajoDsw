@@ -51,7 +51,7 @@ const CardDetailExcursion: React.FC = () => {
                     <div className="info-container">
                         <div className="details">
                             <p><strong>Nombre:</strong> {excursion.nombre}</p>
-                            <p><strong>Descripcion:</strong> {excursion.descripcion} </p>
+                            <p><strong>Detalle:</strong> {excursion.detalle} </p>
                             <p><strong>Horario de inicio:</strong> {formatHorario(excursion.horario)}</p>
                         </div>
                         <div className="price-box">
