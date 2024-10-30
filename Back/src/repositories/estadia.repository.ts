@@ -9,7 +9,7 @@ export class EstadiaRepository implements Repository<Estadia> {
     return estadias as Estadia[];
   }
 
-  public async findOne(item: {id: string;}): Promise<Estadia | undefined> {
+  public async findOne(item: { id: string }): Promise<Estadia | undefined> {
     const id_estadia = Number.parseInt(item.id);
 
     const [estadias] = await pool.query<RowDataPacket[]>(
@@ -48,7 +48,6 @@ export class EstadiaRepository implements Repository<Estadia> {
     item: { id: string },
     estadia: Estadia
   ): Promise<Estadia | undefined> {
-
     const id_estadia = Number.parseInt(item.id);
 
     const [result] = (await pool.query(
@@ -70,17 +69,26 @@ export class EstadiaRepository implements Repository<Estadia> {
     }
   }
 
-  public async remove(item: { id:string }): Promise<void> {
-    
+  public async remove(item: { id: string }): Promise<void> {
     const id_estadia = Number.parseInt(item.id);
 
-    const [result] = (await pool.query(
-      'DELETE FROM estadias WHERE id = ?',
-      [id_estadia]
-    )) as RowDataPacket[];
+    const [result] = (await pool.query('DELETE FROM estadias WHERE id = ?', [
+      id_estadia,
+    ])) as RowDataPacket[];
     const affectedRows = (result as any).affectedRows;
     if (affectedRows == 0) {
       throw new Error('No se ha podido borrar la estadia');
     }
+  }
+
+  public async findByPaquete(item: { id: string }): Promise<Estadia[] | undefined> {
+    const id_paquete = Number.parseInt(item.id);
+
+    const [estadias] = await pool.query<RowDataPacket[]>(
+      'SELECT * FROM estadias WHERE id_paquete = ?',
+      [id_paquete]
+    );
+
+    return estadias as Estadia[];
   }
 }

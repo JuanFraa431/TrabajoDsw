@@ -73,4 +73,16 @@ async function remove(req: Request, res: Response) {
   }
 }
 
-export { findAll, findOne, create, update, remove };
+async function findByPaquete(req: Request, res: Response) {
+  try {
+    const { id } = req.params;
+
+    const estadias = await repository.findByPaquete({ id });
+    res.json(estadias);
+  } catch (error: any) {
+    const errorMessage = error.message || 'Error desconocido';
+    res.status(500).json({ message: 'Error al obtener las estadias', errorMessage });
+  }
+}
+
+export { findAll, findOne, create, update, remove, findByPaquete };
