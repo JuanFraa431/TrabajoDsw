@@ -16,7 +16,6 @@ import Filtro from './components/Filtro';
 import VistaAdmin from './components/VistaAdmin';
 import Login from './components/Login';
 import DetalleCliente from './components/Cliente/DetalleCliente';
-import { divider } from '@nextui-org/react';
 import CardDetailExcursion from './components/CardDetailExcursion';
 
 const pageTransition = {

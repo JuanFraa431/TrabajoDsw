@@ -24,4 +24,3 @@ routerExcursion.post('/', create);
 routerExcursion.put('/:id', update);
 
 routerExcursion.delete('/:id', remove);
-

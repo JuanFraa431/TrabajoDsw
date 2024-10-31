@@ -108,8 +108,8 @@ const VistaAdmin: React.FC = () => {
         );
         case 'hoteles':
         return (
-          <HotelList 
-          hoteles={hoteles} 
+          <HotelList
+          hoteles={hoteles}
             onEdit={(hotel) => setHotelEditado(hotel)}
             onDelete={(hotel) => handleEliminar(hotel.id, '/api/hotel', 'hotel', setHoteles)}
           />
