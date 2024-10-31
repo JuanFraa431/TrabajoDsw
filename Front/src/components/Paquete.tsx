@@ -16,7 +16,7 @@ const Paquetes: React.FC = () => {
             if (paquetes.length > 0) {
                 setVisiblePackages(paquetes.map((paquete: Paquete) => paquete.id.toString()));
             }
-        }, 200); // El tiempo de espera para la animación inicial
+        }, 200);
 
         return () => clearTimeout(timeout);
     }, [paquetes]);

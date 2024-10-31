@@ -79,14 +79,14 @@
     }
   
     .hotel-card {
-      opacity: 0; /* Comienza oculto */
-      transform: translateY(20px); /* Desplazamiento hacia abajo */
-      transition: opacity 0.5s ease, transform 0.5s ease; /* Efecto de transición */
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
   }
   
   .hotel-card.visible {
-      opacity: 1; /* Visible */
-      transform: translateY(0); /* Regresa a su posición original */
+      opacity: 1; 
+      transform: translateY(0); 
   }
   
   .hotel-card img {
