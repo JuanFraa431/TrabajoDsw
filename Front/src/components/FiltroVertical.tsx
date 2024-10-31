@@ -43,7 +43,6 @@ const FiltroVertical: React.FC = () => {
     return (
         <div className="filters">
             <div className="filter-section">
-                <h3>Mapa</h3>
                 <GoogleMap
                     mapContainerStyle={{ width: '100%', height: '300px' }}
                     center={{ lat, lng }}
