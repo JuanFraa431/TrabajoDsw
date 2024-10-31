@@ -78,10 +78,16 @@
       color: #007bffc5; 
     }
   
-.hotel-card:hover {
-    /* transform: scale(1.01); */
-    /* box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); */
-}
+    .hotel-card {
+      opacity: 0; /* Comienza oculto */
+      transform: translateY(20px); /* Desplazamiento hacia abajo */
+      transition: opacity 0.5s ease, transform 0.5s ease; /* Efecto de transición */
+  }
+  
+  .hotel-card.visible {
+      opacity: 1; /* Visible */
+      transform: translateY(0); /* Regresa a su posición original */
+  }
   
   .hotel-card img {
     max-width: 300px;

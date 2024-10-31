@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import '../styles/Paquete.css';
 import { useLocation, useNavigate } from 'react-router-dom'; 
 import { Paquete } from '../interface/paquete';
@@ -7,7 +7,19 @@ import Filtros from './FiltroVertical';
 const Paquetes: React.FC = () => {
     const location = useLocation();
     const navigate = useNavigate(); 
-    const { paquetes } = location.state || { paquetes: [] };
+    const { paquetes } = location.state || { paquetes: [] } as { paquetes: Paquete[] };
+
+    const [visiblePackages, setVisiblePackages] = useState<string[]>([]);
+
+    useEffect(() => {
+        const timeout = setTimeout(() => {
+            if (paquetes.length > 0) {
+                setVisiblePackages(paquetes.map((paquete: Paquete) => paquete.id.toString()));
+            }
+        }, 200); // El tiempo de espera para la animación inicial
+
+        return () => clearTimeout(timeout);
+    }, [paquetes]);
 
     const handleViewPackage = (id: string) => {
         navigate(`/cardDetail`, { state: { id } });
@@ -19,7 +31,10 @@ const Paquetes: React.FC = () => {
             <div className="hotels-list">
                 {paquetes.length > 0 ? (
                     paquetes.map((paquete: Paquete) => (
-                        <div className="hotel-card" key={paquete.id}>
+                        <div 
+                            className={`hotel-card ${visiblePackages.includes(paquete.id.toString()) ? 'visible' : ''}`} 
+                            key={paquete.id}
+                        >
                             <img src={paquete.imagen} alt={paquete.nombre} className="card-img" />
                             <div className="hotel-info">
                                 <h3>{paquete.nombre}</h3>

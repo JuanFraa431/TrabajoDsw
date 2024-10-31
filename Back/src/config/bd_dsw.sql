@@ -510,7 +510,7 @@ VALUES (
         'admin',
         '$2b$10$WUe5775fiXJbqywxe7C1LOCTZNo9jhyQTxms06Mb5woYwTzWDTd2e',
         'admin',
-        'https://cdn.discordapp.com/attachments/1041463155680874618/1296256493083037766/imagen_admin.jpg?ex=6711a06f&is=67104eef&hm=75a60090424a5bcc0fbf4169a4aa6f1e93015f13b2a1c64d63e9b35d59c7c6bd&'
+        'https://res.cloudinary.com/dy8lzfj2h/image/upload/v1730384187/bxhksrvyeoyrae0oeakn.jpg'
     );
 -- Inserciones en tabla 'excursiones'
 INSERT INTO excursiones (

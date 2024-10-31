@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
+import { useLocation } from 'react-router-dom';
+import { GoogleMap, Marker, useLoadScript } from '@react-google-maps/api';
 import '../styles/FiltroVertical.css';
-import {  useLocation } from 'react-router-dom';
-
 
 const FiltroVertical: React.FC = () => {
     const [selectedFilters, setSelectedFilters] = useState({
@@ -18,6 +18,16 @@ const FiltroVertical: React.FC = () => {
     const location = useLocation();
     const { paquetes } = location.state || { paquetes: [] };
 
+    const defaultLat = -32.9468; 
+    const defaultLng = -60.6393;
+
+    const lat = Number(paquetes.length > 0 && paquetes[0].latitud && !isNaN(parseFloat(paquetes[0].latitud)) ? parseFloat(paquetes[0].latitud) : defaultLat);
+    const lng = Number(paquetes.length > 0 && paquetes[0].longitud && !isNaN(parseFloat(paquetes[0].longitud)) ? parseFloat(paquetes[0].longitud) : defaultLng);
+
+    const { isLoaded } = useLoadScript({
+        googleMapsApiKey: 'AIzaSyCHdkM9EAUAUnqvDk8FcOWBUUnBPFEisgQ',
+    });
+
     const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, checked } = e.target;
         setSelectedFilters({ ...selectedFilters, [name]: checked });
@@ -28,13 +38,20 @@ const FiltroVertical: React.FC = () => {
         setSelectedFilters({ ...selectedFilters, [name]: value });
     };
 
-    const iframeSrc = `https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d26812.60881892444!2d${paquetes.longitud}!3d${paquetes.latitud}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1ses-419!2sar!4v1728933077357!5m2!1ses-419!2sar`;
+    if (!isLoaded) return <div>Cargando mapa...</div>;
 
     return (
         <div className="filters">
             <div className="filter-section">
                 <h3>Mapa</h3>
-                <iframe src={iframeSrc} className="mapa" style={{ border: 0 }} allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade"></iframe>
+                <GoogleMap
+                    mapContainerStyle={{ width: '100%', height: '300px' }}
+                    center={{ lat, lng }}
+                    zoom={10}
+                >
+                    <Marker position={{ lat, lng }} />
+                </GoogleMap>
+
                 <h3>Filtros más usados</h3>
                 <div className="filter-item">
                     <input
@@ -199,5 +216,3 @@ const FiltroVertical: React.FC = () => {
 };
 
 export default FiltroVertical;
-
-
