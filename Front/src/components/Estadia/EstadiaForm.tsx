@@ -72,7 +72,7 @@ const EstadiaForm: React.FC<Props> = ({ estadiaEditada, onChange, onCancel, onSa
         required
       />
 
-      <button type="submit">Guardar cambios</button>
+      <button type="submit">Guardar Cambios</button>
       <button type="button" onClick={onCancel}>Cancelar</button>
     </form>
   );
