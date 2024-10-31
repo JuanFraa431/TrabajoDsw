@@ -139,7 +139,7 @@ const VistaAdmin: React.FC = () => {
           />
         );
       default:
-        return <p>Selecciona una categoría para ver los registros.</p>;
+        return <div className='mensaje-noEncontro'><p>Selecciona una categoría para ver los registros.</p></div>;
     }
   };
 

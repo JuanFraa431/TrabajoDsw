@@ -169,6 +169,12 @@ form .cancel-btn:hover {
     background-color: #5a6268;
 }
 
+.mensaje-noEncontro{
+    text-align: center;
+    font-size: 1.5rem;
+    color: #007bff;
+}
+
 @media (max-width: 768px) {
     .category-buttons {
         flex-direction: column;
