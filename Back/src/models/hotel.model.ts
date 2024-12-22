@@ -1,14 +1,30 @@
-import { Ciudad } from "./ciudad.model.js";
+import { Cascade, Entity, ManyToOne, PrimaryKey, Property } from '@mikro-orm/core';
+import { Ciudad } from './ciudad.model.js';
+import { BaseModel } from '../shared/db/baseModel.model.js';
 
-export class Hotel {
-  constructor(
-    public id: number,
-    public nombre: string,
-    public direccion: string,
-    public descripcion: string,
-    public telefono: string,
-    public email: string,
-    public estrellas: number,
-    public id_ciudad: number,
-  ) {}
+@Entity()
+export class Hotel extends BaseModel {
+  @Property({ nullable: false })
+  nombre!: string;
+
+  @Property({ nullable: false })
+  descripcion!: string;
+
+  @Property({ nullable: false })
+  direccion!: string;
+
+  @Property({ nullable: false })
+  telefono!: string;
+
+  @Property({ nullable: false })
+  email!: string;
+
+  @Property({ nullable: false })
+  estrellas!: number;
+
+  @Property({ nullable: false })
+  precio_x_dia!: number;
+
+  @ManyToOne(() => Ciudad, { nullable: false })
+  ciudad!: Ciudad;
 }

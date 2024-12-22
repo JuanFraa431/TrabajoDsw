@@ -1,61 +1,59 @@
 import {Request, Response, NextFunction} from 'express'
-import { TransporteRepository } from '../repositories/transporte.repository.js'
 import { Transporte } from '../models/transporte.model.js'
+import { orm } from '../shared/db/orm.js';
 
-const repository = new TransporteRepository()
+const em = orm.em;
 
 async function findAll(req: Request, res: Response) {
-    const transportes = await repository.findAll(); 
-    res.json(transportes); 
+    try {
+        const transportes = await em.find(Transporte, {});
+        res.status(200).json({ message: 'Transportes encontrados', data: transportes });
+    } catch (error: any) {
+        res.status(500).json({ message: error.message });
+    }
 }
 
 
 async function findOne(req: Request, res: Response) {
     try {
-        const { id } = req.params;
-        const transporte = await repository.findOne({ id }); 
-        if (transporte) {
-            res.json(transporte);
-        } else {
-            res.status(404).json({ message: 'Transporte no encontrado' });
-        }
+        const id = Number.parseInt(req.params.id);
+        const transporte = await em.findOneOrFail(Transporte, { id });
+        res.status(200).json({ message: 'Transporte encontrado', data: transporte });
     } catch (error: any) {
-        const errorMessage = error.message || 'Error desconocido';
-        res.status(500).json({ message: 'Error al obtener el transporte', errorMessage });
+        res.status(500).json({ message: error.message });
     }
 }
 
 async function create(req: Request, res: Response) {
     try {
-        const transporte = new Transporte(req.body.id,req.body.descripcion, req.body.capacidad, req.body.tipo, req.body.nombre_empresa, req.body.mail_empresa);
-        const result = await repository.save(transporte);
-        res.json(result);
+        const transporte = em.create(Transporte, req.body);
+        await em.flush();
+        res.status(201).json({ message: 'Transporte creado', data: transporte });
     } catch (error: any) {
-        const errorMessage = error.message || 'Error desconocido';
-        res.status(500).json({ message: 'Error al crear el transporte', errorMessage });
+        res.status(500).json({ message: error.message });
     }
 }
 
 async function update(req: Request, res: Response) {
     try {
-        const { id } = req.params;
-        const transporte = new Transporte(req.body.id,req.body.descripcion, req.body.capacidad, req.body.tipo, req.body.nombre_empresa, req.body.mail_empresa);
-        const result = await repository.update({ id }, transporte);
-        res.json(result);
+        const id = Number.parseInt(req.params.id);
+        const transporte = em.getReference(Transporte, id);
+        em.assign(transporte, req.body);
+        await em.flush();
+        res.status(200).json({ message: 'Transporte actualizado', data: transporte });
     } catch (error: any) {
-        const errorMessage = error.message || 'Error desconocido';
-        res.status(500).json({ message: 'Error al actualizar el transporte', errorMessage });
+        res.status(500).json({ message: error.message });
     }
 }
 
 async function remove(req: Request, res: Response) {
     try {
-        const { id } = req.params;
-        await repository.remove({ id });
-        res.json({ message: 'Transporte eliminado' });
+        const id = Number.parseInt(req.params.id);
+        const transporte = em.getReference(Transporte, id);
+        em.removeAndFlush(transporte);
+        res.status(200).json({ message: 'Transporte eliminado' });
     } catch (error: any) {
-        const errorMessage = error.message || 'Error desconocido';
-        res.status(500).json({ message: 'Error al eliminar el transporte', errorMessage });
+        res.status(500).json({ message: error.message });
     }
 }
 

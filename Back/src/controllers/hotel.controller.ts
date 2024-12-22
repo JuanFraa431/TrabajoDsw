@@ -1,78 +1,58 @@
-import e, { Request, Response, NextFunction } from 'express';
-import { HotelRepository } from '../repositories/hotel.repository.js';
+import { Request, Response } from 'express';
 import { Hotel } from '../models/hotel.model.js';
+import { orm } from '../shared/db/orm.js';
 
-const repository = new HotelRepository();
+const em = orm.em;
 
 async function findAll(req: Request, res: Response) {
-  const hoteles = await repository.findAll();
-  res.json(hoteles);
+  try {
+    const hoteles = await em.find(Hotel, {});
+    res.status(200).json({ message: 'Hoteles encontrados', data: hoteles });
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
 }
 
 async function findOne(req: Request, res: Response) {
   try {
-    const { id } = req.params;
-    const hotel = await repository.findOne({ id });
-    if (hotel) {
-      res.json(hotel);
-    } else {
-      res.status(404).json({ message: 'Hotel no encontrado' });
-    }
+    const id = Number.parseInt(req.params.id);
+    const hotel = await em.findOneOrFail(Hotel, { id });
+    res.status(200).json({ message: 'Hotel encontrado', data: hotel });
   } catch (error: any) {
-    const errorMessage = error.message || 'Error desconocido';
-    res.status(500).json({ message: 'Error al obtener el hotel', errorMessage });
+    res.status(500).json({ message: error.message });
   }
 }
 
 async function create(req: Request, res: Response) {
   try {
-    const hotel = new Hotel(
-      req.body.id,
-      req.body.nombre,
-      req.body.direccion,
-      req.body.descripcion,
-      req.body.telefono,
-      req.body.email,
-      req.body.estrellas,
-      req.body.id_ciudad
-    );
-    const result = await repository.save(hotel);
-    res.json(result);
+    const hotel = em.create(Hotel, req.body);
+    await em.flush();
+    res.status(201).json({ message: 'Hotel creado', data: hotel });
   } catch (error: any) {
-    const errorMessage = error.message || 'Error desconocido';
-    res.status(500).json({ message: 'Error al crear el hotel', errorMessage });
+    res.status(500).json({ message: error.message });
   }
 }
 
 async function update(req: Request, res: Response) {
   try {
-    const { id } = req.params;
-    const hotel = new Hotel(
-      req.body.id,
-      req.body.nombre,
-      req.body.direccion,
-      req.body.descripcion,
-      req.body.telefono,
-      req.body.email,
-      req.body.estrellas,
-      req.body.id_ciudad
-    );
-    const result = await repository.update({ id }, hotel);
-    res.json(result);
+    const id = Number.parseInt(req.params.id);
+    const hotel = em.getReference(Hotel, id);
+    em.assign(hotel, req.body);
+    await em.flush();
+    res.status(200).json({ message: 'Hotel actualizado', data: hotel });
   } catch (error: any) {
-    const errorMessage = error.message || 'Error desconocido';
-    res.status(500).json({ message: 'Error al actualizar el hotel', errorMessage });
+    res.status(500).json({ message: error.message });
   }
 }
 
 async function remove(req: Request, res: Response) {
   try {
-    const { id } = req.params;
-    await repository.remove({ id });
-    res.json({ message: 'Hotel eliminado' });
-  } catch (error:  any) {
-    const errorMessage = error.message || 'Error desconocido';
-    res.status(500).json({ message: 'Error al eliminar el hotel', errorMessage });
+    const id = Number.parseInt(req.params.id);
+    const hotel = em.getReference(Hotel, id);
+    em.removeAndFlush(hotel);
+    res.status(200).json({ message: 'Hotel eliminado' });
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
   }
 }
 

@@ -1,131 +1,96 @@
-import { Request, Response } from 'express'
-import { PaqueteRepository } from '../repositories/paquete.repository.js'
+import { Request, Response, NextFunction } from 'express'
 import { Paquete } from '../models/paquete.model.js'
+import { orm } from '../shared/db/orm.js';
 
-const repository = new PaqueteRepository()
+const em = orm.em;
 
 async function findAll(req: Request, res: Response) {
-    const paquetes = await repository.findAll();
-    res.json(paquetes);
+    try {
+        const paquetes = await em.find(Paquete, {});
+        res.status(200).json({ message: 'Paquetes encontrados', data: paquetes });
+    } catch (error: any) {
+        res.status(500).json({ message: error.message });
+    }
 }
 
 async function findAllUser(req: Request, res: Response) {
     try {
-        const paquetes = await repository.findAllUser();
-        res.json(paquetes);
+        const paquetes = await em.find(Paquete, { estado: 'Activo' });
+        res.status(200).json({ message: 'Paquetes encontrados', data: paquetes });
     } catch (error: any) {
-        const errorMessage = error.message || 'Error desconocido';
-        res.status(500).json({ message: 'Error al obtener los paquetes de usuario', errorMessage });
+        res.status(500).json({ message: error.message });
     }
 }
 
 
 async function findOne(req: Request, res: Response) {
     try {
-        const { id } = req.params;
-        const paquete = await repository.findOne({ id });
-        if (paquete) {
-            res.json(paquete);
-        } else {
-            res.status(404).json({ message: 'Paquete no encontrado' });
-        }
+        const id = Number.parseInt(req.params.id);
+        const paquete = await em.findOneOrFail(Paquete, { id }, { populate: ['comentarios', 'estadias'] });
+        res.status(200).json({ message: 'Paquete encontrado', data: paquete });
     } catch (error: any) {
-        const errorMessage = error.message || 'Error desconocido';
-        res.status(500).json({ message: 'Error al obtener el paquete', errorMessage });
+        res.status(500).json({ message: error.message });
     }
 }
 
 async function create(req: Request, res: Response) {
     try {
-
-        let fecha_ini = req.body.fecha_ini;
-        if (fecha_ini) {
-            fecha_ini = fecha_ini.split('T')[0];
-        }
-
-        let fecha_fin = req.body.fecha_fin;
-        if (fecha_fin) {
-            fecha_fin = fecha_fin.split('T')[0];
-        }
-
-        const paquete = new Paquete(
-            req.body.id,
-            req.body.nombre,
-            req.body.estado,
-            req.body.descripcion,
-            req.body.detalle,
-            req.body.precio,
-            fecha_ini,
-            fecha_fin,
-            req.body.imagen
-        );
-        const result = await repository.save(paquete);
-        res.json(result);
+        const paquete = em.create(Paquete, req.body);
+        await em.flush();
+        res.status(201).json({ message: 'Paquete creado', data: paquete });
     } catch (error: any) {
-        const errorMessage = error.message || 'Error desconocido';
-        res.status(500).json({ message: 'Error al crear el paquete', errorMessage });
+        res.status(500).json({ message: error.message });
     }
 }
 
 async function update(req: Request, res: Response) {
     try {
-        const { id } = req.params;
-
-        let fecha_ini = req.body.fecha_ini;
-        if (fecha_ini) {
-            fecha_ini = fecha_ini.split('T')[0];
-        }
-
-        let fecha_fin = req.body.fecha_fin;
-        if (fecha_fin) {
-            fecha_fin = fecha_fin.split('T')[0];
-        }
-
-        const paquete = new Paquete(
-            req.body.id,
-            req.body.nombre,
-            req.body.estado,
-            req.body.descripcion,
-            req.body.detalle,
-            req.body.precio,
-            fecha_ini,
-            fecha_fin,
-            req.body.imagen
-        );
-        const result = await repository.update({ id }, paquete);
-        res.json(result);
+        const id = Number.parseInt(req.params.id);
+        const paquete = em.getReference(Paquete, id);
+        em.assign(paquete, req.body);
+        await em.flush();
+        res.status(200).json({ message: 'Paquete actualizado', data: paquete });
     } catch (error: any) {
-        const errorMessage = error.message || 'Error desconocido';
-        res.status(500).json({ message: 'Error al actualizar el paquete', errorMessage });
+        res.status(500).json({ message: error.message });
     }
 }
 
 async function remove(req: Request, res: Response) {
     try {
-        const { id } = req.params;
-        const result = await repository.remove({ id });
-        res.json({ message: 'Paquete eliminado' });
+        const id = Number.parseInt(req.params.id);
+        const paquete = em.getReference(Paquete, id);
+        em.removeAndFlush(paquete);
+        res.status(200).json({ message: 'Paquete eliminado' });
     } catch (error: any) {
-        const errorMessage = error.message || 'Error desconocido';
-        res.status(500).json({ message: 'Error al eliminar el paquete', errorMessage });
+        res.status(500).json({ message: error.message });
     }
 }
 
 async function search(req: Request, res: Response) {
-    const { ciudad, fechaInicio, fechaFin, precioMaximo } = req.query;
-
     try {
-        const paquetes = await repository.search({
-            ciudad: ciudad as string,
-            fechaInicio: fechaInicio as string,
-            fechaFin: fechaFin as string,
-            precioMaximo: Number(precioMaximo)
-        });
-
-        res.json(paquetes);
+        const { ciudad, fechaInicio, fechaFin, precioMaximo } = req.body;
+        const paquetes = await em.getConnection().execute<Paquete[]>(
+        `
+            SELECT p.*, c.latitud, c.longitud
+            FROM 
+                    paquete AS p
+                INNER JOIN
+                    estadia AS e ON p.id = e.paquete_id
+                INNER JOIN
+                    hotel AS h ON e.hotel_id = h.id
+                INNER JOIN 
+                    ciudad AS c ON h.ciudad_id = c.id
+            WHERE (c.nombre = ? OR ? = '') 
+            AND p.fecha_ini >= ? 
+            AND p.fecha_fin <= ? 
+            AND p.precio <= ?
+            AND p.estado = '1'
+        `,
+        [ciudad, ciudad, fechaInicio, fechaFin, precioMaximo]
+        );
+        res.status(200).json({ message: 'Paquetes encontrados', data: paquetes });
     } catch (error: any) {
-        const errorMessage = error.message || 'Error desconocido';
-        res.status(500).json({ message: 'Error al buscar paquetes', errorMessage });
+        res.status(500).json({ message: error.message });
     }
 }
 

@@ -1,74 +1,58 @@
-import { Request, Response, NextFunction } from 'express';
-import { CiudadRepository } from '../repositories/ciudad.repository.js';
+import { Request, Response } from 'express';
 import { Ciudad } from '../models/ciudad.model.js';
+import { orm } from '../shared/db/orm.js';
 
-const repository = new CiudadRepository();
+const em = orm.em;
 
 async function findAll(req: Request, res: Response) {
-  const ciudades = await repository.findAll();
-  res.json(ciudades);
+  try {
+    const ciudades = await em.find(Ciudad, {});
+    res.status(200).json( { message: 'Ciudades encontradas', data: ciudades } );
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
 }
 
 async function findOne(req: Request, res: Response) {
   try {
-    const { id } = req.params;
-    const ciudad = await repository.findOne({ id });
-    if (ciudad) {
-      res.json(ciudad);
-    } else {
-      res.status(404).json({ message: 'Ciudad no encontrada' });
-    }
+    const id = Number.parseInt(req.params.id);
+    const ciudad = await em.findOneOrFail(Ciudad, { id });
+    res.status(200).json( { message: 'Ciudad encontrada', data: ciudad } );
   } catch (error: any) {
-    const errorMessage = error.message || 'Error desconocido';
-    res.status(500).json({ message: 'Error al obtener la ciudad', errorMessage });
+    res.status(500).json({ message: error.message });
   }
 }
 
 async function create(req: Request, res: Response) {
   try {
-    const ciudad = new Ciudad(
-      req.body.id,
-      req.body.nombre,
-      req.body.descripcion,
-      req.body.pais,
-      req.body.latitud,
-      req.body.longitud
-    );
-    const result = await repository.save(ciudad);
-    res.json(result);
+    const ciudad = em.create(Ciudad, req.body);
+    await em.flush();
+    res.status(201).json( { message: 'Ciudad creada', data: ciudad } );
   } catch (error: any) {
-  const errorMessage = error.message || 'Error desconocido';
-    res.status(500).json({ message: 'Error al crear la ciudad', errorMessage });
+    res.status(500).json({ message: error.message });
   }
 }
 
 async function update(req: Request, res: Response) {
   try {
-    const { id } = req.params;
-    const ciudad = new Ciudad(
-      req.body.id,
-      req.body.nombre,
-      req.body.descripcion,
-      req.body.pais,
-      req.body.latitud,
-      req.body.longitud
-    );
-    const result = await repository.update({ id }, ciudad);
-    res.json(result);
+    const id = Number.parseInt(req.params.id);
+    const ciudad = em.getReference(Ciudad, id);
+    em.assign(ciudad, req.body);
+    await em.flush();
+    res.status(200).json( { message: 'Ciudad actualizada' } );
   } catch (error: any) {
-    const errorMessage = error.message || 'Error desconocido';
-    res.status(500).json({ message: 'Error al actualizar la ciudad', errorMessage });
+    res.status(500).json({ message: error.message });
   }
 }
 
 async function remove(req: Request, res: Response) {
   try {
-    const { id } = req.params;
-    const result = await repository.remove({ id });
-    res.json({ message: 'Ciudad eliminada' });
+    const id = Number.parseInt(req.params.id);
+    const ciudad = em.getReference(Ciudad, id);
+    em.removeAndFlush(ciudad);
+    res.status(200).json( { message: 'Ciudad eliminada' } );
   } catch (error: any) {
-    const errorMessage = error.message || 'Error desconocido';
-    res.status(500).json({ message: 'Error al eliminar la ciudad', errorMessage });
+    res.status(500).json({ message: error.message });
   }
 }
 

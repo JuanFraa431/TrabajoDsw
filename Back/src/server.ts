@@ -1,3 +1,6 @@
+import 'reflect-metadata';
+import { orm, syncSchema } from './shared/db/orm.js';
+
 import express from 'express';
 import path from 'path';
 import cors from 'cors';
@@ -17,6 +20,7 @@ import { routerTransporte } from './routes/transporte.routes.js';
 import { routerPaquete } from './routes/paquete.routes.js';
 import { routerEstadia } from './routes/estadia.routes.js';
 import { routerComentario } from './routes/comentario.routes.js';
+import { RequestContext } from '@mikro-orm/core';
 
 const app = express();
 
@@ -35,6 +39,10 @@ app.use(cors({
 
 app.use(express.json());
 
+app.use( (req, res, next) => {
+  RequestContext.create(orm.em, next);
+});
+
 app.use('/api/cliente', routerCliente);
 app.use('/api/ciudad', routerCiudad);
 app.use('/api/hotel',routerHotel);
@@ -52,7 +60,10 @@ app.get('/home', (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 
-console.log(`Iniciando el servidor en el puerto ${PORT}`); // Añadir un log
+console.log(`Iniciando el servidor en el puerto ${PORT}`);
+
+await syncSchema(); // solo para desarrollo
+
 app.listen(PORT, () => {
     const url = `http://localhost:${PORT}`;
     console.log(`Puedes abrir el servidor en: ${url}`);

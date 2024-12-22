@@ -1,86 +1,59 @@
-import e, { Request, Response, NextFunction } from 'express';
-import { ComentarioRepository } from '../repositories/comentario.repository.js';
+import { Request, Response } from 'express';
 import { Comentario } from '../models/comentario.model.js';
+import { orm } from '../shared/db/orm.js';
 
-const repository = new ComentarioRepository();
+const em = orm.em;
 
 async function findAll(req: Request, res: Response) {
-  const comentarios = await repository.findAll();
-  res.json(comentarios);
+  try {
+    const comentarios = await em.find(Comentario, {});
+    res.status(200).json({ message: 'Comentarios encontrados', data: comentarios });
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
 }
 
 async function findOne(req: Request, res: Response) {
   try {
-    const { id } = req.params;
-    const comentario = await repository.findOne({ id });
-    if (comentario) {
-      res.json(comentario);
-    } else {
-      res.status(404).json({ message: 'Comentario no encontrado' });
-    }
+    const id = Number.parseInt(req.params.id);
+    const comentario = await em.findOneOrFail(Comentario, { id });
+    res.status(200).json({ message: 'Comentario encontrado', data: comentario });
   } catch (error: any) {
-    const errorMessage = error.message || 'Error desconocido';
-    res.status(500).json({ message: 'Error al obtener el comentario', errorMessage });
+    res.status(500).json({ message: error.message });
   }
 }
 
 async function create(req: Request, res: Response) {
   try {
-    const comentario = new Comentario(
-      req.body.id,
-      req.body.id_cliente,
-      req.body.id_paquete,
-      req.body.fecha,
-      req.body.descripcion,
-      req.body.estrellas
-    );
-    const result = await repository.save(comentario);
-    res.json(result);
+    const comentario = em.create(Comentario, req.body);
+    await em.flush();
+    res.status(201).json({ message: 'Comentario creado', data: comentario });
   } catch (error: any) {
-    const errorMessage = error.message || 'Error desconocido';
-    res.status(500).json({ message: 'Error al crear el comentario', errorMessage });
+    res.status(500).json({ message: error.message });
   }
 }
 
 async function update(req: Request, res: Response) {
   try {
-    const { id } = req.params;
-    const comentario = new Comentario(
-      req.body.id,
-      req.body.id_cliente,
-      req.body.id_paquete,
-      req.body.fecha,
-      req.body.descripcion,
-      req.body.estrellas
-    );
-    const result = await repository.update({ id }, comentario);
-    res.json(result);
+    const id = Number.parseInt(req.params.id);
+    const comentario = em.getReference(Comentario, id);
+    em.assign(comentario, req.body);
+    await em.flush();
+    res.status(200).json({ message: 'Comentario actualizado' });
   } catch (error: any) {
-    const errorMessage = error.message || 'Error desconocido';
-    res.status(500).json({ message: 'Error al actualizar el comentario', errorMessage });
+    res.status(500).json({ message: error.message });
   }
 }
 
 async function remove(req: Request, res: Response) {
   try {
-    const { id } = req.params;
-    const result = await repository.remove({ id });
-    res.json({ message: 'Comentario eliminado' });
+    const id = Number.parseInt(req.params.id);
+    const comentario = em.getReference(Comentario, id);
+    em.removeAndFlush(comentario);
+    res.status(200).json({ message: 'Comentario eliminado' });
   } catch (error: any) {
-    const errorMessage = error.message || 'Error desconocido';
-    res.status(500).json({ message: 'Error al eliminar el comentario', errorMessage });
+    res.status(500).json({ message: error.message });
   }
 }
 
-async function findByPaquete(req: Request, res: Response) {
-  try {
-    const { id } = req.params;
-    const comentarios = await repository.findByPaquete(id);
-    res.json(comentarios);
-  } catch (error: any) {
-    const errorMessage = error.message || 'Error desconocido';
-    res.status(500).json({ message: 'Error al obtener los comentarios', errorMessage });
-  }
-}
-
-export { findAll, findOne, create, update, remove, findByPaquete };
+export { findAll, findOne, create, update, remove };

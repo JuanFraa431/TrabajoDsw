@@ -1,108 +1,84 @@
-import e, { Request, Response, NextFunction } from 'express';
-import { ExcursionRepository } from '../repositories/excursion.repository.js';
+import { Request, Response } from 'express';
 import { Excursion } from '../models/excursion.model.js';
+import { orm } from '../shared/db/orm.js';
 
-const repository = new ExcursionRepository();
+const em = orm.em;
 
 async function findAll(req: Request, res: Response) {
-  const excursiones = await repository.findAll();
-  res.json(excursiones);
+  try {
+    const excursiones = await em.find(Excursion, {});
+    res.status(200).json({ message: 'Excursiones encontradas', data: excursiones });
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
 }
 
 async function findOne(req: Request, res: Response) {
   try {
-    const { id } = req.params;
-    const excursion = await repository.findOne({ id });
-    if (excursion) {
-      res.json(excursion);
-    } else {
-      res.status(404).json({ message: 'Excursion no encontrada' });
-    }
+    const id = Number.parseInt(req.params.id);
+    const excursion = await em.findOneOrFail(Excursion, { id });
+    res.status(200).json({ message: 'Excursion encontrada', data: excursion });
   } catch (error: any) {
-    const errorMessage = error.message || 'Error desconocido';
-    res.status(500).json({ message: 'Error al obtener la excursion', errorMessage });
+    res.status(500).json({ message: error.message });
   }
 }
 
 async function create(req: Request, res: Response) {
   try {
-    const excursion = new Excursion(
-      req.body.id,
-      req.body.nombre,
-      req.body.descripcion,
-      req.body.detalle,
-      req.body.tipo,
-      req.body.horario,
-      req.body.nro_personas_max,
-      req.body.nombre_empresa,
-      req.body.mail_empresa,
-      req.body.precio,
-      req.body.id_ciudad,
-      req.body.imagen
-    );
-    const result = await repository.save(excursion);
-    res.json(result);
+    const excursion = em.create(Excursion, req.body);
+    await em.flush();
+    res.status(201).json({ message: 'Excursion creada', data: excursion });
   } catch (error: any) {
-    const errorMessage = error.message || 'Error desconocido';
-    res.status(500).json({ message: 'Error al crear la excursion', errorMessage });
+    res.status(500).json({ message: error.message });
   }
 }
 
 async function update(req: Request, res: Response) {
   try {
-    const { id } = req.params;
-    const excursion = new Excursion(
-      req.body.id,
-      req.body.nombre,
-      req.body.descripcion,
-      req.body.detalle,
-      req.body.tipo,
-      req.body.horario,
-      req.body.nro_personas_max,
-      req.body.nombre_empresa,
-      req.body.mail_empresa,
-      req.body.precio,
-      req.body.id_ciudad,
-      req.body.imagen
-    );
-    const result = await repository.update({ id }, excursion);
-    res.json(result);
+    const id = Number.parseInt(req.params.id);
+    const excursion = em.getReference(Excursion, id);
+    em.assign(excursion, req.body);
+    await em.flush();
+    res.status(200).json({ message: 'Excursion actualizada', data: excursion });
   } catch (error: any) {
-    const errorMessage = error.message || 'Error desconocido';
-    res.status(500).json({ message: 'Error al actualizar la excursion', errorMessage });
+    res.status(500).json({ message: error.message });
   }
 }
 
 async function remove(req: Request, res: Response) {
   try {
-    const { id } = req.params;
-    await repository.remove({ id });
-    res.json({ message: 'Excursion eliminada' });
+    const id = Number.parseInt(req.params.id);
+    const excursion = em.getReference(Excursion, id);
+    em.removeAndFlush(excursion);
+    res.status(200).json({ message: 'Excursion eliminada' });
   } catch (error: any) {
-    const errorMessage = error.message || 'Error desconocido';
-    res.status(500).json({ message: 'Error al eliminar la excursion', errorMessage });
+    res.status(500).json({ message: error.message });
   }
 }
 
 async function findByType(req: Request, res: Response) {
   try {
-    const { tipo } = req.params;
-    const excursiones = await repository.findByType({ tipo });
-    res.json(excursiones);
+    const tipo = req.params.tipo;
+    const excursiones = await em.find(Excursion, { tipo });
+    res.status(200).json({ message: 'Excursiones encontradas', data: excursiones });
   } catch (error: any) {
-    const errorMessage = error.message || 'Error desconocido';
-    res.status(500).json({ message: 'Error al obtener las excursiones', errorMessage });
+    res.status(500).json({ message: error.message });
   }
 }
 
 async function findTypes(req: Request, res: Response) {
   try {
-    const tipos = await repository.findTypes();
-    res.json(tipos);
+    const tipos = await em
+      .getConnection()
+      .execute<{ tipo: string; cantidad: number }[]>(
+        `SELECT tipo, COUNT(*) as cantidad FROM excursiones GROUP BY tipo`
+      );
+
+    res.status(200).json({ message: 'Tipos de excursiones encontrados', data: tipos });
   } catch (error: any) {
-    const errorMessage = error.message || 'Error desconocido';
-    res.status(500).json({ message: 'Error al obtener los tipos de excursiones', errorMessage });
+    res.status(500).json({ message: error.message });
   }
+
 }
 
 export { findAll, findOne, create, update, remove, findByType, findTypes };

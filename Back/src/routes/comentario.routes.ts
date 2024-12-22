@@ -3,14 +3,11 @@ import {
   findOne,
   create,
   update,
-  remove,
-  findByPaquete
+  remove
 } from '../controllers/comentario.controller.js';
 import { Router } from 'express';
 
 export const routerComentario = Router();
-
-routerComentario.get('/paquete/:id', findByPaquete);
 
 routerComentario.get('/', findAll);
 
