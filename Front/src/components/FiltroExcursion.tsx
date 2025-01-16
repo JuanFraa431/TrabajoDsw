@@ -19,7 +19,7 @@ const FiltroVerticalExcursiones: React.FC<FiltroVerticalExcursionesProps> = ({ o
         const obtenerTiposExcursion = async () => {
             try {
                 const response = await axios.get('http://localhost:8080/api/excursion/tipo');
-                setTiposExcursion(response.data);
+                setTiposExcursion(response.data.data);
             } catch (error) {
                 console.error('Error al obtener tipos de excursión:', error);
             }

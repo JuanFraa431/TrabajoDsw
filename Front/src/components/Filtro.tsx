@@ -46,9 +46,12 @@ const Filtro: React.FC = () => {
                 }
             });
 
+            console.log('params:' , {destination, formattedStartDate, formattedEndDate, price});
+            
+
             navigate('/paquetes', {
                 state: {
-                    paquetes: response.data,
+                    paquetes: response.data.data,
                     filters: {
                         destination,
                         startDate: formattedStartDate,

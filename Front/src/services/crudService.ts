@@ -3,7 +3,7 @@ import axios from 'axios';
 export const fetchEntities = async (endpoint: string) => {
   try {
     const response = await axios.get(endpoint);
-    return response.data;
+    return response.data.data;
   } catch (error) {
     throw new Error(`Error fetching data from ${endpoint}`);
   }

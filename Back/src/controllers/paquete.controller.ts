@@ -68,10 +68,10 @@ async function remove(req: Request, res: Response) {
 
 async function search(req: Request, res: Response) {
     try {
-        const { ciudad, fechaInicio, fechaFin, precioMaximo } = req.body;
+        const { ciudad, fechaInicio, fechaFin, precioMaximo } = req.query;
         const paquetes = await em.getConnection().execute<Paquete[]>(
         `
-            SELECT p.*, c.latitud, c.longitud
+            SELECT DISTINCT p.*, c.latitud, c.longitud
             FROM 
                     paquete AS p
                 INNER JOIN

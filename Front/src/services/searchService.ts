@@ -10,7 +10,7 @@ export const handleLinkClick = async (
 
     try {
         const response = await axios.get(`http://localhost:3000/api/${endpoint}`);
-        navigate(`/${route}`, { state: { [route]: response.data } });
+        navigate(`/${route}`, { state: { [route]: response.data.data } });
     } catch (error) {
         console.error(`Error al obtener ${endpoint}:`, error);
     }

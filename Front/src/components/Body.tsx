@@ -35,11 +35,13 @@ const BuscadorPaquetes: React.FC = () => {
                     fechaFin: formattedEndDate,
                     precioMaximo: price
                 }
+            
             });
-
+            
             navigate('/paquetes', { 
                 state: { 
-                    paquetes: response.data,
+                    
+                    paquetes: response.data.data,
                     filters: {
                         destination,
                         startDate: formattedStartDate,

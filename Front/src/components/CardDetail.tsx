@@ -22,7 +22,7 @@ const CardDetail: React.FC = () => {
         const fetchPaquete = async () => {
             try {
                 const response = await axios.get(`http://localhost:3000/api/paquete/${id}`);
-                setPaquete(response.data);
+                setPaquete(response.data.data);
             } catch (error) {
                 console.error("Error fetching paquete:", error);
             }
@@ -37,7 +37,7 @@ const CardDetail: React.FC = () => {
     const fetchComentarios = async () => {
         try {
             const response = await axios.get(`http://localhost:3000/api/comentario/paquete/${id}`);
-            const comentariosConCliente = await Promise.all(response.data.map(async (comentario: Comentario) => {
+            const comentariosConCliente = await Promise.all(response.data.data.map(async (comentario: Comentario) => {
                 const cliente = await fetchClienteComentario(comentario.id_cliente);
                 return { ...comentario, cliente };
             }));

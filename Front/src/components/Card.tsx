@@ -33,7 +33,7 @@ const CardList: React.FC = () => {
         const fetchPaquetes = async () => {
             try {
                 const response = await axios.get('/api/paquete/user');
-                setPaquetes(response.data);
+                setPaquetes(response.data.data);
             } catch (err) {
                 setError(err instanceof Error ? err.message : 'Error desconocido');
             } finally {

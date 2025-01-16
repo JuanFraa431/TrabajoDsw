@@ -16,7 +16,7 @@ const EstadiaForm: React.FC<Props> = ({ estadiaEditada, onChange, onCancel, onSa
 
       useEffect(() => {
         axios.get('/api/hotel/')
-          .then(response => setHotels(response.data))
+          .then(response => setHotels(response.data.data))
           .catch(error => console.error(error));
       }, []);
 

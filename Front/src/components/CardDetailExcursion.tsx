@@ -13,7 +13,7 @@ const CardDetailExcursion: React.FC = () => {
         const fetchExcursion = async () => {
             try {
                 const response = await axios.get(`http://localhost:3000/api/excursion/${id}`);
-                setExcursion(response.data);
+                setExcursion(response.data.data);
             } catch (error) {
                 console.error("Error fetching excursion:", error);
             }

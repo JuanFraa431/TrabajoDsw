@@ -12,8 +12,8 @@ const Mapa = () => {
 
     try {
       const response = await axios.get(url);
-      if (response.data.results.length > 0) {
-        const { lat, lng } = response.data.results[0].geometry.location;
+      if (response.data.data.results.length > 0) {
+        const { lat, lng } = response.data.data.results[0].geometry.location;
         setLatitud(lat);
         setLongitud(lng);
       } else {

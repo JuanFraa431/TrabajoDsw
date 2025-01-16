@@ -23,12 +23,14 @@ const ClienteForm: React.FC<Props> = ({ paqueteEditado, onChange, onCancel, onSa
       />
       
       <label htmlFor="descripcion">Descripcion:</label>
-      <input
+      <label htmlFor="descripcion">Descripción:</label>
+      <textarea
         id="descripcion"
-        type="text"
         value={paqueteEditado.descripcion}
         onChange={(e) => onChange({ ...paqueteEditado, descripcion: e.target.value })}
         required
+        rows={4}
+        cols={50}
       />
       
       <label htmlFor="detalle">Detalle:</label>

@@ -18,7 +18,7 @@ const Login: React.FC = () => {
       console.log(response);
 
       if (response.status === 200) {
-        const { cliente, token } = response.data;
+        const { cliente, token } = response.data.data;
 
         if (cliente.estado === 1) {
           console.log('Login successful:', cliente);
