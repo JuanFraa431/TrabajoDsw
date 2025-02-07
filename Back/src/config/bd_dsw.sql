@@ -47,16 +47,16 @@ INSERT INTO `agenciadeviajes`.`hotel` (`nombre`, `descripcion`, `direccion`, `te
 ('Hotel Nocturno', 'Hotel especializado en turismo nocturno', 'Av. Noche 33', '012345678', 'nocturno@hotel.com', 5, 10, 220);
 
 INSERT INTO `agenciadeviajes`.`paquete` (`nombre`, `estado`, `descripcion`, `detalle`, `precio`, `fecha_ini`, `fecha_fin`, `imagen`) VALUES
-('Paquete Cultural', 1, 'Experiencia cultural única', 'Incluye museos y visitas guiadas', 500, '2024-01-01', '2024-01-07', 'cultural.jpg'),
-('Aventura Extrema', 1, 'Paquete para los amantes de la adrenalina', 'Rafting, escalada y más', 700, '2024-02-01', '2024-02-10', 'aventura.jpg'),
-('Relax Total', 1, 'Relájate en las mejores playas', 'Incluye spa y deportes acuáticos', 600, '2024-03-01', '2024-03-07', 'relax.jpg'),
-('Naturaleza Salvaje', 1, 'Explora la selva y su biodiversidad', 'Safari y trekking', 800, '2024-04-01', '2024-04-07', 'naturaleza.jpg'),
-('Lujo y Confort', 1, 'Hospedaje en hoteles 5 estrellas', 'Cena gourmet y tours privados', 1000, '2024-05-01', '2024-05-10', 'lujo.jpg'),
-('Historia Viva', 1, 'Sumérgete en la historia de la región', 'Incluye sitios históricos y guías expertos', 550, '2024-06-01', '2024-06-07', 'historia.jpg'),
-('Aventura en Familia', 1, 'Diversión asegurada para toda la familia', 'Parques temáticos y actividades grupales', 450, '2024-07-01', '2024-07-07', 'familia.jpg'),
-('Descanso Natural', 1, 'Relájate rodeado de naturaleza', 'Cabañas y actividades al aire libre', 500, '2024-08-01', '2024-08-07', 'natural.jpg'),
-('Turismo Urbano', 1, 'Explora las ciudades más vibrantes', 'Incluye transporte y guías locales', 550, '2024-09-01', '2024-09-07', 'urbano.jpg'),
-('Escapada Romántica', 1, 'Paquete para parejas', 'Cena romántica y actividades especiales', 750, '2024-10-01', '2024-10-07', 'romantico.jpg');
+('Paquete Cultural', 1, 'Experiencia cultural única', 'Incluye museos y visitas guiadas', 500, '2026-01-01', '2027-01-07', 'cultural.jpg'),
+('Aventura Extrema', 1, 'Paquete para los amantes de la adrenalina', 'Rafting, escalada y más', 700, '2026-02-01', '2027-02-10', 'aventura.jpg'),
+('Relax Total', 1, 'Relájate en las mejores playas', 'Incluye spa y deportes acuáticos', 600, '2026-03-01', '2027-03-07', 'relax.jpg'),
+('Naturaleza Salvaje', 1, 'Explora la selva y su biodiversidad', 'Safari y trekking', 800, '2026-04-01', '2027-04-07', 'naturaleza.jpg'),
+('Lujo y Confort', 1, 'Hospedaje en hoteles 5 estrellas', 'Cena gourmet y tours privados', 1000, '2026-05-01', '2027-05-10', 'lujo.jpg'),
+('Historia Viva', 1, 'Sumérgete en la historia de la región', 'Incluye sitios históricos y guías expertos', 550, '2026-06-01', '2027-06-07', 'historia.jpg'),
+('Aventura en Familia', 1, 'Diversión asegurada para toda la familia', 'Parques temáticos y actividades grupales', 450, '2026-07-01', '2027-07-07', 'familia.jpg'),
+('Descanso Natural', 1, 'Relájate rodeado de naturaleza', 'Cabañas y actividades al aire libre', 500, '2026-08-01', '2027-08-07', 'natural.jpg'),
+('Turismo Urbano', 1, 'Explora las ciudades más vibrantes', 'Incluye transporte y guías locales', 550, '2026-09-01', '2027-09-07', 'urbano.jpg'),
+('Escapada Romántica', 1, 'Paquete para parejas', 'Cena romántica y actividades especiales', 750, '2026-10-01', '2027-10-07', 'romantico.jpg');
 
 INSERT INTO `agenciadeviajes`.`transporte` (`nombre`, `descripcion`, `capacidad`, `tipo`, `nombre_empresa`, `mail_empresa`) VALUES
 ('Bus de Lujo', 'Autobús con asientos reclinables y WiFi', 50, 'Terrestre', 'Viajes Confort', 'info@viajesconfort.com'),

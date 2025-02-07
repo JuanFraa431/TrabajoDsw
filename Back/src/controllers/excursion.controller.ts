@@ -71,7 +71,7 @@ async function findTypes(req: Request, res: Response) {
     const tipos = await em
       .getConnection()
       .execute<{ tipo: string; cantidad: number }[]>(
-        `SELECT tipo, COUNT(*) as cantidad FROM excursiones GROUP BY tipo`
+        `SELECT tipo, COUNT(*) as cantidad FROM excursion GROUP BY tipo`
       );
 
     res.status(200).json({ message: 'Tipos de excursiones encontrados', data: tipos });
