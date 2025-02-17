@@ -1,7 +1,6 @@
 export interface Comentario {
   id: number;
-  id_cliente: number;
-  id_paquete: number;
+  paquete: number;
   fecha: string;
   descripcion: string;
   estrellas: number;

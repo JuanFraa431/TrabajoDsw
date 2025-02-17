@@ -30,32 +30,14 @@ const CardDetail: React.FC = () => {
 
         if (id) {
             fetchPaquete();
-            fetchComentarios();
         }
     }, [id]);
 
-    const fetchComentarios = async () => {
-        try {
-            const response = await axios.get(`http://localhost:3000/api/comentario/paquete/${id}`);
-            const comentariosConCliente = await Promise.all(response.data.data.map(async (comentario: Comentario) => {
-                const cliente = await fetchClienteComentario(comentario.id_cliente);
-                return { ...comentario, cliente };
-            }));
-            setComentarios(comentariosConCliente);
-        } catch (error) {
-            console.error("Error fetching comentarios:", error);
+    useEffect(() => {
+        if(paquete) {
+            setComentarios(paquete.comentarios);
         }
-    };
-
-    const fetchClienteComentario = async (clienteId: number) => {
-        try {
-            const response = await axios.get(`http://localhost:3000/api/cliente/${clienteId}`);
-            return response.data;
-        } catch (error) {
-            console.error("Error fetching cliente:", error);
-            return null;
-        }
-    };
+    }, [paquete]);
 
     const agregarComentario = async () => {
         if (!nuevoComentario.trim() || estrellas === 0) {
@@ -65,21 +47,22 @@ const CardDetail: React.FC = () => {
 
         try {
             const newComentario = {
-                id_cliente: clienteLogueado ? JSON.parse(clienteLogueado).id : null,
-                id_paquete: id,
+                cliente: clienteLogueado ? JSON.parse(clienteLogueado).id : null,
+                paquete: id,
                 fecha: new Date().toISOString().split('T')[0],
                 descripcion: nuevoComentario,
                 estrellas
             };
-
             
             const response = await axios.post('http://localhost:3000/api/comentario', newComentario);
             
-            
-            const comentarioCreado = { 
-                ...newComentario, 
+            const comentarioCreado: Comentario = { 
                 id: response.data.id,
-                cliente: userData 
+                cliente: userData,
+                paquete: id,
+                fecha: newComentario.fecha,
+                descripcion: newComentario.descripcion,
+                estrellas: newComentario.estrellas 
             }; 
             setComentarios(prev => [...prev, comentarioCreado]);
             setNuevoComentario("");

@@ -15,7 +15,7 @@ async function findAll(req: Request, res: Response) {
 
 async function findAllUser(req: Request, res: Response) {
     try {
-        const paquetes = await em.find(Paquete, { estado: 'Activo' });
+        const paquetes = await em.find(Paquete, { estado: 1 });
         res.status(200).json({ message: 'Paquetes encontrados', data: paquetes });
     } catch (error: any) {
         res.status(500).json({ message: error.message });
@@ -26,7 +26,7 @@ async function findAllUser(req: Request, res: Response) {
 async function findOne(req: Request, res: Response) {
     try {
         const id = Number.parseInt(req.params.id);
-        const paquete = await em.findOneOrFail(Paquete, { id }, { populate: ['comentarios', 'estadias'] });
+        const paquete = await em.findOneOrFail(Paquete, { id }, { populate: ['comentarios', 'estadias', 'comentarios.cliente'] });
         res.status(200).json({ message: 'Paquete encontrado', data: paquete });
     } catch (error: any) {
         res.status(500).json({ message: error.message });

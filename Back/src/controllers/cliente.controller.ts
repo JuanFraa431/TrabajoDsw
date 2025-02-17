@@ -27,12 +27,51 @@ async function findOne(req: Request, res: Response) {
 }
 
 async function create(req: Request, res: Response) {
-    res.status(500).json({ message: 'Error al crear el cliente', errorMessage: 'No se puede crear un cliente' });
+    try {
+        const { password, ...data } = req.body;
+
+        if (!password) {
+            return res.status(400).json({ message: 'La contraseña es obligatoria' });
+        }
+
+        const saltRounds = 10;
+        const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+        const cliente = em.create(Cliente, {
+        ...data,
+        password: hashedPassword,
+        });
+
+        await em.flush();
+
+        res.status(201).json({ message: 'Cliente creado', data: cliente });
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
 }
 
+
 async function update(req: Request, res: Response) {
-  res.status(500).json({ message: 'Error al actualizar el cliente', errorMessage: 'No se puede actualizar un cliente' });
+    try {
+        const id = Number.parseInt(req.params.id);
+
+        const cliente = em.getReference(Cliente, id);
+
+        if (req.body.password) {
+            const saltRounds = 10;
+            req.body.password = await bcrypt.hash(req.body.password, saltRounds);
+        }
+
+        em.assign(cliente, req.body);
+
+        await em.flush();
+
+        res.status(200).json({ message: 'Cliente actualizado', data: cliente });
+    } catch (error: any) {
+        res.status(500).json({ message: error.message });
+    }
 }
+
 
 
 

@@ -25,7 +25,7 @@ export class Cliente extends BaseModel {
     @Property({ nullable: false })
     username!: string;
 
-    @Property({ nullable: false })
+    @Property({ nullable: false, hidden: true })
     password!: string;
 
     @Property({ nullable: false })

@@ -29,6 +29,12 @@ const DetalleCliente: React.FC = () => {
     navigate('/');
   };
 
+  // Validamos y formateamos la fecha de nacimiento
+  const fechaNacimiento = new Date(cliente.fecha_nacimiento);
+  const fechaFormateada = !isNaN(fechaNacimiento.getTime())
+    ? fechaNacimiento.toISOString().split('T')[0]
+    : 'Fecha inválida';
+
   return (
     <div className="profile-container">
       <div className="profile-header">
@@ -53,7 +59,9 @@ const DetalleCliente: React.FC = () => {
         <p><strong>Apellido:</strong> {cliente.apellido}</p>
         <p><strong>DNI:</strong> {cliente.dni}</p>
         <p><strong>Email:</strong> {cliente.email}</p>
-        <p><strong>Fecha de Nacimiento:</strong> {new Date(cliente.fecha_nacimiento).toISOString().split('T')[0]}</p>
+        <p>
+          <strong>Fecha de Nacimiento:</strong> {fechaFormateada}
+        </p>
         <p><strong>Username:</strong> {cliente.username}</p>
       </div>
 

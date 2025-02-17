@@ -9,7 +9,7 @@ export class Paquete extends BaseModel {
   nombre!: string;
 
   @Property({ nullable: false })
-  estado!: string;
+  estado!: number;
 
   @Property({ nullable: false })
   descripcion!: string;

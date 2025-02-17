@@ -1,3 +1,5 @@
+import { Comentario } from "./comentario.js";
+
 export interface Paquete {
     id: number;
     nombre: string;
@@ -8,4 +10,5 @@ export interface Paquete {
     fecha_ini: string;
     fecha_fin: string;
     imagen: string;
+    comentarios: Comentario[];
 }

@@ -20,7 +20,8 @@ const Login: React.FC = () => {
       if (response.status === 200) {
         const { cliente, token } = response.data.data;
 
-        if (cliente.estado === 1) {
+        const est = parseInt(cliente.estado, 10);
+        if (est === 1) {
           console.log('Login successful:', cliente);
           setError('');
 
