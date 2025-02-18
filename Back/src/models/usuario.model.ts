@@ -10,7 +10,7 @@ export class Usuario extends Persona {
     @Property({ nullable: false })
     estado!: number;
 
-    @Property({ nullable: false })
+    @Property({ nullable: true })
     username!: string;
 
     @Property({ nullable: false, hidden: true })

@@ -21,17 +21,17 @@ const Register: React.FC = () => {
 
         try {
             await createEntity('/api/cliente/', {
-                username,
-                password,
-                nombre,
-                apellido,
-                dni,
+                nombre: null,
+                apellido: null,
+                dni: null,
                 email,
+                fechaNacimiento: null,
                 estado: 1,
-                tipo_usuario: 'cliente',
-                fecha_nacimiento: fechaNacimiento
+                username: null,
+                password,
+                tipo_usuario: "cliente",
+                imagen:null
             });
-
             setError('');
             navigate('/login');
         } catch (error) {
@@ -40,103 +40,67 @@ const Register: React.FC = () => {
         }
     }
 
+    function togglePasswordVisibility(event: React.MouseEvent<HTMLSpanElement, MouseEvent>): void {
+        const passwordInput = event.currentTarget.previousElementSibling as HTMLInputElement;
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            event.currentTarget.textContent = 'OCULTAR';
+        } else {
+            passwordInput.type = 'password';
+            event.currentTarget.textContent = 'MOSTRAR';
+        }
+    }
+
     return (
-        <div className="container-session">
-            <div className="container-image">
-                <Link to="/">
-                    <img src={logo} alt="Logo" />
-                </Link>
+        <div className='container-session'>
+    <div className='container-image'>
+        <Link to="/"><img src={logo} alt="Logo" /></Link>
+    </div>
+    <div className='form-session'>
+        <h2>Crear una cuenta</h2>
+        <form onSubmit={handleRegister}>
+            <div className='form-group'>
+                <label>Email</label>
+                <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                />
             </div>
-            <div className="form-session">
-                <h2>Registro</h2>
-                <form onSubmit={handleRegister}>
-                    {/* Fila 1: Nombre y Apellido */}
-                    <div className="form-group-half">
-                        <div className="form-group">
-                            <label>Nombre:</label>
-                            <input
-                                type="text"
-                                value={nombre}
-                                onChange={(e) => setNombre(e.target.value)}
-                                required
-                            />
-                        </div>
-                        <div className="form-group">
-                            <label>Apellido:</label>
-                            <input
-                                type="text"
-                                value={apellido}
-                                onChange={(e) => setApellido(e.target.value)}
-                                required
-                            />
-                        </div>
-                    </div>
 
-                    {/* Fila 2: DNI y Email */}
-                    <div className="form-group-half">
-                        <div className="form-group">
-                            <label>DNI:</label>
-                            <input
-                                type="text"
-                                value={dni}
-                                onChange={(e) => setDni(e.target.value)}
-                                required
-                            />
-                        </div>
-                        <div className="form-group">
-                            <label>Email:</label>
-                            <input
-                                type="email"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                required
-                            />
-                        </div>
-                    </div>
-
-                    {/* Fila 3: Fecha de nacimiento y Username */}
-                    <div className="form-group-half">
-                        <div className="form-group">
-                            <label>Fecha de Nacimiento:</label>
-                            <input
-                                type="date"
-                                value={fechaNacimiento}
-                                onChange={(e) => setFechaNacimiento(e.target.value)}
-                                required
-                            />
-                        </div>
-                        <div className="form-group">
-                            <label>Username:</label>
-                            <input
-                                type="text"
-                                value={username}
-                                onChange={(e) => setUsername(e.target.value)}
-                                required
-                            />
-                        </div>
-                    </div>
-
-                    {/* Fila 4: Password */}
-                    <div className="form-group">
-                        <label>Password:</label>
-                        <input
-                            type="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            required
-                        />
-                    </div>
-
-                    {/* Mensaje de error */}
-                    {error && <p className="error-message">{error}</p>}
-
-                    {/* Botón de submit */}
-                    <div className="container-button">
-                        <button type="submit">Registrarse</button>
-                    </div>
-                </form>
+            <div className='form-group'>
+                <label>Contraseña</label>
+                <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                />
+                <span className="show-password" onClick={togglePasswordVisibility}>MOSTRAR</span>
             </div>
-        </div>
+
+            <div className='password-criteria'>
+                <p>8 caracteres</p>
+                <p>Una mayúscula</p>
+                <p>Un número</p>
+            </div>
+
+            <div className='terms'>
+                <p>Al crear una cuenta aceptas:</p>
+                <ul>
+                    <li><a href="#">Nuestra política de privacidad.</a></li>
+                    <li><a href="#">Recibir ofertas y recomendaciones por email.</a></li>
+                </ul>
+            </div>
+
+            {error && <p className="error-message">{error}</p>}
+
+            <button type="submit">Crear una cuenta</button>
+        </form>
+    </div>
+</div>
+
     );
 };
 
