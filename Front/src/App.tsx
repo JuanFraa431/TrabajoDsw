@@ -17,6 +17,7 @@ import VistaAdmin from './components/VistaAdmin';
 import Login from './components/Login';
 import DetalleCliente from './components/Cliente/DetalleCliente';
 import CardDetailExcursion from './components/CardDetailExcursion';
+import Register from './components/Register';
 
 const pageTransition = {
     initial: { opacity: 0 }, 
@@ -137,6 +138,18 @@ const App: React.FC = () => {
                             </motion.div>
                         </div>
                     }/>
+                    <Route
+                        path="/register"
+                        element={
+                            <div>
+                                <Header/>
+                                <motion.div {...pageTransition}>
+                                    <Register/>
+                                </motion.div>
+                            </div>
+                        }
+                        
+                    />
                 </Routes>
             </AnimatePresence>
         </>
