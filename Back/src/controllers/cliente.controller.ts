@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { Cliente } from '../models/usuario.model.js';
+import { Usuario } from '../models/usuario.model.js';
 import bcrypt from 'bcrypt';
 import { orm } from '../shared/db/orm.js';
 import jwt from 'jsonwebtoken';
@@ -8,8 +8,8 @@ const em = orm.em;
 
 async function findAll(req: Request, res: Response) {
   try {
-    const clientes = await em.find(Cliente, {});
-    res.status(200).json({ message: 'Clientes encontrados', data: clientes });
+    const usuarios = await em.find(Usuario, {});
+    res.status(200).json({ message: 'Clientes encontrados', data: usuarios });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
@@ -18,8 +18,8 @@ async function findAll(req: Request, res: Response) {
 async function findOne(req: Request, res: Response) {
   try {
     const id = Number.parseInt(req.params.id);
-    const cliente = await em.findOneOrFail(Cliente, { id });
-    res.status(200).json({ message: 'Cliente encontrado', data: cliente });
+    const usuario = await em.findOneOrFail(Usuario, { id });
+    res.status(200).json({ message: 'Usuario encontrado', data: usuario });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
@@ -36,14 +36,14 @@ async function create(req: Request, res: Response) {
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-    const cliente = em.create(Cliente, {
+    const usuario = em.create(Usuario, {
       ...data,
       password: hashedPassword,
     });
 
     await em.flush();
 
-    res.status(201).json({ message: 'Cliente creado', data: cliente });
+    res.status(201).json({ message: 'Usuario creado', data: usuario });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
@@ -53,18 +53,18 @@ async function update(req: Request, res: Response) {
   try {
     const id = Number.parseInt(req.params.id);
 
-    const cliente = em.getReference(Cliente, id);
+    const usuario = em.getReference(Usuario, id);
 
     if (req.body.password) {
       const saltRounds = 10;
       req.body.password = await bcrypt.hash(req.body.password, saltRounds);
     }
 
-    em.assign(cliente, req.body);
+    em.assign(usuario, req.body);
 
     await em.flush();
 
-    res.status(200).json({ message: 'Cliente actualizado', data: cliente });
+    res.status(200).json({ message: 'Usuario actualizado', data: usuario });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
@@ -73,16 +73,16 @@ async function update(req: Request, res: Response) {
 async function remove(req: Request, res: Response) {
   try {
     const id = Number.parseInt(req.params.id);
-    const cliente = await em.findOne(Cliente, { id });
+    const usuario = await em.findOne(Usuario, { id });
 
-    if (!cliente) {
-      return res.status(404).json({ message: 'Cliente no encontrado' });
+    if (!usuario) {
+      return res.status(404).json({ message: 'Usuario no encontrado' });
     }
 
-    cliente.estado = 0;
+    usuario.estado = 0;
     await em.flush();
 
-    res.status(200).json({ message: 'Cliente deshabilitado', data: cliente });
+    res.status(200).json({ message: 'Usuario deshabilitado', data: usuario });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
@@ -91,25 +91,25 @@ async function remove(req: Request, res: Response) {
 async function login(req: Request, res: Response) {
   try {
     const { username, password } = req.body;
-    const cliente = await em.findOneOrFail(Cliente, { username });
+    const usuario = await em.findOneOrFail(Usuario, { username });
 
-    if (cliente) {
-      const isMatch = await bcrypt.compare(password, cliente.password);
+    if (usuario) {
+      const isMatch = await bcrypt.compare(password, usuario.password);
 
       if (isMatch) {
         const token = jwt.sign(
-          { id: cliente.id, username: cliente.username },
+          { id: usuario.id, username: usuario.username },
           'secreto_del_token',
           { expiresIn: '1h' }
         );
         res
           .status(200)
-          .json({ message: 'Cliente logueado', data: { cliente, token } });
+          .json({ message: 'Usuario logueado', data: { usuario, token } });
       } else {
         res.status(401).json({ message: 'Contraseña incorrecta' });
       }
     } else {
-      res.status(404).json({ message: 'Cliente no encontrado' });
+      res.status(404).json({ message: 'Usuario no encontrado' });
     }
   } catch (error: any) {
     res.status(500).json({ message: error.message });
