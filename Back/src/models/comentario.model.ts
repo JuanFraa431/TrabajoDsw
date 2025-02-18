@@ -1,12 +1,11 @@
 import { Entity, ManyToOne, Property, Rel } from '@mikro-orm/core';
 import { BaseModel } from '../shared/db/baseModel.model.js';
-import { Cliente } from './cliente.model.js';
+import { Cliente } from './usuario.model.js';
 import { Paquete } from './paquete.model.js';
 
 @Entity()
 export class Comentario extends BaseModel {
-
-  @ManyToOne( () => Cliente, { nullable: false })
+  @ManyToOne(() => Cliente, { nullable: false })
   cliente!: Rel<Cliente>;
 
   @ManyToOne(() => Paquete, { nullable: false })
@@ -19,5 +18,5 @@ export class Comentario extends BaseModel {
   descripcion!: string;
 
   @Property({ nullable: false })
-  estrellas!: number  
+  estrellas!: number;
 }

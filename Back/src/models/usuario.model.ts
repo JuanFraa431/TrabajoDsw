@@ -1,23 +1,11 @@
-import { BaseModel } from '../shared/db/baseModel.model.js';
+import { Persona } from './persona.model.js';
 import {Entity, OneToMany, Property } from "@mikro-orm/core"
 import { Estadia } from './estadia.model.js';
 
 @Entity()
-export class Cliente extends BaseModel {
-    @Property({ nullable: false })
-    nombre!: string;
-
-    @Property({ nullable: false })
-    apellido!: string;
-
-    @Property({ nullable: false })
-    dni!: string;
-
+export class Usuario extends Persona {
     @Property({ nullable: false })
     email!: string;
-
-    @Property({ nullable: false })
-    fecha_nacimiento!: Date;
 
     @Property({ nullable: false })
     estado!: number;
