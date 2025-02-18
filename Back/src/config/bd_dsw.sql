@@ -10,17 +10,17 @@ INSERT INTO `agenciadeviajes`.`ciudad` (`nombre`, `descripcion`, `pais`, `latitu
 ('Ciudad de México', 'Capital de México', 'México', 19.4326, -99.1332),
 ('Nueva York', 'Ciudad más grande de EE.UU.', 'EE.UU.', 40.7128, -74.0060);
 
-INSERT INTO `agenciadeviajes`.`cliente` (`nombre`, `apellido`, `dni`, `email`, `fecha_nacimiento`, `estado`, `username`, `password`, `tipo_usuario`, `imagen`) VALUES
-('Juan', 'Pérez', '12345678', 'juan.perez@example.com', '1990-01-01', 1, 'juanperez', 'hashed_password1', 'cliente', 'juan.jpg'),
-('María', 'González', '87654321', 'maria.gonzalez@example.com', '1985-05-12', 1, 'mariagonzalez', 'hashed_password2', 'cliente', 'maria.jpg'),
-('Carlos', 'Rodríguez', '34567890', 'carlos.rodriguez@example.com', '1993-08-25', 1, 'carlosrodriguez', 'hashed_password3', 'cliente', 'carlos.jpg'),
-('Ana', 'Martínez', '45678901', 'ana.martinez@example.com', '1988-11-10', 1, 'anamartinez', 'hashed_password4', 'cliente', 'ana.jpg'),
-('Luis', 'Gómez', '56789012', 'luis.gomez@example.com', '1995-02-15', 1, 'luisgomez', 'hashed_password5', 'cliente', 'luis.jpg'),
-('Lucía', 'Fernández', '67890123', 'lucia.fernandez@example.com', '1997-07-07', 1, 'luciafernandez', 'hashed_password6', 'cliente', 'lucia.jpg'),
-('Pedro', 'López', '78901234', 'pedro.lopez@example.com', '1989-03-19', 1, 'pedrolopez', 'hashed_password7', 'cliente', 'pedro.jpg'),
-('Sofía', 'Ramírez', '89012345', 'sofia.ramirez@example.com', '1992-12-30', 1, 'sofiaramirez', 'hashed_password8', 'cliente', 'sofia.jpg'),
-('Jorge', 'Torres', '90123456', 'jorge.torres@example.com', '1994-06-18', 1, 'jorgetorres', 'hashed_password9', 'cliente', 'jorge.jpg'),
-('Camila', 'Vargas', '01234567', 'camila.vargas@example.com', '1996-09-14', 1, 'camilavargas', 'hashed_password10', 'cliente', 'camila.jpg'),
+INSERT INTO `agenciadeviajes`.`usuario` (`nombre`, `apellido`, `dni`, `email`, `fecha_nacimiento`, `estado`, `username`, `password`, `tipo_usuario`, `imagen`) VALUES
+('Juan', 'Pérez', '12345678', 'juan.perez@example.com', '1990-01-01', 1, 'juanperez', 'hashed_password1', 'usuario', 'juan.jpg'),
+('María', 'González', '87654321', 'maria.gonzalez@example.com', '1985-05-12', 1, 'mariagonzalez', 'hashed_password2', 'usuario', 'maria.jpg'),
+('Carlos', 'Rodríguez', '34567890', 'carlos.rodriguez@example.com', '1993-08-25', 1, 'carlosrodriguez', 'hashed_password3', 'usuario', 'carlos.jpg'),
+('Ana', 'Martínez', '45678901', 'ana.martinez@example.com', '1988-11-10', 1, 'anamartinez', 'hashed_password4', 'usuario', 'ana.jpg'),
+('Luis', 'Gómez', '56789012', 'luis.gomez@example.com', '1995-02-15', 1, 'luisgomez', 'hashed_password5', 'usuario', 'luis.jpg'),
+('Lucía', 'Fernández', '67890123', 'lucia.fernandez@example.com', '1997-07-07', 1, 'luciafernandez', 'hashed_password6', 'usuario', 'lucia.jpg'),
+('Pedro', 'López', '78901234', 'pedro.lopez@example.com', '1989-03-19', 1, 'pedrolopez', 'hashed_password7', 'usuario', 'pedro.jpg'),
+('Sofía', 'Ramírez', '89012345', 'sofia.ramirez@example.com', '1992-12-30', 1, 'sofiaramirez', 'hashed_password8', 'usuario', 'sofia.jpg'),
+('Jorge', 'Torres', '90123456', 'jorge.torres@example.com', '1994-06-18', 1, 'jorgetorres', 'hashed_password9', 'usuario', 'jorge.jpg'),
+('Camila', 'Vargas', '01234567', 'camila.vargas@example.com', '1996-09-14', 1, 'camilavargas', 'hashed_password10', 'usuario', 'camila.jpg'),
 ('Admin', 'DSW', '66666666', 'admin@example.com', '9999-12-30', 1, 'admin', '$2b$10$TlSc1UGAV.7uz6IcgkpZz.Gaw4gRPcXe6XAuzKawW2qTx1Opk1Dja', 'admin', 'https://acortar.link/mGDrpn');
 
 INSERT INTO `agenciadeviajes`.`excursion` (`nombre`, `descripcion`, `detalle`, `tipo`, `horario`, `nro_personas_max`, `nombre_empresa`, `mail_empresa`, `precio`, `ciudad_id`, `imagen`) VALUES
@@ -70,7 +70,7 @@ INSERT INTO `agenciadeviajes`.`transporte` (`nombre`, `descripcion`, `capacidad`
 ('Bicicleta', 'Opción ecológica para turismo urbano', 1, 'Terrestre', 'EcoBikes', 'contacto@ecobikes.com'),
 ('Tren Turístico', 'Tren con vistas panorámicas', 100, 'Terrestre', 'Railway Adventures', 'info@railwayadventures.com');
 
-INSERT INTO `agenciadeviajes`.`estadia` (`paquete_id`, `hotel_id`, `fecha_ini`, `fecha_fin`, `precio_x_dia`, `cliente_id`) VALUES
+INSERT INTO `agenciadeviajes`.`estadia` (`paquete_id`, `hotel_id`, `fecha_ini`, `fecha_fin`, `precio_x_dia`, `usuario_id`) VALUES
 (1, 1, '2024-01-01', '2024-01-07', 100, 1),
 (2, 2, '2024-02-01', '2024-02-07', 120, 2),
 (3, 3, '2024-03-01', '2024-03-07', 150, 3),
