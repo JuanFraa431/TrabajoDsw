@@ -20,7 +20,7 @@ export class Cliente extends BaseModel {
     fecha_nacimiento!: Date;
 
     @Property({ nullable: false })
-    estado!: string;
+    estado!: number;
 
     @Property({ nullable: false })
     username!: string;

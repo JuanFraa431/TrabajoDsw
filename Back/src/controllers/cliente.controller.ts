@@ -72,19 +72,24 @@ async function update(req: Request, res: Response) {
     }
 }
 
-
-
-
 async function remove(req: Request, res: Response) {
     try {
         const id = Number.parseInt(req.params.id);
-        const cliente = em.getReference(Cliente, id);
-        em.removeAndFlush(cliente);
-        res.status(200).json({ message: 'Cliente eliminado' });
+        const cliente = await em.findOne(Cliente, { id });
+
+        if (!cliente) {
+            return res.status(404).json({ message: 'Cliente no encontrado' });
+        }
+
+        cliente.estado = 0;
+        await em.flush();
+
+        res.status(200).json({ message: 'Cliente deshabilitado', data: cliente });
     } catch (error: any) {
         res.status(500).json({ message: error.message });
     }
 }
+
 
 async function login(req: Request, res: Response) {
     try {
