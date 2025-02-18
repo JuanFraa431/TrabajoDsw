@@ -20,7 +20,7 @@ INSERT INTO `agenciadeviajes`.`cliente` (`nombre`, `apellido`, `dni`, `email`, `
 ('Pedro', 'López', '78901234', 'pedro.lopez@example.com', '1989-03-19', 1, 'pedrolopez', 'hashed_password7', 'cliente', 'pedro.jpg'),
 ('Sofía', 'Ramírez', '89012345', 'sofia.ramirez@example.com', '1992-12-30', 1, 'sofiaramirez', 'hashed_password8', 'cliente', 'sofia.jpg'),
 ('Jorge', 'Torres', '90123456', 'jorge.torres@example.com', '1994-06-18', 1, 'jorgetorres', 'hashed_password9', 'cliente', 'jorge.jpg'),
-('Camila', 'Vargas', '01234567', 'camila.vargas@example.com', '1996-09-14', 1, 'camilavargas', 'hashed_password10', 'cliente', 'camila.jpg');
+('Camila', 'Vargas', '01234567', 'camila.vargas@example.com', '1996-09-14', 1, 'camilavargas', 'hashed_password10', 'cliente', 'camila.jpg'),
 ('Admin', 'DSW', '66666666', 'admin@example.com', '9999-12-30', 1, 'admin', '$2b$10$TlSc1UGAV.7uz6IcgkpZz.Gaw4gRPcXe6XAuzKawW2qTx1Opk1Dja', 'admin', 'https://acortar.link/mGDrpn');
 
 INSERT INTO `agenciadeviajes`.`excursion` (`nombre`, `descripcion`, `detalle`, `tipo`, `horario`, `nro_personas_max`, `nombre_empresa`, `mail_empresa`, `precio`, `ciudad_id`, `imagen`) VALUES
