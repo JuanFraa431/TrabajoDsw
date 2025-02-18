@@ -142,7 +142,6 @@ const App: React.FC = () => {
                         path="/register"
                         element={
                             <div>
-                                <Header/>
                                 <motion.div {...pageTransition}>
                                     <Register/>
                                 </motion.div>
