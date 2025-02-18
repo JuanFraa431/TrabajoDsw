@@ -17,7 +17,7 @@ export class Cliente extends BaseModel {
     email!: string;
 
     @Property({ nullable: false })
-    fechaNacimiento!: Date;
+    fecha_nacimiento!: Date;
 
     @Property({ nullable: false })
     estado!: string;
@@ -31,7 +31,7 @@ export class Cliente extends BaseModel {
     @Property({ nullable: false })
     tipo_usuario!: string;
 
-    @Property({ nullable: false })
+    @Property({ nullable: true })
     imagen!: string;
 
     @OneToMany( () => Estadia, estadia => estadia.cliente)

@@ -7,6 +7,15 @@
     padding: 20px 90px 20px 90px;
 }
 
+.contenedor-home {
+    display: flex;
+    justify-content: center;
+    background: none;
+    background-size: contain;
+    padding: 0px 0px 20px 0px;
+    width: 100%;
+}
+
 .content {
     position: relative;
     z-index: 1;
@@ -24,6 +33,7 @@
 
 .formulario-buscador {
     background: rgba(255, 255, 255, 0.821);
+    padding: 25px 20px;
     margin-top: 10px;
     border-radius: 8px;
     gap: 15px;

@@ -21,18 +21,19 @@ INSERT INTO `agenciadeviajes`.`cliente` (`nombre`, `apellido`, `dni`, `email`, `
 ('Sofía', 'Ramírez', '89012345', 'sofia.ramirez@example.com', '1992-12-30', 1, 'sofiaramirez', 'hashed_password8', 'cliente', 'sofia.jpg'),
 ('Jorge', 'Torres', '90123456', 'jorge.torres@example.com', '1994-06-18', 1, 'jorgetorres', 'hashed_password9', 'cliente', 'jorge.jpg'),
 ('Camila', 'Vargas', '01234567', 'camila.vargas@example.com', '1996-09-14', 1, 'camilavargas', 'hashed_password10', 'cliente', 'camila.jpg');
+('Admin', 'DSW', '66666666', 'admin@example.com', '9999-12-30', 1, 'admin', '$2b$10$TlSc1UGAV.7uz6IcgkpZz.Gaw4gRPcXe6XAuzKawW2qTx1Opk1Dja', 'admin', 'https://acortar.link/mGDrpn');
 
 INSERT INTO `agenciadeviajes`.`excursion` (`nombre`, `descripcion`, `detalle`, `tipo`, `horario`, `nro_personas_max`, `nombre_empresa`, `mail_empresa`, `precio`, `ciudad_id`, `imagen`) VALUES
-('Tour Histórico', 'Visita al centro histórico', 'Guía incluido', 'Cultural', '08:00', 30, 'Excursiones SA', 'info@excursiones.com', 50, 1, 'historico.jpg'),
-('Aventura en la Montaña', 'Excursión por la cordillera', 'Incluye equipo básico', 'Aventura', '07:00', 20, 'Mountain Tours', 'contacto@mountaintours.com', 120, 2, 'montana.jpg'),
-('Tour Gastronómico', 'Degustación de platos locales', 'Chef incluido', 'Gastronómico', '10:00', 25, 'Sabores Únicos', 'reservas@sabores.com', 80, 3, 'gastronomico.jpg'),
-('Safari Fotográfico', 'Avistamiento de fauna', 'Guía experto', 'Naturaleza', '06:30', 15, 'Wildlife Expeditions', 'info@wildlife.com', 100, 4, 'safari.jpg'),
-('Excursión a la Playa', 'Día de playa y deportes acuáticos', 'Incluye transporte', 'Relax', '09:00', 50, 'Beach Days', 'playas@beachdays.com', 70, 5, 'playa.jpg'),
-('Circuito de Museos', 'Visita a los principales museos', 'Entrada incluida', 'Cultural', '11:00', 40, 'Museo Tour', 'info@museotour.com', 40, 6, 'museo.jpg'),
-('Senderismo en el Bosque', 'Exploración de senderos naturales', 'Incluye refrigerio', 'Aventura', '07:30', 20, 'Nature Trails', 'contacto@naturetrails.com', 60, 7, 'bosque.jpg'),
-('Tour Urbano', 'Recorrido por la ciudad', 'Guía en varios idiomas', 'Cultural', '09:30', 35, 'City Walks', 'info@citywalks.com', 45, 8, 'urbano.jpg'),
-('Avistamiento de Aves', 'Observación de aves locales', 'Guía experto', 'Naturaleza', '06:00', 10, 'Birdwatching Co', 'aves@birdwatching.com', 110, 9, 'aves.jpg'),
-('Excursión Nocturna', 'Visita a lugares icónicos por la noche', 'Incluye cena', 'Relax', '20:00', 25, 'Night Lights', 'reservas@nightlights.com', 90, 10, 'nocturna.jpg');
+('Tour Histórico', 'Visita al centro histórico', 'Guía incluido', 'Cultural', '08:00', 30, 'Excursiones SA', 'info@excursiones.com', 50, 1, 'https://acortar.link/tGGoaz'),
+('Aventura en la Montaña', 'Excursión por la cordillera', 'Incluye equipo básico', 'Aventura', '07:00', 20, 'Mountain Tours', 'contacto@mountaintours.com', 120, 2, 'https://acortar.link/0Ucp8g'),
+('Tour Gastronómico', 'Degustación de platos locales', 'Chef incluido', 'Gastronómico', '10:00', 25, 'Sabores Únicos', 'reservas@sabores.com', 80, 3, 'https://acortar.link/ebV3Pc'),
+('Safari Fotográfico', 'Avistamiento de fauna', 'Guía experto', 'Naturaleza', '06:30', 15, 'Wildlife Expeditions', 'info@wildlife.com', 100, 4, 'https://acortar.link/8fWEbn'),
+('Excursión a la Playa', 'Día de playa y deportes acuáticos', 'Incluye transporte', 'Relax', '09:00', 50, 'Beach Days', 'playas@beachdays.com', 70, 5, 'https://acortar.link/e4xE0t'),
+('Circuito de Museos', 'Visita a los principales museos', 'Entrada incluida', 'Cultural', '11:00', 40, 'Museo Tour', 'info@museotour.com', 40, 6, 'https://acortar.link/wzlvL6'),
+('Senderismo en el Bosque', 'Exploración de senderos naturales', 'Incluye refrigerio', 'Aventura', '07:30', 20, 'Nature Trails', 'contacto@naturetrails.com', 60, 7, 'https://acortar.link/CsqnxN'),
+('Tour Urbano', 'Recorrido por la ciudad', 'Guía en varios idiomas', 'Cultural', '09:30', 35, 'City Walks', 'info@citywalks.com', 45, 8, 'https://acortar.link/pHywbS'),
+('Avistamiento de Aves', 'Observación de aves locales', 'Guía experto', 'Naturaleza', '06:00', 10, 'Birdwatching Co', 'aves@birdwatching.com', 110, 9, 'https://acortar.link/s1KJ8X'),
+('Excursión Nocturna', 'Visita a lugares icónicos por la noche', 'Incluye cena', 'Relax', '20:00', 25, 'Night Lights', 'reservas@nightlights.com', 90, 10, 'https://acortar.link/NHGNXS');
 
 INSERT INTO `agenciadeviajes`.`hotel` (`nombre`, `descripcion`, `direccion`, `telefono`, `email`, `estrellas`, `ciudad_id`, `precio_x_dia`) VALUES
 ('Hotel Central', 'Hotel en el centro de la ciudad', 'Av. Principal 123', '123456789', 'central@hotel.com', 4, 1, 100),
@@ -47,16 +48,17 @@ INSERT INTO `agenciadeviajes`.`hotel` (`nombre`, `descripcion`, `direccion`, `te
 ('Hotel Nocturno', 'Hotel especializado en turismo nocturno', 'Av. Noche 33', '012345678', 'nocturno@hotel.com', 5, 10, 220);
 
 INSERT INTO `agenciadeviajes`.`paquete` (`nombre`, `estado`, `descripcion`, `detalle`, `precio`, `fecha_ini`, `fecha_fin`, `imagen`) VALUES
-('Paquete Cultural', 1, 'Experiencia cultural única', 'Incluye museos y visitas guiadas', 500, '2026-01-01', '2027-01-07', 'cultural.jpg'),
-('Aventura Extrema', 1, 'Paquete para los amantes de la adrenalina', 'Rafting, escalada y más', 700, '2026-02-01', '2027-02-10', 'aventura.jpg'),
-('Relax Total', 1, 'Relájate en las mejores playas', 'Incluye spa y deportes acuáticos', 600, '2026-03-01', '2027-03-07', 'relax.jpg'),
-('Naturaleza Salvaje', 1, 'Explora la selva y su biodiversidad', 'Safari y trekking', 800, '2026-04-01', '2027-04-07', 'naturaleza.jpg'),
-('Lujo y Confort', 1, 'Hospedaje en hoteles 5 estrellas', 'Cena gourmet y tours privados', 1000, '2026-05-01', '2027-05-10', 'lujo.jpg'),
-('Historia Viva', 1, 'Sumérgete en la historia de la región', 'Incluye sitios históricos y guías expertos', 550, '2026-06-01', '2027-06-07', 'historia.jpg'),
-('Aventura en Familia', 1, 'Diversión asegurada para toda la familia', 'Parques temáticos y actividades grupales', 450, '2026-07-01', '2027-07-07', 'familia.jpg'),
-('Descanso Natural', 1, 'Relájate rodeado de naturaleza', 'Cabañas y actividades al aire libre', 500, '2026-08-01', '2027-08-07', 'natural.jpg'),
-('Turismo Urbano', 1, 'Explora las ciudades más vibrantes', 'Incluye transporte y guías locales', 550, '2026-09-01', '2027-09-07', 'urbano.jpg'),
-('Escapada Romántica', 1, 'Paquete para parejas', 'Cena romántica y actividades especiales', 750, '2026-10-01', '2027-10-07', 'romantico.jpg');
+('Paquete Cultural', 1, 'Experiencia cultural única', 'Incluye museos y visitas guiadas', 500, '2026-01-01', '2027-01-07', 'https://acortar.link/LOxrFl'),
+('Aventura Extrema', 1, 'Paquete para los amantes de la adrenalina', 'Rafting, escalada y más', 700, '2026-02-01', '2027-02-10', 'https://acortar.link/KQJwYl'),
+('Relax Total', 1, 'Relájate en las mejores playas', 'Incluye spa y deportes acuáticos', 600, '2026-03-01', '2027-03-07', 'https://acortar.link/4ZugMz'),
+('Naturaleza Salvaje', 1, 'Explora la selva y su biodiversidad', 'Safari y trekking', 800, '2026-04-01', '2027-04-07', 'https://acortar.link/6KhzQB'),
+('Lujo y Confort', 1, 'Hospedaje en hoteles 5 estrellas', 'Cena gourmet y tours privados', 1000, '2026-05-01', '2027-05-10', 'https://acortar.link/57dqtg'),
+('Historia Viva', 1, 'Sumérgete en la historia de la región', 'Incluye sitios históricos y guías expertos', 550, '2026-06-01', '2027-06-07', 'https://acortar.link/QWc8ns'),
+('Aventura en Familia', 1, 'Diversión asegurada para toda la familia', 'Parques temáticos y actividades grupales', 450, '2026-07-01', '2027-07-07', 'https://acortar.link/z9OemL'),
+('Descanso Natural', 1, 'Relájate rodeado de naturaleza', 'Cabañas y actividades al aire libre', 500, '2026-08-01', '2027-08-07', 'https://acortar.link/UJRVx3'),
+('Turismo Urbano', 1, 'Explora las ciudades más vibrantes', 'Incluye transporte y guías locales', 550, '2026-09-01', '2027-09-07', 'https://acortar.link/I4bDv6'),
+('Escapada Romántica', 1, 'Paquete para parejas', 'Cena romántica y actividades especiales', 750, '2026-10-01', '2027-10-07', 'https://acortar.link/vQkrxn');
+
 
 INSERT INTO `agenciadeviajes`.`transporte` (`nombre`, `descripcion`, `capacidad`, `tipo`, `nombre_empresa`, `mail_empresa`) VALUES
 ('Bus de Lujo', 'Autobús con asientos reclinables y WiFi', 50, 'Terrestre', 'Viajes Confort', 'info@viajesconfort.com'),

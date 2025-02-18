@@ -5,7 +5,7 @@ import '../styles/Filtro.css';
 import axios from 'axios';
 import { useNavigate, useLocation } from 'react-router-dom';
 
-const Filtro: React.FC = () => {
+const Filtro: React.FC<{ className?: string }> = ({ className = '' }) => {
     const today = new Date();
     const tomorrow = new Date(today);
     tomorrow.setDate(today.getDate() + 1);
@@ -67,7 +67,7 @@ const Filtro: React.FC = () => {
     };
 
     return (
-        <div className="contenedor-filtro">
+        <div className={`contenedor-filtro ${className}`}>
             <form onSubmit={handleSubmit} className="formulario-buscador">
                 <div className="search-form">
                     <div className="form-group">

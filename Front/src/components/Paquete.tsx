@@ -16,14 +16,17 @@ const Paquetes: React.FC = () => {
             if (paquetes.length > 0) {
                 setVisiblePackages(paquetes.map((paquete: Paquete) => paquete.id.toString()));
             }
-        }, 200);
 
+        }, 200);
+        console.log('paquete:', paquetes);
         return () => clearTimeout(timeout);
     }, [paquetes]);
 
     const handleViewPackage = (id: string) => {
         navigate(`/cardDetail`, { state: { id } });
     };
+
+    
 
     return (
         <div className="container2">

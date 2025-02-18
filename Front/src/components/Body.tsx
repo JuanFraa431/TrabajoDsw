@@ -6,6 +6,7 @@ import video from '../images/esteEs.mp4';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Filtro from '../components/Filtro';
+import "../styles/Filtro.css";
 
 const BuscadorPaquetes: React.FC = () => {
     const today = new Date();
@@ -63,7 +64,7 @@ const BuscadorPaquetes: React.FC = () => {
             </video>
             <h2>NUESTROS PAQUETES</h2>
             <h1>Busca tu viaje ideal</h1>
-            <Filtro />
+            <Filtro className="contenedor-home" />
         </div>
     );
 };

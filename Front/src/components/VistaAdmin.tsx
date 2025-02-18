@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/VistaAdmin.css';
+import { useNavigate } from 'react-router-dom';
 
 import PaqueteList from './Paquete/PaqueteList';
 import PaqueteForm from './Paquete/PaqueteForm';
@@ -27,6 +28,20 @@ import { fetchEntities, updateEntity, deleteEntity, createEntity } from '../serv
 import '../styles/VistaAdmin.css';
 
 const VistaAdmin: React.FC = () => {
+
+  const navigate = useNavigate();
+  useEffect(() => {
+    const userStr = localStorage.getItem('user');
+    if (!userStr) {
+      navigate('/login');
+      return;
+    }
+    const user = JSON.parse(userStr);
+    if (user.tipo_usuario !== 'admin') {
+      navigate('/'); 
+    }
+  }, [navigate]);
+
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const [clientes, setClientes] = useState<Cliente[]>([]);
@@ -181,7 +196,7 @@ const VistaAdmin: React.FC = () => {
       )}
 
       {selectedCategory === 'paquetes' && (
-        <button className='boton-crear' onClick={() => setPaqueteEditado({ id: 0, estado: 1, nombre: '', descripcion: '', detalle: '', precio: 0, fecha_ini: '', fecha_fin: '', imagen: ''})}>
+        <button className='boton-crear' onClick={() => setPaqueteEditado({ id: 0, estado: 1, nombre: '', descripcion: '', detalle: '', precio: 0, fecha_ini: '', fecha_fin: '', imagen: '', comentarios: [] })}>
           Crear Paquete
         </button>
       )}

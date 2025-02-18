@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Cliente } from '../../interface/cliente';
 import '../../styles/Cliente/DetalleCliente.css';
+import userIcon from "../../images/user-icon.png";
 
 const DetalleCliente: React.FC = () => {
   const location = useLocation();
@@ -29,7 +30,7 @@ const DetalleCliente: React.FC = () => {
     navigate('/');
   };
 
-  // Validamos y formateamos la fecha de nacimiento
+
   const fechaNacimiento = new Date(cliente.fecha_nacimiento);
   const fechaFormateada = !isNaN(fechaNacimiento.getTime())
     ? fechaNacimiento.toISOString().split('T')[0]
@@ -39,10 +40,11 @@ const DetalleCliente: React.FC = () => {
     <div className="profile-container">
       <div className="profile-header">
         <div className="profile-pic">
-          <img 
-            src={cliente.imagen}
-            alt="Perfil" 
-          />
+        <img 
+            src={cliente && cliente.imagen ? cliente.imagen : userIcon} 
+            alt="User Icon" 
+            className="user-icon" 
+        />
         </div>
         <div className="profile-info">
           <h1>¡Hola, {cliente.nombre}!</h1>

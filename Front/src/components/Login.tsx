@@ -26,6 +26,7 @@ const Login: React.FC = () => {
           setError('');
 
           localStorage.setItem('token', token);
+          console.log('cliente que mando al local storage:', cliente);
           localStorage.setItem('user', JSON.stringify(cliente));
 
           if (cliente.tipo_usuario === 'admin') {
