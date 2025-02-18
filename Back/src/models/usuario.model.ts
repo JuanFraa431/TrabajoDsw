@@ -22,7 +22,7 @@ export class Usuario extends Persona {
     @Property({ nullable: true })
     imagen!: string;
 
-    @OneToMany( () => Estadia, estadia => estadia.cliente)
+    @OneToMany( () => Estadia, estadia => estadia.usuario)
     estadias = new Array<Estadia>();
 }
 
