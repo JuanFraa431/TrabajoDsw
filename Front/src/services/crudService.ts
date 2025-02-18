@@ -30,9 +30,11 @@ export const deleteEntity = async (endpoint: string, id: number) => {
 };
 
 export const createEntity = async (endpoint: string, entityData: object) => {
-  try {
-    await axios.post(`${endpoint}`, entityData);
-  } catch (error) {
-    throw new Error('Error creating entity');
-  }
-}
+    try {
+        const response = await axios.post(endpoint, entityData);
+        return response.data;
+    } catch (error: any) {
+        console.error('Error en createEntity:', error.response?.data || error.message);
+        throw new Error(error.response?.data?.message || 'Error creating entity');
+    }
+};
