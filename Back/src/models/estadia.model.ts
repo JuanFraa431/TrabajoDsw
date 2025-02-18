@@ -2,7 +2,7 @@ import { Entity, ManyToOne, Property, Rel } from '@mikro-orm/core';
 import { BaseModel } from '../shared/db/baseModel.model.js';
 import { Paquete } from './paquete.model.js';
 import { Hotel } from './hotel.model.js';
-import { Cliente } from './usuario.model.js';
+import { Usuario } from './usuario.model.js';
 
 @Entity()
 export class Estadia extends BaseModel {
@@ -21,6 +21,6 @@ export class Estadia extends BaseModel {
   @Property({ nullable: false })
   precio_x_dia!: number;
 
-  @ManyToOne(() => Cliente, { nullable: false })
-  cliente!: Rel<Cliente>;
+  @ManyToOne(() => Usuario, { nullable: false })
+  usuario!: Rel<Usuario>;
 }
