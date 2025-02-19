@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Cliente } from '../../interface/cliente';
 import '../../styles/Cliente/DetalleCliente.css';
 import userIcon from "../../images/user-icon.png";
 
-const DetalleCliente: React.FC = () => {
-  const location = useLocation();
+const DetalleCliente: React.FC = () => {;
   const navigate = useNavigate();
   const cliente = JSON.parse(localStorage.getItem('user') || '{}') as Cliente;
 
@@ -39,10 +38,12 @@ const DetalleCliente: React.FC = () => {
     return <div>Cargando...</div>;
   }
 
-  const fechaNacimiento = new Date(cliente.fecha_nacimiento || '');
-  const fechaFormateada = !isNaN(fechaNacimiento.getTime())
-    ? fechaNacimiento.toISOString().split('T')[0]
-    : 'Fecha inválida';
+  const fecha = new Date(cliente.fecha_nacimiento);
+  const dia = String(fecha.getUTCDate()).padStart(2, '0');
+  const mes = String(fecha.getUTCMonth() + 1).padStart(2, '0'); // +1 porque los meses van de 0 a 11
+  const anio = fecha.getUTCFullYear();
+
+  const fechaFormateada = `${dia}/${mes}/${anio}`;
 
   return (
     <div className="profile-container">

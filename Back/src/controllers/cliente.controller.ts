@@ -3,6 +3,7 @@ import { Usuario } from '../models/usuario.model.js';
 import bcrypt from 'bcrypt';
 import { orm } from '../shared/db/orm.js';
 import jwt from 'jsonwebtoken';
+import { log } from 'console';
 
 const em = orm.em;
 
@@ -36,9 +37,10 @@ async function create(req: Request, res: Response) {
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
+
     const usuario = em.create(Usuario, {
       ...data,
-      password: hashedPassword,
+      password: hashedPassword
     });
 
     await em.flush();
@@ -60,6 +62,15 @@ async function update(req: Request, res: Response) {
       req.body.password = await bcrypt.hash(req.body.password, saltRounds);
     }
 
+    if (req.body.fecha_nacimiento) {
+      console.log(req.body.fecha_nacimiento);
+      const fechaUTC = new Date(req.body.fecha_nacimiento);
+      fechaUTC.setUTCHours(10, 0, 0, 0);
+      req.body.fecha_nacimiento = fechaUTC;
+      console.log(req.body.fecha_nacimiento);
+    }
+
+    
     em.assign(usuario, req.body);
 
     await em.flush();

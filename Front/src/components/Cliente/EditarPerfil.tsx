@@ -7,12 +7,16 @@ const EditarPerfil: React.FC = () => {
     const navigate = useNavigate();
     const cliente = JSON.parse(localStorage.getItem('user') || '{}')
 
+    const formatoFecha = (fecha: string): string => {
+  return fecha.split('T')[0];
+};
+
     const [formData, setFormData] = useState(cliente ? {
         nombre: cliente.nombre,
         apellido: cliente.apellido,
         dni: cliente.dni,
         email: cliente.email,
-        fecha_nacimiento: cliente.fecha_nacimiento,
+        fecha_nacimiento: formatoFecha(cliente.fecha_nacimiento),
         username: cliente.username
     } : {
         nombre: '',

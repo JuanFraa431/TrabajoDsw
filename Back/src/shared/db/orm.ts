@@ -7,7 +7,7 @@ export const orm = await MikroORM.init({
   entitiesTs: ['src/models/*.model.ts'],
   dbName: 'agenciadeviajes',
   driver: MySqlDriver,
-  clientUrl: 'mysql://dsw:dsw@localhost:3306/agenciadeviajes',
+  clientUrl: 'mysql://dsw:dsw@localhost:3306/agenciadeviajes?timezone=UTC',
   highlighter: new SqlHighlighter(),
   debug: true,
   schemaGenerator: {

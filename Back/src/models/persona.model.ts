@@ -17,9 +17,9 @@ export class Persona extends BaseModel {
     @Property({ nullable: true })
     email!: string;
 
-    @Property({ nullable: true })
+    @Property({ nullable: true, columnType: 'date' })
     fecha_nacimiento!: Date;
 
-    @ManyToMany(() => ReservaPaquete, rp => rp.personas)
+    @ManyToMany(() => ReservaPaquete, rp => rp.personas, { owner: true })
     reservas = new Collection<ReservaPaquete>(this);
 }
