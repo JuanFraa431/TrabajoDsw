@@ -124,7 +124,7 @@ const EditarPerfil: React.FC = () => {
                     </div>
 
                     <div className="form-group-perfil">
-                        <label htmlFor="username">Username</label>
+                        <label htmlFor="username">Usuario</label>
                         <input
                             type="text"
                             id="username"

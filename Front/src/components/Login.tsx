@@ -56,7 +56,7 @@ const Login: React.FC = () => {
         <h2>Ingresar a mi cuenta</h2>
         <form onSubmit={handleLogin} className="login-form">
           <div className="input-group">
-            <label htmlFor="username">Username:</label>
+            <label htmlFor="username">Usuario:</label>
             <input
               id="username"
               type="text"
@@ -67,7 +67,7 @@ const Login: React.FC = () => {
           </div>
 
           <div className="input-group">
-            <label htmlFor="password">Password:</label>
+            <label htmlFor="password">Contraseña:</label>
             <input
               id="password"
               type="password"
@@ -80,7 +80,7 @@ const Login: React.FC = () => {
           {error && <p className="error-message">{error}</p>}
 
           <div className="container-button">
-            <button type="submit" className="btn-login">Login</button>
+            <button type="submit" className="btn-login">Iniciar Sesion</button>
           </div>
         </form>
 
