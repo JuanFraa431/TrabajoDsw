@@ -4,17 +4,6 @@ import { Persona } from "./persona.model.js";
 
 @Entity()
 export class Usuario extends Persona {
-    @Property({ nullable: true })
-    dni!: string;
-
-    @Property({ nullable: true })
-    nombre!: string;
-
-    @Property({ nullable: true })
-    apellido!: string;
-
-    @Property({ nullable: true })
-    fecha_nacimiento!: Date;
     
     @Property({ nullable: false })
     email!: string;
