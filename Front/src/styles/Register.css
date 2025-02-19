@@ -1,32 +1,31 @@
-.container-session {
+.custom-container-session {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100vh;
     background-color: #f6f6f6;
     padding: 0 20px;
-}
-
-/* Contenedor del logo */
-.container-image {
     margin-bottom: 30px;
 }
 
-.container-image img {
-    width: 120px;
+.custom-container-image {
+    margin-bottom: 30px;
+}
+
+.custom-container-image img {
+    padding-top: 30px;
+    width: 400px;
     cursor: pointer;
     transition: transform 0.2s ease-in-out;
 }
 
-.container-image img:hover {
+.custom-container-image img:hover {
     transform: scale(1.05);
 }
 
-/* Contenedor principal del formulario */
-.form-session {
+.custom-form-session {
     background-color: white;
-    padding: 3rem;
+    padding: 2rem;
     border-radius: 10px;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
     width: 100%;
@@ -36,7 +35,7 @@
 }
 
 /* Título */
-.form-session h2 {
+.custom-form-session h2 {
     text-align: center;
     font-size: 1.8rem;
     margin-bottom: 20px;
@@ -44,7 +43,7 @@
 }
 
 /* Etiquetas */
-label {
+.custom-form-session label {
     font-size: 1rem;
     color: #444;
     font-weight: 600;
@@ -52,7 +51,7 @@ label {
 }
 
 /* Inputs */
-input[type="text"], input[type="password"], input[type="email"] {
+.custom-input {
     padding: 12px 15px;
     font-size: 1rem;
     border-radius: 8px;
@@ -64,14 +63,22 @@ input[type="text"], input[type="password"], input[type="email"] {
 }
 
 /* Focus en los inputs */
-input[type="text"]:focus, input[type="password"]:focus, input[type="email"]:focus {
-    border-color: #9b4dca;
+.custom-input:focus {
+    border-color: 007bff;
     outline: none;
     background-color: #f1f1f1;
 }
 
+/* Botón Mostrar Contraseña */
+.custom-show-password {
+    cursor: pointer;
+    color: #007bff;
+    font-size: 0.9rem;
+    margin-left: 10px;
+}
+
 /* Mensaje de error */
-.error-message {
+.custom-error-message {
     color: red;
     font-size: 0.9rem;
     text-align: center;
@@ -79,8 +86,8 @@ input[type="text"]:focus, input[type="password"]:focus, input[type="email"]:focu
 }
 
 /* Botón */
-button {
-    background-color: #9b4dca;
+.custom-button {
+    background-color: #007bff;
     color: white;
     border: none;
     padding: 14px 20px;
@@ -92,34 +99,60 @@ button {
     margin-top: 20px;
 }
 
-button:hover {
-    background-color: #7a36b5;
+.custom-button:hover {
+    background-color: #007bff;
 }
 
 /* Links */
-a {
+.custom-link {
     text-align: center;
-    color: #9b4dca;
+    color: #007bff;
     font-size: 0.9rem;
     text-decoration: none;
     margin-top: 10px;
     display: block;
 }
 
-a:hover {
+.custom-link:hover {
     text-decoration: underline;
 }
 
 /* Reglas para los términos y condiciones debajo de los inputs */
-.terms {
+.custom-terms {
     font-size: 0.9rem;
     color: #444;
     margin-top: 15px;
 }
 
+/* Validación de los inputs */
+.custom-validations {
+    display: flex;
+    flex-direction: column;
+    margin-top: 5px;
+}
+
+.custom-validation-item {
+    display: flex;
+    align-items: center;
+    font-size: 0.9rem;
+}
+
+.custom-validation-item .valid {
+    color: green;
+}
+
+.custom-validation-item .invalid {
+    color: red;
+}
+
+/* Iconos de validación */
+.custom-icon {
+    margin-left: 5px;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
-    .form-session {
+    .custom-form-session {
         width: 90%;
     }
 }

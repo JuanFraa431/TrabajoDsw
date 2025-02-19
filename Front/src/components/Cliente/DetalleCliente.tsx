@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Cliente } from '../../interface/cliente';
@@ -8,15 +8,16 @@ import userIcon from "../../images/user-icon.png";
 const DetalleCliente: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const cliente = location.state?.cliente as Cliente;
+  const cliente = JSON.parse(localStorage.getItem('user') || '{}') as Cliente;
 
   const handleDarseDeBaja = async () => {
     const confirmacion = window.confirm('¿Está seguro que desea darse de baja?');
-    if (confirmacion) {
+    if (confirmacion && cliente) {
       try {
         await axios.delete(`/api/cliente/${cliente.id}`);
         alert('Cliente eliminado con éxito.');
-        navigate('/');
+        localStorage.removeItem('user'); // Eliminar cliente de localStorage
+        navigate('/'); // Redirigir al home
       } catch (error) {
         alert('Hubo un error al intentar eliminar el cliente.');
         console.error(error);
@@ -30,8 +31,15 @@ const DetalleCliente: React.FC = () => {
     navigate('/');
   };
 
+  const handleAdministrarPerfil = () => {
+    navigate(`/editar-perfil`, { state: { cliente } });
+  };
 
-  const fechaNacimiento = new Date(cliente.fecha_nacimiento);
+  if (!cliente) {
+    return <div>Cargando...</div>;
+  }
+
+  const fechaNacimiento = new Date(cliente.fecha_nacimiento || '');
   const fechaFormateada = !isNaN(fechaNacimiento.getTime())
     ? fechaNacimiento.toISOString().split('T')[0]
     : 'Fecha inválida';
@@ -40,17 +48,22 @@ const DetalleCliente: React.FC = () => {
     <div className="profile-container">
       <div className="profile-header">
         <div className="profile-pic">
-        <img 
-            src={cliente && cliente.imagen ? cliente.imagen : userIcon} 
-            alt="User Icon" 
-            className="user-icon" 
-        />
+          <img
+            src={cliente && cliente.imagen ? cliente.imagen : userIcon}
+            alt="User Icon"
+            className="user-icon"
+          />
         </div>
         <div className="profile-info">
-          <h1>¡Hola, {cliente.nombre}!</h1>
+          <h1>¡Hola, {cliente.nombre ? cliente.nombre : cliente.username}!</h1>
           {cliente.tipo_usuario === 'admin' && (
             <button onClick={() => navigate('/vistaAdmin')} className="btn-admin">
               Administración
+            </button>
+          )}
+          {cliente.tipo_usuario === 'cliente' && (
+            <button onClick={handleAdministrarPerfil} className="btn-admin">
+              Administrar Perfil
             </button>
           )}
         </div>
@@ -61,9 +74,7 @@ const DetalleCliente: React.FC = () => {
         <p><strong>Apellido:</strong> {cliente.apellido}</p>
         <p><strong>DNI:</strong> {cliente.dni}</p>
         <p><strong>Email:</strong> {cliente.email}</p>
-        <p>
-          <strong>Fecha de Nacimiento:</strong> {fechaFormateada}
-        </p>
+        <p><strong>Fecha de Nacimiento:</strong> {fechaFormateada}</p>
         <p><strong>Username:</strong> {cliente.username}</p>
       </div>
 

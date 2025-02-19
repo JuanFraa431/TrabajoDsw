@@ -18,6 +18,7 @@ import Login from './components/Login';
 import DetalleCliente from './components/Cliente/DetalleCliente';
 import CardDetailExcursion from './components/CardDetailExcursion';
 import Register from './components/Register';
+import EditarPerfil from './components/Cliente/EditarPerfil';
 
 const pageTransition = {
     initial: { opacity: 0 }, 
@@ -144,6 +145,17 @@ const App: React.FC = () => {
                             <div>
                                 <motion.div {...pageTransition}>
                                     <Register/>
+                                </motion.div>
+                            </div>
+                        }
+                        
+                    />
+                    <Route
+                        path="/editar-perfil"
+                        element={
+                            <div>
+                                <motion.div {...pageTransition}>
+                                    <EditarPerfil/>
                                 </motion.div>
                             </div>
                         }
