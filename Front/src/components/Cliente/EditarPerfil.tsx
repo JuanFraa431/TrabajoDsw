@@ -8,8 +8,11 @@ const EditarPerfil: React.FC = () => {
     const cliente = JSON.parse(localStorage.getItem('user') || '{}')
 
     const formatoFecha = (fecha: string): string => {
-  return fecha.split('T')[0];
-};
+        if (fecha) {
+            return fecha.split('T')[0];
+        }
+        return '';
+    };
 
     const [formData, setFormData] = useState(cliente ? {
         nombre: cliente.nombre,
