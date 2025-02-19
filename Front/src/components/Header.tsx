@@ -53,7 +53,11 @@ const Header = () => {
                             navigate('/detalleCliente', { state: { cliente } });
                         }}
                     >
-                        {cliente.nombre} {cliente.apellido}
+                        {cliente.nombre && cliente.apellido ? (
+                            `${cliente.nombre} ${cliente.apellido}`
+                        ) : (
+                            cliente.username
+                        )}
                     </a>
                 ) : (
                     <Link to="/login" className="boton-inicia_sesion">Iniciar Sesión</Link>
