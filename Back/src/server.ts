@@ -8,6 +8,8 @@ import session from 'express-session';
 import bcrypt from 'bcrypt';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
+import passport from 'passport';
+import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -53,6 +55,24 @@ app.use('/api/estadia', routerEstadia);
 app.use('/api/comentario', routerComentario);
 
 app.use(express.static(path.join(__dirname, 'dist')));
+
+passport.use(new GoogleStrategy(
+  {
+    clientID: "1013873914332-sf1up07lqjoch6tork8cpfohi32st8pi.apps.googleusercontent.com",
+    clientSecret: "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",
+    callbackURL: "http://localhost:3000/api/cliente/auth/google",
+  },
+  (accessToken, refreshToken, profile, done) => {
+    // Aquí deberías buscar o crear el usuario en tu base de datos.
+    // Ejemplo (pseudocódigo):
+    // User.findOrCreate({ googleId: profile.id }, (err, user) => {
+    //   return done(err, user);
+    // });
+    // Para este ejemplo, retornamos el perfil de Google directamente:
+    return done(null, profile);
+  }
+));
+
 
 app.get('/home', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));

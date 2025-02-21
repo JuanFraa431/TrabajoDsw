@@ -1,5 +1,17 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const webpack = require('webpack');
+
+let envKeys = {};
+try {
+    const dotenv = require('dotenv').config().parsed || {};
+    envKeys = Object.keys(dotenv).reduce((prev, next) => {
+        prev[`process.env.${next}`] = JSON.stringify(dotenv[next]);
+        return prev;
+    }, {});
+} catch (error) {
+    console.warn('No se encontró dotenv o falló la carga del archivo .env.');
+}
 
 module.exports = {
     entry: './src/index.tsx',
@@ -7,8 +19,12 @@ module.exports = {
         path: path.resolve(__dirname, './dist'),
     },
     resolve: {
-        extensions: ['.js', '.jsx', '.ts', '.tsx']
+        extensions: ['.js', '.jsx', '.ts', '.tsx'],
+        fallback: {
+            process: false,
+        },
     },
+    
     performance: {
         hints: false,
     },
@@ -17,11 +33,11 @@ module.exports = {
             {
                 test: /\.(js|jsx|ts|tsx)$/,
                 exclude: /node_modules/,
-                use: 'babel-loader'
+                use: 'babel-loader',
             },
             {
                 test: /\.css$/,
-                use: ['style-loader', 'css-loader']
+                use: ['style-loader', 'css-loader'],
             },
             {
                 test: /\.(png|jpe?g|gif)$/i,
@@ -43,13 +59,17 @@ module.exports = {
                         outputPath: 'videos/',
                     },
                 },
-            }
-        ]
+            },
+        ],
     },
     plugins: [
+        new webpack.DefinePlugin(envKeys),
+        new webpack.ProvidePlugin({
+            process: 'process/browser',
+        }),
         new HtmlWebpackPlugin({
-            template: './src/public/index.html'
-        })
+            template: './src/public/index.html',
+        }),
     ],
     devServer: {
         static: {
@@ -66,5 +86,5 @@ module.exports = {
                 pathRewrite: { '^/api': '/api' },
             },
         ],
-    }
+    },
 };
