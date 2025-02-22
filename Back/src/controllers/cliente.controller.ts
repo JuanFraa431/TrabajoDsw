@@ -3,8 +3,6 @@ import { Usuario } from '../models/usuario.model.js';
 import bcrypt from 'bcrypt';
 import { orm } from '../shared/db/orm.js';
 import jwt from 'jsonwebtoken';
-import { log } from 'console';
-import { EntityManager } from '@mikro-orm/core';
 import { OAuth2Client } from 'google-auth-library';
 
 const googleClient = new OAuth2Client("1013873914332-sf1up07lqjoch6tork8cpfohi32st8pi.apps.googleusercontent.com");
@@ -138,6 +136,7 @@ async function googleLogin(req: Request, res: Response) {
       return res.status(400).json({ message: "Token de Google requerido" });
     }
 
+    console.log("Google token:", googleToken);
     let payload;
     try {
       const ticket = await googleClient.verifyIdToken({
@@ -145,6 +144,8 @@ async function googleLogin(req: Request, res: Response) {
         audience: "1013873914332-sf1up07lqjoch6tork8cpfohi32st8pi.apps.googleusercontent.com",
       });
       payload = ticket.getPayload();
+
+      console.log("Google payload:", payload);
     } catch (error) {
       console.error("Error verificando el token de Google:", error);
       return res.status(401).json({ message: "Token de Google inválido o expirado" });

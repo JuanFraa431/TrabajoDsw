@@ -65,25 +65,29 @@ const Login: React.FC = () => {
     }
 
     window.google.accounts.id.initialize({
-      client_id: '1013873914332-sf1up07lqjoch6tork8cpfohi32st8pi.apps.googleusercontent.com',
-      callback: async (response: any) => {
-        console.log('Google token received:', response.credential);
-        try {
-          const res = await axios.post('/api/cliente/auth/google', { token: response.credential });
-          if (res.status === 200) {
-            const { usuario, token } = res.data.data;
-            localStorage.setItem('token', token);
-            localStorage.setItem('user', JSON.stringify(usuario));
-            navigate(usuario.tipo_usuario === 'admin' ? '/vistaAdmin' : '/');
-          }
-        } catch (error) {
-          console.error('Google login failed:', error);
-          setError('Error al iniciar sesión con Google.');
-        }
-      },
-      //auto_select: true,
-    });
-    
+  client_id: '1013873914332-sf1up07lqjoch6tork8cpfohi32st8pi.apps.googleusercontent.com',
+  callback: async (response: any) => {
+    if (!response || !response.credential) {
+      console.error('No se recibió un token de Google');
+      setError('No se pudo obtener el token de Google.');
+      return;
+    }
+
+    console.log('Google token received:', response.credential);
+    try {
+      const res = await axios.post('/api/cliente/auth/google', { token: response.credential });
+      if (res.status === 200) {
+        const { usuario, token } = res.data.data;
+        localStorage.setItem('token', token);
+        localStorage.setItem('user', JSON.stringify(usuario));
+        navigate(usuario.tipo_usuario === 'admin' ? '/vistaAdmin' : '/');
+      }
+    } catch (error) {
+      console.error('Google login failed:', error);
+      setError('Error al iniciar sesión con Google.');
+    }
+  },
+});
 
     window.google.accounts.id.prompt();
   };
