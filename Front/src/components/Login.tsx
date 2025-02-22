@@ -64,32 +64,40 @@ const Login: React.FC = () => {
       return;
     }
 
+    console.log('Google login clicked');
+
     window.google.accounts.id.initialize({
-  client_id: '1013873914332-sf1up07lqjoch6tork8cpfohi32st8pi.apps.googleusercontent.com',
-  callback: async (response: any) => {
-    if (!response || !response.credential) {
-      console.error('No se recibió un token de Google');
-      setError('No se pudo obtener el token de Google.');
-      return;
-    }
+      client_id: '1013873914332-sf1up07lqjoch6tork8cpfohi32st8pi.apps.googleusercontent.com',
+      callback: async (response: any) => {
+        if (!response || !response.credential) {
+          console.error('No se recibió un token de Google');
+          setError('No se pudo obtener el token de Google.');
+          return;
+        }
 
-    console.log('Google token received:', response.credential);
-    try {
-      const res = await axios.post('/api/cliente/auth/google', { token: response.credential });
-      if (res.status === 200) {
-        const { usuario, token } = res.data.data;
-        localStorage.setItem('token', token);
-        localStorage.setItem('user', JSON.stringify(usuario));
-        navigate(usuario.tipo_usuario === 'admin' ? '/vistaAdmin' : '/');
+        console.log('Google token received:', response.credential);
+        try {
+          const res = await axios.post('/api/cliente/auth/google', { token: response.credential });
+          if (res.status === 200) {
+            const { usuario, token } = res.data.data;
+            localStorage.setItem('token', token);
+            localStorage.setItem('user', JSON.stringify(usuario));
+            navigate(usuario.tipo_usuario === 'admin' ? '/vistaAdmin' : '/');
+          }
+        } catch (error) {
+          console.error('Google login failed:', error);
+          setError('Error al iniciar sesión con Google.');
+        }
+      },
+    });
+    window.google.accounts.id.prompt((notification: any) => {
+      if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+        console.error('Google login prompt not displayed or skipped:', notification);
+        setError('Error al mostrar el prompt de Google.');
+      } else {
+        console.log('Google login prompt displayed successfully');
       }
-    } catch (error) {
-      console.error('Google login failed:', error);
-      setError('Error al iniciar sesión con Google.');
-    }
-  },
-});
-
-    window.google.accounts.id.prompt();
+    });
   };
 
   return (
