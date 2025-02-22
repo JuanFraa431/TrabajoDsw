@@ -89,6 +89,7 @@ const Login: React.FC = () => {
           setError('Error al iniciar sesión con Google.');
         }
       },
+      prompt: 'select_account',
     });
     window.google.accounts.id.prompt((notification: any) => {
       if (notification.isNotDisplayed() || notification.isSkippedMoment()) {

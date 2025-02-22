@@ -55,18 +55,18 @@ app.use('/api/comentario', routerComentario);
 
 app.use(express.static(path.join(__dirname, 'dist')));
 
-/*
+app.use(passport.initialize());
 passport.use(new GoogleStrategy(
   {
     clientID: "1013873914332-sf1up07lqjoch6tork8cpfohi32st8pi.apps.googleusercontent.com",
     clientSecret: "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",
-    callbackURL: "http://localhost:8080",
+    callbackURL: "http://localhost:8080/login",
   },
   (accessToken, refreshToken, profile, done) => {
     return done(null, profile);
   }
 ));
-*/
+
 
 app.get('/home', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
