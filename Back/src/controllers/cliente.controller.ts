@@ -30,19 +30,33 @@ async function findOne(req: Request, res: Response) {
 
 async function create(req: Request, res: Response) {
   try {
-    const { password, ...data } = req.body;
+    const { password, email, username, ...data } = req.body;
 
     if (!password) {
       return res.status(400).json({ message: 'La contraseña es obligatoria' });
     }
 
+    if (!email) {
+      return res.status(400).json({ message: 'El email es obligatorio' });
+    }
+
+    const existingUser = await em.findOne(Usuario, { email });
+    const existingUserNick = await em.findOne(Usuario, { username });
+    if (existingUser) {
+      return res.status(401).json({ message: 'El email ya pertenece a un usuario' });
+    }
+
+    if (existingUserNick) {
+      return res.status(401).json({ message: 'El nombre de usuario ya se encuentra en uso' });
+    }
+
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-
     const usuario = em.create(Usuario, {
       ...data,
-      password: hashedPassword
+      email,
+      password: hashedPassword,
     });
 
     await em.flush();

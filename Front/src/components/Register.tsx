@@ -6,6 +6,7 @@ import logo from "../images/logoFinal2.png";
 import '../styles/Register.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import { log } from 'console';
 
 const Register: React.FC = () => {
     const [password, setPassword] = useState('');
@@ -37,11 +38,15 @@ const Register: React.FC = () => {
             });
             setError('');
             navigate('/login');
-        } catch (error) {
+        } catch (error: any) {
             console.error('Register failed:', error);
-            setError('Error al registrarse, por favor intente nuevamente.');
+            console.log(error.message);
+            const errorMessage = error.message;
+            setError(errorMessage);
         }
     }
+
+
     function togglePasswordVisibility(): void {
         setIsPasswordVisible(!isPasswordVisible);
     }
@@ -85,10 +90,10 @@ const Register: React.FC = () => {
                                 required
                                 style={{ paddingRight: '30px' }}
                             />
-                            <span 
-                                className="custom-show-password" 
+                            <span
+                                className="custom-show-password"
                                 onClick={togglePasswordVisibility}
-                                style={{ position: 'absolute', right: '10px', cursor: 'pointer', color:"gray" }}
+                                style={{ position: 'absolute', right: '10px', cursor: 'pointer', color: "gray" }}
                             >
                                 {isPasswordVisible ? <FontAwesomeIcon icon={faEyeSlash} /> : <FontAwesomeIcon icon={faEye} />}
                             </span>
