@@ -13,7 +13,7 @@ declare global {
 }
 
 const Login: React.FC = () => {
-  const [username, setUsername] = useState('');
+  const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
@@ -37,7 +37,7 @@ const Login: React.FC = () => {
   async function handleLogin(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     try {
-      const response = await axios.post('/api/cliente/login', { username, password });
+      const response = await axios.post('/api/cliente/login', { identifier, password });
 
       if (response.status === 200) {
         const { usuario, token } = response.data.data;
@@ -115,12 +115,12 @@ const Login: React.FC = () => {
           </div>
           <form onSubmit={handleLogin} className="login-form">
             <div className="input-group">
-              <label htmlFor="username">Usuario:</label>
+              <label htmlFor="identifier">Usuario o Correo Electrónico:</label>
               <input
-                id="username"
+                id="identifier"
                 type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                value={identifier}
+                onChange={(e) => setIdentifier(e.target.value)}
                 required
               />
             </div>

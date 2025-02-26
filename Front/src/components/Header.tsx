@@ -43,7 +43,7 @@ const Header = () => {
                 <img 
                     src={cliente && cliente.imagen ? cliente.imagen : userIcon} 
                     alt="User Icon" 
-                    className="user-icon" 
+                    className="user-icon-chico" 
                 />
                 {cliente ? (
                     <a

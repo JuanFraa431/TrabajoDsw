@@ -1,13 +1,23 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Cliente } from '../../interface/cliente';
 import '../../styles/Cliente/DetalleCliente.css';
 import userIcon from "../../images/user-icon.png";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPencilAlt } from '@fortawesome/free-solid-svg-icons';
 
-const DetalleCliente: React.FC = () => {;
+const DetalleCliente: React.FC = () => {
   const navigate = useNavigate();
-  const cliente = JSON.parse(localStorage.getItem('user') || '{}') as Cliente;
+  const storedUser = localStorage.getItem('user');
+  const cliente = storedUser ? (JSON.parse(storedUser) as Cliente) : null;
+  const [imgUrl, setImgUrl] = useState<string>(cliente?.imagen || '');
+  const [uploading, setUploading] = useState<boolean>(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  
+  const cloudName = 'dy8lzfj2h';
+  const uploadPreset = 'ml_default';
 
   const handleDarseDeBaja = async () => {
     const confirmacion = window.confirm('¿Está seguro que desea darse de baja?');
@@ -15,8 +25,9 @@ const DetalleCliente: React.FC = () => {;
       try {
         await axios.delete(`/api/cliente/${cliente.id}`);
         alert('Cliente eliminado con éxito.');
-        localStorage.removeItem('user'); // Eliminar cliente de localStorage
-        navigate('/'); // Redirigir al home
+        localStorage.removeItem('user');
+        localStorage.removeItem('token');
+        navigate('/');
       } catch (error) {
         alert('Hubo un error al intentar eliminar el cliente.');
         console.error(error);
@@ -34,15 +45,55 @@ const DetalleCliente: React.FC = () => {;
     navigate(`/editar-perfil`, { state: { cliente } });
   };
 
+  const handleEditImageClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (!files || files.length === 0) return;
+    
+    const file = files[0];
+    console.log("Archivo seleccionado:", file);
+  
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', uploadPreset);
+  
+    try {
+      setUploading(true);
+      const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${cloudName}/upload`;
+      const response = await axios.post(cloudinaryUrl, formData);
+      console.log("Respuesta de Cloudinary:", response.data);
+      const newImageUrl = response.data.secure_url;
+      setImgUrl(newImageUrl);
+  
+      await axios.put(`/api/cliente/${cliente?.id}`, { imagen: newImageUrl });
+      
+      if (cliente) {
+        const updatedCliente = { ...cliente, imagen: newImageUrl };
+        localStorage.setItem('user', JSON.stringify(updatedCliente));
+      }
+      alert('Imagen de perfil actualizada correctamente.');
+    } catch (error) {
+      console.error("Error subiendo la imagen:", error);
+      alert('Error al subir la imagen.');
+    } finally {
+      setUploading(false);
+    }
+  };
+  
+
   if (!cliente) {
-    return <div>Cargando...</div>;
+    return
   }
 
   const fecha = new Date(cliente.fecha_nacimiento);
   const dia = String(fecha.getUTCDate()).padStart(2, '0');
-  const mes = String(fecha.getUTCMonth() + 1).padStart(2, '0'); // +1 porque los meses van de 0 a 11
+  const mes = String(fecha.getUTCMonth() + 1).padStart(2, '0');
   const anio = fecha.getUTCFullYear();
-
   const fechaFormateada = `${dia}/${mes}/${anio}`;
 
   return (
@@ -50,10 +101,21 @@ const DetalleCliente: React.FC = () => {;
       <div className="profile-header">
         <div className="profile-pic">
           <img
-            src={cliente && cliente.imagen ? cliente.imagen : userIcon}
+            src={imgUrl || userIcon}
             alt="User Icon"
             className="user-icon"
           />
+          <div className="edit-icon" onClick={handleEditImageClick}>
+            <FontAwesomeIcon icon={faPencilAlt} />
+          </div>
+          <input
+            type="file"
+            accept="image/*"
+            ref={fileInputRef}
+            onChange={handleFileChange}
+            style={{ display: 'none' }}
+          />
+          {uploading && <div className="uploading">Subiendo...</div>}
         </div>
         <div className="profile-info">
           <h1>¡Hola, {cliente.nombre ? cliente.nombre : cliente.username}!</h1>

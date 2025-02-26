@@ -40,6 +40,10 @@ async function create(req: Request, res: Response) {
       return res.status(400).json({ message: 'El email es obligatorio' });
     }
 
+    if (username.includes('@')) {
+      return res.status(400).json({ message: 'El nombre de usuario no puede contener un @' });
+    }
+
     const existingUser = await em.findOne(Usuario, { email });
     const existingUserNick = await em.findOne(Usuario, { username });
     if (existingUser) {
@@ -56,6 +60,7 @@ async function create(req: Request, res: Response) {
     const usuario = em.create(Usuario, {
       ...data,
       email,
+      username,
       password: hashedPassword,
     });
 
@@ -117,8 +122,15 @@ async function remove(req: Request, res: Response) {
 
 async function login(req: Request, res: Response) {
   try {
-    const { username, password } = req.body;
-    const usuario = await em.findOneOrFail(Usuario, { username });
+    const { password, identifier } = req.body;
+    let usuario;
+    if (identifier.includes('@')) {
+      usuario = await em.findOneOrFail(Usuario, { email: identifier });
+    }
+
+    if (!usuario) {
+      usuario = await em.findOneOrFail(Usuario, { username: identifier });
+    }
 
     if (usuario) {
       const isMatch = await bcrypt.compare(password, usuario.password);

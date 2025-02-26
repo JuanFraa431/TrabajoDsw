@@ -63,9 +63,18 @@ a{
     width: 35px;
     height: 35px;
     border-radius: 50%;
-    margin-right: 10px;
     object-fit: cover;
 }
+
+.user-icon-chico {
+    width: 35px;
+    height: 35px;
+    margin-right: 10px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+
 
 .user a:hover {
     color: #007bff !important;

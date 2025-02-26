@@ -25,15 +25,64 @@
 }
 
 .profile-pic {
+  position: relative;
   padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .profile-pic img {
   border-radius: 50%;
-  width: 100px;
-  height: 100px;
+  width: 120px;
+  height: 120px;
   object-fit: cover;
-  border: 2px solid #cecece;
+  border: 3px solid #cecece;
+  transition: filter 0.3s ease;
+}
+
+/* Al pasar el mouse sobre la imagen, se oscurece ligeramente */
+.profile-pic:hover img {
+  filter: brightness(0.6);
+}
+
+/* Ícono de edición bien centrado y con mejor diseño */
+.edit-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  padding: 12px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 22px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  width: 48px;
+  height: 48px;
+}
+
+/* Efecto al pasar el mouse: aparece el ícono con una leve animación */
+.profile-pic:hover .edit-icon {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1.1);
+}
+
+
+.uploading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(255, 255, 255, 0.8);
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 12px;
 }
 
 .profile-info {
@@ -84,7 +133,7 @@
 }
 
 .btn.danger:hover {
-  scale: 1.1;
+  transform: scale(1.1);
 }
 
 .btn.logout {
@@ -95,7 +144,7 @@
 }
 
 .btn.logout:hover {
-  scale: 1.1;
+  transform: scale(1.1);
 }
 
 .btn:hover {
@@ -116,5 +165,5 @@
 }
 
 .btn-admin:hover {
-  scale: 1.1;
+  transform: scale(1.1);
 }
