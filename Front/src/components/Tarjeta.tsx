@@ -4,14 +4,13 @@ import visa from '../images/visa.png';
 import mastercard from '../images/mastercard.png';
 import chip from '../images/chip-tarjeta.png';
 
-// Función para formatear el número de tarjeta en grupos de 4 dígitos.
 function formatCardNumber(value: string) {
     let digits = value.replace(/\D/g, '');
     digits = digits.slice(0, 16);
     return digits.replace(/(.{4})/g, '$1 ').trim();
 }
 
-// Función para formatear la fecha en formato MM/YY.
+
 function formatExpirationDate(value: string) {
     const digits = value.replace(/\D/g, '').slice(0, 4);
     if (digits.length >= 3) {
@@ -20,8 +19,6 @@ function formatExpirationDate(value: string) {
     return digits;
 }
 
-// Función para generar la firma a partir del nombre.
-// Por ejemplo: "JUAN FRANCISCO ALANIZ" → "JUANFRA"
 function generateSignature(name: string) {
     const parts = name.trim().split(' ').filter(Boolean);
     if (parts.length >= 2) {
@@ -71,7 +68,6 @@ const Tarjeta: React.FC = () => {
 
     return (
         <div className="container-tarjeta">
-            {/* Formulario a la izquierda */}
             <div className="formulario-tarjeta">
                 <h3>Formulario de Tarjeta</h3>
                 <div className="grupo">
@@ -114,10 +110,8 @@ const Tarjeta: React.FC = () => {
                 </div>
             </div>
 
-            {/* Tarjeta a la derecha */}
             <div className="tarjeta" onClick={() => setTarjetaVolteada(!tarjetaVolteada)}>
                 <div className={`tarjeta-content ${tarjetaVolteada ? 'flipped' : ''}`}>
-                    {/* Frente de la tarjeta */}
                     <div className="delantera">
                         {marcaTarjeta !== 'none' && (
                             <div className="logo-marca">
@@ -134,12 +128,11 @@ const Tarjeta: React.FC = () => {
                             <p className="nombre">{nombre || 'NOMBRE DEL TITULAR'}</p>
                         </div>
                         <div className="expiracion-container">
+                            <span className="vto-label">VTO:</span>
                             <p className="expiracion">{fechaExpiracion || 'MM/YY'}</p>
-                            <span className="vto-label">VTO</span>
+                            
                         </div>
                     </div>
-
-                    {/* Reverso de la tarjeta */}
                     <div className="trasera">
                         <div className="magnetic-stripe" />
                         <div className="signature-section">

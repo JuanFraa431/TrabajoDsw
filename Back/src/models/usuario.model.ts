@@ -29,11 +29,11 @@ export class Usuario extends Persona {
   })
   estadias = new Collection<Estadia>(this);
 
-    @OneToMany(() => ReservaPaquete, (rp) => rp.usuario, {
-        orphanRemoval: true,
-        cascade: [Cascade.ALL]
-    })
-    reservas = new Collection<ReservaPaquete>(this);
+  @OneToMany(() => ReservaPaquete, (rp) => rp.usuario, {
+      orphanRemoval: true,
+      cascade: [Cascade.ALL]
+  })
+  reservas = new Collection<ReservaPaquete>(this);
 }
 
 

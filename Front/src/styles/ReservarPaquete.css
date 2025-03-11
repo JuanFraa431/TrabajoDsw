@@ -1,26 +1,106 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap");
 
 .container {
-    font-family: 'Poppins', sans-serif;
+    font-family: "Poppins", sans-serif;
     width: 100%;
     margin: auto;
     text-align: center;
 }
 
-.payment-container{
-    display: grid;
-    grid-template-rows: 1fr 1fr;
-    gap: 20px;
+/* ===== Estructura General de los Formularios ===== */
+.form-container {
+    padding: 20px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    transform: translateY(10px);
+    transition:
+        opacity 0.5s ease-in-out,
+        transform 0.5s ease-in-out;
+    margin-bottom: 20px;
 }
 
-.container-inputs-reserva{
+.form-container.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+input,
+select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.botones-reserva {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+    gap: 10px;
+}
+
+.botones-reserva button {
+    width: 100px;
+}
+
+.error-message {
+    color: red;
+    margin-top: 10px;
+}
+
+/* ===== Container para Inputs ===== */
+.container-inputs-reserva {
     width: 110vh;
     display: grid;
     grid-template-columns: 1fr 1fr;
     justify-content: center;
     gap: 10px;
+    margin-top: 20px;
 }
 
+.input-reserva {
+    margin-top: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+/* ===== Pagos ===== */
+.payment-container {
+    display: grid;
+    grid-template-rows: auto auto;
+    gap: 20px;
+}
+
+.payment-options {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.payment-button.selected {
+    background-color: #0056b3;
+    color: #fff;
+}
+
+/* ===== Acompañantes ===== */
 .container-inputs-acompañantes {
     width: 110vh;
     display: grid;
@@ -42,27 +122,41 @@
     width: 70vh;
 }
 
-.payment-options{
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-}
-
-
-.stepper {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.steps{
+/* ===== Paginación de Acompañantes ===== */
+.acompanante-pagination {
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 10px;
-    padding: 20px 0 20px 0;
+    margin-top: 10px;
 }
+
+.pagination-numbers {
+    display: flex;
+    gap: 3px;
+}
+
+.number.active {
+    background-color: #004997;
+    color: white;
+}
+
+.arrow-button {
+    background-color: #eaeaea;
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+/* ===== Steps ===== */
+.steps {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding: 20px 0;
+}
+
 .step {
     width: 40px;
     height: 40px;
@@ -71,117 +165,81 @@
     background-color: #ddd;
     color: #666;
     font-weight: bold;
-    transition: background-color 0.3s, color 0.3s;
+    transition:
+        background-color 0.3s,
+        color 0.3s;
 }
 
 .step.active {
     background-color: #007bff;
-    color: white;
+    color: #fff;
 }
 
-.progress-bar {
-    flex: 1;
-    height: 4px;
-    background-color: #ddd;
-    margin: 0 10px;
-    position: relative;
-}
-
-.progress-bar .progress {
-    width: 0%;
-    height: 100%;
-    background-color: #007bff;
-    transition: width 0.5s ease-in-out;
-}
-
-
-.form-container {
-    padding: 20px;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    opacity: 0;
-    transform: translateY(10px);
-    transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
-}
-
-.form-container.active {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-input, select {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-
-.input-reserva{
-    width: 100%;
-    gap: 20px;
-    padding: 10px;
-    margin-top: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-
-button {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.botones-reserva{
-    display: flex;
-    justify-content:center;
-    align-items: center;
-    margin-top: 10px;
-    gap: 10px;
-}
-
-.botones-reserva button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100px;
-}
-
-button:hover {
-    background-color: #0056b3;
-}
-
-.acompanante-pagination{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    margin-top: 10px;
-}
-
-.pagination-numbers .number.active {
-    background-color: #004997;
-    color: white;
-}
-
-.pagination-numbers arrow-button.active {
-    background-color: #007bff;
-}
-
-.pagination-numbers{
-    display: flex;
-    gap: 3px;
-}
-
-
+/* ===== Mensaje de Éxito ===== */
 .success-message {
     background-color: #d4edda;
     color: #155724;
     padding: 20px;
     border-radius: 8px;
     text-align: center;
+}
+
+/* ===== Paso 5: Resumen con Diseño ===== */
+.summary {
+    margin-top: 20px;
+}
+
+/* Contenedor principal en 2 columnas */
+.resumen-contenedor {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 20px;
+    background-color: #f7f9fc;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Columna Izquierda */
+.resumen-izquierda {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.gracias-compra {
+    background-color: #e7f1ff;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.datos-comprador,
+.datos-acompanantes {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: left;
+}
+
+/* Estilo para cada acompañante */
+.acompanante-item {
+    margin-bottom: 10px;
+    border-bottom: 1px dashed #ccc;
+    padding-bottom: 10px;
+}
+
+/* Columna Derecha */
+.resumen-derecha {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: left;
+}
+
+/* Contenido del paquete */
+.datos-paquete p {
+    margin: 5px 0;
 }
