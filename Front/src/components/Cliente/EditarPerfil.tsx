@@ -1,17 +1,15 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import Swal from 'sweetalert2';
 import '../../styles/Cliente/EditarPerfil.css';
 
 const EditarPerfil: React.FC = () => {
     const navigate = useNavigate();
-    const cliente = JSON.parse(localStorage.getItem('user') || '{}')
+    const cliente = JSON.parse(localStorage.getItem('user') || '{}');
 
     const formatoFecha = (fecha: string): string => {
-        if (fecha) {
-            return fecha.split('T')[0];
-        }
-        return '';
+        return fecha ? fecha.split('T')[0] : '';
     };
 
     const [formData, setFormData] = useState(cliente ? {
@@ -44,10 +42,26 @@ const EditarPerfil: React.FC = () => {
             await axios.put(`/api/cliente/${cliente.id}`, formData);
             const updatedUser = { ...cliente, ...formData };
             localStorage.setItem('user', JSON.stringify(updatedUser));
-            alert('Perfil actualizado con éxito');
-            navigate(`/detalleCliente`, { state: { cliente: updatedUser } });
+
+            Swal.fire({
+                title: 'Perfil actualizado',
+                text: 'Tu perfil ha sido actualizado con éxito',
+                icon: 'success',
+                timer: 1000,
+                showConfirmButton: false
+            });
+
+            setTimeout(() => {
+                navigate(`/detalleCliente`, { state: { cliente: updatedUser } });
+            }, 1250);
+
         } catch (error) {
-            alert('Hubo un error al intentar actualizar el perfil.');
+            Swal.fire({
+                title: 'Error',
+                text: 'Hubo un problema al actualizar tu perfil',
+                icon: 'error',
+                confirmButtonText: 'Intentar de nuevo'
+            });
             console.error(error);
         }
     };

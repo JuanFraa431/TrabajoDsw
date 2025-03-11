@@ -41,18 +41,18 @@
   transition: filter 0.3s ease;
 }
 
-/* Al pasar el mouse sobre la imagen, se oscurece ligeramente */
 .profile-pic:hover img {
   filter: brightness(0.6);
 }
 
-/* Ícono de edición bien centrado y con mejor diseño */
 .edit-icon {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.3);
+  width: 85px;
+  height: 85px;
   color: white;
   padding: 12px;
   border-radius: 50%;
@@ -63,11 +63,9 @@
   align-items: center;
   opacity: 0;
   transition: opacity 0.3s ease, transform 0.3s ease;
-  width: 48px;
-  height: 48px;
 }
 
-/* Efecto al pasar el mouse: aparece el ícono con una leve animación */
+
 .profile-pic:hover .edit-icon {
   opacity: 1;
   transform: translate(-50%, -50%) scale(1.1);

@@ -19,6 +19,8 @@ import DetalleCliente from './components/Cliente/DetalleCliente';
 import CardDetailExcursion from './components/CardDetailExcursion';
 import Register from './components/Register';
 import EditarPerfil from './components/Cliente/EditarPerfil';
+import ReservarPaquete from './components/Paquete/ReservarPaquete';
+import Tarjeta from './components/Tarjeta';
 
 const pageTransition = {
     initial: { opacity: 0 }, 
@@ -156,6 +158,28 @@ const App: React.FC = () => {
                             <div>
                                 <motion.div {...pageTransition}>
                                     <EditarPerfil/>
+                                </motion.div>
+                            </div>
+                        }
+                        
+                    />
+                    <Route
+                        path="/reservar"
+                        element={
+                            <div>
+                                <motion.div {...pageTransition}>
+                                    <ReservarPaquete/>
+                                </motion.div>
+                            </div>
+                        }
+                        
+                    />
+                    <Route
+                        path="/tarjeta"
+                        element={
+                            <div>
+                                <motion.div {...pageTransition}>
+                                    <Tarjeta/>
                                 </motion.div>
                             </div>
                         }

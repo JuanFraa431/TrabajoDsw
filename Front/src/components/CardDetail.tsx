@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 import '../styles/CardDetail.css';
 import { Comentario } from '../interface/comentario';
 import userIcon from "../images/user-icon.png";
@@ -118,7 +118,13 @@ const CardDetail: React.FC = () => {
                         <div className="price-box">
                             <p className="price-per-night">Precio por noche</p>
                             <p className="price-total">${paquete.precio}</p>
-                            <button className="reserve-button">Reservar Ahora</button>
+                            <Link
+                                to="/reservar"
+                                state={{ paquete }}
+                                className="reserve-button"
+                            >
+                                Reservar Ahora
+                            </Link>
                         </div>
                     </div>
                 </div>
