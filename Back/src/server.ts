@@ -13,7 +13,7 @@ import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-import { routerCliente } from './routes/cliente.routes.js';
+import { routerCliente } from './routes/usuario.routes.js';
 import { routerCiudad } from './routes/ciudad.routes.js';
 import { routerHotel } from './routes/hotel.routes.js';
 import { routerExcursion } from './routes/excursion.routes.js';
@@ -21,6 +21,11 @@ import { routerTransporte } from './routes/transporte.routes.js';
 import { routerPaquete } from './routes/paquete.routes.js';
 import { routerEstadia } from './routes/estadia.routes.js';
 import { routerComentario } from './routes/comentario.routes.js';
+import { routerReservaPaquete } from './routes/reservaPaquete.routes.js';
+import { routerMetodo } from './routes/metodoDePago.routes.js';
+import { routerPago } from './routes/pago.routes.js';
+import { routerPersona } from './routes/persona.routes.js';
+
 import { RequestContext } from '@mikro-orm/core';
 
 const app = express();
@@ -52,6 +57,10 @@ app.use('/api/transporte', routerTransporte);
 app.use('/api/paquete', routerPaquete);
 app.use('/api/estadia', routerEstadia);
 app.use('/api/comentario', routerComentario);
+app.use('/api/reservaPaquete', routerReservaPaquete);
+app.use('/api/metodoDePago', routerMetodo);
+app.use('/api/pago', routerPago);
+app.use('/api/persona', routerPersona);
 
 app.use(express.static(path.join(__dirname, 'dist')));
 

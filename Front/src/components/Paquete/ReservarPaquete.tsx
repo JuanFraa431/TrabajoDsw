@@ -4,13 +4,8 @@ import { useLocation, Link } from "react-router-dom";
 import Tarjeta from "../Tarjeta";
 import "../../styles/ReservarPaquete.css";
 import logo from "../../images/logoFinal2.png";
-
-interface Acompanante {
-    nombre: string;
-    email: string;
-    fechaNacimiento: string;
-    dni: string;
-}
+import { Acompanante } from "../../interface/acompanante";
+import axios from "axios";
 
 const ReservarPaquete: React.FC = () => {
     const [step, setStep] = useState<number>(1);
@@ -18,7 +13,6 @@ const ReservarPaquete: React.FC = () => {
     const paquete = location.state?.paquete;
     const user = JSON.parse(localStorage.getItem("user") || "{}");
 
-    // Datos del formulario
     const [form, setForm] = useState<{
         tipoFactura: string;
         documento: string;
@@ -68,7 +62,6 @@ const ReservarPaquete: React.FC = () => {
     const nextStep = () => {
         setError(null);
 
-        // Validaciones mínimas de cada paso
         if (step === 1 && !pagoSeleccionado) {
             setError("Debes seleccionar un método de pago.");
             return;
@@ -89,7 +82,6 @@ const ReservarPaquete: React.FC = () => {
             return;
         }
 
-        // Confirmación final en el paso 5
         if (step === 5) {
             setTimeout(() => {
                 setReservaConfirmada(true);
@@ -106,23 +98,62 @@ const ReservarPaquete: React.FC = () => {
         }
     };
 
-    // Animaciones con Framer Motion
     const stepperVariants = {
         hidden: { opacity: 0, x: -50 },
         visible: { opacity: 1, x: 0 },
         exit: { opacity: 0, x: 50 },
     };
 
+    const handleReservar = async () => {
+        try {
+            const reservaData = {
+                paqueteId: paquete.id,
+                clienteId: user.id,
+                tipoFactura: form.tipoFactura,
+                documento: form.documento,
+                nombre: form.nombre,
+                email: form.email,
+                telefono: form.telefono,
+                metodoPago: pagoSeleccionado,
+                acompanantes: form.acompanantesData.map((acomp) => ({
+                    nombre: acomp.nombre,
+                    email: acomp.email,
+                    fechaNacimiento: acomp.fechaNacimiento,
+                    dni: acomp.dni,
+                })),
+            };
+
+            console.log("Enviando datos de reserva:", reservaData);
+
+            const response = await axios.post("/api/reservaPaquete", {
+                    fecha: new Date(),
+                    paqueteId: paquete.id,
+                    usuarioId: user.id,
+                    estado: "pendiente",
+                    personas: form.acompanantesData,
+                });
+
+            if (response.status === 201) {
+                console.log("Reserva creada con éxito:", response.data);
+                setReservaConfirmada(true);
+            } else {
+                console.error("Error al crear la reserva:", response.data);
+                setError("Hubo un problema al confirmar la reserva.");
+            }
+        } catch (error) {
+            console.error("Error al enviar la reserva:", error);
+            setError("Hubo un problema al confirmar la reserva.");
+        }
+    };
+
     return (
         <div className="container">
-            {/* Logo */}
             <div className="container-image">
                 <Link to="/">
                     <img src={logo} alt="Logo" className="logo" />
                 </Link>
             </div>
 
-            {/* Steps */}
             <div className="steps">
                 {[1, 2, 3, 4, 5].map((num) => (
                     <div key={num} className={`step ${step >= num ? "active" : ""}`}>
@@ -131,7 +162,6 @@ const ReservarPaquete: React.FC = () => {
                 ))}
             </div>
 
-            {/* Mensaje de Reserva Confirmada */}
             {reservaConfirmada ? (
                 <motion.div
                     className="success-message"
@@ -153,7 +183,6 @@ const ReservarPaquete: React.FC = () => {
                     variants={stepperVariants}
                     transition={{ duration: 0.5 }}
                 >
-                    {/* Paso 1: Selección método de pago */}
                     {step === 1 && (
                         <div className="payment-container form-container active">
                             <h2>¿Cómo vas a pagar?</h2>
@@ -183,7 +212,6 @@ const ReservarPaquete: React.FC = () => {
                         </div>
                     )}
 
-                    {/* Paso 2: Datos de facturación */}
                     {step === 2 && (
                         <div className="billing form-container active">
                             <h2>Facturación</h2>
@@ -299,8 +327,8 @@ const ReservarPaquete: React.FC = () => {
                                                     <button
                                                         key={index}
                                                         className={`number ${form.currentAcompanante === index
-                                                                ? "active"
-                                                                : ""
+                                                            ? "active"
+                                                            : ""
                                                             }`}
                                                         onClick={() =>
                                                             setForm((prev) => ({
@@ -508,7 +536,7 @@ const ReservarPaquete: React.FC = () => {
                             {error && <p className="error-message">{error}</p>}
                             <div className="botones-reserva">
                                 <button onClick={oppositeStep}>Atrás</button>
-                                <button onClick={nextStep}>Confirmar Reserva</button>
+                                <button onClick={handleReservar}>Confirmar Reserva</button>
                             </div>
                         </div>
                     )}

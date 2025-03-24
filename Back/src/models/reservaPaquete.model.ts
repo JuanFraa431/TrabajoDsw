@@ -28,6 +28,9 @@ export class ReservaPaquete extends BaseModel {
     @Property({ nullable: true })
     motivo_cancelacion!: string;
 
+    @Property({ nullable: true })
+    estado!: string;
+
     @ManyToMany(() => Persona, (p) => p.reservas)
     personas = new Collection<Persona>(this);
 }
