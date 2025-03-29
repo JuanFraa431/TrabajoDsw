@@ -13,7 +13,7 @@ import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-import { routerCliente } from './routes/usuario.routes.js';
+import { routerUsuario } from './routes/usuario.routes.js';
 import { routerCiudad } from './routes/ciudad.routes.js';
 import { routerHotel } from './routes/hotel.routes.js';
 import { routerExcursion } from './routes/excursion.routes.js';
@@ -49,7 +49,7 @@ app.use( (req, res, next) => {
   RequestContext.create(orm.em, next);
 });
 
-app.use('/api/cliente', routerCliente);
+app.use('/api/cliente', routerUsuario);
 app.use('/api/ciudad', routerCiudad);
 app.use('/api/hotel',routerHotel);
 app.use('/api/excursion', routerExcursion);

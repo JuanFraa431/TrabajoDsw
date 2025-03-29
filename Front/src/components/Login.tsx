@@ -37,7 +37,7 @@ const Login: React.FC = () => {
   async function handleLogin(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     try {
-      const response = await axios.post('/api/cliente/login', { username, password });
+      const response = await axios.post('/api/cliente/login', { identifier: username, password });
 
       if (response.status === 200) {
         const { usuario, token } = response.data.data;

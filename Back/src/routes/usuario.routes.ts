@@ -1,20 +1,20 @@
-import { findAll, findOne, create, update, remove, login, googleLogin } from "../controllers/cliente.controller.js";
+import { findAll, findOne, create, update, remove, login, googleLogin } from "../controllers/usuario.controller.js";
 import { Router } from "express";
 
-export const routerCliente = Router();
+export const routerUsuario = Router();
 
-routerCliente.post('/auth/google', googleLogin);
+routerUsuario.post('/auth/google', googleLogin);
 
-routerCliente.post('/login', login);
+routerUsuario.post('/login', login);
 
-routerCliente.get('/', findAll);
+routerUsuario.get('/', findAll);
 
-routerCliente.get('/:id', findOne);
+routerUsuario.get('/:id', findOne);
 
-routerCliente.post('/', create);
+routerUsuario.post('/', create);
 
-routerCliente.put('/:id', update);
+routerUsuario.put('/:id', update);
 
-routerCliente.delete('/:id', remove);
+routerUsuario.delete('/:id', remove);
 
 
