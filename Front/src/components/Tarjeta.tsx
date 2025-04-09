@@ -77,6 +77,7 @@ const Tarjeta: React.FC = () => {
                         value={nombre}
                         onChange={handleNombreChange}
                         placeholder="JUAN PÉREZ"
+                        autoComplete='off'
                     />
                 </div>
                 <div className="grupo">
@@ -86,6 +87,7 @@ const Tarjeta: React.FC = () => {
                         value={numeroTarjeta}
                         onChange={handleNumeroChange}
                         placeholder="#### #### #### ####"
+                        autoComplete='off'
                     />
                 </div>
                 <div className="grupo">
@@ -96,6 +98,7 @@ const Tarjeta: React.FC = () => {
                         onChange={handleFechaChange}
                         placeholder="MM/YY"
                         maxLength={5}
+                        autoComplete='off'
                     />
                 </div>
                 <div className="grupo">
@@ -106,6 +109,7 @@ const Tarjeta: React.FC = () => {
                         value={cvv}
                         onChange={handleCvvChange}
                         placeholder="123"
+                        autoComplete='off'
                     />
                 </div>
             </div>

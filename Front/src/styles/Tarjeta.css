@@ -102,9 +102,11 @@
 }
 
 .nombre {
+    display: flex;
     font-size: 1rem;
     margin: 0;
     text-transform: uppercase;
+    align-items:flex-start;
 }
 
 .grupo label {

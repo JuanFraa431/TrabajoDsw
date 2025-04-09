@@ -6,13 +6,43 @@ import "../../styles/ReservarPaquete.css";
 import logo from "../../images/logoFinal2.png";
 import { Acompanante } from "../../interface/acompanante";
 import axios from "axios";
+import { useEffect } from "react";
 
 const ReservarPaquete: React.FC = () => {
     const [step, setStep] = useState<number>(1);
     const location = useLocation();
     const paquete = location.state?.paquete;
-    const user = JSON.parse(localStorage.getItem("user") || "{}");
+    const [ciudad, setCiudad] = useState<string>("");
 
+    useEffect(() => {
+        console.log("Paquete recibido:", paquete); // Debugging paquete
+        const fetchCiudad = async () => {
+            try {
+                if (paquete?.estadias[0]?.hotel) {
+                    const response = await axios.get(`/api/hotel/${paquete.estadias[0].hotel}`);
+                    if (response.status === 200) {
+                        const hotelData = response.data.data;
+                        const Idciudad = hotelData.ciudad;
+                        const response2 = await axios.get(`/api/ciudad/${Idciudad}`);
+                        console.log("Ciudad del hotel:", response2.data.data.nombre);
+                        setCiudad(response2.data.data.nombre); 
+                    } else {
+                        console.error("Error al obtener la ciudad del hotel:", response.data);
+                    }
+                } else {
+                    console.warn("El paquete o el ID del hotel no está definido.");
+                }
+            } catch (error) {
+                console.error("Error al buscar la ciudad del hotel:", error);
+            }
+        };
+
+        fetchCiudad();
+    }, [paquete]);
+
+    console.log(paquete.estadias[0].hotel)
+    
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
     const [form, setForm] = useState<{
         tipoFactura: string;
         documento: string;
@@ -75,6 +105,7 @@ const ReservarPaquete: React.FC = () => {
         }
         if (
             step === 3 &&
+            form.acompanantes > 0 && // Validar solo si hay acompañantes
             (!form.acompanantesData[form.currentAcompanante]?.nombre ||
                 !form.acompanantesData[form.currentAcompanante]?.email)
         ) {
@@ -126,12 +157,12 @@ const ReservarPaquete: React.FC = () => {
             console.log("Enviando datos de reserva:", reservaData);
 
             const response = await axios.post("/api/reservaPaquete", {
-                    fecha: new Date(),
-                    paqueteId: paquete.id,
-                    usuarioId: user.id,
-                    estado: "pendiente",
-                    personas: form.acompanantesData,
-                });
+                fecha: new Date(),
+                paqueteId: paquete.id,
+                usuarioId: user.id,
+                estado: "pendiente",
+                personas: form.acompanantesData,
+            });
 
             if (response.status === 201) {
                 console.log("Reserva creada con éxito:", response.data);
@@ -277,20 +308,29 @@ const ReservarPaquete: React.FC = () => {
                     {step === 3 && (
                         <div className="personal-data form-container active">
                             <h3>Datos Acompañantes</h3>
-                            <label>¿Cuántas personas te acompañarán?</label>
-                            <input
-                                type="number"
+                            <label >¿Cuántas personas te acompañarán?</label>
+                            <select
                                 name="acompanantes"
+                                className="title_acompañantes"
                                 value={form.acompanantes}
-                                onChange={(e) =>
+                                onChange={(e) => {
+                                    const value = parseInt(e.target.value) || 0;
                                     setForm({
                                         ...form,
-                                        acompanantes: parseInt(e.target.value) || 0,
-                                    })
-                                }
-                                placeholder="Número de acompañantes"
+                                        acompanantes: value,
+                                        acompanantesData: value === 0 ? [] : form.acompanantesData, 
+                                    });
+                                }}
                                 required
-                            />
+                            >
+                                <option value={0}>Sin acompañantes</option>
+                                <option value={1}>1 acompañante</option>
+                                <option value={2}>2 acompañantes</option>
+                                <option value={3}>3 acompañantes</option>
+                                <option value={4}>4 acompañantes</option>
+                                <option value={5}>5 acompañantes</option>
+                            </select>
+
                             {form.acompanantes > 0 && (() => {
                                 const itemsPerPage = 5;
                                 const currentPage = Math.floor(
@@ -358,6 +398,7 @@ const ReservarPaquete: React.FC = () => {
                                     </div>
                                 );
                             })()}
+
                             {form.acompanantes > 0 && (
                                 <div className="container-inputs-acompañantes">
                                     <label>Nombre</label>
@@ -524,7 +565,7 @@ const ReservarPaquete: React.FC = () => {
                                             {paquete.cantidad_personas} adultos
                                         </p>
                                         <p>
-                                            <strong>Ciudad:</strong> {paquete.ciudad}
+                                            <strong>Ciudad:</strong> {ciudad}
                                         </p>
                                         <p>
                                             <strong>Precio:</strong> ${paquete.precio}
