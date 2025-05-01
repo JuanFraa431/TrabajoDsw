@@ -4,6 +4,7 @@ import { orm } from '../shared/db/orm.js';
 import { Usuario } from '../models/usuario.model.js';
 import { Paquete } from '../models/paquete.model.js';
 import { Persona } from '../models/persona.model.js';
+import { Pago } from '../models/pago.model.js';
 
 const em = orm.em;
 
@@ -28,7 +29,7 @@ async function findOne(req: Request, res: Response) {
 
 async function create(req: Request, res: Response) {
   try {
-    const { usuarioId, paqueteId, personaId, ...data } = req.body;
+    const { usuarioId, paqueteId, personas, pagoId, ...data } = req.body;
 
     if (!usuarioId) {
       return res.status(400).json({ message: 'El id del usuario es obligatorio' });
@@ -38,18 +39,43 @@ async function create(req: Request, res: Response) {
       return res.status(400).json({ message: 'El id del paquete es obligatorio' });
     }
 
-    if (!personaId) {
-      return res.status(400).json({ message: 'El id de la persona es obligatorio' });
+    if (!pagoId) {
+      return res.status(400).json({ message: 'El id del pago es obligatorio' });
     }
 
     const usuario = await em.findOneOrFail(Usuario, { id: usuarioId });
     const paquete = await em.findOneOrFail(Paquete, { id: paqueteId });
-    const persona = await em.findOneOrFail(Persona, { id: personaId });
 
-    const reservaPaquete = em.create(ReservaPaquete, { usuario, paquete, persona, ...data });
+    const reserva = new ReservaPaquete();
+    reserva.usuario = usuario;
+    reserva.paquete = paquete;
+    reserva.fecha = new Date(data.fecha ?? Date.now());
+    reserva.estado = data.estado ?? 'reservado';
+    reserva.fecha_cancelacion = data.fecha_cancelacion ?? null;
+    reserva.motivo_cancelacion = data.motivo_cancelacion ?? null;
+
+    reserva.pago = em.getReference(Pago, pagoId);
+
+    for (const p of personas) {
+      const persona = new Persona();
+      persona.nombre = p.nombre;
+      persona.apellido = p.apellido;
+      persona.email = p.email;
+      persona.fecha_nacimiento = new Date(p.fechaNacimiento);
+      persona.dni = p.dni;
+
+      persona.reservas.add(reserva);
+      reserva.personas.add(persona);
+
+      em.persist(persona);
+    }
+
+    em.persist(reserva);
     await em.flush();
-    res.status(201).json({ message: 'ReservaPaquete creada', data: reservaPaquete });
+
+    res.status(201).json({ message: 'ReservaPaquete creada', data: reserva });
   } catch (error: any) {
+    console.error("Error al crear la reserva:", error);
     res.status(500).json({ message: error.message });
   }
 }

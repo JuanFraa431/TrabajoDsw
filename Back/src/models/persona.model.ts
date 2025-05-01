@@ -9,7 +9,7 @@ export class Persona extends BaseModel {
     nombre!: string;
 
     @Property({ nullable: true })
-    apellido!: string;
+    apellido!: string; // Ensure apellido is defined
 
     @Property({ nullable: true })
     dni!: string;

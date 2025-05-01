@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { Pago } from '../models/pago.model.js';
 import { orm } from '../shared/db/orm.js';
+import { ReservaPaquete } from '../models/reservaPaquete.model.js';
 
 const em = orm.em;
 
@@ -26,7 +27,7 @@ async function findOne(req: Request, res: Response) {
 async function create(req: Request, res: Response) {
   try {
     const pago = em.create(Pago, req.body);
-    await em.flush();
+    await em.persistAndFlush(pago);
     res.status(201).json( { message: 'Pago creado', data: pago } );
   } catch (error: any) {
     res.status(500).json({ message: error.message });

@@ -1,6 +1,6 @@
-import { Entity, ManyToOne, Property, Rel} from "@mikro-orm/core";
+import { Entity, OneToOne, Property, Rel} from "@mikro-orm/core";
 import { BaseModel } from "../shared/db/baseModel.model.js";
-import { MetodoDePago } from "./metodoDePago.model.js";
+import { ReservaPaquete } from "./reservaPaquete.model.js";
 
 @Entity()
 export class Pago extends BaseModel{
@@ -13,9 +13,38 @@ export class Pago extends BaseModel{
     @Property ({ nullable: true })
     estado!: string;
 
-    @Property ({ nullable: true })
-    factura!: string;
+    @Property({ nullable: true })
+    metodoDePago!: string;
 
-    @ManyToOne(() => MetodoDePago, { nullable: true })
-    metodoDePago!: Rel<MetodoDePago>;
+    // DATOS DE FACTURACION
+    @Property({ nullable: true })
+    tipoFactura!: string;
+
+    @Property({ nullable: true })
+    nombreFacturacion!: string;
+
+    @Property({ nullable: true })
+    apellidoFacturacion!: string;
+
+    @Property({ nullable: true })
+    dniFacturacion!: string;
+
+    @Property({ nullable: true })
+    telefonoFacturacion!: string;
+
+    @Property({ nullable: true })
+    emailFacturacion!: string;
+
+    // DATOS DE TARJETA
+    @Property({ nullable: true })
+    nombreTitular!: string;
+    
+    @Property({ nullable: true })
+    ultimos4!: string;
+
+    @Property({ nullable: true })
+    proveedor!: string; // Ej: "Stripe", "MercadoPago"
+
+    @Property({ nullable: true })
+    transaccionId!: string; // ID del proveedor (para reclamos o auditoría)
 }

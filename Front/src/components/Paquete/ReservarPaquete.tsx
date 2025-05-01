@@ -19,15 +19,15 @@ const ReservarPaquete: React.FC = () => {
         const fetchCiudad = async () => {
             try {
                 if (paquete?.estadias[0]?.hotel) {
-                    const response = await axios.get(`/api/hotel/${paquete.estadias[0].hotel}`);
-                    if (response.status === 200) {
-                        const hotelData = response.data.data;
+                    const responseReserva = await axios.get(`/api/hotel/${paquete.estadias[0].hotel}`);
+                    if (responseReserva.status === 200) {
+                        const hotelData = responseReserva.data.data;
                         const Idciudad = hotelData.ciudad;
-                        const response2 = await axios.get(`/api/ciudad/${Idciudad}`);
-                        console.log("Ciudad del hotel:", response2.data.data.nombre);
-                        setCiudad(response2.data.data.nombre); 
+                        const responseReserva2 = await axios.get(`/api/ciudad/${Idciudad}`);
+                        console.log("Ciudad del hotel:", responseReserva2.data.data.nombre);
+                        setCiudad(responseReserva2.data.data.nombre);
                     } else {
-                        console.error("Error al obtener la ciudad del hotel:", response.data);
+                        console.error("Error al obtener la ciudad del hotel:", responseReserva.data);
                     }
                 } else {
                     console.warn("El paquete o el ID del hotel no está definido.");
@@ -41,31 +41,38 @@ const ReservarPaquete: React.FC = () => {
     }, [paquete]);
 
     console.log(paquete.estadias[0].hotel)
-    
+
     const user = JSON.parse(localStorage.getItem("user") || "{}");
     const [form, setForm] = useState<{
         tipoFactura: string;
         documento: string;
         nombre: string;
+        apellido: string;
         email: string;
         direccion: string;
         telefono: string;
         acompanantesData: Acompanante[];
         acompanantes: number;
         currentAcompanante: number;
+        tarjetaNombre: string;
+        tarjetaUltimos4: string;
     }>({
         tipoFactura: "",
         documento: user.dni || "",
         nombre: user.nombre || "",
+        apellido: user.apellido || "",
         email: user.email || "",
         direccion: "",
         telefono: "",
         acompanantesData: [],
         acompanantes: 0,
         currentAcompanante: 0,
+        tarjetaNombre: "",
+        tarjetaUltimos4: "",
     });
 
     const [pagoSeleccionado, setPagoSeleccionado] = useState<string | null>(null);
+    const [numeroTarjeta, setNumeroTarjeta] = useState<string>("");
     const [error, setError] = useState<string | null>(null);
     const [reservaConfirmada, setReservaConfirmada] = useState(false);
 
@@ -98,16 +105,19 @@ const ReservarPaquete: React.FC = () => {
         }
         if (
             step === 2 &&
-            (!form.tipoFactura || !form.documento || !form.nombre || !form.telefono)
+            (!form.tipoFactura || !form.documento || !form.nombre || !form.apellido || !form.telefono)
         ) {
             setError("Completa todos los campos de facturación.");
             return;
         }
         if (
             step === 3 &&
-            form.acompanantes > 0 && // Validar solo si hay acompañantes
+            form.acompanantes > 0 &&
             (!form.acompanantesData[form.currentAcompanante]?.nombre ||
-                !form.acompanantesData[form.currentAcompanante]?.email)
+                !form.acompanantesData[form.currentAcompanante]?.email ||
+                !form.acompanantesData[form.currentAcompanante]?.apellido ||
+                !form.acompanantesData[form.currentAcompanante]?.fechaNacimiento ||
+                !form.acompanantesData[form.currentAcompanante]?.dni)
         ) {
             setError("Completa todos los campos de datos personales del acompañante.");
             return;
@@ -137,38 +147,38 @@ const ReservarPaquete: React.FC = () => {
 
     const handleReservar = async () => {
         try {
-            const reservaData = {
-                paqueteId: paquete.id,
-                clienteId: user.id,
+
+            const responsePago = await axios.post("/api/pago", {
+                fecha: new Date(),
+                monto: paquete.precio,
+                estado: "pagado",
+                metodoDePago: pagoSeleccionado,
                 tipoFactura: form.tipoFactura,
-                documento: form.documento,
-                nombre: form.nombre,
-                email: form.email,
-                telefono: form.telefono,
-                metodoPago: pagoSeleccionado,
-                acompanantes: form.acompanantesData.map((acomp) => ({
-                    nombre: acomp.nombre,
-                    email: acomp.email,
-                    fechaNacimiento: acomp.fechaNacimiento,
-                    dni: acomp.dni,
-                })),
-            };
+                nombreFacturacion: form.nombre,
+                apellidoFacturacion: form.apellido,
+                dniFacturacion: form.documento,
+                telefonoFacturacion: form.telefono,
+                emailFacturacion: form.email,
+                nombreTitular: form.tarjetaNombre || "",
+                ultimos4: form.tarjetaUltimos4 || "",
+                proveedor: "Stripe" // Cambiar esto por el proveedor real
+            });
 
-            console.log("Enviando datos de reserva:", reservaData);
-
-            const response = await axios.post("/api/reservaPaquete", {
+            const responseReserva = await axios.post("/api/reservaPaquete", {
+                pagoId: responsePago.data.data.id,
                 fecha: new Date(),
                 paqueteId: paquete.id,
                 usuarioId: user.id,
-                estado: "pendiente",
+                estado: "reservado",
                 personas: form.acompanantesData,
             });
 
-            if (response.status === 201) {
-                console.log("Reserva creada con éxito:", response.data);
+
+            if (responseReserva.status === 201) {
+                console.log("Reserva creada con éxito:", responseReserva.data);
                 setReservaConfirmada(true);
             } else {
-                console.error("Error al crear la reserva:", response.data);
+                console.error("Error al crear la reserva:", responseReserva.data);
                 setError("Hubo un problema al confirmar la reserva.");
             }
         } catch (error) {
@@ -269,6 +279,15 @@ const ReservarPaquete: React.FC = () => {
                                     required
                                 />
                                 <input
+                                    type="text"
+                                    name="apellido"
+                                    value={form.apellido}
+                                    onChange={handleChange}
+                                    placeholder="Apellido"
+                                    className="input-reserva"
+                                    required
+                                />
+                                <input
                                     type="email"
                                     name="email"
                                     value={form.email}
@@ -318,7 +337,7 @@ const ReservarPaquete: React.FC = () => {
                                     setForm({
                                         ...form,
                                         acompanantes: value,
-                                        acompanantesData: value === 0 ? [] : form.acompanantesData, 
+                                        acompanantesData: value === 0 ? [] : form.acompanantesData,
                                     });
                                 }}
                                 required
@@ -419,6 +438,24 @@ const ReservarPaquete: React.FC = () => {
                                         placeholder="Nombre"
                                         required
                                     />
+                                    <label>Apellido</label>
+                                    <input
+                                        type="text"
+                                        name={`acompanante_apellido_${form.currentAcompanante}`}
+                                        value={
+                                            form.acompanantesData[form.currentAcompanante]
+                                                ?.apellido || ""
+                                        }
+                                        onChange={(e) =>
+                                            handleAcompananteChange(
+                                                form.currentAcompanante,
+                                                "apellido",
+                                                e.target.value
+                                            )
+                                        }
+                                        placeholder="Apellido"
+                                        required
+                                    />
                                     <label>Email</label>
                                     <input
                                         type="email"
@@ -484,7 +521,16 @@ const ReservarPaquete: React.FC = () => {
                     {/* Paso 4: Detalles de tarjeta */}
                     {step === 4 && (
                         <div className="card-details form-container active">
-                            <Tarjeta />
+                                <Tarjeta
+                                    nombre={form.tarjetaNombre}
+                                    setNombre={(value: string) => setForm((prev) => ({ ...prev, tarjetaNombre: value }))}
+                                    numeroTarjeta={numeroTarjeta}
+                                    setNumeroTarjeta={(value: string) => {
+                                        setNumeroTarjeta(value); // si lo manejás también localmente
+                                        const clean = value.replace(/\D/g, "");
+                                        setForm((prev) => ({ ...prev, tarjetaUltimos4: clean.slice(-4) }));
+                                    }}
+                                />
                             <div className="botones-reserva">
                                 <button onClick={oppositeStep}>Atrás</button>
                                 <button onClick={nextStep}>Continuar</button>
@@ -508,6 +554,9 @@ const ReservarPaquete: React.FC = () => {
                                             <strong>Nombre:</strong> {form.nombre}
                                         </p>
                                         <p>
+                                            <strong>Apellido:</strong> {form.apellido}
+                                        </p>
+                                        <p>
                                             <strong>Documento:</strong> {form.documento}
                                         </p>
                                         <p>
@@ -525,6 +574,9 @@ const ReservarPaquete: React.FC = () => {
                                                 <div key={idx} className="acompanante-item">
                                                     <p>
                                                         <strong>Nombre:</strong> {acomp.nombre}
+                                                    </p>
+                                                    <p>
+                                                        <strong>Apellido:</strong> {acomp.apellido}
                                                     </p>
                                                     <p>
                                                         <strong>Email:</strong> {acomp.email}

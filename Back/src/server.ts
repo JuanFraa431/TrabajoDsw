@@ -22,7 +22,6 @@ import { routerPaquete } from './routes/paquete.routes.js';
 import { routerEstadia } from './routes/estadia.routes.js';
 import { routerComentario } from './routes/comentario.routes.js';
 import { routerReservaPaquete } from './routes/reservaPaquete.routes.js';
-import { routerMetodo } from './routes/metodoDePago.routes.js';
 import { routerPago } from './routes/pago.routes.js';
 import { routerPersona } from './routes/persona.routes.js';
 
@@ -58,7 +57,6 @@ app.use('/api/paquete', routerPaquete);
 app.use('/api/estadia', routerEstadia);
 app.use('/api/comentario', routerComentario);
 app.use('/api/reservaPaquete', routerReservaPaquete);
-app.use('/api/metodoDePago', routerMetodo);
 app.use('/api/pago', routerPago);
 app.use('/api/persona', routerPersona);
 

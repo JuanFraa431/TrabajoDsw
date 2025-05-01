@@ -4,12 +4,18 @@ import visa from '../images/visa.png';
 import mastercard from '../images/mastercard.png';
 import chip from '../images/chip-tarjeta.png';
 
+type TarjetaProps = {
+    nombre: string;
+    setNombre: (value: string) => void;
+    numeroTarjeta: string;
+    setNumeroTarjeta: (value: string) => void;
+};
+
 function formatCardNumber(value: string) {
     let digits = value.replace(/\D/g, '');
     digits = digits.slice(0, 16);
     return digits.replace(/(.{4})/g, '$1 ').trim();
 }
-
 
 function formatExpirationDate(value: string) {
     const digits = value.replace(/\D/g, '').slice(0, 4);
@@ -27,9 +33,7 @@ function generateSignature(name: string) {
     return name ? name.substring(0, 7).toUpperCase() : 'FIRMA';
 }
 
-const Tarjeta: React.FC = () => {
-    const [numeroTarjeta, setNumeroTarjeta] = useState('');
-    const [nombre, setNombre] = useState('');
+const Tarjeta: React.FC<TarjetaProps> = ({ nombre, setNombre, numeroTarjeta, setNumeroTarjeta }) => {
     const [fechaExpiracion, setFechaExpiracion] = useState('');
     const [cvv, setCvv] = useState('');
     const [tarjetaVolteada, setTarjetaVolteada] = useState(false);

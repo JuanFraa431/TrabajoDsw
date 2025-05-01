@@ -6,10 +6,12 @@ import {
     Property,
     Collection,
     Rel,
+    OneToOne,
 } from '@mikro-orm/core';
 import { Usuario } from './usuario.model.js';
 import { Paquete } from './paquete.model.js';
 import { Persona } from './persona.model.js';
+import { Pago } from './pago.model.js';
 
 @Entity()
 export class ReservaPaquete extends BaseModel {
@@ -33,4 +35,7 @@ export class ReservaPaquete extends BaseModel {
 
     @ManyToMany(() => Persona, (p) => p.reservas)
     personas = new Collection<Persona>(this);
+
+    @OneToOne(() => Pago, { nullable: true })
+    pago!: Rel<Pago>;
 }
