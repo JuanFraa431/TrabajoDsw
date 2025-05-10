@@ -21,8 +21,6 @@ const ClienteForm: React.FC<Props> = ({ paqueteEditado, onChange, onCancel, onSa
         onChange={(e) => onChange({ ...paqueteEditado, nombre: e.target.value })}
         required
       />
-      
-      <label htmlFor="descripcion">Descripcion:</label>
       <label htmlFor="descripcion">Descripción:</label>
       <textarea
         id="descripcion"
@@ -32,7 +30,6 @@ const ClienteForm: React.FC<Props> = ({ paqueteEditado, onChange, onCancel, onSa
         rows={4}
         cols={50}
       />
-      
       <label htmlFor="detalle">Detalle:</label>
       <input
         id="detalle"
@@ -41,16 +38,14 @@ const ClienteForm: React.FC<Props> = ({ paqueteEditado, onChange, onCancel, onSa
         onChange={(e) => onChange({ ...paqueteEditado, detalle: e.target.value })}
         required
       />
-      
       <label htmlFor="precio">Precio:</label>
       <input
         id="precio"
-        type="precio"
+        type="text"
         value={paqueteEditado.precio}
         onChange={(e) => onChange({ ...paqueteEditado, precio: parseFloat(e.target.value) })}
         required
       />
-      
       <label htmlFor="fecha_ini">Fecha de Inicio:</label>
       <input
         id="fecha_ini"
@@ -59,7 +54,6 @@ const ClienteForm: React.FC<Props> = ({ paqueteEditado, onChange, onCancel, onSa
         onChange={(e) => onChange({ ...paqueteEditado, fecha_ini: e.target.value })}
         required
       />
-
       <label htmlFor="fecha_fin">Fecha de Finalización:</label>
       <input
         id="fecha_fin"
@@ -68,7 +62,6 @@ const ClienteForm: React.FC<Props> = ({ paqueteEditado, onChange, onCancel, onSa
         onChange={(e) => onChange({ ...paqueteEditado, fecha_fin: e.target.value })}
         required
       />
-      
       <label htmlFor="estado">Estado:</label>
       <select
         id="estado"
@@ -79,7 +72,6 @@ const ClienteForm: React.FC<Props> = ({ paqueteEditado, onChange, onCancel, onSa
         <option value="1">Habilitado</option>
         <option value="0">Deshabilitado</option>
       </select>
-      
       <label htmlFor="imagen">Imagen:</label>
       <input
         id="imagen"
@@ -88,7 +80,6 @@ const ClienteForm: React.FC<Props> = ({ paqueteEditado, onChange, onCancel, onSa
         onChange={(e) => onChange({ ...paqueteEditado, imagen: e.target.value })}
         required
       />
-
       <button type="submit">Guardar cambios</button>
       <button type="button" onClick={onCancel}>Cancelar</button>
     </form>

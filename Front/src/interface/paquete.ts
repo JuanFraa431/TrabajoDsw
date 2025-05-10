@@ -1,4 +1,5 @@
 import { Comentario } from "./comentario.js";
+import { Estadia } from "./estadia.js";
 
 export interface Paquete {
     id: number;
@@ -11,4 +12,5 @@ export interface Paquete {
     fecha_fin: string;
     imagen: string;
     comentarios: Comentario[];
+    estadias: Estadia[];
 }

@@ -22,11 +22,7 @@ export class Usuario extends Persona {
 
   @Property({ nullable: true })
   imagen!: string;
-
-  @OneToMany(() => Estadia, (estadia) => estadia.usuario, {
-    orphanRemoval: true,
-    cascade: [Cascade.ALL]
-  })
+  
   estadias = new Collection<Estadia>(this);
 
   @OneToMany(() => ReservaPaquete, (rp) => rp.usuario, {

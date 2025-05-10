@@ -1,6 +1,8 @@
 import { Request, Response } from 'express';
 import { Estadia } from '../models/estadia.model.js';
+import { Hotel } from '../models/hotel.model.js';
 import { orm }  from '../shared/db/orm.js';
+import { Paquete } from '../models/paquete.model.js';
 
 const em = orm.em;
 
@@ -25,10 +27,21 @@ async function findOne(req: Request, res: Response) {
 
 async function create(req: Request, res: Response) {
   try {
-    const estadia = em.create(Estadia, req.body);
+    const { id_hotel, id_paquete, ...rest } = req.body;
+
+    const hotel = await em.getReference(Hotel, id_hotel);
+    const paquete = await em.getReference(Paquete, id_paquete);
+
+    const estadia = em.create(Estadia, {
+      ...rest,
+      hotel,
+      paquete,
+    });
+
     await em.flush();
     res.status(201).json({ message: 'Estadia creada', data: estadia });
   } catch (error: any) {
+    console.error('Error al crear estadía:', error);
     res.status(500).json({ message: error.message });
   }
 }

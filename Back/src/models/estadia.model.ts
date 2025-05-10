@@ -7,10 +7,10 @@ import { Usuario } from './usuario.model.js';
 @Entity()
 export class Estadia extends BaseModel {
   @ManyToOne(() => Paquete, { nullable: false })
-  paquete!: Paquete;
+  paquete!: Rel <Paquete>;
 
   @ManyToOne(() => Hotel, { nullable: false })
-  hotel!: Hotel;
+  hotel!: Rel <Hotel>;
 
   @Property({ nullable: false })
   fecha_ini!: Date;
@@ -20,7 +20,4 @@ export class Estadia extends BaseModel {
 
   @Property({ nullable: false })
   precio_x_dia!: number;
-
-  @ManyToOne(() => Usuario, { nullable: false })
-  usuario!: Rel<Usuario>;
 }

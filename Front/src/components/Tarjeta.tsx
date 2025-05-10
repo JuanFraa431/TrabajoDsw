@@ -141,6 +141,7 @@ const Tarjeta: React.FC<TarjetaProps> = ({ nombre, setNombre, numeroTarjeta, set
                             
                         </div>
                     </div>
+
                     <div className="trasera">
                         <div className="magnetic-stripe" />
                         <div className="signature-section">

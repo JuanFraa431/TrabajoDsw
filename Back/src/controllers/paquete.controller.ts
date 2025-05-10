@@ -6,7 +6,7 @@ const em = orm.em;
 
 async function findAll(req: Request, res: Response) {
     try {
-        const paquetes = await em.find(Paquete, {});
+        const paquetes = await em.find(Paquete, {}, {populate: ['comentarios', 'estadias', 'comentarios.cliente']});
         res.status(200).json({ message: 'Paquetes encontrados', data: paquetes });
     } catch (error: any) {
         res.status(500).json({ message: error.message });
