@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
+
 
 import { Paquete } from '../../interface/paquete';
 import { Estadia } from '../../interface/estadia';
@@ -14,6 +17,50 @@ interface PaqueteListProps {
   onDelete: (paquete: Paquete) => void;
   onAddEstadia: (newEstadia: any) => void;
 }
+
+const MySwal = withReactContent(Swal);
+
+const handleEditPaquete = (paquete: Paquete, onEdit: (paquete: Paquete) => void) => {
+  let nombre = paquete.nombre;
+  let detalle = paquete.detalle;
+  let estado = paquete.estado;
+
+  MySwal.fire({
+    title: 'Editar Paquete',
+    html: `
+      <input id="swal-input-nombre" class="swal2-input" placeholder="Nombre" value="${nombre}" />
+      <input id="swal-input-detalle" class="swal2-input" placeholder="Detalle" value="${detalle}" />
+      <select id="swal-input-estado" class="swal2-input">
+        <option value="1" ${estado === 1 ? 'selected' : ''}>Activo</option>
+        <option value="0" ${estado === 0 ? 'selected' : ''}>Inactivo</option>
+      </select>
+    `,
+    showCancelButton: true,
+    confirmButtonText: 'Guardar',
+    cancelButtonText: 'Cancelar',
+    preConfirm: () => {
+      const newNombre = (document.getElementById('swal-input-nombre') as HTMLInputElement)?.value;
+      const newDetalle = (document.getElementById('swal-input-detalle') as HTMLInputElement)?.value;
+      const newEstado = parseInt((document.getElementById('swal-input-estado') as HTMLSelectElement)?.value);
+
+      if (!newNombre || !newDetalle) {
+        Swal.showValidationMessage('Todos los campos son obligatorios');
+        return;
+      }
+
+      return {
+        ...paquete,
+        nombre: newNombre,
+        detalle: newDetalle,
+        estado: newEstado,
+      };
+    }
+  }).then((result) => {
+    if (result.isConfirmed && result.value) {
+      onEdit(result.value); // Pasamos el paquete actualizado al padre
+    }
+  });
+};
 
 const PaqueteList: React.FC<PaqueteListProps> = ({
   paquetes: initialPaquetes,
@@ -107,8 +154,6 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
       .then((response) => {
         const updatedEstadia = response.data;
         console.log('✅ Estadía guardada:', updatedEstadia);
-
-        // Llamar a la función onAddEstadia para actualizar el estado en el componente padre
         onAddEstadia(updatedEstadia);
       })
       .catch((error) => {
@@ -134,7 +179,7 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
             <p>Detalle: {paquete.detalle}</p>
           </div>
           <div className="card-actions">
-            <button onClick={() => onEdit(paquete)}>Editar</button>
+            <button onClick={() => handleEditPaquete(paquete, onEdit)}>Editar</button>
             <button onClick={() => onDelete(paquete)}>Eliminar</button>
             <button onClick={() => toggleEstadias(paquete.id, paquete.estadias)}>
               {activePaquete === paquete.id ? 'Ocultar Estadías' : 'Ver Estadías'}
