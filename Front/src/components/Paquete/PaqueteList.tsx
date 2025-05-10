@@ -20,54 +20,73 @@ interface PaqueteListProps {
 
 const MySwal = withReactContent(Swal);
 
-const handleEditPaquete = (paquete: Paquete, onEdit: (paquete: Paquete) => void) => {
+const handleEditPaquete = (
+  paquete: Paquete,
+  onEdit: (paquete: Paquete) => void,
+  setPaquetes: React.Dispatch<React.SetStateAction<Paquete[]>>
+) => {
   let nombre = paquete.nombre;
   let detalle = paquete.detalle;
   let estado = paquete.estado;
+  let precio = paquete.precio; // Define precio from paquete
+  let fecha_inicio = paquete.fecha_ini; // Extract fecha_ini from paquete
+  let fecha_fin = paquete.fecha_fin; // Extract fecha_fin from paquete
+  let imagen = paquete.imagen; // Extract imagen from paquete
 
-  MySwal.fire({
-    title: 'Editar Paquete',
-    html: `
-      <input id="swal-input-nombre" class="swal2-input" placeholder="Nombre" value="${nombre}" />
-      <input id="swal-input-detalle" class="swal2-input" placeholder="Detalle" value="${detalle}" />
-      <select id="swal-input-estado" class="swal2-input">
-        <option value="1" ${estado === 1 ? 'selected' : ''}>Activo</option>
-        <option value="0" ${estado === 0 ? 'selected' : ''}>Inactivo</option>
-      </select>
-    `,
-    showCancelButton: true,
-    confirmButtonText: 'Guardar',
-    cancelButtonText: 'Cancelar',
-    preConfirm: () => {
-      const newNombre = (document.getElementById('swal-input-nombre') as HTMLInputElement)?.value;
-      const newDetalle = (document.getElementById('swal-input-detalle') as HTMLInputElement)?.value;
-      const newEstado = parseInt((document.getElementById('swal-input-estado') as HTMLSelectElement)?.value);
+ MySwal.fire({
+  title: 'Editar Paquete',
+  html: `
+    <input id="swal-input-nombre" class="swal2-input" placeholder="Nombre" value="${nombre}" />
+    <select id="swal-input-estado" class="swal2-input">
+      <option value="activo" ${estado.toString() === 'activo' ? 'selected' : ''}>Activo</option>
+      <option value="inactivo" ${estado.toString() === 'inactivo' ? 'selected' : ''}>Inactivo</option>
+    </select>
+    <input id="swal-input-detalle" class="swal2-input" placeholder="Detalle" value="${detalle}" />
+    <input id="swal-input-precio" type="number" class="swal2-input" placeholder="Precio" value="${precio}" />
+    <input id="swal-input-fecha-inicio" type="date" class="swal2-input" placeholder="Fecha Inicio" value="${fecha_inicio}" />
+    <input id="swal-input-fecha-fin" type="date" class="swal2-input" placeholder="Fecha Fin" value="${fecha_fin}" />
+    <input id="swal-input-imagen" class="swal2-input" placeholder="URL de Imagen" value="${imagen}" />
+  `,
+  showCancelButton: true,
+  confirmButtonText: 'Guardar',
+  cancelButtonText: 'Cancelar',
+  preConfirm: () => {
+    const newNombre = (document.getElementById('swal-input-nombre') as HTMLInputElement)?.value;
+    const newEstado = (document.getElementById('swal-input-estado') as HTMLSelectElement)?.value;
+    const newDetalle = (document.getElementById('swal-input-detalle') as HTMLInputElement)?.value;
+    const newPrecio = parseFloat((document.getElementById('swal-input-precio') as HTMLInputElement)?.value);
+    const newFechaInicio = (document.getElementById('swal-input-fecha-inicio') as HTMLInputElement)?.value;
+    const newFechaFin = (document.getElementById('swal-input-fecha-fin') as HTMLInputElement)?.value;
+    const newImagen = (document.getElementById('swal-input-imagen') as HTMLInputElement)?.value;
 
-      if (!newNombre || !newDetalle) {
-        Swal.showValidationMessage('Todos los campos son obligatorios');
-        return;
-      }
-
-      return {
-        ...paquete,
-        nombre: newNombre,
-        detalle: newDetalle,
-        estado: newEstado,
-      };
+    if (!newNombre || !newEstado || !newDetalle || isNaN(newPrecio) || !newFechaInicio || !newFechaFin || !newImagen) {
+      Swal.showValidationMessage('Todos los campos son obligatorios');
+      return;
     }
-  }).then((result) => {
-    if (result.isConfirmed && result.value) {
-      onEdit(result.value); // Pasamos el paquete actualizado al padre
-    }
-  });
+
+    return {
+      ...paquete,
+      nombre: newNombre,
+      estado: newEstado,
+      detalle: newDetalle,
+      precio: newPrecio,
+      fecha_inicio: newFechaInicio,
+      fecha_fin: newFechaFin,
+      imagen: newImagen,
+    };
+  }
+}).then((result) => {
+  if (result.isConfirmed && result.value) {
+    const updatedPaquete = result.value;
+    onEdit(updatedPaquete);
+    setPaquetes((prevPaquetes) =>
+      prevPaquetes.map((p) => (p.id === updatedPaquete.id ? updatedPaquete : p))
+    );
+  }
+});
 };
 
-const PaqueteList: React.FC<PaqueteListProps> = ({
-  paquetes: initialPaquetes,
-  onEdit,
-  onDelete,
-  onAddEstadia,
-}) => {
+const PaqueteList: React.FC<PaqueteListProps> = ({ paquetes: initialPaquetes, onEdit, onDelete, onAddEstadia }) => {
   const [paquetes, setPaquetes] = useState<Paquete[]>(initialPaquetes);
   const [hoteles, setHoteles] = useState<{ [key: number]: any }>({});
   const [activePaquete, setActivePaquete] = useState<number | null>(null);
@@ -77,7 +96,7 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
     setPaquetes(initialPaquetes);
   }, [initialPaquetes]);
 
-  const toggleEstadias = (paqueteId: number, estadias: any[]) => {
+  const toggleEstadias = (paqueteId: number, estadias: Estadia[]) => {
     if (activePaquete === paqueteId) {
       setActivePaquete(null);
       return;
@@ -85,8 +104,8 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
 
     setActivePaquete(paqueteId);
     estadias.forEach((estadia) => {
-      if (!hoteles[estadia.hotel]) {
-        fetchHotel(estadia.hotel);
+      if (!hoteles[estadia.id_hotel]) {
+        fetchHotel(estadia.id_hotel);
       }
     });
   };
@@ -144,7 +163,6 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
 
   const handleSaveEstadia = () => {
     if (!estadiaEditada) return;
-    console.log('💾 Guardando estadía:', JSON.stringify(estadiaEditada, null, 2));
 
     const request = estadiaEditada.id === 0
       ? axios.post('/api/estadia', estadiaEditada)
@@ -153,11 +171,10 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
     request
       .then((response) => {
         const updatedEstadia = response.data;
-        console.log('✅ Estadía guardada:', updatedEstadia);
         onAddEstadia(updatedEstadia);
       })
       .catch((error) => {
-        console.error('❌ Error guardando estadía:', error);
+        console.error('Error guardando estadía:', error);
       });
 
     setEstadiaEditada(null);
@@ -179,7 +196,7 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
             <p>Detalle: {paquete.detalle}</p>
           </div>
           <div className="card-actions">
-            <button onClick={() => handleEditPaquete(paquete, onEdit)}>Editar</button>
+            <button onClick={() => handleEditPaquete(paquete, onEdit, setPaquetes)}>Editar</button>
             <button onClick={() => onDelete(paquete)}>Eliminar</button>
             <button onClick={() => toggleEstadias(paquete.id, paquete.estadias)}>
               {activePaquete === paquete.id ? 'Ocultar Estadías' : 'Ver Estadías'}
@@ -191,8 +208,8 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
               <ul>
                 {paquete.estadias.map((estadia: any) => (
                   <li key={estadia.id}>
-                    {hoteles[estadia.hotel] ? (
-                      <p style={{ textDecoration: 'underline' }}>{hoteles[estadia.hotel].nombre}</p>
+                    {hoteles[estadia.id_hotel] ? (
+                      <p style={{ textDecoration: 'underline' }}>{hoteles[estadia.id_hotel].nombre}</p>
                     ) : (
                       <p>Cargando datos del hotel...</p>
                     )}
@@ -215,10 +232,7 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
         <EstadiaForm
           estadiaEditada={estadiaEditada}
           onChange={setEstadiaEditada}
-          onCancel={() => {
-            console.log('❌ Cancelar edición de estadía');
-            setEstadiaEditada(null);
-          }}
+          onCancel={() => setEstadiaEditada(null)}
           onSave={handleSaveEstadia}
         />
       )}
