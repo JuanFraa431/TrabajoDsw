@@ -8,7 +8,7 @@ const em = orm.em;
 
 async function findAll(req: Request, res: Response) {
   try {
-    const estadias = await em.find(Estadia, {});
+    const estadias = await em.find(Estadia, {}, { populate: ['hotel', 'paquete'] });
     res.status(200).json({ message: 'Estadias encontradas', data: estadias });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
@@ -18,7 +18,7 @@ async function findAll(req: Request, res: Response) {
 async function findOne(req: Request, res: Response) {
   try {
     const id = Number.parseInt(req.params.id);
-    const estadia = await em.findOneOrFail(Estadia, { id });
+    const estadia = await em.findOneOrFail(Estadia, { id }, { populate: ['hotel', 'paquete'] });
     res.status(200).json({ message: 'Estadia encontrada', data: estadia });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
@@ -49,11 +49,27 @@ async function create(req: Request, res: Response) {
 async function update(req: Request, res: Response) {
   try {
     const id = Number.parseInt(req.params.id);
-    const estadia = em.getReference(Estadia, id);
-    em.assign(estadia, req.body);
+    const estadia = await em.findOneOrFail(Estadia, { id }); // Asegurarse de cargar la entidad completa
+
+    // Extraer solo el id del hotel y paquete para evitar duplicados
+    const { id_hotel, id_paquete, ...rest } = req.body;
+
+    if (!id_paquete) {
+      return res.status(400).json({ message: 'El ID del paquete es obligatorio.' });
+    }
+
+    const updatedData: any = {
+      ...rest,
+      hotel: id_hotel ? em.getReference(Hotel, id_hotel) : null,
+      paquete: em.getReference(Paquete, id_paquete),
+    };
+
+    em.assign(estadia, updatedData);
+
     await em.flush();
     res.status(200).json({ message: 'Estadia actualizada', data: estadia });
   } catch (error: any) {
+    console.error('Error al actualizar la estadía:', error);
     res.status(500).json({ message: error.message });
   }
 }
