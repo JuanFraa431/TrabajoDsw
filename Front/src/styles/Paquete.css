@@ -144,3 +144,80 @@
     text-align: center;
     margin-top: 100px;
 }
+
+.form-editar-paquete {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.sweet-form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sweet-form-row label {
+  display: flex;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #333;
+  margin-left: 2px;
+  flex-direction: flex-start;
+}
+
+.sweet-form-row input,
+.sweet-form-row select {
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  background-color: #f9f9f9;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  box-sizing: border-box;
+}
+
+.sweet-form-row input:focus,
+.sweet-form-row select:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.15);
+  outline: none;
+}
+
+.swal2-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+  gap: 10px;
+}
+
+.swal2-confirm, .swal2-cancel {
+  padding: 10px 20px;
+  font-weight: 600;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.swal2-confirm {
+  background-color: #0051f2 !important;
+  color: white !important;
+  border: none !important;
+}
+
+.swal2-cancel {
+  background-color: #6c757d !important;
+  color: white !important;
+  border: none !important;
+}
+
+.swal2-confirm:hover {
+  background-color: #5a4ab1 !important;
+}
+
+.swal2-cancel:hover {
+  background-color: #5a6268 !important;
+}

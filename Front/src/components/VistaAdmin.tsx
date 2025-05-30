@@ -3,19 +3,16 @@ import '../styles/VistaAdmin.css';
 import { useNavigate } from 'react-router-dom';
 
 import PaqueteList from './Paquete/PaqueteList';
-import PaqueteForm from './Paquete/PaqueteForm';
 
 import ClienteList from './Cliente/ClienteList';
-import ClienteForm from './Cliente/ClienteForm';
 
 import HotelList from './Hotel/HotelList';
-import HotelForm from './Hotel/HotelForm';
 
 import CiudadList from './Ciudad/CiudadList';
-import CiudadForm from './Ciudad/CiudadForm';
+
 
 import ExcursionList from './Excursion/ExcursionList';
-import ExcursionForm from './Excursion/ExcursionForm';
+
 
 import { Ciudad } from '../interface/ciudad';
 import { Cliente } from '../interface/cliente';
@@ -143,6 +140,7 @@ const VistaAdmin: React.FC = () => {
             excursiones={excursiones}
             onEdit={(excursion) => setExcursionEditada(excursion)}
             onDelete={(excursion) => handleEliminar(excursion.id, '/api/excursion', 'excursión', setExcursiones)}
+            onCreate={(excursion) => setExcursionEditada(excursion)}
           />
         );
       case 'paquetes':
@@ -151,6 +149,9 @@ const VistaAdmin: React.FC = () => {
             paquetes={paquetes}
             onEdit={(paquete) => setPaqueteEditado(paquete)}
             onDelete={(paquete) => handleEliminar(paquete.id, '/api/paquete', 'paquete', setPaquetes)}
+            onAddEstadia={(newEstadia) => {
+              console.log('Agregar estadía:', newEstadia);
+            }}
           />
         );
       default:
@@ -196,101 +197,10 @@ const VistaAdmin: React.FC = () => {
       )}
 
       {selectedCategory === 'paquetes' && (
-        <button className='boton-crear' onClick={() => setPaqueteEditado({ id: 0, estado: 1, nombre: '', descripcion: '', detalle: '', precio: 0, fecha_ini: '', fecha_fin: '', imagen: '', comentarios: [] })}>
+        <button className='boton-crear' onClick={() => setPaqueteEditado({ id: 0, estado: 1, nombre: '', descripcion: '', detalle: '', precio: 0, fecha_ini: '', fecha_fin: '', imagen: '', comentarios: [], estadias: [] })}>
           Crear Paquete
         </button>
       )}
-
-      <div>
-        {hotelEditado && (
-          <HotelForm
-            hotelEditado={hotelEditado}
-            ciudades={ciudades}
-            onChange={setHotelEditado}
-            onCancel={() => setHotelEditado(null)}
-            onSave={async () => {
-              if (hotelEditado.id === 0) {
-                await handleCrear(hotelEditado, '/api/hotel', setHoteles);
-              } else {
-                await handleEditar(hotelEditado, '/api/hotel', setHoteles);
-              }
-              setHotelEditado(null);
-            }}
-          />
-        )}
-      </div>
-      
-      <div>
-        {ciudadEditada && (
-          <CiudadForm
-            ciudadEditada={ciudadEditada}
-            onChange={setCiudadEditada}
-            onCancel={() => setCiudadEditada(null)}
-            onSave={async () => {
-              if (ciudadEditada.id === 0) {
-                await handleCrear(ciudadEditada, '/api/ciudad', setCiudades);
-              } else {
-                await handleEditar(ciudadEditada, '/api/ciudad', setCiudades);
-              }
-              setCiudadEditada(null);
-            }}
-          />
-        )}
-      </div>
-      <div>
-        {clienteEditado && (
-          <ClienteForm
-            clienteEditado={clienteEditado}
-            onChange={setClienteEditado}
-            onCancel={() => setClienteEditado(null)}
-            onSave={async () => {
-              if (clienteEditado.id === 0) {
-                await handleCrear(clienteEditado, '/api/cliente', setClientes);
-              } else {
-                await handleEditar(clienteEditado, '/api/cliente', setClientes);
-              }
-              setClienteEditado(null);
-            }}
-          />
-        )}
-      </div>
-      <div>
-        {excursionEditada && (
-          <ExcursionForm
-            excursionEditada={excursionEditada}
-            ciudades={ciudades}
-            onChange={setExcursionEditada}
-            onCancel={() => setExcursionEditada(null)}
-            onSave={async () => {
-              if (excursionEditada.id === 0) {
-                await handleCrear(excursionEditada, '/api/excursion', setExcursiones);
-              } else {
-                await handleEditar(excursionEditada, '/api/excursion', setExcursiones);
-              }
-              setExcursionEditada(null);
-            }}
-          />
-        )}
-      </div>
-      <div>
-        {paqueteEditado && (
-          <PaqueteForm
-            paqueteEditado={paqueteEditado}
-            onChange={setPaqueteEditado}
-            onCancel={() => setPaqueteEditado(null)}
-            onSave={async () => {
-              if (paqueteEditado.id === 0) {
-                console.log(paqueteEditado);
-                
-                await handleCrear(paqueteEditado, '/api/paquete', setPaquetes);
-              } else {
-                await handleEditar(paqueteEditado, '/api/paquete', setPaquetes);
-              }
-              setPaqueteEditado(null);
-            }}
-          />
-        )}
-      </div>
     </div>
   );
 };

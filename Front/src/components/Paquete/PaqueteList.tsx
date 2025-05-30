@@ -36,16 +36,45 @@ const handleEditPaquete = (
   MySwal.fire({
     title: 'Editar Paquete',
     html: `
-      <input id="swal-input-nombre" class="swal2-input" placeholder="Nombre" value="${nombre}" />
-      <select id="swal-input-estado" class="swal2-input">
-        <option value="1" ${estado === 1 ? 'selected' : ''}>Activo</option>
-        <option value="0" ${estado === 0 ? 'selected' : ''}>Inactivo</option>
-      </select>
-      <input id="swal-input-detalle" class="swal2-input" placeholder="Detalle" value="${detalle}" />
-      <input id="swal-input-precio" type="number" class="swal2-input" placeholder="Precio" value="${precio}" />
-      <input id="swal-input-fecha-inicio" type="date" class="swal2-input" placeholder="Fecha Inicio" value="${fecha_inicio}" />
-      <input id="swal-input-fecha-fin" type="date" class="swal2-input" placeholder="Fecha Fin" value="${fecha_fin}" />
-      <input id="swal-input-imagen" class="swal2-input" placeholder="URL de Imagen" value="${imagen}" />
+      <div class="form-editar-paquete">
+        <div class="sweet-form-row">
+          <label for="swal-input-nombre">Nombre</label>
+          <input id="swal-input-nombre" placeholder="Nombre" value="${nombre}" />
+        </div>
+
+        <div class="sweet-form-row">
+          <label for="swal-input-estado">Estado</label>
+          <select id="swal-input-estado">
+            <option value="1" ${estado === 1 ? 'selected' : ''}>Activo</option>
+            <option value="0" ${estado === 0 ? 'selected' : ''}>Inactivo</option>
+          </select>
+        </div>
+
+        <div class="sweet-form-row">
+          <label for="swal-input-detalle">Detalle</label>
+          <input id="swal-input-detalle" placeholder="Detalle" value="${detalle}" />
+        </div>
+
+        <div class="sweet-form-row">
+          <label for="swal-input-precio">Precio</label>
+          <input id="swal-input-precio" type="number" placeholder="Precio" value="${precio}" />
+        </div>
+
+        <div class="sweet-form-row">
+          <label for="swal-input-fecha-inicio">Fecha Inicio</label>
+          <input id="swal-input-fecha-inicio" type="date" value="${fecha_inicio}" />
+        </div>
+
+        <div class="sweet-form-row">
+          <label for="swal-input-fecha-fin">Fecha Fin</label>
+          <input id="swal-input-fecha-fin" type="date" value="${fecha_fin}" />
+        </div>
+
+        <div class="sweet-form-row">
+          <label for="swal-input-imagen">URL de Imagen</label>
+          <input id="swal-input-imagen" placeholder="URL de Imagen" value="${imagen}" />
+        </div>
+      </div>
     `,
     showCancelButton: true,
     confirmButtonText: 'Guardar',
@@ -111,7 +140,7 @@ const PaqueteList: React.FC<PaqueteListProps> = ({ paquetes: initialPaquetes, on
         setHoteles(response.data.data.reduce((acc: any, hotel: any) => {
           acc[hotel.id] = hotel;
           return acc;
-        }, {})); // Almacenar hoteles en un objeto con sus IDs como claves
+        }, {})); 
       } else {
         console.error('La respuesta del servidor no contiene un array válido:', response.data);
         Swal.fire('Error', 'No se pudieron cargar los hoteles. Respuesta inválida del servidor.', 'error');
@@ -123,7 +152,7 @@ const PaqueteList: React.FC<PaqueteListProps> = ({ paquetes: initialPaquetes, on
   };
 
   useEffect(() => {
-    fetchHoteles(); // Obtener la lista de hoteles al cargar el componente
+    fetchHoteles(); 
   }, []);
 
   useEffect(() => {
@@ -142,22 +171,48 @@ const PaqueteList: React.FC<PaqueteListProps> = ({ paquetes: initialPaquetes, on
   };
 
 
-const onEditEstadia = (estadia: any) => {
-  console.log('✏️ Editar estadía:', estadia);
+const onEditEstadia = (estadia: Estadia, paquetePadreId?: number) => {
   const fechaInicio = new Date(estadia.fecha_ini).toISOString().split('T')[0];
   const fechaFin = new Date(estadia.fecha_fin).toISOString().split('T')[0];
+  let paqueteId = estadia.id_paquete;
+  if (!paqueteId) {
+    const paquetePadre = paquetes.find((p) => p.estadias.some((e) => e.id === estadia.id));
+    if (paquetePadre) {
+      paqueteId = paquetePadre.id;
+    } else if (paquetePadreId) {
+      paqueteId = paquetePadreId;
+    }
+  }
+  const estadiaId = estadia.id;
 
   MySwal.fire({
     title: 'Editar Estadía',
     html: `
-      <select id="swal-input-hotel" class="swal2-input">
-        ${Object.values(hoteles).map(
-          (hotel: any) => `<option value="${hotel.id}" ${hotel.id === estadia.id_hotel ? 'selected' : ''}>${hotel.nombre}</option>`
-        ).join('')}
-      </select>
-      <input id="swal-input-fecha-inicio" type="date" class="swal2-input" placeholder="Fecha Inicio" value="${fechaInicio}" />
-      <input id="swal-input-fecha-fin" type="date" class="swal2-input" placeholder="Fecha Fin" value="${fechaFin}" />
-      <input id="swal-input-precio" type="number" class="swal2-input" placeholder="Precio por Día" value="${estadia.precio_x_dia}" />
+      <div class="form-editar-estadia">
+        <div class="sweet-form-row">
+          <label for="swal-input-hotel">Hotel</label>
+          <select id="swal-input-hotel">
+            ${Object.values(hoteles)
+              .map(
+                (hotel: any) =>
+                  `<option value="${hotel.id}" ${hotel.id === (typeof estadia.hotel === 'object' ? estadia.hotel?.id : estadia.hotel) ? 'selected' : ''}>${hotel.nombre}</option>`
+              )
+              .join('')}
+          </select>
+        </div>
+        <div class="sweet-form-row">
+          <label for="swal-input-fecha-inicio">Fecha Inicio</label>
+          <input id="swal-input-fecha-inicio" type="date" value="${fechaInicio}" />
+        </div>
+        <div class="sweet-form-row">
+          <label for="swal-input-fecha-fin">Fecha Fin</label>
+          <input id="swal-input-fecha-fin" type="date" value="${fechaFin}" />
+        </div>
+        <div class="sweet-form-row">
+          <label for="swal-input-precio">Precio por Día</label>
+          <input id="swal-input-precio" type="number" step="0.01" value="${estadia.precio_x_dia}" />
+        </div>
+      </div>
     `,
     showCancelButton: true,
     confirmButtonText: 'Guardar',
@@ -168,16 +223,18 @@ const onEditEstadia = (estadia: any) => {
       const newFechaFin = (document.getElementById('swal-input-fecha-fin') as HTMLInputElement)?.value;
       const newPrecio = parseFloat((document.getElementById('swal-input-precio') as HTMLInputElement)?.value);
 
-      const paqueteId = estadia.paquete || estadia.paquete?.id;
-
       if (!newHotelId || !newFechaInicio || !newFechaFin || isNaN(newPrecio) || !paqueteId) {
-        Swal.showValidationMessage('Todos los campos son obligatorios y deben ser válidos, incluyendo el ID del paquete');
+        Swal.showValidationMessage("Todos los campos deben estar completos y válidos, incluyendo el paquete.");
         return;
       }
-
+      if (typeof paqueteId !== 'number' || isNaN(paqueteId) || paqueteId <= 0) {
+        Swal.showValidationMessage("Error interno: el paquete no está definido correctamente. Intenta desde el botón 'Ver Estadías' del paquete.");
+        return;
+      }
       return {
-        id_hotel: newHotelId,
+        id: estadiaId,
         id_paquete: paqueteId,
+        id_hotel: newHotelId,
         fecha_ini: newFechaInicio,
         fecha_fin: newFechaFin,
         precio_x_dia: newPrecio,
@@ -185,54 +242,68 @@ const onEditEstadia = (estadia: any) => {
     },
   }).then((result) => {
     if (result.isConfirmed && result.value) {
-      const updatedEstadia = { ...estadia, ...result.value };
-
+      const estadiaActualizada = result.value;
       axios
-        .put(`/api/estadia/${updatedEstadia.id}`, updatedEstadia)
+        .put(`/api/estadia/${estadiaActualizada.id}`, estadiaActualizada)
         .then((response) => {
-          const estadiaActualizada = response.data.data;
-
-
-          setPaquetes((prevPaquetes) =>
-            prevPaquetes.map((paquete) =>
-              paquete.id === estadiaActualizada.id_paquete
-                ? {
-                    ...paquete,
-                    estadias: paquete.estadias.map((e) =>
-                      e.id === estadiaActualizada.id ? estadiaActualizada : e
-                    ),
-                  }
-                : paquete
-            )
-          );
-
+          let paqueteId = estadiaActualizada.id_paquete;
+          fetchAndUpdatePaquete(paqueteId);
           Swal.fire('Guardado', 'La estadía fue actualizada correctamente.', 'success');
         })
         .catch((error) => {
-          console.error('Error al actualizar la estadía:', error.response?.data || error.message);
-          Swal.fire('Error', `No se pudo actualizar la estadía: ${error.response?.data?.message || error.message}`, 'error');
+          console.error('Error al actualizar la estadía:', error);
+          Swal.fire('Error', `No se pudo actualizar la estadía: ${error.message}`, 'error');
         });
     }
   });
 };
 
 
-const onDeleteEstadia = (estadia: any) => {
+
+const onDeleteEstadia = (estadia: any, paquetePadreId?: number) => {
   console.log('🗑️ Eliminar estadía:', estadia);
-  if (window.confirm('¿Estás seguro que deseas eliminar la estadía?')) {
-    axios.delete(`/api/estadia/${estadia.id}`)
-      .then(() => {
-        console.log('✅ Estadía eliminada');
-        setPaquetes((prevPaquetes) =>
-          prevPaquetes.map((paquete) =>
-            paquete.id === estadia.paquete
-              ? { ...paquete, estadias: paquete.estadias.filter((e) => e.id !== estadia.id) }
-              : paquete
-          )
-        );
-      })
-      .catch((error) => console.error('❌ Error eliminando estadía:', error));
+  let paqueteId = estadia.id_paquete;
+  if (!paqueteId) {
+    const paquetePadre = paquetes.find((p) => p.estadias.some((e) => e.id === estadia.id));
+    if (paquetePadre) {
+      paqueteId = paquetePadre.id;
+    } else if (paquetePadreId) {
+      paqueteId = paquetePadreId;
+    }
   }
+  if (!paqueteId) {
+    Swal.fire('Error', 'No se pudo determinar el paquete de la estadía. Intenta desde el botón "Ver Estadías" del paquete.', 'error');
+    return;
+  }
+  Swal.fire({
+    title: '¿Estás seguro que deseas eliminar la estadía?',
+    text: 'Esta acción no se puede deshacer.',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#d33',
+    cancelButtonColor: '#3085d6',
+    confirmButtonText: 'Sí, eliminar',
+    cancelButtonText: 'Cancelar',
+  }).then((result) => {
+    if (result.isConfirmed) {
+      axios.delete(`/api/estadia/${estadia.id}`)
+        .then(() => {
+          console.log('✅ Estadía eliminada');
+          setPaquetes((prevPaquetes) =>
+            prevPaquetes.map((paquete) =>
+              paquete.id === paqueteId
+                ? { ...paquete, estadias: paquete.estadias.filter((e) => e.id !== estadia.id) }
+                : paquete
+            )
+          );
+          Swal.fire('Eliminado', 'La estadía fue eliminada correctamente.', 'success');
+        })
+        .catch((error) => {
+          console.error('❌ Error eliminando estadía:', error);
+          Swal.fire('Error', `No se pudo eliminar la estadía: ${error.response?.data?.message || error.message}`, 'error');
+        });
+    }
+  });
 };
 
 const handleAddEstadia = (id_paquete: number) => {
@@ -273,23 +344,10 @@ const handleAddEstadia = (id_paquete: number) => {
   }).then((result) => {
     if (result.isConfirmed && result.value) {
       const nuevaEstadia = result.value;
-
       axios
         .post('/api/estadia', nuevaEstadia)
         .then((response) => {
-          const estadiaAgregada = response.data;
-
-          setPaquetes((prevPaquetes) =>
-            prevPaquetes.map((paquete) =>
-              paquete.id === id_paquete
-                ? {
-                    ...paquete,
-                    estadias: [...(paquete.estadias || []), estadiaAgregada],
-                  }
-                : paquete
-            )
-          );
-
+          fetchAndUpdatePaquete(id_paquete);
           Swal.fire('Guardado', 'La estadía fue agregada correctamente.', 'success');
         })
         .catch((error) => {
@@ -320,6 +378,79 @@ const handleAddEstadia = (id_paquete: number) => {
     setEstadiaEditada(null);
   };
 
+  const fetchAndUpdatePaquete = async (paqueteId: number) => {
+    try {
+      const response = await axios.get(`/api/paquete/${paqueteId}`);
+      const paqueteActualizado = response.data.data || response.data;
+      // Inyectar hoteles en las estadías
+      if (Array.isArray(paqueteActualizado.estadias)) {
+        paqueteActualizado.estadias = paqueteActualizado.estadias.map((estadia: any) =>
+          estadia.id_hotel && hoteles[estadia.id_hotel]
+            ? { ...estadia, hotel: hoteles[estadia.id_hotel] }
+            : estadia
+        );
+      }
+      setPaquetes((prevPaquetes) =>
+        prevPaquetes.map((p) => (p.id === paqueteId ? paqueteActualizado : p))
+      );
+    } catch (error) {
+      console.error('Error recargando el paquete:', error);
+      Swal.fire('Error', 'No se pudo recargar el paquete actualizado.', 'error');
+    }
+  };
+
+  const showEstadiasSwal = (paquete: Paquete) => {
+    MySwal.fire({
+      title: `Estadías de ${paquete.nombre}`,
+      html: `
+        <div style="max-height:60vh;overflow-y:auto;">
+          ${paquete.estadias.map((estadia: any) => `
+            <div style="border:1px solid #ccc;border-radius:8px;padding:6px 10px;margin-bottom:8px;background:#f9f9f9;display:inline-block;min-width:220px;max-width:98%;box-sizing:border-box;">
+              <p style="font-weight:bold;text-decoration:underline;margin:0 0 4px 0;">${estadia.hotel ? estadia.hotel.nombre : 'Cargando hotel...'}</p>
+              <p style="margin:0 0 2px 0;">Fecha Inicio: ${new Date(estadia.fecha_ini).toLocaleDateString('es-ES')}</p>
+              <p style="margin:0 0 2px 0;">Fecha Fin: ${new Date(estadia.fecha_fin).toLocaleDateString('es-ES')}</p>
+              <p style="margin:0 0 6px 0;">Precio por Día: $${estadia.precio_x_dia}</p>
+              <div style="display:flex;gap:8px;justify-content:center;">
+                <button class="swal2-confirm swal2-styled" style="background:#3085d6;padding:2px 10px;font-size:0.95em;" onclick="window.editEstadiaSwal(${estadia.id}, ${paquete.id})">Editar</button>
+                <button class="swal2-cancel swal2-styled" style="background:#d33;padding:2px 10px;font-size:0.95em;" onclick="window.deleteEstadiaSwal(${estadia.id}, ${paquete.id})">Eliminar</button>
+              </div>
+            </div>
+          `).join('')}
+          <button class="swal2-confirm swal2-styled" style="width:90%;margin-top:8px;" onclick="window.addEstadiaSwal(${paquete.id})">Agregar Estadía</button>
+        </div>
+      `,
+      showConfirmButton: false,
+      width: 600,
+      didOpen: () => {
+        // Exponer funciones globales para los botones
+        (window as any).editEstadiaSwal = (estadiaId: number, paqueteId: number) => {
+          const estadia = paquete.estadias.find((e: any) => e.id === estadiaId);
+          if (estadia) {
+            Swal.close();
+            setTimeout(() => onEditEstadia(estadia, paqueteId), 200);
+          }
+        };
+        (window as any).deleteEstadiaSwal = (estadiaId: number, paqueteId: number) => {
+          const estadia = paquete.estadias.find((e: any) => e.id === estadiaId);
+          if (estadia) {
+            Swal.close();
+            setTimeout(() => onDeleteEstadia(estadia, paqueteId), 200);
+          }
+        };
+        (window as any).addEstadiaSwal = (paqueteId: number) => {
+          Swal.close();
+          setTimeout(() => handleAddEstadia(paqueteId), 200);
+        };
+      },
+      willClose: () => {
+        // Limpiar funciones globales
+        delete (window as any).editEstadiaSwal;
+        delete (window as any).deleteEstadiaSwal;
+        delete (window as any).addEstadiaSwal;
+      }
+    });
+  };
+
   return (
     <div className="card-list">
       {paquetes.map((paquete) => (
@@ -330,7 +461,7 @@ const handleAddEstadia = (id_paquete: number) => {
               {paquete.estado === 1 ? (
                 <span className="circulo-verde"></span>
               ) : (
-                <span className="circulo-rojo"></span>
+                <span className="circulo-roja"></span>
               )}
             </h3>
             <p>Detalle: {paquete.detalle}</p>
@@ -338,8 +469,8 @@ const handleAddEstadia = (id_paquete: number) => {
           <div className="card-actions">
             <button onClick={() => handleEditPaquete(paquete, onEdit, setPaquetes)}>Editar</button>
             <button onClick={() => onDelete(paquete)}>Eliminar</button>
-            <button onClick={() => toggleEstadias(paquete.id, paquete.estadias)}>
-              {activePaquete === paquete.id ? 'Ocultar Estadías' : 'Ver Estadías'}
+            <button onClick={() => showEstadiasSwal(paquete)}>
+              Ver Estadías
             </button>
           </div>
           {activePaquete === paquete.id && (
@@ -357,8 +488,8 @@ const handleAddEstadia = (id_paquete: number) => {
                     <p>Fecha Fin: {new Date(estadia.fecha_fin).toLocaleDateString('es-ES')}</p>
                     <p>Precio por Día: ${estadia.precio_x_dia}</p>
                     <div className="card-actions">
-                      <button onClick={() => onEditEstadia(estadia)}>Editar</button>
-                      <button onClick={() => onDeleteEstadia(estadia)}>Eliminar</button>
+                      <button onClick={() => onEditEstadia(estadia, paquete.id)}>Editar</button>
+                      <button onClick={() => onDeleteEstadia(estadia, paquete.id)}>Eliminar</button>
                     </div>
                   </li>
                 ))}
