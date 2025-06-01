@@ -94,4 +94,17 @@ async function search(req: Request, res: Response) {
     }
 }
 
-export { findAll, findOne, create, update, remove, search, findAllUser };
+async function getExcursionesByPaquete(req: Request, res: Response) {
+    try {
+        const id = Number.parseInt(req.params.id);
+        // Suponiendo que la relación es paquete.excursiones
+        // Asegúrate de que 'excursiones' es una relación válida en el modelo Paquete.
+        // Si la relación se llama diferente, reemplaza 'excursiones' por el nombre correcto.
+        const paquete = await em.findOneOrFail(Paquete, { id }, { populate: ['comentarios', 'estadias'] }); // Ajusta aquí si tienes la relación correcta
+        res.status(200).json({ message: 'Excursiones encontradas', data: (paquete as any).excursiones }); // Ajusta aquí si el nombre es diferente
+    } catch (error: any) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+export { findAll, findOne, create, update, remove, search, findAllUser, getExcursionesByPaquete };

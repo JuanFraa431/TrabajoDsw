@@ -142,6 +142,32 @@ const CardDetail: React.FC = () => {
                 </button>
             </div>
 
+            {/* Sección de excursiones usando paquete.excursiones */}
+            <div className="excursiones-section">
+                <h3>Excursiones incluidas</h3>
+                {(() => {
+                    // LOG para depuración
+                    console.log("paquete.excursiones:", paquete);
+                    return null;
+                })()}
+                {paquete?.excursiones && paquete.excursiones.length > 0 ? (
+                    <div className="excursiones-list">
+                        {paquete.excursiones.map((exc: any) => (
+                            <div key={exc.id} className="excursion-card">
+                                <img src={exc.imagen} alt={exc.nombre} className="excursion-image" />
+                                <div className="excursion-info">
+                                    <h4>{exc.nombre}</h4>
+                                    <p>{exc.descripcion}</p>
+                                    <p><strong>Duración:</strong> {exc.duracion} hs</p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <p>No hay excursiones asociadas a este paquete.</p>
+                )}
+            </div>
+
             <div className="comments-section">
                 <h3>Comentarios</h3>
                 <div className="comments-list">
