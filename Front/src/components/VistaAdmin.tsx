@@ -191,13 +191,13 @@ const VistaAdmin: React.FC = () => {
       )}
 
       {selectedCategory === 'excursiones' && (
-        <button className='boton-crear' onClick={() => setExcursionEditada({ id: 0, nombre: '', descripcion: '', detalle: '', tipo: '', horario: '', nro_personas_max: 0, nombre_empresa: '', mail_empresa: '', precio: 0, id_ciudad: 0, imagen: ''})}>
+        <button className='boton-crear' onClick={() => setExcursionEditada({ id: 0, nombre: '', descripcion: '', detalle: '', tipo: '', nro_personas_max: 0, nombre_empresa: '', mail_empresa: '', precio: 0, imagen: ''})}>
           Crear Excursión
         </button>
       )}
 
       {selectedCategory === 'paquetes' && (
-        <button className='boton-crear' onClick={() => setPaqueteEditado({ id: 0, estado: 1, nombre: '', descripcion: '', detalle: '', precio: 0, fecha_ini: '', fecha_fin: '', imagen: '', comentarios: [], estadias: [] })}>
+        <button className='boton-crear' onClick={() => setPaqueteEditado({ id: 0, estado: 1, nombre: '', descripcion: '', detalle: '', precio: 0, fecha_ini: '', fecha_fin: '', imagen: '', comentarios: [], estadias: [], paqueteExcursiones: [] })}>
           Crear Paquete
         </button>
       )}

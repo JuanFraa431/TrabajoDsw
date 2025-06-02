@@ -142,29 +142,78 @@ const CardDetail: React.FC = () => {
                 </button>
             </div>
 
-            {/* Sección de excursiones usando paquete.excursiones */}
+            {/* Sección de excursiones usando paquete.paqueteExcursiones */}
             <div className="excursiones-section">
                 <h3>Excursiones incluidas</h3>
                 {(() => {
                     // LOG para depuración
-                    console.log("paquete.excursiones:", paquete);
+                    console.log("paquete.paqueteExcursiones:", paquete?.paqueteExcursiones);
                     return null;
                 })()}
-                {paquete?.excursiones && paquete.excursiones.length > 0 ? (
+                {(paquete?.paqueteExcursiones ?? []) && (paquete?.paqueteExcursiones?.length > 0) ? (
                     <div className="excursiones-list">
-                        {paquete.excursiones.map((exc: any) => (
-                            <div key={exc.id} className="excursion-card">
-                                <img src={exc.imagen} alt={exc.nombre} className="excursion-image" />
-                                <div className="excursion-info">
-                                    <h4>{exc.nombre}</h4>
-                                    <p>{exc.descripcion}</p>
-                                    <p><strong>Duración:</strong> {exc.duracion} hs</p>
-                                </div>
+                        {paquete.paqueteExcursiones.map((paqueteExc: any) => (
+                            <div key={paqueteExc.id} className="excursion-card">
+                                {paqueteExc.excursion && (
+                                    <div className="excursion-details">
+                                        <img
+                                            src={paqueteExc.excursion.imagen}
+                                            alt={paqueteExc.excursion.nombre}
+                                            className="excursion-image"
+                                            style={{ objectFit: 'cover', width: '120px', height: '120px', borderRadius: '8px' }}
+                                            onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                                        />
+                                        <div>
+                                            <h4>{paqueteExc.excursion.nombre}</h4>
+                                            <p>{paqueteExc.excursion.descripcion}</p>
+                                            <p><strong>Día:</strong> {paqueteExc.dia}</p>
+                                            <p><strong>Horario:</strong> {paqueteExc.horario}</p>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         ))}
                     </div>
                 ) : (
                     <p>No hay excursiones asociadas a este paquete.</p>
+                )}
+            </div>
+
+            {/* Sección de estadías usando paquete.estadias */}
+            <div className="estadias-section">
+                <h3>Estadías incluidas</h3>
+                {(() => {
+                    // LOG para depuración
+                    console.log("paquete.estadias:", paquete?.estadias);
+                    return null;
+                })()}
+                {(paquete?.estadias ?? []) && (paquete?.estadias?.length > 0) ? (
+                    <div className="estadias-list">
+                        {paquete.estadias.map((estadia: any) => (
+                            <div key={estadia.id} className="estadia-card">
+                                <div className="estadia-details">
+                                    {estadia.hotel && (
+                                        <img
+                                            src={estadia.hotel.imagen}
+                                            alt={estadia.hotel.nombre}
+                                            className="estadia-image"
+                                            style={{ objectFit: 'cover', width: '120px', height: '120px', borderRadius: '8px' }}
+                                            onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                                        />
+                                    )}
+                                    <div>
+                                        <h4>{estadia.hotel?.nombre}</h4>
+                                        <p>{estadia.hotel?.direccion}</p>
+                                        <p><strong>Desde:</strong> {new Date(estadia.fecha_ini).toLocaleDateString('es-ES')}</p>
+                                        <p><strong>Hasta:</strong> {new Date(estadia.fecha_fin).toLocaleDateString('es-ES')}</p>
+                                        <p><strong>Precio x día:</strong> ${estadia.precio_x_dia}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <p>No hay estadías asociadas a este paquete.</p>
                 )}
             </div>
 

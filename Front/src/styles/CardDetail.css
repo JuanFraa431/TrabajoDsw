@@ -293,39 +293,100 @@
     color: #333;
 }
 
-.excursiones-list {
+.excursiones-list,
+.estadias-list {
     display: flex;
     flex-wrap: wrap;
-    gap: 20px;
+    gap: 24px;
+    justify-content: flex-start;
 }
 
-.excursion-card {
+.excursion-card,
+.estadia-card {
     background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.08);
-    padding: 15px;
+    border-radius: 16px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+    padding: 0;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 250px;
+    width: 270px;
+    transition: box-shadow 0.2s, transform 0.2s;
+    border: 1px solid #e6e6e6;
 }
 
-.excursion-image {
+.excursion-card:hover,
+.estadia-card:hover {
+    box-shadow: 0 8px 24px rgba(0,123,189,0.15);
+    transform: translateY(-4px) scale(1.02);
+    border-color: #b3e0ff;
+}
+
+.excursion-image,
+.estadia-image {
     width: 100%;
-    height: 140px;
+    height: 200px;
     object-fit: cover;
-    border-radius: 6px;
-    margin-bottom: 10px;
+    border-radius: 10px;
+    margin-bottom: 16px;
+    background: #f0f4f8;
+    display: block;
 }
 
-.excursion-info h4 {
-    margin: 0 0 8px 0;
-    font-size: 1.2rem;
+.excursion-info h4,
+.estadia-details h4 {
+    margin: 0 0 10px 0;
+    font-size: 1.25rem;
     color: #007bbd;
+    font-weight: 600;
+    letter-spacing: 0.5px;
 }
 
-.excursion-info p {
-    margin: 4px 0;
+.excursion-info p,
+.estadia-details p {
+    margin: 6px 0;
     font-size: 1rem;
-    color: #555;
+    color: #444;
+    line-height: 1.4;
+}
+
+.excursion-details,
+.estadia-details {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 20px;
+    box-sizing: border-box;
+    flex-grow: 1;
+}
+
+.excursion-details > div,
+.estadia-details > div {
+    width: 100%;
+}
+
+.excursion-card strong,
+.estadia-card strong {
+    color: #007bbd;
+    font-weight: 500;
+}
+
+.excursiones-section,
+.estadias-section {
+    margin-top: 30px;
+    padding: 24px;
+    background-color: #f7fafd;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,123,189,0.04);
+}
+
+.excursiones-section h3,
+.estadias-section h3 {
+    font-size: 1.7rem;
+    margin-bottom: 18px;
+    color: #007bbd;
+    font-weight: 700;
+    letter-spacing: 0.5px;
 }

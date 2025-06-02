@@ -90,7 +90,7 @@ const Filtro: React.FC<{ className?: string }> = ({ className = '' }) => {
                                 onChange={(date: Date | null) => setStartDate(date)}
                                 dateFormat="dd/MM/yyyy"
                                 placeholderText="Fecha de inicio"
-                                className="datepicker-input"
+                                className="datepicker-input datepicker-inicio"
                                 minDate={today}
                                 portalId="root-portal"
                             />
@@ -100,7 +100,7 @@ const Filtro: React.FC<{ className?: string }> = ({ className = '' }) => {
                                 onChange={(date: Date | null) => setEndDate(date)}
                                 dateFormat="dd/MM/yyyy"
                                 placeholderText="Fecha de fin"
-                                className="datepicker-input"
+                                className="datepicker-input datepicker-fin"
                                 minDate={tomorrow}
                                 portalId="root-portal"
                             />

@@ -67,7 +67,22 @@ const Paquetes: React.FC = () => {
                     </div>
                 )}
             </div>
-            {/* <iframe width="425" height="350" src="https://www.openstreetmap.org/export/embed.html?bbox=-66.64306640625001%2C-38.505191402403554%2C-58.22753906250001%2C-33.36723746583833&amp;layer=mapnik&amp;marker=-35.97800618085566%2C-62.435302734375" style={{ border: '1px solid black' }}></iframe><br/><small><a href="https://www.openstreetmap.org/?mlat=-35.978&amp;mlon=-62.435#map=7/-35.978/-62.435">Ver el mapa más grande</a></small> */}
+            {/* Mapa solo visible en tablet */}
+            <div className="mapa-tablet">
+                <iframe
+                    width="100%"
+                    height="220"
+                    src="https://www.openstreetmap.org/export/embed.html?bbox=-66.64306640625001%2C-38.505191402403554%2C-58.22753906250001%2C-33.36723746583833&amp;layer=mapnik&amp;marker=-35.97800618085566%2C-62.435302734375"
+                    style={{ border: '1px solid black', borderRadius: '10px', marginTop: '10px' }}
+                    title="Mapa Paquetes"
+                ></iframe>
+                <br />
+                <small>
+                    <a href="https://www.openstreetmap.org/?mlat=-35.978&amp;mlon=-62.435#map=7/-35.978/-62.435" target="_blank" rel="noopener noreferrer">
+                        Ver el mapa más grande
+                    </a>
+                </small>
+            </div>
         </div>
     );
 };

@@ -48,10 +48,22 @@
     margin-right: 10px;
 }
 
-.search-form input{
+.search-form input[type="text"] {
     background: rgba(255, 255, 255, 0.6);
-    width: 32vh;
+    width: 100%;
     margin-right: 5px;
+    border: 1px solid #bdbdbd;
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 1rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    box-sizing: border-box;
+}
+
+.search-form input[type="text"]:focus {
+    border-color: #007bbf;
+    box-shadow: 0 0 0 2px #b3e0ff;
+    outline: none;
 }
 
 .form-group{
@@ -121,5 +133,143 @@
     display: flex;
     align-items: center;
     position: relative; 
+}
+
+@media (max-width: 1200px) {
+    .contenedor-filtro {
+        padding: 16px 30px 16px 30px;
+    }
+    .formulario-buscador {
+        padding: 18px 18px;
+    }
+    .search-form {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 18px;
+        margin: 0;
+    }
+    .search-form input,
+    .datepicker-input {
+        width: 100%;
+        min-width: 0;
+        margin-right: 0;
+    }
+
+    .search-form input[type="text"] 
+    .datepicker-inicio{
+        width: 320px;
+        max-width: 100%;
+        box-sizing: border-box;
+        margin-right: 0;
+    }
+
+    .search-form input[type="text"] 
+    .datepicker-fin{
+        width: 320px;
+        max-width: 100%;
+        box-sizing: border-box;
+        margin-right: 0;
+    }
+
+    .range-container {
+        flex-direction: row;
+        justify-content: flex-start;
+        width: 100%;
+    }
+
+}
+
+@media (max-width: 900px) {
+    .contenedor-filtro {
+        padding: 12px 8px 12px 8px;
+        background-size: cover;
+    }
+    .formulario-buscador {
+        padding: 14px 14px;
+    }
+    .search-form {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 14px;
+        margin: 0;
+    }
+    .search-form input,
+    .datepicker-input {
+        width: 100%;
+        min-width: 0;
+        margin-right: 0;
+    }
+    .range-container {
+        flex-direction: row;
+        justify-content: flex-start;
+        width: 100%;
+    }
+
+    .search-form input[type="text"] {
+        width: 100%;
+        min-width: 0;
+        margin-right: 0;
+        font-size: 1rem;
+        padding: 10px 14px;
+    }
+}
+
+@media (max-width: 600px) {
+    .contenedor-filtro {
+        padding: 8px 0 8px 0;
+        background-size: cover;
+    }
+    .formulario-buscador {
+        padding: 18px 18px;
+        border-radius: 6px;
+        margin-top: 6px;
+    }
+    .search-form {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+        margin: 0;
+    }
+    .form-group {
+        gap: 2px;
+    }
+    .fechas {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 6px;
+    }
+    .datepicker-input {
+        width: 100%;
+        min-width: 0;
+        padding: 8px;
+        font-size: 1rem;
+    }
+    .range-container {
+        flex-direction: row;
+        align-items: center;
+        width: 100%;
+        height: auto;
+    }
+    .range-container .price-label {
+        width: auto;
+        font-size: 15px;
+        margin-left: 8px;
+    }
+    .button-buscar {
+        width: 100%;
+        padding: 10px 0;
+        font-size: 1.1rem;
+        border-radius: 18px;
+        margin-top: 8px;
+    }
+
+    .search-form input[type="text"] {
+        width: 100%;
+        min-width: 0;
+        margin-right: 0;
+        font-size: 1rem;
+        padding: 10px 14px;
+        border-radius: 10px;
+    }
 }
 

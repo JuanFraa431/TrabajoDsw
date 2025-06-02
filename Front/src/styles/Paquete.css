@@ -41,7 +41,6 @@
     display: flex;            
     flex-direction: column;
     width: 90%;
-    margin-left: 50px;
     margin-top: 20px;
   }
   
@@ -220,4 +219,178 @@
 
 .swal2-cancel:hover {
   background-color: #5a6268 !important;
+}
+
+@media (max-width: 1200px) {
+  .container2 {
+    grid-template-columns: 1fr 3fr;
+    padding-bottom: 8px;
+  }
+  .hotels-list {
+    width: 100%;
+    margin-left: 0;
+  }
+  .hotel-card {
+    margin-left: 0;
+  }
+}
+
+/* Tablet: mostrar filtros y mapa, card más pequeña y revercionada */
+@media (max-width: 900px) and (min-width: 601px) {
+  .container2 {
+    display: grid;
+    grid-template-columns: 1fr 2.2fr;
+    gap: 12px;
+    padding: 0 8px 8px 8px;
+  }
+  .filters {
+    display: block;
+    margin: 10px 0 0 0;
+    padding: 14px 8px;
+    border-radius: 8px;
+  }
+  .hotels-list {
+    width: 100%;
+    margin: 0;
+  }
+  .hotel-card {
+    flex-direction: row-reverse;
+    align-items: center;
+    padding: 10px;
+    border-radius: 10px;
+    margin: 0 0 14px 0;
+    min-height: 120px;
+    max-width: 480px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .hotel-card img {
+    max-width: 120px;
+    width: 120px;
+    height: 80px;
+    aspect-ratio: 3/2;
+    margin-bottom: 0;
+    margin-left: 0;
+    margin-right: 16px;
+    border-radius: 8px;
+    object-fit: cover;
+  }
+  .hotel-info {
+    margin-left: 0;
+    margin-right: 10px;
+    margin-bottom: 0;
+    font-size: 0.97rem;
+  }
+  .hotel-info h3 {
+    font-size: 1.1rem;
+  }
+  .hotel-info p {
+    font-size: 0.97rem;
+    margin: 6px 0;
+  }
+  .package-features {
+    font-size: 0.93rem;
+  }
+  .price-container {
+    position: static;
+    text-align: left;
+    margin-top: 0;
+    margin-left: 8px;
+  }
+  .price-label {
+    font-size: 12px;
+  }
+  .price-large {
+    font-size: 20px;
+  }
+  .boton-ver-paquete {
+    font-size: 0.95rem;
+    padding: 7px 12px;
+    border-radius: 14px;
+    margin-top: 4px;
+  }
+  .prueba {
+    justify-content: flex-start;
+  }
+  /* Mostrar mapa y filtros en tablet */
+  .mapa-tablet {
+    display: block !important;
+    margin: 16px auto 0 auto;
+    max-width: 95vw;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+}
+
+/* Mobile: ocultar filtros y mapa, menú vertical, card vertical y compacta */
+@media (max-width: 600px) {
+  .container2 {
+    display: block;
+    padding: 0 2px 2px 2px;
+  }
+  .filters {
+    display: none !important;
+  }
+  .hotels-list {
+    margin: 0;
+    width: 100%;
+  }
+  .hotel-card {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 14px;
+    min-height: unset;
+    max-width: 100%;
+  }
+  .hotel-card img {
+    max-width: 100%;
+    width: 100%;
+    height: 120px;
+    aspect-ratio: 16/9;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    object-fit: cover;
+  }
+  .hotel-info {
+    margin-left: 0;
+    margin-bottom: 8px;
+    font-size: 1rem;
+  }
+  .hotel-info h3 {
+    font-size: 1.05rem;
+  }
+  .hotel-info p {
+    font-size: 0.97rem;
+    margin: 6px 0;
+  }
+  .package-features {
+    font-size: 0.93rem;
+  }
+  .price-container {
+    margin-top: 8px;
+    position: static;
+    text-align: left;
+  }
+  .boton-ver-paquete {
+    width: 100%;
+    padding: 10px 0;
+    font-size: 1rem;
+    border-radius: 16px;
+    margin-top: 6px;
+  }
+  .fail {
+    font-size: 16px;
+    margin-top: 40px;
+  }
+  /* Ocultar mapa en mobile */
+  .mapa-tablet {
+    display: none !important;
+  }
+}
+
+/* Por defecto, ocultar el mapa salvo que se muestre en tablet */
+.mapa-tablet {
+  display: none;
 }

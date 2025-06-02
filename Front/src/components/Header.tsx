@@ -5,8 +5,9 @@ import userIcon from "../images/user-icon.png";
 import logo from "../images/logoFinal2.png";
 import { handleLinkClick } from "../services/searchService";
 import { Cliente } from "../interface/cliente.js";
-//import 'bootstrap/dist/css/bootstrap.min.css';
-//import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+// Importa Bootstrap JS y CSS si no lo tienes en index.html
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 const Header = () => {
     const [cliente, setCliente] = useState<Cliente | null>(null);
@@ -25,6 +26,7 @@ const Header = () => {
                 <Link to="/"><img src={logo} alt="Logo" /></Link>
             </div>
 
+            {/* Menú desktop */}
             <nav className="nav d-none d-lg-flex justify-content-center align-items-center">
                 <ul>
                     <li><Link to="/hoteles">Hoteles</Link></li>
@@ -64,7 +66,8 @@ const Header = () => {
                 )}
             </div>
 
-            {/* <nav className="navbar navbar-expand-lg d-lg-none">
+            {/* Menú hamburguesa Bootstrap para mobile/tablet */}
+            <nav className="navbar navbar-expand-lg d-lg-none" style={{ width: "100%" }}>
                 <button className="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
                     <span className="navbar-toggler-icon"></span>
                 </button>
@@ -99,7 +102,7 @@ const Header = () => {
                         </div>
                     </div>
                 </div>
-            </nav> */}
+            </nav>
         </header>
     );
 };

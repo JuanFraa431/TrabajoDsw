@@ -1,5 +1,7 @@
 import { Comentario } from "./comentario.js";
 import { Estadia } from "./estadia.js";
+import { paqueteExcursion } from "./paqueteExcursion.js";
+
 
 export interface Paquete {
     id: number;
@@ -11,6 +13,8 @@ export interface Paquete {
     fecha_ini: string;
     fecha_fin: string;
     imagen: string;
-    comentarios: Comentario[];
-    estadias: Estadia[];
+    comentarios?: Comentario[];
+    estadias?: Estadia[];       
+    paqueteExcursiones?: paqueteExcursion[]; 
+
 }
