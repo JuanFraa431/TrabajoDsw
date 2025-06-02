@@ -24,6 +24,7 @@ import { routerComentario } from './routes/comentario.routes.js';
 import { routerReservaPaquete } from './routes/reservaPaquete.routes.js';
 import { routerPago } from './routes/pago.routes.js';
 import { routerPersona } from './routes/persona.routes.js';
+import { routerPaqueteExcursion } from './routes/paqueteExcursion.routes.js';
 
 import { RequestContext } from '@mikro-orm/core';
 
@@ -59,6 +60,7 @@ app.use('/api/comentario', routerComentario);
 app.use('/api/reservaPaquete', routerReservaPaquete);
 app.use('/api/pago', routerPago);
 app.use('/api/persona', routerPersona);
+app.use('/api/paqueteExcursion', routerPaqueteExcursion);
 
 app.use(express.static(path.join(__dirname, 'dist')));
 

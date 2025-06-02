@@ -18,19 +18,10 @@ export class Excursion extends BaseModel {
   tipo!: string
   
   @Property({ nullable: false })
-  horario!: string
-  
-  @Property({ nullable: false })
-  nro_personas_max!: number
-  
-  @Property({ nullable: false })
   nombre_empresa!: string
   
   @Property({ nullable: false })
   mail_empresa!: string
-
-  @Property({ nullable: false })
-  precio!: number
 
   @ManyToOne( () => Ciudad, { nullable: false })
   ciudad!: Rel<Ciudad>
