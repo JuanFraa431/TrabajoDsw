@@ -1,6 +1,8 @@
 import { BaseModel } from '../shared/db/baseModel.model.js';
-import { Entity, ManyToOne, Property, Rel } from '@mikro-orm/core';
+import { Cascade, Collection, Entity, ManyToOne, OneToMany, Property, Rel } from '@mikro-orm/core';
 import { Ciudad } from './ciudad.model.js';
+import { PaqueteExcursion } from './paqueteExcursion.model.js';
+
 
 @Entity()
 export class Excursion extends BaseModel {
@@ -28,4 +30,10 @@ export class Excursion extends BaseModel {
   
   @Property({ nullable: false })
   imagen!: string
+
+  @OneToMany(() => PaqueteExcursion, (paqueteExcursion) => paqueteExcursion.excursion, {
+    cascade: [Cascade.ALL],
+    orphanRemoval: true
+  })
+  paqueteExcursiones = new Collection<PaqueteExcursion>(this);
 }

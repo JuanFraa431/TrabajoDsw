@@ -2,6 +2,7 @@ import { BaseModel } from '../shared/db/baseModel.model.js';
 import { OneToMany, Property, Collection, Entity, Cascade } from '@mikro-orm/core';
 import { Comentario } from './comentario.model.js';
 import { Estadia } from './estadia.model.js';
+import { PaqueteExcursion } from './paqueteExcursion.model.js';
 
 @Entity()
 export class Paquete extends BaseModel {
@@ -40,4 +41,10 @@ export class Paquete extends BaseModel {
     orphanRemoval: true
   })
   estadias = new Collection<Estadia>(this);
+
+  @OneToMany(() => PaqueteExcursion, (paqueteExcursion) => paqueteExcursion.paquete, {
+    cascade: [Cascade.ALL],
+    orphanRemoval: true
+  })
+  paqueteExcursiones = new Collection<PaqueteExcursion>(this);
 }
