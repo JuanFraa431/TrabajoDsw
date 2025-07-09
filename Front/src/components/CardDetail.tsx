@@ -35,7 +35,7 @@ const CardDetail: React.FC = () => {
     }, [id]);
 
     useEffect(() => {
-        if (paquete) {
+        if(paquete) {
             setComentarios(paquete.comentarios);
         }
     }, [paquete]);
@@ -54,17 +54,17 @@ const CardDetail: React.FC = () => {
                 descripcion: nuevoComentario,
                 estrellas
             };
-
+            
             const response = await axios.post('http://localhost:3000/api/comentario', newComentario);
-
-            const comentarioCreado: Comentario = {
+            
+            const comentarioCreado: Comentario = { 
                 id: response.data.id,
                 cliente: userData,
                 paquete: id,
                 fecha: newComentario.fecha,
                 descripcion: newComentario.descripcion,
-                estrellas: newComentario.estrellas
-            };
+                estrellas: newComentario.estrellas 
+            }; 
             setComentarios(prev => [...prev, comentarioCreado]);
             setNuevoComentario("");
             setEstrellas(0);
@@ -76,16 +76,18 @@ const CardDetail: React.FC = () => {
     const handleDeleteComentario = async (comentarioId: number) => {
         const confirmacion = window.confirm("¿Estás seguro que deseas borrar este comentario?");
         if (!confirmacion) {
-            return;
+            return; 
         }
 
         try {
             await axios.delete(`http://localhost:3000/api/comentario/${comentarioId}`);
-            setComentarios(prev => prev.filter(comentario => comentario.id !== comentarioId));
+            setComentarios(prev => prev.filter(comentario => comentario.id !== comentarioId)); 
         } catch (error) {
             console.error("Error al borrar el comentario:", error);
         }
-    }; const toggleDescripcion = () => {
+    };
+
+    const toggleDescripcion = () => {
         setMostrarDescripcionCompleta(!mostrarDescripcionCompleta);
     };
 
@@ -130,7 +132,9 @@ const CardDetail: React.FC = () => {
         }
 
         return { desglose, totalEstadias, totalExcursiones, total: totalEstadias + totalExcursiones };
-    }; const { desglose, totalEstadias, totalExcursiones, total } = calcularDesglosePrecio();
+    };
+
+    const { desglose, totalEstadias, totalExcursiones, total } = calcularDesglosePrecio();
 
     return (
         <div className="card-detail-container">
@@ -145,7 +149,8 @@ const CardDetail: React.FC = () => {
                             <p><strong>Detalles:</strong> {paquete.detalle}</p>
                             <p className="price"><strong>Desde:</strong> {new Date(paquete.fecha_ini).toLocaleDateString('es-ES')}</p>
                             <p className='price'><strong>Hasta:</strong> {new Date(paquete.fecha_fin).toLocaleDateString('es-ES')} </p>
-                        </div>                        <div className="price-box">
+                        </div>
+                        <div className="price-box">
                             <p className="price-per-night">Precio total del paquete</p>
                             <p className="price-total">${calcularPrecioTotalPaquete(paquete)}</p>
                             <Link
@@ -269,11 +274,11 @@ const CardDetail: React.FC = () => {
                                     <p className="stars-display comentario-p">{renderEstrellas(comentario.estrellas)}</p>
 
                                     {(isAdmin || (comentario.cliente?.id === userData?.id)) && userData && (
-                                        <button
-                                            className="delete-button"
+                                        <button 
+                                            className="delete-button" 
                                             onClick={() => handleDeleteComentario(comentario.id)}
                                         >
-                                            <FaTrash className="trash-icon" />Borrar
+                                            <FaTrash className="trash-icon"/>Borrar
                                         </button>
                                     )}
                                 </div>

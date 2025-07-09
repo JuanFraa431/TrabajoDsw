@@ -176,7 +176,7 @@ const onEditEstadia = (estadia: Estadia, paquetePadreId?: number) => {
   const fechaFin = new Date(estadia.fecha_fin).toISOString().split('T')[0];
   let paqueteId = estadia.id_paquete;
   if (!paqueteId) {
-    const paquetePadre = paquetes.find((p) => p.estadias.some((e) => e.id === estadia.id));
+    const paquetePadre = paquetes.find((p) => Array.isArray(p.estadias) && p.estadias.some((e) => e.id === estadia.id));
     if (paquetePadre) {
       paqueteId = paquetePadre.id;
     } else if (paquetePadreId) {
@@ -264,7 +264,7 @@ const onDeleteEstadia = (estadia: any, paquetePadreId?: number) => {
   console.log('🗑️ Eliminar estadía:', estadia);
   let paqueteId = estadia.id_paquete;
   if (!paqueteId) {
-    const paquetePadre = paquetes.find((p) => p.estadias.some((e) => e.id === estadia.id));
+    const paquetePadre = paquetes.find((p) => Array.isArray(p.estadias) && p.estadias.some((e) => e.id === estadia.id));
     if (paquetePadre) {
       paqueteId = paquetePadre.id;
     } else if (paquetePadreId) {
@@ -292,7 +292,7 @@ const onDeleteEstadia = (estadia: any, paquetePadreId?: number) => {
           setPaquetes((prevPaquetes) =>
             prevPaquetes.map((paquete) =>
               paquete.id === paqueteId
-                ? { ...paquete, estadias: paquete.estadias.filter((e) => e.id !== estadia.id) }
+                ? { ...paquete, estadias: Array.isArray(paquete.estadias) ? paquete.estadias.filter((e) => e.id !== estadia.id) : [] }
                 : paquete
             )
           );
@@ -424,7 +424,7 @@ const handleAddEstadia = (id_paquete: number) => {
       didOpen: () => {
         // Exponer funciones globales para los botones
         (window as any).editEstadiaSwal = (estadiaId: number, paqueteId: number) => {
-          const estadia = paquete.estadias.find((e: any) => e.id === estadiaId);
+          const estadia = paquete.estadias?.find((e: any) => e.id === estadiaId);
           if (estadia) {
             Swal.close();
             setTimeout(() => onEditEstadia(estadia, paqueteId), 200);

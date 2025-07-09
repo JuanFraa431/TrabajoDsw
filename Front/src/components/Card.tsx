@@ -38,7 +38,9 @@ const Card: React.FC<Paquete> = ({ id, nombre, descripcion, detalle, precio, fec
 const CardList: React.FC = () => {
     const [paquetes, setPaquetes] = useState<Paquete[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
-    const [error, setError] = useState<string | null>(null); useEffect(() => {
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
         const fetchPaquetes = async () => {
             try {
                 const response = await axios.get('/api/paquete/user');
