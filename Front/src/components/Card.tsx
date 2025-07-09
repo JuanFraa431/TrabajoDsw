@@ -3,14 +3,18 @@ import axios from 'axios';
 import '../styles/Card.css';
 import { Paquete } from '../interface/paquete';
 import { useNavigate } from 'react-router-dom';
+import { calcularPrecioTotalPaquete } from '../utils/paqueteUtils';
 
-const Card: React.FC<Paquete> = ({ id, nombre, descripcion, detalle, precio, fecha_ini, fecha_fin, imagen }) => {
+const Card: React.FC<Paquete> = ({ id, nombre, descripcion, detalle, precio, fecha_ini, fecha_fin, imagen, estadias, paqueteExcursiones }) => {
     const navigate = useNavigate();
 
     const handleViewPackage = () => {
         // Navega a /cardDetail pasando el id en el state
         navigate(`/cardDetail`, { state: { id } });
     };
+
+    const paqueteData = { estadias, paqueteExcursiones };
+    const precioCalculado = calcularPrecioTotalPaquete(paqueteData);
 
     return (
         <div className="card">
@@ -20,7 +24,7 @@ const Card: React.FC<Paquete> = ({ id, nombre, descripcion, detalle, precio, fec
                 <p className="p-body">{detalle}</p>
                 <div className="card-footer">
                     <p className="p-footer">Precio por persona</p>
-                    <h4>${precio}</h4>
+                    <h4>${precioCalculado > 0 ? precioCalculado : precio}</h4>
                     <p>Incluye impuestos, tasas y cargos</p>
                 </div>
                 <button className="boton-ver" onClick={handleViewPackage}>
@@ -34,9 +38,7 @@ const Card: React.FC<Paquete> = ({ id, nombre, descripcion, detalle, precio, fec
 const CardList: React.FC = () => {
     const [paquetes, setPaquetes] = useState<Paquete[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
-    const [error, setError] = useState<string | null>(null);
-
-    useEffect(() => {
+    const [error, setError] = useState<string | null>(null); useEffect(() => {
         const fetchPaquetes = async () => {
             try {
                 const response = await axios.get('/api/paquete/user');

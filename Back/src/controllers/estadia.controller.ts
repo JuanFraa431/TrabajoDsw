@@ -1,8 +1,9 @@
 import { Request, Response } from 'express';
 import { Estadia } from '../models/estadia.model.js';
 import { Hotel } from '../models/hotel.model.js';
-import { orm }  from '../shared/db/orm.js';
+import { orm } from '../shared/db/orm.js';
 import { Paquete } from '../models/paquete.model.js';
+import { actualizarPrecioPaquete } from '../utils/paqueteUtils.js';
 
 const em = orm.em;
 
@@ -39,6 +40,10 @@ async function create(req: Request, res: Response) {
     });
 
     await em.flush();
+
+    // Actualizar el precio del paquete automáticamente
+    await actualizarPrecioPaquete(id_paquete);
+
     res.status(201).json({ message: 'Estadia creada', data: estadia });
   } catch (error: any) {
     console.error('Error al crear estadía:', error);
@@ -67,6 +72,10 @@ async function update(req: Request, res: Response) {
     em.assign(estadia, updatedData);
 
     await em.flush();
+
+    // Actualizar el precio del paquete automáticamente
+    await actualizarPrecioPaquete(id_paquete);
+
     res.status(200).json({ message: 'Estadia actualizada', data: estadia });
   } catch (error: any) {
     console.error('Error al actualizar la estadía:', error);
@@ -77,8 +86,18 @@ async function update(req: Request, res: Response) {
 async function remove(req: Request, res: Response) {
   try {
     const id = Number.parseInt(req.params.id);
-    const estadia = em.getReference(Estadia, id);
+    const estadia = await em.findOneOrFail(Estadia, { id }, { populate: ['paquete'] });
+    const paqueteId = estadia.paquete.id;
+
+    if (!paqueteId) {
+      return res.status(400).json({ message: 'No se encontró el paquete asociado' });
+    }
+
     em.removeAndFlush(estadia);
+
+    // Actualizar el precio del paquete después de eliminar la estadía
+    await actualizarPrecioPaquete(paqueteId);
+
     res.status(200).json({ message: 'Estadia eliminada' });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
