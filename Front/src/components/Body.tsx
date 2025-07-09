@@ -55,16 +55,14 @@ const BuscadorPaquetes: React.FC = () => {
         } catch (error) {
             console.error('Error al buscar paquetes:', error);
         }
-    };
-
-    return (
-        <div className="contenedor-buscador">
-            <video autoPlay muted loop id="bgVideo">
+    };    return (
+        <div className="body-contenedor-buscador">
+            <video autoPlay muted loop id="body-bgVideo">
                 <source src={video} type="video/mp4" />
             </video>
             <h2>NUESTROS PAQUETES</h2>
             <h1>Busca tu viaje ideal</h1>
-            <Filtro className="contenedor-home" />
+            <Filtro className="body-contenedor-home" />
         </div>
     );
 };

@@ -36,7 +36,7 @@ select {
 
 button {
     padding: 10px 20px;
-    background-color: #007bff;
+    background-color: #027BFF;
     color: #fff;
     border: none;
     border-radius: 5px;
@@ -45,7 +45,7 @@ button {
 }
 
 button:hover {
-    background-color: #0056b3;
+    background-color: #1a5dc7;
 }
 
 .botones-reserva {
@@ -95,7 +95,7 @@ button:hover {
 }
 
 .payment-button.selected {
-    background-color: #0056b3;
+    background-color: #1a5dc7;
     color: #fff;
 }
 
@@ -136,7 +136,7 @@ button:hover {
 }
 
 .number.active {
-    background-color: #004997;
+    background-color: #027BFF;
     color: white;
 }
 
@@ -170,7 +170,7 @@ button:hover {
 }
 
 .step.active {
-    background-color: #007bff;
+    background-color: #027BFF;
     color: #fff;
 }
 

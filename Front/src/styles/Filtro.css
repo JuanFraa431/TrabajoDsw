@@ -1,4 +1,4 @@
-.contenedor-filtro {
+.filtro-contenedor {
     display: flex;
     justify-content: center;
     background-size: cover;
@@ -7,7 +7,7 @@
     padding: 20px 90px 20px 90px;
 }
 
-.contenedor-home {
+.body-contenedor-home {
     display: flex;
     justify-content: center;
     background: none;
@@ -16,14 +16,14 @@
     width: 100%;
 }
 
-.content {
+.filtro-content {
     position: relative;
     z-index: 1;
     width: 100%;
     text-align: center;
 }
 
-.titulo {
+.filtro-titulo {
     color: white;
     text-align: center;
     margin-bottom: 20px;
@@ -31,7 +31,7 @@
     text-decoration: underline;
 }
 
-.formulario-buscador {
+.filtro-formulario-buscador {
     background: rgba(255, 255, 255, 0.821);
     padding: 25px 20px;
     margin-top: 10px;
@@ -40,7 +40,7 @@
     width: 100%; 
 }
 
-.search-form {
+.filtro-search-form {
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -48,7 +48,7 @@
     margin-right: 10px;
 }
 
-.search-form input[type="text"] {
+.filtro-search-form input[type="text"] {
     background: rgba(255, 255, 255, 0.6);
     width: 100%;
     margin-right: 5px;
@@ -60,20 +60,20 @@
     box-sizing: border-box;
 }
 
-.search-form input[type="text"]:focus {
+.filtro-search-form input[type="text"]:focus {
     border-color: #007bbf;
     box-shadow: 0 0 0 2px #b3e0ff;
     outline: none;
 }
 
-.form-group{
+.filtro-form-group{
     display: flex;
     flex-direction: column;
     gap: 5px;
 }
 
 
-.fechas{
+.filtro-fechas{
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -81,13 +81,13 @@
 }
 
 
-.datepicker-input {
+.filtro-datepicker-input {
     width: 150px;
     padding: 5px;
     border: 1px solid #ccc;
     border-radius: 4px;
 }
-.range-container {
+.filtro-range-container {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -95,12 +95,13 @@
     height: 36px;
 }
 
-.range-container .price-label {
+.filtro-range-container .filtro-price-label {
     width: 100px;
     font-size: 16px;
 }
 
-.button-buscar {
+
+.filtro-button-buscar {
     font-family: 'Poppins', sans-serif;
     display: inline-block;
     padding: 8px 16px;
@@ -114,12 +115,12 @@
     cursor: pointer;
 }
 
-.button-buscar:hover {
+.filtro-button-buscar:hover {
     background-color: #0056b3;
     color: white;
 }
 
-.datepicker-input {
+.filtro-datepicker-input {
     width: 100%;
     padding: 10px;
     border: 1px solid #ccc;
@@ -129,49 +130,49 @@
 }
 
 
-.fechas {
+.filtro-fechas {
     display: flex;
     align-items: center;
     position: relative; 
 }
 
 @media (max-width: 1200px) {
-    .contenedor-filtro {
+    .filtro-contenedor {
         padding: 16px 30px 16px 30px;
     }
-    .formulario-buscador {
+    .filtro-formulario-buscador {
         padding: 18px 18px;
     }
-    .search-form {
+    .filtro-search-form {
         flex-direction: column;
         align-items: stretch;
         gap: 18px;
         margin: 0;
     }
-    .search-form input,
-    .datepicker-input {
+    .filtro-search-form input,
+    .filtro-datepicker-input {
         width: 100%;
         min-width: 0;
         margin-right: 0;
     }
 
-    .search-form input[type="text"] 
-    .datepicker-inicio{
+    .filtro-search-form input[type="text"] 
+    .filtro-datepicker-inicio{
         width: 320px;
         max-width: 100%;
         box-sizing: border-box;
         margin-right: 0;
     }
 
-    .search-form input[type="text"] 
-    .datepicker-fin{
+    .filtro-search-form input[type="text"] 
+    .filtro-datepicker-fin{
         width: 320px;
         max-width: 100%;
         box-sizing: border-box;
         margin-right: 0;
     }
 
-    .range-container {
+    .filtro-range-container {
         flex-direction: row;
         justify-content: flex-start;
         width: 100%;
@@ -180,32 +181,32 @@
 }
 
 @media (max-width: 900px) {
-    .contenedor-filtro {
+    .filtro-contenedor {
         padding: 12px 8px 12px 8px;
         background-size: cover;
     }
-    .formulario-buscador {
+    .filtro-formulario-buscador {
         padding: 14px 14px;
     }
-    .search-form {
+    .filtro-search-form {
         flex-direction: column;
         align-items: stretch;
         gap: 14px;
         margin: 0;
     }
-    .search-form input,
-    .datepicker-input {
+    .filtro-search-form input,
+    .filtro-datepicker-input {
         width: 100%;
         min-width: 0;
         margin-right: 0;
     }
-    .range-container {
+    .filtro-range-container {
         flex-direction: row;
         justify-content: flex-start;
         width: 100%;
     }
 
-    .search-form input[type="text"] {
+    .filtro-search-form input[type="text"] {
         width: 100%;
         min-width: 0;
         margin-right: 0;
@@ -215,47 +216,47 @@
 }
 
 @media (max-width: 600px) {
-    .contenedor-filtro {
+    .filtro-contenedor {
         padding: 8px 0 8px 0;
         background-size: cover;
     }
-    .formulario-buscador {
+    .filtro-formulario-buscador {
         padding: 18px 18px;
         border-radius: 6px;
         margin-top: 6px;
     }
-    .search-form {
+    .filtro-search-form {
         flex-direction: column;
         align-items: stretch;
         gap: 12px;
         margin: 0;
     }
-    .form-group {
+    .filtro-form-group {
         gap: 2px;
     }
-    .fechas {
+    .filtro-fechas {
         flex-direction: column;
         align-items: stretch;
         gap: 6px;
     }
-    .datepicker-input {
+    .filtro-datepicker-input {
         width: 100%;
         min-width: 0;
         padding: 8px;
         font-size: 1rem;
     }
-    .range-container {
+    .filtro-range-container {
         flex-direction: row;
         align-items: center;
         width: 100%;
         height: auto;
     }
-    .range-container .price-label {
+    .filtro-range-container .filtro-price-label {
         width: auto;
         font-size: 15px;
         margin-left: 8px;
     }
-    .button-buscar {
+    .filtro-button-buscar {
         width: 100%;
         padding: 10px 0;
         font-size: 1.1rem;
@@ -263,7 +264,7 @@
         margin-top: 8px;
     }
 
-    .search-form input[type="text"] {
+    .filtro-search-form input[type="text"] {
         width: 100%;
         min-width: 0;
         margin-right: 0;

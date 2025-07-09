@@ -18,16 +18,14 @@ const Header = () => {
         if (storedCliente) {
             setCliente(JSON.parse(storedCliente));
         }
-    }, []);
-
-    return (
-        <header className="header">
-            <div className="logo">
+    }, []);    return (
+        <header className="header-container">
+            <div className="header-logo">
                 <Link to="/"><img src={logo} alt="Logo" /></Link>
             </div>
 
             {/* Menú desktop */}
-            <nav className="nav d-none d-lg-flex justify-content-center align-items-center">
+            <nav className="header-nav d-none d-lg-flex justify-content-center align-items-center">
                 <ul>
                     <li><Link to="/hoteles">Hoteles</Link></li>
                     <li>
@@ -41,11 +39,11 @@ const Header = () => {
                 </ul>
             </nav>
 
-            <div className="user d-none d-lg-flex align-items-center ms-3">
+            <div className="header-user d-none d-lg-flex align-items-center ms-3">
                 <img 
                     src={cliente && cliente.imagen ? cliente.imagen : userIcon} 
                     alt="User Icon" 
-                    className="user-icon-chico" 
+                    className="header-user-icon-chico" 
                 />
                 {cliente ? (
                     <a
@@ -62,7 +60,7 @@ const Header = () => {
                         )}
                     </a>
                 ) : (
-                    <Link to="/login" className="boton-inicia_sesion">Iniciar Sesión</Link>
+                    <Link to="/login" className="header-boton-inicia-sesion">Iniciar Sesión</Link>
                 )}
             </div>
 
@@ -83,9 +81,8 @@ const Header = () => {
                             <li className="nav-item"><Link className="nav-link" to="/excursiones" onClick={(event) => handleLinkClick(event, 'excursion', 'excursiones', navigate)}>Excursiones</Link></li>
                             <li className="nav-item"><Link className="nav-link" to="/transportes">Transportes</Link></li>
                             <li className="nav-item"><Link className="nav-link" to="/nosotros">Nosotros</Link></li>
-                        </ul>
-                        <div className="user-offcanvas mt-3">
-                            <img src={cliente ? cliente.imagen : userIcon} alt="User Icon" className="user-icon" />
+                        </ul>                        <div className="header-user-offcanvas mt-3">
+                            <img src={cliente ? cliente.imagen : userIcon} alt="User Icon" className="header-user-icon" />
                             {cliente ? (
                                 <a
                                     href="/detalleCliente"
@@ -97,7 +94,7 @@ const Header = () => {
                                     {cliente.nombre} {cliente.apellido}
                                 </a>
                             ) : (
-                                <Link to="/login" className="boton-inicia_sesion">Iniciar Sesión</Link>
+                                <Link to="/login" className="header-boton-inicia-sesion">Iniciar Sesión</Link>
                             )}
                         </div>
                     </div>

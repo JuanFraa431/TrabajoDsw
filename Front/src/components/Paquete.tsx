@@ -26,54 +26,71 @@ const Paquetes: React.FC = () => {
         navigate(`/cardDetail`, { state: { id } });
     };
 
-    
-
-    return (
-        <div className="container2">
+        return (
+        <div className="paquetes-container">
             <Filtros />
-            <div className="hotels-list">
-                {paquetes.length > 0 ? (
-                    paquetes.map((paquete: Paquete) => (
-                        <div 
-                            className={`hotel-card ${visiblePackages.includes(paquete.id.toString()) ? 'visible' : ''}`} 
-                            key={paquete.id}
-                        >
-                            <img src={paquete.imagen} alt={paquete.nombre} className="card-img" />
-                            <div className="hotel-info">
-                                <h3>{paquete.nombre}</h3>
-                                <p>{paquete.detalle}</p>
-                                <div className="package-features">
-                                    <p><strong>Duración:</strong> 5 días</p>
-                                    <p><strong>Actividades incluidas:</strong> Tour guiado, comidas, transporte.</p>
+            <div className="paquetes-content">
+                <div className="paquetes-header">
+                    <h1 className="paquetes-title">Paquetes de Viaje</h1>
+                    <p className="paquetes-subtitle">Descubre destinos increíbles con nuestros paquetes todo incluido</p>
+                </div>
+                <div className="paquetes-grid">
+                    {paquetes.length > 0 ? (
+                        paquetes.map((paquete: Paquete) => (
+                            <div 
+                                className={`paquete-card ${visiblePackages.includes(paquete.id.toString()) ? 'paquete-visible' : ''}`} 
+                                key={paquete.id}
+                            >
+                                <div className="paquete-image-container">
+                                    <img src={paquete.imagen} alt={paquete.nombre} className="paquete-image" />
+                                    <div className="paquete-overlay">
+                                        <span className="paquete-badge">Todo Incluido</span>
+                                    </div>
                                 </div>
-                                <div className='prueba'>
-                                    <button 
-                                        className="boton-ver-paquete" 
-                                        onClick={() => handleViewPackage(paquete.id.toString())} 
-                                    >
-                                        Ver Alojamiento
-                                    </button>
+                                <div className="paquete-content">
+                                    <h3 className="paquete-title">{paquete.nombre}</h3>
+                                    <p className="paquete-description">{paquete.detalle}</p>
+                                    <div className="paquete-features">
+                                        <div className="feature-item">
+                                            <span className="feature-icon">📅</span>
+                                            <span className="feature-text">5 días</span>
+                                        </div>
+                                        <div className="feature-item">
+                                            <span className="feature-icon">🎯</span>
+                                            <span className="feature-text">Tour guiado, comidas, transporte</span>
+                                        </div>
+                                    </div>
+                                    <div className="paquete-footer">
+                                        <div className="paquete-price">
+                                            <span className="price-label">Precio por persona</span>
+                                            <span className="price-amount">${paquete.precio}</span>
+                                        </div>
+                                        <button 
+                                            className="paquete-btn" 
+                                            onClick={() => handleViewPackage(paquete.id.toString())} 
+                                        >
+                                            Ver Detalles
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
-                            <div className="price-container">
-                                <p className="price-label">Precio x persona</p>
-                                <p className="price-large">${paquete.precio}</p>
-                            </div>
+                        ))
+                    ) : (
+                        <div className="paquetes-empty">
+                            <div className="empty-icon">🏖️</div>
+                            <h3>No se encontraron paquetes</h3>
+                            <p>Intenta ajustar los filtros para encontrar más opciones</p>
                         </div>
-                    ))
-                ) : (
-                    <div className='fail'>
-                        <p>No se encontraron paquetes que coincidan con la búsqueda.</p>
-                    </div>
-                )}
+                    )}
+                </div>
             </div>
             {/* Mapa solo visible en tablet */}
-            <div className="mapa-tablet">
+            <div className="paquetes-mapa-tablet">
                 <iframe
                     width="100%"
                     height="220"
                     src="https://www.openstreetmap.org/export/embed.html?bbox=-66.64306640625001%2C-38.505191402403554%2C-58.22753906250001%2C-33.36723746583833&amp;layer=mapnik&amp;marker=-35.97800618085566%2C-62.435302734375"
-                    style={{ border: '1px solid black', borderRadius: '10px', marginTop: '10px' }}
+                    style={{ border: '1px solid #e2e8f0', borderRadius: '12px', marginTop: '16px' }}
                     title="Mapa Paquetes"
                 ></iframe>
                 <br />

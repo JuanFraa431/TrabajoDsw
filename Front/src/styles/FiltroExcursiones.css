@@ -1,67 +1,328 @@
-.filtro-excursiones {
-  display: flex;
-  gap: 2vh;
-  margin-top: 3vh;
-  margin-bottom: 3vh;
-  width: 100%;
-  justify-content: center;
+/* Modern Filtro Excursiones Sidebar Styles */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* Sidebar principal */
+.filtro-excursiones-sidebar {
+  width: 300px;
+  min-width: 300px;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 24px;
+  height: fit-content;
+  position: sticky;
+  top: 24px;
+  box-shadow: 
+    0 1px 3px rgba(0, 0, 0, 0.05),
+    0 4px 6px rgba(0, 0, 0, 0.05),
+    0 10px 15px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  font-family: 'Inter', sans-serif;
 }
 
-.filtro-item {
+/* Header del filtro */
+.filtro-excursiones-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.filtro-excursiones-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+}
+
+.filtro-excursiones-clear {
+  background: none;
+  border: 1px solid #e2e8f0;
+  color: #64748b;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.filtro-excursiones-clear:hover {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+  color: #475569;
+}
+
+/* Sección de filtros */
+.filtro-excursiones-section {
+  margin-bottom: 24px;
+}
+
+.filtro-excursiones-section-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #374151;
+  margin: 0 0 16px 0;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #f3f4f6;
+}
+
+/* Contenedor de opciones */
+.filtro-excursiones-options {
   display: flex;
   flex-direction: column;
-  width: 200px;
+  gap: 12px;
 }
 
-.filtro-item label {
-  font-weight: bold;
-}
-
-.filtro-item input,
-.filtro-item select {
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-.filtro-boton {
-  padding: 0px 10px 0px 10px;
-  background-color: #0056b3;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.filtro-boton:hover {
-  background-color: #003d80;
-}
-
-.container-filtro {
-  display: flex;
-  justify-content: center;
-}
-
-
-.filter-item {
-  margin-top: 10px;
+/* Opciones individuales */
+.filtro-excursiones-option {
   display: flex;
   align-items: center;
-  margin-bottom: 10px;
-}
-
-.filter-item input{
-  margin-right: 10px; 
-}
-
-.container-filters {
-  width: 95%;
-  padding: 20px;
-  background-color: #ffffff;
-  border: 1px solid #dbdbdb;
+  padding: 12px;
   border-radius: 10px;
-  align-self: start;
-  height: auto;
-  margin-top: 20px;
-  margin-left: 10px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid transparent;
+  background: #f8fafc;
+  position: relative;
+}
+
+.filtro-excursiones-option:hover {
+  background: #e2e8f0;
+  border-color: #cbd5e1;
+}
+
+.filtro-excursiones-option:has(.filtro-excursiones-checkbox:checked) {
+  background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+  border-color: #3b82f6;
+}
+
+/* Checkbox personalizado */
+.filtro-excursiones-checkbox {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+/* Checkmark personalizado */
+.filtro-excursiones-checkmark {
+  position: relative;
+  height: 20px;
+  width: 20px;
+  background: #ffffff;
+  border: 2px solid #d1d5db;
+  border-radius: 6px;
+  margin-right: 12px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  flex-shrink: 0;
+}
+
+.filtro-excursiones-checkmark::after {
+  content: "";
+  position: absolute;
+  display: none;
+  left: 6px;
+  top: 2px;
+  width: 6px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.filtro-excursiones-checkbox:checked ~ .filtro-excursiones-checkmark {
+  background: #3b82f6;
+  border-color: #3b82f6;
+}
+
+.filtro-excursiones-checkbox:checked ~ .filtro-excursiones-checkmark::after {
+  display: block;
+}
+
+/* Labels */
+.filtro-excursiones-label {
+  font-size: 0.875rem;
+  color: #374151;
+  font-weight: 500;
+  line-height: 1.4;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.filtro-excursiones-count {
+  font-size: 0.75rem;
+  color: #64748b;
+  background: #e2e8f0;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-weight: 600;
+  margin-left: 8px;
+}
+
+.filtro-excursiones-checkbox:checked ~ .filtro-excursiones-label .filtro-excursiones-count {
+  background: rgba(59, 130, 246, 0.2);
+  color: #3b82f6;
+}
+
+/* Enhanced animations and effects */
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.filtro-excursiones-sidebar {
+  animation: slideInLeft 0.5s ease-out;
+}
+
+/* Ripple effect for checkboxes */
+.filtro-excursiones-option {
+  position: relative;
+  overflow: hidden;
+}
+
+.filtro-excursiones-option::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(59, 130, 246, 0.2);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.3s ease, height 0.3s ease;
+  pointer-events: none;
+}
+
+.filtro-excursiones-option:active::before {
+  width: 200px;
+  height: 200px;
+}
+
+/* Smooth transitions for count badges */
+.filtro-excursiones-count {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: scale(1);
+}
+
+.filtro-excursiones-option:hover .filtro-excursiones-count {
+  transform: scale(1.05);
+}
+
+/* Clear button enhanced effects */
+.filtro-excursiones-clear {
+  position: relative;
+  overflow: hidden;
+}
+
+.filtro-excursiones-clear::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(100, 116, 139, 0.1), transparent);
+  transition: left 0.5s ease;
+}
+
+.filtro-excursiones-clear:hover::before {
+  left: 100%;
+}
+
+/* Focus indicators */
+.filtro-excursiones-clear:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(100, 116, 139, 0.3);
+}
+
+/* Loading state for options */
+.filtro-excursiones-option.loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.filtro-excursiones-option.loading .filtro-excursiones-checkmark {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* Enhanced section title */
+.filtro-excursiones-section-title {
+  position: relative;
+}
+
+.filtro-excursiones-section-title::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  width: 30px;
+  height: 2px;
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+  border-radius: 1px;
+}
+
+/* Responsive Design */
+@media (max-width: 968px) {
+  .filtro-excursiones-sidebar {
+    width: 100%;
+    min-width: unset;
+    position: static;
+    margin-bottom: 20px;
+    padding: 20px;
+  }
+  
+  .filtro-excursiones-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 8px;
+  }
+  
+  .filtro-excursiones-option {
+    padding: 10px;
+  }
+}
+
+@media (max-width: 640px) {
+  .filtro-excursiones-sidebar {
+    padding: 16px;
+    border-radius: 12px;
+  }
+  
+  .filtro-excursiones-header {
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+  }
+  
+  .filtro-excursiones-title {
+    font-size: 1.125rem;
+  }
+  
+  .filtro-excursiones-options {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  
+  .filtro-excursiones-option {
+    padding: 12px;
+  }
+  
+  .filtro-excursiones-section {
+    margin-bottom: 16px;
+  }
 }

@@ -3,21 +3,21 @@ import '../styles/Footer.css';
 
 const Footer = () => {
     return (
-        <footer className="footer">
+        <footer className="footer-container">
             <div className="footer-content">
-                <div className="contact-section">
+                <div className="footer-contact-section">
                     <h3>Atención al cliente</h3>
                     <p>0810.220.1309</p>
                     <p>Lunes a viernes de 10 a 21 h</p>
                     <p>Sábados de 10 a 16 h</p>
                 </div>
-                <div className="sales-section">
+                <div className="footer-sales-section">
                     <h3>Ventas</h3>
                     <p>0810.220.1031</p>
                     <p>WhatsApp: +54 911 5571.0504</p>
                     <p>Lunes a domingos y feriados de 9 a 23 h</p>
                 </div>
-                <div className="links-section">
+                <div className="footer-links-section">
                     <h3>Odyssey Travels</h3>
                     <ul>
                         <li><a href="#">¿Quiénes somos?</a></li>
@@ -27,7 +27,7 @@ const Footer = () => {
                         <li><a href="#">Ayuda</a></li>
                     </ul>
                 </div>
-                <div className="legal-section">
+                <div className="footer-legal-section">
                     <h3>LEGALES</h3>
                     <ul>
                         <li><a href="https://www.argentina.gob.ar/normativa/nacional/ley-24240-638" target="_blank">Ley 24.240</a></li>
@@ -38,7 +38,7 @@ const Footer = () => {
                     </ul>
                 </div>
             </div>
-            <div className="consumer-protection">
+            <div className="footer-consumer-protection">
                 <p>Defensa de las y los consumidores. Para reclamos ingrese <a href="#">aquí</a></p>
                 <p>Dirección General de Defensa y Protección al Consumidor. Para consultas y/o denuncias ingrese <a href="#">aquí</a></p>
             </div>

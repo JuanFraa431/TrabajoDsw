@@ -41,25 +41,41 @@ const FiltroVerticalExcursiones: React.FC<FiltroVerticalExcursionesProps> = ({ o
 
         setSelectedTipos(updatedSelectedTipos);
         onFiltrar({ tipos: updatedSelectedTipos }); 
-    };
-
-    return (
-        <div className="container-filters">
-            <div className="filter-section">
-                <h3>Tipo de Excursión</h3>
-                {tiposExcursion.map((tipoObj, index) => (
-                    <div className="filter-item" key={index}>
-                        <input
-                            type="checkbox"
-                            name="tipoExcursion"
-                            value={tipoObj.tipo}
-                            checked={selectedTipos.includes(tipoObj.tipo)}
-                            onChange={handleCheckboxChange}
-                            id={`tipoExcursion-${index}`}
-                        />
-                        <label htmlFor={`tipoExcursion-${index}`}>{tipoObj.tipo} ({tipoObj.cantidad})</label>
-                    </div>
-                ))}
+    };    return (
+        <div className="filtro-excursiones-sidebar">
+            <div className="filtro-excursiones-header">
+                <h2 className="filtro-excursiones-title">Filtros</h2>
+                <button 
+                    className="filtro-excursiones-clear"
+                    onClick={() => {
+                        setSelectedTipos([]);
+                        onFiltrar({ tipos: [] });
+                    }}
+                >
+                    Limpiar
+                </button>
+            </div>
+            <div className="filtro-excursiones-section">
+                <h3 className="filtro-excursiones-section-title">Tipo de Excursión</h3>
+                <div className="filtro-excursiones-options">
+                    {tiposExcursion.map((tipoObj, index) => (
+                        <label className="filtro-excursiones-option" key={index}>
+                            <input
+                                type="checkbox"
+                                name="tipoExcursion"
+                                value={tipoObj.tipo}
+                                checked={selectedTipos.includes(tipoObj.tipo)}
+                                onChange={handleCheckboxChange}
+                                className="filtro-excursiones-checkbox"
+                            />
+                            <span className="filtro-excursiones-checkmark"></span>
+                            <span className="filtro-excursiones-label">
+                                {tipoObj.tipo}
+                                <span className="filtro-excursiones-count">({tipoObj.cantidad})</span>
+                            </span>
+                        </label>
+                    ))}
+                </div>
             </div>
         </div>
     );

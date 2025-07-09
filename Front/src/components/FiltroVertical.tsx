@@ -38,176 +38,253 @@ const FiltroVertical: React.FC = () => {
         setSelectedFilters({ ...selectedFilters, [name]: value });
     };
 
-    if (!isLoaded) return <div>Cargando mapa...</div>;
-
-    return (
-        <div className="filters">
-            <div className="filter-section">
+    if (!isLoaded) return <div>Cargando mapa...</div>;    return (
+        <div className="filtro-vertical">
+            <div className="filtro-vertical-map-section">
                 <GoogleMap
-                    mapContainerStyle={{ width: '100%', height: '300px' }}
+                    mapContainerStyle={{ width: '100%', height: '300px', borderRadius: '12px' }}
                     center={{ lat, lng }}
                     zoom={10}
                 >
                     <Marker position={{ lat, lng }} />
                 </GoogleMap>
-
-                <h3>Filtros más usados</h3>
-                <div className="filter-item">
-                    <input
-                        type="checkbox"
-                        name="allInclusive"
-                        checked={selectedFilters.allInclusive}
-                        onChange={handleCheckboxChange}
-                    />
-                    <label>All Inclusive (16)</label>
-                </div>
-                <div className="filter-item">
-                    <input
-                        type="checkbox"
-                        name="desayuno"
-                        checked={selectedFilters.desayuno}
-                        onChange={handleCheckboxChange}
-                    />
-                    <label>Desayuno (6)</label>
-                </div>
-                <div className="filter-item">
-                    <input
-                        type="checkbox"
-                        name="cuatroEstrellas"
-                        checked={selectedFilters.cuatroEstrellas}
-                        onChange={handleCheckboxChange}
-                    />
-                    <label>4 Estrellas (10)</label>
-                </div>
-                <div className="filter-item">
-                    <input
-                        type="checkbox"
-                        name="tresEstrellas"
-                        checked={selectedFilters.tresEstrellas}
-                        onChange={handleCheckboxChange}
-                    />
-                    <label>3 Estrellas (6)</label>
-                </div>
-                <div className="filter-item">
-                    <input
-                        type="checkbox"
-                        name="hotel"
-                        checked={selectedFilters.hotel}
-                        onChange={handleCheckboxChange}
-                    />
-                    <label>Hotel (32)</label>
-                </div>
             </div>
 
-            <div className="filter-section">
-                <h3>Tipo de alojamiento</h3>
-                <div className="filter-item">
-                    <input
-                        type="radio"
-                        name="tipoAlojamiento"
-                        value="hotel"
-                        checked={selectedFilters.tipoAlojamiento === 'hotel'}
-                        onChange={handleSelectChange}
-                    />
-                    <label>Hotel (32)</label>
+            <div className="filtro-vertical-scroll-container">
+                <div className="filtro-vertical-section">
+                    <h3 className="filtro-vertical-title">Filtros más usados</h3>
+                    <div className="filtro-vertical-item">
+                        <input
+                            type="checkbox"
+                            id="allInclusive"
+                            name="allInclusive"
+                            checked={selectedFilters.allInclusive}
+                            onChange={handleCheckboxChange}
+                            className="filtro-vertical-checkbox"
+                        />
+                        <label htmlFor="allInclusive" className="filtro-vertical-label">
+                            All Inclusive 
+                            <span className="filtro-vertical-count">(16)</span>
+                        </label>
+                    </div>
+                    <div className="filtro-vertical-item">
+                        <input
+                            type="checkbox"
+                            id="desayuno"
+                            name="desayuno"
+                            checked={selectedFilters.desayuno}
+                            onChange={handleCheckboxChange}
+                            className="filtro-vertical-checkbox"
+                        />
+                        <label htmlFor="desayuno" className="filtro-vertical-label">
+                            Desayuno 
+                            <span className="filtro-vertical-count">(6)</span>
+                        </label>
+                    </div>
+                    <div className="filtro-vertical-item">
+                        <input
+                            type="checkbox"
+                            id="cuatroEstrellas"
+                            name="cuatroEstrellas"
+                            checked={selectedFilters.cuatroEstrellas}
+                            onChange={handleCheckboxChange}
+                            className="filtro-vertical-checkbox"
+                        />
+                        <label htmlFor="cuatroEstrellas" className="filtro-vertical-label">
+                            4 Estrellas 
+                            <span className="filtro-vertical-count">(10)</span>
+                        </label>
+                    </div>
+                    <div className="filtro-vertical-item">
+                        <input
+                            type="checkbox"
+                            id="tresEstrellas"
+                            name="tresEstrellas"
+                            checked={selectedFilters.tresEstrellas}
+                            onChange={handleCheckboxChange}
+                            className="filtro-vertical-checkbox"
+                        />
+                        <label htmlFor="tresEstrellas" className="filtro-vertical-label">
+                            3 Estrellas 
+                            <span className="filtro-vertical-count">(6)</span>
+                        </label>
+                    </div>
+                    <div className="filtro-vertical-item">
+                        <input
+                            type="checkbox"
+                            id="hotel"
+                            name="hotel"
+                            checked={selectedFilters.hotel}
+                            onChange={handleCheckboxChange}
+                            className="filtro-vertical-checkbox"
+                        />
+                        <label htmlFor="hotel" className="filtro-vertical-label">
+                            Hotel 
+                            <span className="filtro-vertical-count">(32)</span>
+                        </label>
+                    </div>
                 </div>
-                <div className="filter-item">
-                    <input
-                        type="radio"
-                        name="tipoAlojamiento"
-                        value="alquilerTemporario"
-                        checked={selectedFilters.tipoAlojamiento === 'alquilerTemporario'}
-                        onChange={handleSelectChange}
-                    />
-                    <label>Alquiler Temporario (24)</label>
-                </div>
-                <div className="filter-item">
-                    <input
-                        type="radio"
-                        name="tipoAlojamiento"
-                        value="apartHotel"
-                        checked={selectedFilters.tipoAlojamiento === 'apartHotel'}
-                        onChange={handleSelectChange}
-                    />
-                    <label>Apart Hotel (9)</label>
-                </div>
-                <div className="filter-item">
-                    <input
-                        type="radio"
-                        name="tipoAlojamiento"
-                        value="hostel"
-                        checked={selectedFilters.tipoAlojamiento === 'hostel'}
-                        onChange={handleSelectChange}
-                    />
-                    <label>Hostel (2)</label>
-                </div>
-                <div className="filter-item">
-                    <input
-                        type="radio"
-                        name="tipoAlojamiento"
-                        value="bedAndBreakfast"
-                        checked={selectedFilters.tipoAlojamiento === 'bedAndBreakfast'}
-                        onChange={handleSelectChange}
-                    />
-                    <label>Bed And Breakfast (1)</label>
-                </div>
-            </div>
 
-            <div className="filter-section">
-                <h3>Plan de comida</h3>
-                <div className="filter-item">
-                    <input
-                        type="radio"
-                        name="planComida"
-                        value="soloHospedaje"
-                        checked={selectedFilters.planComida === 'soloHospedaje'}
-                        onChange={handleSelectChange}
-                    />
-                    <label>Solo Hospedaje (46)</label>
+                <div className="filtro-vertical-section">
+                    <h3 className="filtro-vertical-title">Tipo de alojamiento</h3>
+                    <div className="filtro-vertical-item">
+                        <input
+                            type="radio"
+                            id="hotel-radio"
+                            name="tipoAlojamiento"
+                            value="hotel"
+                            checked={selectedFilters.tipoAlojamiento === 'hotel'}
+                            onChange={handleSelectChange}
+                            className="filtro-vertical-radio"
+                        />
+                        <label htmlFor="hotel-radio" className="filtro-vertical-label">
+                            Hotel 
+                            <span className="filtro-vertical-count">(32)</span>
+                        </label>
+                    </div>
+                    <div className="filtro-vertical-item">
+                        <input
+                            type="radio"
+                            id="alquilerTemporario"
+                            name="tipoAlojamiento"
+                            value="alquilerTemporario"
+                            checked={selectedFilters.tipoAlojamiento === 'alquilerTemporario'}
+                            onChange={handleSelectChange}
+                            className="filtro-vertical-radio"
+                        />
+                        <label htmlFor="alquilerTemporario" className="filtro-vertical-label">
+                            Alquiler Temporario 
+                            <span className="filtro-vertical-count">(24)</span>
+                        </label>
+                    </div>
+                    <div className="filtro-vertical-item">
+                        <input
+                            type="radio"
+                            id="apartHotel"
+                            name="tipoAlojamiento"
+                            value="apartHotel"
+                            checked={selectedFilters.tipoAlojamiento === 'apartHotel'}
+                            onChange={handleSelectChange}
+                            className="filtro-vertical-radio"
+                        />
+                        <label htmlFor="apartHotel" className="filtro-vertical-label">
+                            Apart Hotel 
+                            <span className="filtro-vertical-count">(9)</span>
+                        </label>
+                    </div>
+                    <div className="filtro-vertical-item">
+                        <input
+                            type="radio"
+                            id="hostel"
+                            name="tipoAlojamiento"
+                            value="hostel"
+                            checked={selectedFilters.tipoAlojamiento === 'hostel'}
+                            onChange={handleSelectChange}
+                            className="filtro-vertical-radio"
+                        />
+                        <label htmlFor="hostel" className="filtro-vertical-label">
+                            Hostel 
+                            <span className="filtro-vertical-count">(2)</span>
+                        </label>
+                    </div>
+                    <div className="filtro-vertical-item">
+                        <input
+                            type="radio"
+                            id="bedAndBreakfast"
+                            name="tipoAlojamiento"
+                            value="bedAndBreakfast"
+                            checked={selectedFilters.tipoAlojamiento === 'bedAndBreakfast'}
+                            onChange={handleSelectChange}
+                            className="filtro-vertical-radio"
+                        />
+                        <label htmlFor="bedAndBreakfast" className="filtro-vertical-label">
+                            Bed And Breakfast 
+                            <span className="filtro-vertical-count">(1)</span>
+                        </label>
+                    </div>
                 </div>
-                <div className="filter-item">
-                    <input
-                        type="radio"
-                        name="planComida"
-                        value="allInclusive"
-                        checked={selectedFilters.planComida === 'allInclusive'}
-                        onChange={handleSelectChange}
-                    />
-                    <label>All Inclusive (16)</label>
-                </div>
-                <div className="filter-item">
-                    <input
-                        type="radio"
-                        name="planComida"
-                        value="desayuno"
-                        checked={selectedFilters.planComida === 'desayuno'}
-                        onChange={handleSelectChange}
-                    />
-                    <label>Desayuno (6)</label>
-                </div>
-            </div>
 
-            <div className="filter-section">
-                <h3>Método de pago</h3>
-                <div className="filter-item">
-                    <input
-                        type="radio"
-                        name="metodoPago"
-                        value="tarjetaCredito"
-                        checked={selectedFilters.metodoPago === 'tarjetaCredito'}
-                        onChange={handleSelectChange}
-                    />
-                    <label>Tarjeta de Crédito (58)</label>
+                <div className="filtro-vertical-section">
+                    <h3 className="filtro-vertical-title">Plan de comida</h3>
+                    <div className="filtro-vertical-item">
+                        <input
+                            type="radio"
+                            id="soloHospedaje"
+                            name="planComida"
+                            value="soloHospedaje"
+                            checked={selectedFilters.planComida === 'soloHospedaje'}
+                            onChange={handleSelectChange}
+                            className="filtro-vertical-radio"
+                        />
+                        <label htmlFor="soloHospedaje" className="filtro-vertical-label">
+                            Solo Hospedaje 
+                            <span className="filtro-vertical-count">(46)</span>
+                        </label>
+                    </div>
+                    <div className="filtro-vertical-item">
+                        <input
+                            type="radio"
+                            id="allInclusiveComida"
+                            name="planComida"
+                            value="allInclusive"
+                            checked={selectedFilters.planComida === 'allInclusive'}
+                            onChange={handleSelectChange}
+                            className="filtro-vertical-radio"
+                        />
+                        <label htmlFor="allInclusiveComida" className="filtro-vertical-label">
+                            All Inclusive 
+                            <span className="filtro-vertical-count">(16)</span>
+                        </label>
+                    </div>
+                    <div className="filtro-vertical-item">
+                        <input
+                            type="radio"
+                            id="desayunoComida"
+                            name="planComida"
+                            value="desayuno"
+                            checked={selectedFilters.planComida === 'desayuno'}
+                            onChange={handleSelectChange}
+                            className="filtro-vertical-radio"
+                        />
+                        <label htmlFor="desayunoComida" className="filtro-vertical-label">
+                            Desayuno 
+                            <span className="filtro-vertical-count">(6)</span>
+                        </label>
+                    </div>
                 </div>
-                <div className="filter-item">
-                    <input
-                        type="radio"
-                        name="metodoPago"
-                        value="transferenciaBancaria"
-                        checked={selectedFilters.metodoPago === 'transferenciaBancaria'}
-                        onChange={handleSelectChange}
-                    />
-                    <label>Transferencia Bancaria (10)</label>
+
+                <div className="filtro-vertical-section">
+                    <h3 className="filtro-vertical-title">Método de pago</h3>
+                    <div className="filtro-vertical-item">
+                        <input
+                            type="radio"
+                            id="tarjetaCredito"
+                            name="metodoPago"
+                            value="tarjetaCredito"
+                            checked={selectedFilters.metodoPago === 'tarjetaCredito'}
+                            onChange={handleSelectChange}
+                            className="filtro-vertical-radio"
+                        />
+                        <label htmlFor="tarjetaCredito" className="filtro-vertical-label">
+                            Tarjeta de Crédito 
+                            <span className="filtro-vertical-count">(58)</span>
+                        </label>
+                    </div>
+                    <div className="filtro-vertical-item">
+                        <input
+                            type="radio"
+                            id="transferenciaBancaria"
+                            name="metodoPago"
+                            value="transferenciaBancaria"
+                            checked={selectedFilters.metodoPago === 'transferenciaBancaria'}
+                            onChange={handleSelectChange}
+                            className="filtro-vertical-radio"
+                        />
+                        <label htmlFor="transferenciaBancaria" className="filtro-vertical-label">
+                            Transferencia Bancaria 
+                            <span className="filtro-vertical-count">(10)</span>
+                        </label>
+                    </div>
                 </div>
             </div>
         </div>

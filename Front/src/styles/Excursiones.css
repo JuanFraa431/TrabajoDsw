@@ -1,81 +1,436 @@
-.container-excursiones {
+/* Modern Excursiones Component Styles */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* Container principal */
+.excursiones-container {
+  display: flex;
+  min-height: 100vh;
+  background: #ffffff;
+  font-family: 'Inter', sans-serif;
+  gap: 24px;
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+/* Contenido principal */
+.excursiones-content {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  width: 100%;
-  padding-bottom: 10px;
+  max-width: calc(100% - 320px);
 }
 
-.excursiones-list {
+/* Header de excursiones */
+.excursiones-header {
+  margin-bottom: 32px;
+  text-align: center;
+  padding: 0 16px;
+}
+
+.excursiones-title {
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 8px 0;
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  line-height: 1.2;
+}
+
+.excursiones-subtitle {
+  font-size: 1.125rem;
+  color: #64748b;
+  margin: 0;
+  font-weight: 400;
+}
+
+/* Grid de excursiones */
+.excursiones-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-gap: 15px;
-  width: 90%;
-  margin-top: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+  padding: 0 8px;
+  width: 100%;
+  justify-items: center;
+  align-content: start;
 }
 
+/* Card de excursión */
 .excursion-card {
-  background-color: #fff;
-  border: 1px solid #dbdbdb;
-  border-radius: 10px;
-  padding: 20px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  background: #ffffff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 
+    0 1px 3px rgba(0, 0, 0, 0.08),
+    0 4px 6px rgba(0, 0, 0, 0.05),
+    0 10px 15px rgba(0, 0, 0, 0.03);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid rgba(226, 232, 240, 0.6);
+  position: relative;
+  width: 100%;
+  max-width: 380px;
+  height: fit-content;
 }
 
 .excursion-card:hover {
-  transform: scale(1.01);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  transform: translateY(-8px);
+  box-shadow: 
+    0 4px 6px rgba(0, 0, 0, 0.05),
+    0 10px 15px rgba(0, 0, 0, 0.1),
+    0 20px 25px rgba(0, 0, 0, 0.1);
+  border-color: rgba(59, 130, 246, 0.3);
 }
 
-.excursion-info h3 {
-  margin: 0;
+/* Contenedor de imagen */
+.excursion-image-container {
+  position: relative;
+  height: 220px;
+  overflow: hidden;
 }
 
-.excursion-info p {
-  margin: 10px 0;
-}
-
-.boton-ver {
-  font-family: 'Poppins', sans-serif;
-  display: inline-block;
-  padding: 8px 16px;
-  border: 1px solid #0056b3;
-  border-radius: 20px;
-  text-decoration: none;
-  background: rgba(255, 255, 255, 0.6);
-  font-weight: bold;
-  transition: background-color 0.3s, color 0.3s;
-  color: #333;
-  cursor: pointer;
-}
-
-.boton-ver:hover {
-  background-color: #0056b3;
-  color: white;
-}
-
-.prueba2 {
-  display: flex;
+.excursion-image {
   width: 100%;
-  justify-content: flex-end;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.fail {
-  font-size: 20px;
+.excursion-card:hover .excursion-image {
+  transform: scale(1.05);
+}
+
+/* Overlay con tipo de excursión */
+.excursion-overlay {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 6px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.excursion-type {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #3b82f6;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Contenido de la card */
+.excursion-content {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.excursion-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0;
+  line-height: 1.4;  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.excursion-description {
+  font-size: 0.875rem;
+  color: #64748b;
+  line-height: 1.6;
+  margin: 0;  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Footer de la card */
+.excursion-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: auto;
+  gap: 16px;
+}
+
+.excursion-price {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.price-label {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.price-amount {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #059669;
+  line-height: 1;
+}
+
+.price-person {
+  font-size: 0.75rem;
+  color: #64748b;
+  font-weight: 400;
+}
+
+/* Botón moderno */
+.excursion-btn {
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 20px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.excursion-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.excursion-btn:hover::before {
+  left: 100%;
+}
+
+.excursion-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+}
+
+.excursion-btn:active {
+  transform: translateY(0);
+}
+
+/* Estado vacío */
+.excursiones-empty {
+  grid-column: 1 / -1;
   text-align: center;
-  margin-top: 100px;
+  padding: 80px 20px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
+.empty-icon {
+  font-size: 4rem;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
 
-@media (max-width: 1024px) {
-  .excursiones-list {
-    grid-template-columns: repeat(2, 1fr);
+.excursiones-empty h3 {
+  font-size: 1.5rem;
+  color: #374151;
+  margin: 0 0 8px 0;
+  font-weight: 600;
+}
 
+.excursiones-empty p {
+  color: #6b7280;
+  margin: 0;
+  font-size: 1rem;
+}
+
+/* Loading Animation */
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
   }
 }
 
-@media (max-width: 768px) {
-  .excursiones-list {
+.excursion-card-loading {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite;
+}
+
+/* Enhanced hover effects */
+.excursion-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.05), rgba(139, 92, 246, 0.05));
+  opacity: 0;
+  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 16px;
+  pointer-events: none;
+}
+
+.excursion-card:hover::before {
+  opacity: 1;
+}
+
+/* Floating animation for empty state icon */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.empty-icon {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Additional micro-interactions */
+.excursion-title {
+  transition: color 0.2s ease;
+}
+
+.excursion-card:hover .excursion-title {
+  color: #3b82f6;
+}
+
+/* Price highlight effect */
+.price-amount {
+  position: relative;
+}
+
+.price-amount::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #059669, #34d399);
+  transition: width 0.3s ease;
+}
+
+.excursion-card:hover .price-amount::after {
+  width: 100%;
+}
+
+/* Focus states for accessibility */
+.excursion-btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+}
+
+.filtro-excursiones-checkbox:focus + .filtro-excursiones-checkmark {
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+}
+
+
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .excursiones-container {
+    padding: 16px;
+    gap: 16px;
+  }
+  
+  .excursiones-content {
+    max-width: calc(100% - 280px);
+  }
+  
+  .excursiones-grid {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 18px;
+  }
+}
+
+@media (max-width: 968px) {
+  .excursiones-container {
+    flex-direction: column;
+    padding: 12px;
+  }
+  
+  .excursiones-content {
+    max-width: 100%;
+  }
+  
+  .excursiones-grid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+    justify-items: stretch;
+  }
+  
+  .excursion-card {
+    max-width: none;
+  }
+  
+  .excursion-content {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 640px) {
+  .excursiones-container {
+    padding: 8px;
+    gap: 12px;
+  }
+  
+  .excursiones-grid {
     grid-template-columns: 1fr;
+    gap: 12px;
+    padding: 0 4px;
+  }
+  
+  .excursion-card {
+    border-radius: 12px;
+    max-width: none;
+  }
+  
+  .excursion-content {
+    padding: 16px;
+    gap: 12px;
+  }
+  
+  .excursion-footer {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+  
+  .excursion-btn {
+    width: 100%;
+    padding: 14px 20px;
+  }
+  
+  .excursiones-header {
+    margin-bottom: 20px;
+  }
+  
+  .excursiones-title {
+    font-size: 1.75rem;
+  }
+  
+  .excursiones-subtitle {
+    font-size: 1rem;
   }
 }

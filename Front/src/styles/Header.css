@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 
-.header {
+.header-container {
     font-family: 'Poppins', sans-serif;
     display: flex;
     justify-content: space-between;
@@ -14,43 +14,43 @@ a{
     text-decoration: none !important; 
 }
 
-.logo img {
+.header-logo img {
     width: 200px;
     height: 50px;
     object-fit: contain;
     vertical-align: middle;
 }
 
-.nav {
+.header-nav {
     display: flex;
     flex: 1;
     justify-content: center;
 }
 
-.nav ul {
+.header-nav ul {
     display: flex;
     list-style-type: none;
     margin: 0;
     padding: 0;
 }
 
-.nav ul li {
+.header-nav ul li {
     margin-right: 20px;
 }
 
-.nav ul li a {
+.header-nav ul li a {
     text-decoration: none;
     color: #333;
     font-weight: 600;
     transition: color 0.3s, transform 0.3s;
 }
 
-.nav ul li a:hover {
+.header-nav ul li a:hover {
     color: #007bff;
     transform: scale(1.1);
 }
 
-.user {
+.header-user {
     display: flex;
     align-items: center;
     margin-left: auto; 
@@ -59,14 +59,14 @@ a{
     color: #333;
 }
 
-.user-icon {
+.header-user-icon {
     width: 35px;
     height: 35px;
     border-radius: 50%;
     object-fit: cover;
 }
 
-.user-icon-chico {
+.header-user-icon-chico {
     width: 35px;
     height: 35px;
     margin-right: 10px;
@@ -76,19 +76,19 @@ a{
 
 
 
-.user a:hover {
+.header-user a:hover {
     color: #007bff !important;
     transform: scale(1.05);
     transition: color 0.3s, transform 0.3s;
     cursor: pointer;
 }
 
-.boton-inicia_sesion{
+.header-boton-inicia-sesion{
     text-decoration: none;
 }
 
 @media (max-width: 992px) {
-    .nav {
+    .header-nav {
         display: none !important;
     }
 
@@ -100,23 +100,23 @@ a{
         margin-right: 10px;
     }
 
-    .logo img {
+    .header-logo img {
         width: 150px;
         height: 40px;
     }
 
-    .user {
+    .header-user {
         display: none !important;
     }
 
-    .user-offcanvas {
+    .header-user-offcanvas {
         display: flex;
         align-items: center;
         gap: 10px;
         margin-top: 20px;
     }
 
-    .user-offcanvas .user-icon {
+    .header-user-offcanvas .header-user-icon {
         width: 35px;
         height: 35px;
         border-radius: 50%;
@@ -125,13 +125,13 @@ a{
 }
 
 @media (max-width: 600px) {
-    .header {
+    .header-container {
         flex-direction: column;
         align-items: flex-start;
         padding: 10px;
     }
 
-    .logo img {
+    .header-logo img {
         width: 120px;
         height: 32px;
     }
@@ -149,7 +149,7 @@ a{
         padding: 10px 0;
     }
 
-    .user-offcanvas {
+    .header-user-offcanvas {
         gap: 8px;
     }
 }
@@ -186,14 +186,14 @@ a{
     color: #007bff;
 }
 
-.user-offcanvas {
+.header-user-offcanvas {
     display: flex;
     align-items: center;
     gap: 10px;
     margin-top: 20px;
 }
 
-.user-offcanvas .user-icon {
+.header-user-offcanvas .header-user-icon {
     width: 35px;
     height: 35px;
     border-radius: 50%;

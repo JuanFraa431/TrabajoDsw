@@ -64,13 +64,11 @@ const Filtro: React.FC<{ className?: string }> = ({ className = '' }) => {
         } catch (error) {
             console.error('Error al buscar paquetes:', error);
         }
-    };
-
-    return (
-        <div className={`contenedor-filtro ${className}`}>
-            <form onSubmit={handleSubmit} className="formulario-buscador">
-                <div className="search-form">
-                    <div className="form-group">
+    };    return (
+        <div className={`filtro-contenedor ${className}`}>
+            <form onSubmit={handleSubmit} className="filtro-formulario-buscador">
+                <div className="filtro-search-form">
+                    <div className="filtro-form-group">
                         <label htmlFor="destination">Busca tu destino:</label>
                         <div>
                             <input
@@ -82,15 +80,15 @@ const Filtro: React.FC<{ className?: string }> = ({ className = '' }) => {
                             />
                         </div>
                     </div>
-                    <div className="form-group">
+                    <div className="filtro-form-group">
                         <label htmlFor="date">Selecciona las fechas:</label>
-                        <div className='fechas'>
+                        <div className='filtro-fechas'>
                             <DatePicker
                                 selected={startDate}
                                 onChange={(date: Date | null) => setStartDate(date)}
                                 dateFormat="dd/MM/yyyy"
                                 placeholderText="Fecha de inicio"
-                                className="datepicker-input datepicker-inicio"
+                                className="filtro-datepicker-input filtro-datepicker-inicio"
                                 minDate={today}
                                 portalId="root-portal"
                             />
@@ -100,15 +98,15 @@ const Filtro: React.FC<{ className?: string }> = ({ className = '' }) => {
                                 onChange={(date: Date | null) => setEndDate(date)}
                                 dateFormat="dd/MM/yyyy"
                                 placeholderText="Fecha de fin"
-                                className="datepicker-input datepicker-fin"
+                                className="filtro-datepicker-input filtro-datepicker-fin"
                                 minDate={tomorrow}
                                 portalId="root-portal"
                             />
                         </div>
                     </div>
-                    <div className="form-group">
-                        <label htmlFor="price" className='label-range'>Precio máximo:</label>
-                        <div className='range-container'>
+                    <div className="filtro-form-group">
+                        <label htmlFor="price" className='filtro-label-range'>Precio máximo:</label>
+                        <div className='filtro-range-container'>
                             <input
                                 type="range"
                                 id="price"
@@ -117,10 +115,10 @@ const Filtro: React.FC<{ className?: string }> = ({ className = '' }) => {
                                 value={price}
                                 onChange={handlePriceChange}
                             />
-                            <span className="price-label">${price}</span>
+                            <span className="filtro-price-label">${price}</span>
                         </div>
                     </div>
-                    <button type="submit" className="button-buscar">Buscar</button>
+                    <button type="submit" className="filtro-button-buscar">Buscar</button>
                 </div>
             </form>
         </div>
