@@ -29,8 +29,7 @@ const Header = () => {
             {/* Menú desktop */}
             <nav className="nav d-none d-lg-flex justify-content-center align-items-center">
                 <ul>
-                    <li><Link to="/hoteles">Hoteles</Link></li>
-                    <li>
+                    <li><Link to="/hoteles">Hoteles</Link></li>                    <li>
                         <Link to="/paquetes" onClick={(event) => handleLinkClick(event, 'paquete/user', 'paquetes', navigate)}>Paquetes</Link>
                     </li>
                     <li>
@@ -42,10 +41,10 @@ const Header = () => {
             </nav>
 
             <div className="user d-none d-lg-flex align-items-center ms-3">
-                <img 
-                    src={cliente && cliente.imagen ? cliente.imagen : userIcon} 
-                    alt="User Icon" 
-                    className="user-icon-chico" 
+                <img
+                    src={cliente && cliente.imagen ? cliente.imagen : userIcon}
+                    alt="User Icon"
+                    className="user-icon-chico"
                 />
                 {cliente ? (
                     <a

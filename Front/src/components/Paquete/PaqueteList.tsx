@@ -176,7 +176,7 @@ const onEditEstadia = (estadia: Estadia, paquetePadreId?: number) => {
   const fechaFin = new Date(estadia.fecha_fin).toISOString().split('T')[0];
   let paqueteId = estadia.id_paquete;
   if (!paqueteId) {
-    const paquetePadre = paquetes.find((p) => p.estadias.some((e) => e.id === estadia.id));
+    const paquetePadre = paquetes.find((p) => Array.isArray(p.estadias) && p.estadias.some((e) => e.id === estadia.id));
     if (paquetePadre) {
       paqueteId = paquetePadre.id;
     } else if (paquetePadreId) {
@@ -264,7 +264,7 @@ const onDeleteEstadia = (estadia: any, paquetePadreId?: number) => {
   console.log('🗑️ Eliminar estadía:', estadia);
   let paqueteId = estadia.id_paquete;
   if (!paqueteId) {
-    const paquetePadre = paquetes.find((p) => p.estadias.some((e) => e.id === estadia.id));
+    const paquetePadre = paquetes.find((p) => Array.isArray(p.estadias) && p.estadias.some((e) => e.id === estadia.id));
     if (paquetePadre) {
       paqueteId = paquetePadre.id;
     } else if (paquetePadreId) {
@@ -292,7 +292,7 @@ const onDeleteEstadia = (estadia: any, paquetePadreId?: number) => {
           setPaquetes((prevPaquetes) =>
             prevPaquetes.map((paquete) =>
               paquete.id === paqueteId
-                ? { ...paquete, estadias: paquete.estadias.filter((e) => e.id !== estadia.id) }
+                ? { ...paquete, estadias: Array.isArray(paquete.estadias) ? paquete.estadias.filter((e) => e.id !== estadia.id) : [] }
                 : paquete
             )
           );
@@ -404,7 +404,7 @@ const handleAddEstadia = (id_paquete: number) => {
       title: `Estadías de ${paquete.nombre}`,
       html: `
         <div style="max-height:60vh;overflow-y:auto;">
-          ${paquete.estadias.map((estadia: any) => `
+          ${(paquete.estadias ?? []).map((estadia: any) => `
             <div style="border:1px solid #ccc;border-radius:8px;padding:6px 10px;margin-bottom:8px;background:#f9f9f9;display:inline-block;min-width:220px;max-width:98%;box-sizing:border-box;">
               <p style="font-weight:bold;text-decoration:underline;margin:0 0 4px 0;">${estadia.hotel ? estadia.hotel.nombre : 'Cargando hotel...'}</p>
               <p style="margin:0 0 2px 0;">Fecha Inicio: ${new Date(estadia.fecha_ini).toLocaleDateString('es-ES')}</p>
@@ -424,14 +424,14 @@ const handleAddEstadia = (id_paquete: number) => {
       didOpen: () => {
         // Exponer funciones globales para los botones
         (window as any).editEstadiaSwal = (estadiaId: number, paqueteId: number) => {
-          const estadia = paquete.estadias.find((e: any) => e.id === estadiaId);
+          const estadia = paquete.estadias?.find((e: any) => e.id === estadiaId);
           if (estadia) {
             Swal.close();
             setTimeout(() => onEditEstadia(estadia, paqueteId), 200);
           }
         };
         (window as any).deleteEstadiaSwal = (estadiaId: number, paqueteId: number) => {
-          const estadia = paquete.estadias.find((e: any) => e.id === estadiaId);
+          const estadia = paquete.estadias?.find((e: any) => e.id === estadiaId);
           if (estadia) {
             Swal.close();
             setTimeout(() => onDeleteEstadia(estadia, paqueteId), 200);
@@ -477,7 +477,7 @@ const handleAddEstadia = (id_paquete: number) => {
             <div className="estadias-list">
               <h4>Estadías:</h4>
               <ul>
-                {paquete.estadias.map((estadia: any) => (
+                {paquete.estadias?.map((estadia: any) => (
                   <li key={estadia.id}>
                     {estadia.hotel ? (
                       <p style={{ textDecoration: 'underline' }}>{estadia.hotel.nombre}</p>

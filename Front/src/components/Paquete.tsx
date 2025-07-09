@@ -1,12 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import '../styles/Paquete.css';
-import { useLocation, useNavigate } from 'react-router-dom'; 
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Paquete } from '../interface/paquete';
 import Filtros from './FiltroVertical';
+import {
+    calcularPrecioTotalPaquete,
+    obtenerActividadesIncluidas,
+    obtenerCiudadesVisitadas,
+    formatearDuracionPaquete
+} from '../utils/paqueteUtils';
 
 const Paquetes: React.FC = () => {
     const location = useLocation();
-    const navigate = useNavigate(); 
+    const navigate = useNavigate();
     const { paquetes } = location.state || { paquetes: [] } as { paquetes: Paquete[] };
 
     const [visiblePackages, setVisiblePackages] = useState<string[]>([]);
@@ -16,9 +22,8 @@ const Paquetes: React.FC = () => {
             if (paquetes.length > 0) {
                 setVisiblePackages(paquetes.map((paquete: Paquete) => paquete.id.toString()));
             }
-
         }, 200);
-        console.log('paquete:', paquetes);
+        console.log('paquetes:', paquetes);
         return () => clearTimeout(timeout);
     }, [paquetes]);
 
@@ -26,7 +31,7 @@ const Paquetes: React.FC = () => {
         navigate(`/cardDetail`, { state: { id } });
     };
 
-    
+
 
     return (
         <div className="container2">
@@ -34,30 +39,28 @@ const Paquetes: React.FC = () => {
             <div className="hotels-list">
                 {paquetes.length > 0 ? (
                     paquetes.map((paquete: Paquete) => (
-                        <div 
-                            className={`hotel-card ${visiblePackages.includes(paquete.id.toString()) ? 'visible' : ''}`} 
+                        <div
+                            className={`hotel-card ${visiblePackages.includes(paquete.id.toString()) ? 'visible' : ''}`}
                             key={paquete.id}
                         >
-                            <img src={paquete.imagen} alt={paquete.nombre} className="card-img" />
-                            <div className="hotel-info">
+                            <img src={paquete.imagen} alt={paquete.nombre} className="card-img" />                            <div className="hotel-info">
                                 <h3>{paquete.nombre}</h3>
-                                <p>{paquete.detalle}</p>
-                                <div className="package-features">
-                                    <p><strong>Duración:</strong> 5 días</p>
-                                    <p><strong>Actividades incluidas:</strong> Tour guiado, comidas, transporte.</p>
+                                <p>{paquete.detalle}</p>                                <div className="package-features">
+                                    <p><strong>Duración:</strong> {formatearDuracionPaquete(paquete)}</p>
+                                    <p><strong>Ciudades visitadas:</strong> {obtenerCiudadesVisitadas(paquete).join(', ') || 'No especificado'}</p>
+                                    <p><strong>Actividades incluidas:</strong> {obtenerActividadesIncluidas(paquete).join(', ') || 'Consultar disponibilidad'}</p>
                                 </div>
                                 <div className='prueba'>
-                                    <button 
-                                        className="boton-ver-paquete" 
-                                        onClick={() => handleViewPackage(paquete.id.toString())} 
+                                    <button
+                                        className="boton-ver-paquete"
+                                        onClick={() => handleViewPackage(paquete.id.toString())}
                                     >
                                         Ver Alojamiento
                                     </button>
                                 </div>
-                            </div>
-                            <div className="price-container">
+                            </div>                            <div className="price-container">
                                 <p className="price-label">Precio x persona</p>
-                                <p className="price-large">${paquete.precio}</p>
+                                <p className="price-large">${calcularPrecioTotalPaquete(paquete) > 0 ? calcularPrecioTotalPaquete(paquete) : paquete.precio}</p>
                             </div>
                         </div>
                     ))
