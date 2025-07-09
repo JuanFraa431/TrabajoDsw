@@ -1,4 +1,4 @@
-import { findAll, findOne, create, update, remove, search, findAllUser, getExcursionesByPaquete } from "../controllers/paquete.controller.js";
+import { findAll, findOne, create, update, remove, search, findAllUser, getExcursionesByPaquete, recalcularPrecio } from "../controllers/paquete.controller.js";
 import { Router } from "express";
 
 export const routerPaquete = Router();
@@ -18,4 +18,6 @@ routerPaquete.put('/:id', update);
 routerPaquete.delete('/:id', remove);
 
 routerPaquete.get('/:id/excursiones', getExcursionesByPaquete);
+
+routerPaquete.put('/:id/recalcular-precio', recalcularPrecio);
 

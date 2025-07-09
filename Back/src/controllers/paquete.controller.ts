@@ -1,12 +1,13 @@
-import { Request, Response, NextFunction } from 'express'
+import { Request, Response } from 'express'
 import { Paquete } from '../models/paquete.model.js'
 import { orm } from '../shared/db/orm.js';
+import { actualizarPrecioPaquete } from '../utils/paqueteUtils.js';
 
 const em = orm.em;
 
 async function findAll(req: Request, res: Response) {
     try {
-        const paquetes = await em.find(Paquete, {}, {populate: ['comentarios', 'estadias', 'comentarios.cliente', 'estadias.hotel']});
+        const paquetes = await em.find(Paquete, {}, { populate: ['estadias', 'estadias.hotel', 'estadias.hotel.ciudad', 'paqueteExcursiones', 'paqueteExcursiones.excursion'] });
         res.status(200).json({ message: 'Paquetes encontrados', data: paquetes });
     } catch (error: any) {
         res.status(500).json({ message: error.message });
@@ -15,18 +16,19 @@ async function findAll(req: Request, res: Response) {
 
 async function findAllUser(req: Request, res: Response) {
     try {
-        const paquetes = await em.find(Paquete, { estado: 1 });
+        const paquetes = await em.find(Paquete, { estado: 1 }, {
+            populate: ['estadias.hotel.ciudad', 'paqueteExcursiones.excursion'] as any
+        });
         res.status(200).json({ message: 'Paquetes encontrados', data: paquetes });
     } catch (error: any) {
         res.status(500).json({ message: error.message });
     }
 }
 
-
 async function findOne(req: Request, res: Response) {
     try {
         const id = Number.parseInt(req.params.id);
-        const paquete = await em.findOneOrFail(Paquete, { id }, { populate: ['comentarios', 'estadias', 'comentarios.cliente', 'estadias.hotel','paqueteExcursiones', 'paqueteExcursiones.excursion' ] });
+        const paquete = await em.findOneOrFail(Paquete, { id }, { populate: ['comentarios', 'estadias', 'comentarios.cliente', 'estadias.hotel', 'paqueteExcursiones', 'paqueteExcursiones.excursion'] });
         res.status(200).json({ message: 'Paquete encontrado', data: paquete });
     } catch (error: any) {
         res.status(500).json({ message: error.message });
@@ -70,7 +72,7 @@ async function search(req: Request, res: Response) {
     try {
         const { ciudad, fechaInicio, fechaFin, precioMaximo } = req.query;
         const paquetes = await em.getConnection().execute<Paquete[]>(
-        `
+            `
             SELECT DISTINCT p.*, c.latitud, c.longitud
             FROM 
                     paquete AS p
@@ -86,7 +88,7 @@ async function search(req: Request, res: Response) {
             AND p.precio <= ?
             AND p.estado = '1'
         `,
-        [ciudad, ciudad, fechaInicio, fechaFin, precioMaximo]
+            [ciudad, ciudad, fechaInicio, fechaFin, precioMaximo]
         );
         res.status(200).json({ message: 'Paquetes encontrados', data: paquetes });
     } catch (error: any) {
@@ -107,4 +109,18 @@ async function getExcursionesByPaquete(req: Request, res: Response) {
     }
 }
 
-export { findAll, findOne, create, update, remove, search, findAllUser, getExcursionesByPaquete };
+async function recalcularPrecio(req: Request, res: Response) {
+    try {
+        const id = Number.parseInt(req.params.id);
+        await actualizarPrecioPaquete(id);
+        const paquete = await em.findOneOrFail(Paquete, { id });
+        res.status(200).json({
+            message: 'Precio del paquete recalculado',
+            data: { id: paquete.id, nuevoPrecio: paquete.precio }
+        });
+    } catch (error: any) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+export { findAll, findOne, create, update, remove, search, findAllUser, getExcursionesByPaquete, recalcularPrecio };
