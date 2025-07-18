@@ -5,6 +5,7 @@ import { Usuario } from '../models/usuario.model.js';
 import { Paquete } from '../models/paquete.model.js';
 import { Persona } from '../models/persona.model.js';
 import { Pago } from '../models/pago.model.js';
+import { emailService } from '../services/emailService.js';
 
 const em = orm.em;
 
@@ -44,7 +45,21 @@ async function create(req: Request, res: Response) {
     }
 
     const usuario = await em.findOneOrFail(Usuario, { id: usuarioId });
-    const paquete = await em.findOneOrFail(Paquete, { id: paqueteId });
+    
+    // Cargar el paquete con todas las relaciones necesarias para el email
+    const paquete = await em.findOneOrFail(Paquete, { id: paqueteId }, {
+      populate: [
+        'estadias',
+        'estadias.hotel',
+        'estadias.hotel.ciudad',
+        'paqueteExcursiones',
+        'paqueteExcursiones.excursion',
+        'paqueteExcursiones.excursion.ciudad'
+      ]
+    });
+
+    // Cargar el pago para obtener información del monto
+    const pago = await em.findOneOrFail(Pago, { id: pagoId });
 
     const reserva = new ReservaPaquete();
     reserva.usuario = usuario;
@@ -72,6 +87,43 @@ async function create(req: Request, res: Response) {
 
     em.persist(reserva);
     await em.flush();
+
+    // Enviar email de confirmación
+    try {
+      const datosReserva = {
+        usuario: {
+          nombre: usuario.nombre,
+          apellido: usuario.apellido,
+          email: usuario.email
+        },
+        paquete: {
+          id: paquete.id!,
+          nombre: paquete.nombre,
+          descripcion: paquete.descripcion,
+          detalle: paquete.detalle,
+          fecha_ini: paquete.fecha_ini.toISOString(),
+          fecha_fin: paquete.fecha_fin.toISOString(),
+          precio: paquete.precio,
+          imagen: paquete.imagen,
+          estadias: paquete.estadias.getItems(),
+          paqueteExcursiones: paquete.paqueteExcursiones.getItems()
+        },
+        reserva: {
+          id: reserva.id || 0,
+          fecha_reserva: reserva.fecha.toISOString(),
+          cantidad_personas: personas.length,
+          precio_total: pago.monto,
+          estado: reserva.estado
+        },
+        acompanantes: personas
+      };
+
+      await emailService.enviarEmailReserva(datosReserva);
+      console.log('Email de confirmación enviado exitosamente');
+    } catch (emailError) {
+      console.error('Error al enviar email de confirmación:', emailError);
+      // No fallar la reserva por error de email
+    }
 
     res.status(201).json({ message: 'ReservaPaquete creada', data: reserva });
   } catch (error: any) {
