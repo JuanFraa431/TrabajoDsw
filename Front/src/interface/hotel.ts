@@ -1,3 +1,5 @@
+import { Ciudad } from './ciudad';
+
 export interface Hotel {
   id: number;
   nombre: string;
@@ -6,5 +8,7 @@ export interface Hotel {
   telefono: string;
   email: string;
   estrellas: number;
-  id_ciudad: number;
+  precio_x_dia: number;
+  id_ciudad?: number; // For form data
+  ciudad?: Ciudad; // For populated data from backend
 }

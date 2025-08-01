@@ -26,6 +26,9 @@ const CiudadList: React.FC<CiudadListProps> = ({ ciudades: initialCiudades, onEd
       html: `
         <input id="swal-input-nombre" class="swal2-input" placeholder="Nombre" value="${ciudad.nombre}" />
         <input id="swal-input-descripcion" class="swal2-input" placeholder="Descripción" value="${ciudad.descripcion}" />
+        <input id="swal-input-pais" class="swal2-input" placeholder="País" value="${ciudad.pais}" />
+        <input id="swal-input-latitud" class="swal2-input" placeholder="Latitud" value="${ciudad.latitud}" />
+        <input id="swal-input-longitud" class="swal2-input" placeholder="Longitud" value="${ciudad.longitud}" />
       `,
       showCancelButton: true,
       confirmButtonText: 'Guardar',
@@ -33,20 +36,25 @@ const CiudadList: React.FC<CiudadListProps> = ({ ciudades: initialCiudades, onEd
       preConfirm: () => {
         const nombre = (document.getElementById('swal-input-nombre') as HTMLInputElement)?.value;
         const descripcion = (document.getElementById('swal-input-descripcion') as HTMLInputElement)?.value;
-        if (!nombre || !descripcion) {
+        const pais = (document.getElementById('swal-input-pais') as HTMLInputElement)?.value;
+        const latitud = (document.getElementById('swal-input-latitud') as HTMLInputElement)?.value;
+        const longitud = (document.getElementById('swal-input-longitud') as HTMLInputElement)?.value;
+        if (!nombre || !descripcion || !pais || !latitud || !longitud) {
           Swal.showValidationMessage('Todos los campos son obligatorios y deben ser válidos');
           return;
         }
-        return { ...ciudad, nombre, descripcion };
+        return { ...ciudad, nombre, descripcion, pais, latitud, longitud };
       },
     }).then(async (result) => {
       if (result.isConfirmed && result.value) {
+        console.log('Datos que se van a enviar al editar ciudad:', result.value);
         try {
           await axios.put(`/api/ciudad/${ciudad.id}`, result.value);
           setCiudades((prev) => prev.map((c) => (c.id === ciudad.id ? result.value : c)));
           onEdit(result.value);
           Swal.fire('Guardado', 'La ciudad fue actualizada correctamente.', 'success');
         } catch (error: any) {
+          console.error('Error al editar ciudad:', error.response?.data || error);
           Swal.fire('Error', error.response?.data?.message || 'No se pudo actualizar la ciudad', 'error');
         }
       }
@@ -83,6 +91,9 @@ const CiudadList: React.FC<CiudadListProps> = ({ ciudades: initialCiudades, onEd
       html: `
         <input id="swal-input-nombre" class="swal2-input" placeholder="Nombre" />
         <input id="swal-input-descripcion" class="swal2-input" placeholder="Descripción" />
+        <input id="swal-input-pais" class="swal2-input" placeholder="País" />
+        <input id="swal-input-latitud" class="swal2-input" placeholder="Latitud" />
+        <input id="swal-input-longitud" class="swal2-input" placeholder="Longitud" />
       `,
       showCancelButton: true,
       confirmButtonText: 'Crear',
@@ -90,19 +101,24 @@ const CiudadList: React.FC<CiudadListProps> = ({ ciudades: initialCiudades, onEd
       preConfirm: () => {
         const nombre = (document.getElementById('swal-input-nombre') as HTMLInputElement)?.value;
         const descripcion = (document.getElementById('swal-input-descripcion') as HTMLInputElement)?.value;
-        if (!nombre || !descripcion) {
+        const pais = (document.getElementById('swal-input-pais') as HTMLInputElement)?.value;
+        const latitud = (document.getElementById('swal-input-latitud') as HTMLInputElement)?.value;
+        const longitud = (document.getElementById('swal-input-longitud') as HTMLInputElement)?.value;
+        if (!nombre || !descripcion || !pais || !latitud || !longitud) {
           Swal.showValidationMessage('Todos los campos son obligatorios y deben ser válidos');
           return;
         }
-        return { nombre, descripcion };
+        return { nombre, descripcion, pais, latitud, longitud };
       },
     }).then(async (result) => {
       if (result.isConfirmed && result.value) {
+        console.log('Datos que se van a enviar al crear ciudad:', result.value);
         try {
           const response = await axios.post('/api/ciudad', result.value);
           setCiudades((prev) => [...prev, response.data.data || response.data]);
           Swal.fire('Creado', 'La ciudad fue creada correctamente.', 'success');
         } catch (error: any) {
+          console.error('Error al crear ciudad:', error.response?.data || error);
           Swal.fire('Error', error.response?.data?.message || 'No se pudo crear la ciudad', 'error');
         }
       }
@@ -118,7 +134,9 @@ const CiudadList: React.FC<CiudadListProps> = ({ ciudades: initialCiudades, onEd
         <div key={ciudad.id} className="card">
           <div className="card-content">
             <h3>{ciudad.nombre}</h3>
-            <p>Descripción: {ciudad.descripcion}</p>
+            <p><strong>Descripción:</strong> {ciudad.descripcion}</p>
+            <p><strong>País:</strong> {ciudad.pais}</p>
+            <p><strong>Coordenadas:</strong> {ciudad.latitud}, {ciudad.longitud}</p>
           </div>
           <div className="card-actions">
             <button onClick={() => handleEditCiudad(ciudad)}>Editar</button>

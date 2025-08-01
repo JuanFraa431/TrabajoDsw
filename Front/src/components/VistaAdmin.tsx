@@ -35,7 +35,7 @@ const VistaAdmin: React.FC = () => {
     }
     const user = JSON.parse(userStr);
     if (user.tipo_usuario !== 'admin') {
-      navigate('/'); 
+      navigate('/');
     }
   }, [navigate]);
 
@@ -112,16 +112,16 @@ const VistaAdmin: React.FC = () => {
     switch (selectedCategory) {
       case 'clientes':
         return (
-          <ClienteList 
-            clientes={clientes} 
+          <ClienteList
+            clientes={clientes}
             onEdit={(cliente) => setClienteEditado(cliente)}
             onDelete={(cliente) => handleEliminar(cliente.id, '/api/cliente', 'cliente', setClientes)}
           />
         );
-        case 'hoteles':
+      case 'hoteles':
         return (
           <HotelList
-          hoteles={hoteles}
+            hoteles={hoteles}
             onEdit={(hotel) => setHotelEditado(hotel)}
             onDelete={(hotel) => handleEliminar(hotel.id, '/api/hotel', 'hotel', setHoteles)}
           />
@@ -179,19 +179,19 @@ const VistaAdmin: React.FC = () => {
       )}
 
       {selectedCategory === 'hoteles' && (
-        <button className='boton-crear' onClick={() => setHotelEditado({ id: 0, nombre: '', direccion: '', descripcion: '', telefono: '', email: '', estrellas: 0, id_ciudad: 0 })}>
+        <button className='boton-crear' onClick={() => setHotelEditado({ id: 0, nombre: '', direccion: '', descripcion: '', telefono: '', email: '', estrellas: 0, precio_x_dia: 0, id_ciudad: 0 })}>
           Crear Hotel
         </button>
       )}
 
       {selectedCategory === 'clientes' && (
-      <button className='boton-crear' onClick={() => setClienteEditado({ id: 0, nombre: '', apellido: '', dni: '', email: '', fecha_nacimiento: '', estado: 1, username: '', password: '', tipo_usuario: 'cliente', imagen: ''})}>
-        Crear Cliente
-      </button>
+        <button className='boton-crear' onClick={() => setClienteEditado({ id: 0, nombre: '', apellido: '', dni: '', email: '', fecha_nacimiento: '', estado: 1, username: '', password: '', tipo_usuario: 'cliente', imagen: '' })}>
+          Crear Cliente
+        </button>
       )}
 
       {selectedCategory === 'excursiones' && (
-        <button className='boton-crear' onClick={() => setExcursionEditada({ id: 0, nombre: '', descripcion: '', detalle: '', tipo: '', nro_personas_max: 0, nombre_empresa: '', mail_empresa: '', precio: 0, imagen: ''})}>
+        <button className='boton-crear' onClick={() => setExcursionEditada({ id: 0, nombre: '', descripcion: '', detalle: '', tipo: '', nro_personas_max: 0, nombre_empresa: '', mail_empresa: '', precio: 0, imagen: '' })}>
           Crear Excursión
         </button>
       )}
