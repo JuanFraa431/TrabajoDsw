@@ -20,13 +20,37 @@ const ClienteList: React.FC<ClienteListProps> = ({ clientes: initialClientes, on
     setClientes(initialClientes);
   }, [initialClientes]);
 
+  // Helper function to format date without timezone issues
+  const formatDate = (dateString: string | Date) => {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    // Add timezone offset to avoid showing previous day
+    const localDate = new Date(date.getTime() + date.getTimezoneOffset() * 60000);
+    return localDate.toLocaleDateString();
+  };
+
   const handleEditCliente = (cliente: Cliente) => {
+    const fechaNacimiento = cliente.fecha_nacimiento ? new Date(cliente.fecha_nacimiento).toISOString().split('T')[0] : '';
+
     MySwal.fire({
       title: 'Editar Cliente',
       html: `
-        <input id="swal-input-nombre" class="swal2-input" placeholder="Nombre" value="${cliente.nombre}" />
-        <input id="swal-input-apellido" class="swal2-input" placeholder="Apellido" value="${cliente.apellido}" />
-        <input id="swal-input-dni" class="swal2-input" placeholder="DNI" value="${cliente.dni}" />
+        <input id="swal-input-nombre" class="swal2-input" placeholder="Nombre" value="${cliente.nombre || ''}" />
+        <input id="swal-input-apellido" class="swal2-input" placeholder="Apellido" value="${cliente.apellido || ''}" />
+        <input id="swal-input-dni" class="swal2-input" placeholder="DNI" value="${cliente.dni || ''}" />
+        <input id="swal-input-email" class="swal2-input" placeholder="Email" type="email" value="${cliente.email || ''}" />
+        <input id="swal-input-fecha-nacimiento" class="swal2-input" placeholder="Fecha de Nacimiento" type="date" value="${fechaNacimiento}" />
+        <input id="swal-input-username" class="swal2-input" placeholder="Nombre de Usuario" value="${cliente.username || ''}" />
+        <input id="swal-input-password" class="swal2-input" placeholder="Contraseña (dejar vacío para mantener actual)" type="password" />
+        <select id="swal-input-estado" class="swal2-input">
+          <option value="1" ${cliente.estado === 1 ? 'selected' : ''}>Activo</option>
+          <option value="0" ${cliente.estado === 0 ? 'selected' : ''}>Inactivo</option>
+        </select>
+        <select id="swal-input-tipo-usuario" class="swal2-input">
+          <option value="cliente" ${cliente.tipo_usuario === 'cliente' ? 'selected' : ''}>Cliente</option>
+          <option value="admin" ${cliente.tipo_usuario === 'admin' ? 'selected' : ''}>Admin</option>
+        </select>
+        <input id="swal-input-imagen" class="swal2-input" placeholder="URL de Imagen" value="${cliente.imagen || ''}" />
       `,
       showCancelButton: true,
       confirmButtonText: 'Guardar',
@@ -35,11 +59,47 @@ const ClienteList: React.FC<ClienteListProps> = ({ clientes: initialClientes, on
         const nombre = (document.getElementById('swal-input-nombre') as HTMLInputElement)?.value;
         const apellido = (document.getElementById('swal-input-apellido') as HTMLInputElement)?.value;
         const dni = (document.getElementById('swal-input-dni') as HTMLInputElement)?.value;
-        if (!nombre || !apellido || !dni) {
-          Swal.showValidationMessage('Todos los campos son obligatorios y deben ser válidos');
+        const email = (document.getElementById('swal-input-email') as HTMLInputElement)?.value;
+        const fecha_nacimiento = (document.getElementById('swal-input-fecha-nacimiento') as HTMLInputElement)?.value;
+        const username = (document.getElementById('swal-input-username') as HTMLInputElement)?.value;
+        const password = (document.getElementById('swal-input-password') as HTMLInputElement)?.value;
+        const estado = parseInt((document.getElementById('swal-input-estado') as HTMLSelectElement)?.value);
+        const tipo_usuario = (document.getElementById('swal-input-tipo-usuario') as HTMLSelectElement)?.value;
+        const imagen = (document.getElementById('swal-input-imagen') as HTMLInputElement)?.value;
+
+        if (!nombre || !apellido || !dni || !email || !username) {
+          Swal.showValidationMessage('Nombre, apellido, DNI, email y nombre de usuario son obligatorios');
           return;
         }
-        return { ...cliente, nombre, apellido, dni };
+
+        if (email && !/\S+@\S+\.\S+/.test(email)) {
+          Swal.showValidationMessage('Por favor ingrese un email válido');
+          return;
+        }
+
+        if (username && username.includes('@')) {
+          Swal.showValidationMessage('El nombre de usuario no puede contener un @');
+          return;
+        }
+
+        const updateData: any = {
+          ...cliente,
+          nombre,
+          apellido,
+          dni,
+          email,
+          fecha_nacimiento: fecha_nacimiento || null,
+          username,
+          estado,
+          tipo_usuario,
+          imagen: imagen || null
+        };
+
+        if (password && password.trim() !== '') {
+          updateData.password = password;
+        }
+
+        return updateData;
       },
     }).then(async (result) => {
       if (result.isConfirmed && result.value) {
@@ -83,9 +143,22 @@ const ClienteList: React.FC<ClienteListProps> = ({ clientes: initialClientes, on
     MySwal.fire({
       title: 'Crear Cliente',
       html: `
-        <input id="swal-input-nombre" class="swal2-input" placeholder="Nombre" />
-        <input id="swal-input-apellido" class="swal2-input" placeholder="Apellido" />
-        <input id="swal-input-dni" class="swal2-input" placeholder="DNI" />
+        <input id="swal-input-nombre" class="swal2-input" placeholder="Nombre *" />
+        <input id="swal-input-apellido" class="swal2-input" placeholder="Apellido *" />
+        <input id="swal-input-dni" class="swal2-input" placeholder="DNI *" />
+        <input id="swal-input-email" class="swal2-input" placeholder="Email *" type="email" />
+        <input id="swal-input-fecha-nacimiento" class="swal2-input" placeholder="Fecha de Nacimiento" type="date" />
+        <input id="swal-input-username" class="swal2-input" placeholder="Nombre de Usuario *" />
+        <input id="swal-input-password" class="swal2-input" placeholder="Contraseña *" type="password" />
+        <select id="swal-input-estado" class="swal2-input">
+          <option value="1" selected>Activo</option>
+          <option value="0">Inactivo</option>
+        </select>
+        <select id="swal-input-tipo-usuario" class="swal2-input">
+          <option value="cliente" selected>Cliente</option>
+          <option value="admin">Admin</option>
+        </select>
+        <input id="swal-input-imagen" class="swal2-input" placeholder="URL de Imagen" />
       `,
       showCancelButton: true,
       confirmButtonText: 'Crear',
@@ -94,11 +167,41 @@ const ClienteList: React.FC<ClienteListProps> = ({ clientes: initialClientes, on
         const nombre = (document.getElementById('swal-input-nombre') as HTMLInputElement)?.value;
         const apellido = (document.getElementById('swal-input-apellido') as HTMLInputElement)?.value;
         const dni = (document.getElementById('swal-input-dni') as HTMLInputElement)?.value;
-        if (!nombre || !apellido || !dni) {
-          Swal.showValidationMessage('Todos los campos son obligatorios y deben ser válidos');
+        const email = (document.getElementById('swal-input-email') as HTMLInputElement)?.value;
+        const fecha_nacimiento = (document.getElementById('swal-input-fecha-nacimiento') as HTMLInputElement)?.value;
+        const username = (document.getElementById('swal-input-username') as HTMLInputElement)?.value;
+        const password = (document.getElementById('swal-input-password') as HTMLInputElement)?.value;
+        const estado = parseInt((document.getElementById('swal-input-estado') as HTMLSelectElement)?.value);
+        const tipo_usuario = (document.getElementById('swal-input-tipo-usuario') as HTMLSelectElement)?.value;
+        const imagen = (document.getElementById('swal-input-imagen') as HTMLInputElement)?.value;
+
+        if (!nombre || !apellido || !dni || !email || !username || !password) {
+          Swal.showValidationMessage('Nombre, apellido, DNI, email, nombre de usuario y contraseña son obligatorios');
           return;
         }
-        return { nombre, apellido, dni };
+
+        if (email && !/\S+@\S+\.\S+/.test(email)) {
+          Swal.showValidationMessage('Por favor ingrese un email válido');
+          return;
+        }
+
+        if (username && username.includes('@')) {
+          Swal.showValidationMessage('El nombre de usuario no puede contener un @');
+          return;
+        }
+
+        return {
+          nombre,
+          apellido,
+          dni,
+          email,
+          fecha_nacimiento: fecha_nacimiento || null,
+          username,
+          password,
+          estado,
+          tipo_usuario,
+          imagen: imagen || null
+        };
       },
     }).then(async (result) => {
       if (result.isConfirmed && result.value) {
@@ -126,10 +229,16 @@ const ClienteList: React.FC<ClienteListProps> = ({ clientes: initialClientes, on
               {cliente.estado === 1 ? (
                 <span className="circulo-verde"></span>
               ) : (
-                <span className="circulo-roja"></span>
+                <span className="circulo-rojo"></span>
               )}
             </h3>
-            <p>DNI: {cliente.dni}</p>
+            <p><strong>DNI:</strong> {cliente.dni}</p>
+            <p><strong>Email:</strong> {cliente.email}</p>
+            <p><strong>Usuario:</strong> {cliente.username}</p>
+            <p><strong>Tipo:</strong> {cliente.tipo_usuario}</p>
+            {cliente.fecha_nacimiento && (
+              <p><strong>Fecha Nac.:</strong> {formatDate(cliente.fecha_nacimiento)}</p>
+            )}
           </div>
           <div className="card-actions">
             <button onClick={() => handleEditCliente(cliente)}>Editar</button>

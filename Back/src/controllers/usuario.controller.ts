@@ -16,7 +16,7 @@ async function findAll(req: Request, res: Response) {
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
-  
+
 }
 
 async function findOne(req: Request, res: Response) {
@@ -41,6 +41,10 @@ async function create(req: Request, res: Response) {
       return res.status(400).json({ message: 'El email es obligatorio' });
     }
 
+    if (!username) {
+      return res.status(400).json({ message: 'El nombre de usuario es obligatorio' });
+    }
+
     if (username.includes('@')) {
       return res.status(400).json({ message: 'El nombre de usuario no puede contener un @' });
     }
@@ -58,8 +62,16 @@ async function create(req: Request, res: Response) {
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
+    // Procesar fecha de nacimiento si se proporciona
+    const userData = { ...data };
+    if (userData.fecha_nacimiento) {
+      const fechaUTC = new Date(userData.fecha_nacimiento);
+      fechaUTC.setUTCHours(10, 0, 0, 0);
+      userData.fecha_nacimiento = fechaUTC;
+    }
+
     const usuario = em.create(Usuario, {
-      ...data,
+      ...userData,
       email,
       username,
       password: hashedPassword,
@@ -77,7 +89,27 @@ async function update(req: Request, res: Response) {
   try {
     const id = Number.parseInt(req.params.id);
 
-    const usuario = em.getReference(Usuario, id);
+    const usuario = await em.findOneOrFail(Usuario, { id });
+
+    // Validar email único si se está actualizando
+    if (req.body.email && req.body.email !== usuario.email) {
+      const existingUser = await em.findOne(Usuario, { email: req.body.email });
+      if (existingUser) {
+        return res.status(401).json({ message: 'El email ya pertenece a otro usuario' });
+      }
+    }
+
+    // Validar username único si se está actualizando
+    if (req.body.username && req.body.username !== usuario.username) {
+      if (req.body.username.includes('@')) {
+        return res.status(400).json({ message: 'El nombre de usuario no puede contener un @' });
+      }
+
+      const existingUserNick = await em.findOne(Usuario, { username: req.body.username });
+      if (existingUserNick) {
+        return res.status(401).json({ message: 'El nombre de usuario ya se encuentra en uso' });
+      }
+    }
 
     if (req.body.password) {
       const saltRounds = 10;
@@ -92,7 +124,7 @@ async function update(req: Request, res: Response) {
       console.log(req.body.fecha_nacimiento);
     }
 
-    
+
     em.assign(usuario, req.body);
 
     await em.flush();

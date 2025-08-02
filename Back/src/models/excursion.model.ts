@@ -12,22 +12,28 @@ export class Excursion extends BaseModel {
 
   @Property({ nullable: false })
   descripcion!: string
-  
+
   @Property({ nullable: false })
   detalle!: string
-  
+
   @Property({ nullable: false })
   tipo!: string
-  
+
+  @Property({ nullable: false })
+  nro_personas_max!: number
+
+  @Property({ nullable: false })
+  precio!: number
+
   @Property({ nullable: false })
   nombre_empresa!: string
-  
+
   @Property({ nullable: false })
   mail_empresa!: string
 
-  @ManyToOne( () => Ciudad, { nullable: false })
+  @ManyToOne(() => Ciudad, { nullable: false })
   ciudad!: Rel<Ciudad>
-  
+
   @Property({ nullable: false })
   imagen!: string
 

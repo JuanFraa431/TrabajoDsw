@@ -16,6 +16,7 @@ interface PaqueteListProps {
   onEdit: (paquete: Paquete) => void;
   onDelete: (paquete: Paquete) => void;
   onAddEstadia: (newEstadia: any) => void;
+  onCreate?: (paquete: Paquete) => void;
 }
 
 const MySwal = withReactContent(Swal);
@@ -26,6 +27,7 @@ const handleEditPaquete = (
   setPaquetes: React.Dispatch<React.SetStateAction<Paquete[]>>
 ) => {
   let nombre = paquete.nombre;
+  let descripcion = paquete.descripcion;
   let detalle = paquete.detalle;
   let estado = paquete.estado;
   let precio = paquete.precio;
@@ -48,6 +50,11 @@ const handleEditPaquete = (
             <option value="1" ${estado === 1 ? 'selected' : ''}>Activo</option>
             <option value="0" ${estado === 0 ? 'selected' : ''}>Inactivo</option>
           </select>
+        </div>
+
+        <div class="sweet-form-row">
+          <label for="swal-input-descripcion">Descripción</label>
+          <input id="swal-input-descripcion" placeholder="Descripción" value="${descripcion}" />
         </div>
 
         <div class="sweet-form-row">
@@ -82,13 +89,14 @@ const handleEditPaquete = (
     preConfirm: () => {
       const newNombre = (document.getElementById('swal-input-nombre') as HTMLInputElement)?.value;
       const newEstado = parseInt((document.getElementById('swal-input-estado') as HTMLSelectElement)?.value, 10);
+      const newDescripcion = (document.getElementById('swal-input-descripcion') as HTMLInputElement)?.value;
       const newDetalle = (document.getElementById('swal-input-detalle') as HTMLInputElement)?.value;
       const newPrecio = parseFloat((document.getElementById('swal-input-precio') as HTMLInputElement)?.value);
       const newFechaInicio = (document.getElementById('swal-input-fecha-inicio') as HTMLInputElement)?.value;
       const newFechaFin = (document.getElementById('swal-input-fecha-fin') as HTMLInputElement)?.value;
       const newImagen = (document.getElementById('swal-input-imagen') as HTMLInputElement)?.value;
 
-      if (!newNombre || isNaN(newEstado) || !newDetalle || isNaN(newPrecio) || !newFechaInicio || !newFechaFin || !newImagen) {
+      if (!newNombre || isNaN(newEstado) || !newDescripcion || !newDetalle || isNaN(newPrecio) || !newFechaInicio || !newFechaFin || !newImagen) {
         Swal.showValidationMessage('Todos los campos son obligatorios y deben ser válidos');
         return;
       }
@@ -97,6 +105,7 @@ const handleEditPaquete = (
         id: paquete.id,
         nombre: newNombre,
         estado: newEstado,
+        descripcion: newDescripcion,
         detalle: newDetalle,
         precio: newPrecio,
         fecha_ini: newFechaInicio,
@@ -125,7 +134,108 @@ const handleEditPaquete = (
   });
 };
 
-const PaqueteList: React.FC<PaqueteListProps> = ({ paquetes: initialPaquetes, onEdit, onDelete, onAddEstadia }) => {
+const handleCreatePaquete = (
+  onCreate: (paquete: Paquete) => void,
+  setPaquetes: React.Dispatch<React.SetStateAction<Paquete[]>>
+) => {
+  MySwal.fire({
+    title: 'Crear Paquete',
+    html: `
+      <div class="form-editar-paquete">
+        <div class="sweet-form-row">
+          <label for="swal-input-nombre">Nombre</label>
+          <input id="swal-input-nombre" placeholder="Nombre" />
+        </div>
+
+        <div class="sweet-form-row">
+          <label for="swal-input-estado">Estado</label>
+          <select id="swal-input-estado">
+            <option value="1" selected>Activo</option>
+            <option value="0">Inactivo</option>
+          </select>
+        </div>
+
+        <div class="sweet-form-row">
+          <label for="swal-input-descripcion">Descripción</label>
+          <input id="swal-input-descripcion" placeholder="Descripción" />
+        </div>
+
+        <div class="sweet-form-row">
+          <label for="swal-input-detalle">Detalle</label>
+          <input id="swal-input-detalle" placeholder="Detalle" />
+        </div>
+
+        <div class="sweet-form-row">
+          <label for="swal-input-precio">Precio</label>
+          <input id="swal-input-precio" type="number" placeholder="Precio" />
+        </div>
+
+        <div class="sweet-form-row">
+          <label for="swal-input-fecha-inicio">Fecha Inicio</label>
+          <input id="swal-input-fecha-inicio" type="date" />
+        </div>
+
+        <div class="sweet-form-row">
+          <label for="swal-input-fecha-fin">Fecha Fin</label>
+          <input id="swal-input-fecha-fin" type="date" />
+        </div>
+
+        <div class="sweet-form-row">
+          <label for="swal-input-imagen">URL de Imagen</label>
+          <input id="swal-input-imagen" placeholder="URL de Imagen" />
+        </div>
+      </div>
+    `,
+    showCancelButton: true,
+    confirmButtonText: 'Crear',
+    cancelButtonText: 'Cancelar',
+    preConfirm: () => {
+      const nombre = (document.getElementById('swal-input-nombre') as HTMLInputElement)?.value;
+      const estado = parseInt((document.getElementById('swal-input-estado') as HTMLSelectElement)?.value, 10);
+      const descripcion = (document.getElementById('swal-input-descripcion') as HTMLInputElement)?.value;
+      const detalle = (document.getElementById('swal-input-detalle') as HTMLInputElement)?.value;
+      const precio = parseFloat((document.getElementById('swal-input-precio') as HTMLInputElement)?.value);
+      const fechaInicio = (document.getElementById('swal-input-fecha-inicio') as HTMLInputElement)?.value;
+      const fechaFin = (document.getElementById('swal-input-fecha-fin') as HTMLInputElement)?.value;
+      const imagen = (document.getElementById('swal-input-imagen') as HTMLInputElement)?.value;
+
+      if (!nombre || isNaN(estado) || !descripcion || !detalle || isNaN(precio) || !fechaInicio || !fechaFin || !imagen) {
+        Swal.showValidationMessage('Todos los campos son obligatorios y deben ser válidos');
+        return;
+      }
+
+      return {
+        nombre,
+        estado,
+        descripcion,
+        detalle,
+        precio,
+        fecha_ini: fechaInicio,
+        fecha_fin: fechaFin,
+        imagen,
+      };
+    },
+  }).then((result) => {
+    if (result.isConfirmed && result.value) {
+      const newPaquete = result.value;
+
+      axios
+        .post('/api/paquete', newPaquete)
+        .then((response) => {
+          const createdPaquete = response.data.data;
+          onCreate(createdPaquete);
+          setPaquetes((prevPaquetes) => [...prevPaquetes, createdPaquete]);
+          Swal.fire('Creado', 'El paquete fue creado correctamente.', 'success');
+        })
+        .catch((error) => {
+          console.error('Error al crear el paquete:', error.response?.data || error.message);
+          Swal.fire('Error', `No se pudo crear el paquete: ${error.response?.data?.message || error.message}`, 'error');
+        });
+    }
+  });
+};
+
+const PaqueteList: React.FC<PaqueteListProps> = ({ paquetes: initialPaquetes, onEdit, onDelete, onAddEstadia, onCreate }) => {
   const [paquetes, setPaquetes] = useState<Paquete[]>(initialPaquetes);
   const [hoteles, setHoteles] = useState<{ [key: number]: any }>({});
   const [activePaquete, setActivePaquete] = useState<number | null>(null);
@@ -140,7 +250,7 @@ const PaqueteList: React.FC<PaqueteListProps> = ({ paquetes: initialPaquetes, on
         setHoteles(response.data.data.reduce((acc: any, hotel: any) => {
           acc[hotel.id] = hotel;
           return acc;
-        }, {})); 
+        }, {}));
       } else {
         console.error('La respuesta del servidor no contiene un array válido:', response.data);
         Swal.fire('Error', 'No se pudieron cargar los hoteles. Respuesta inválida del servidor.', 'error');
@@ -152,7 +262,7 @@ const PaqueteList: React.FC<PaqueteListProps> = ({ paquetes: initialPaquetes, on
   };
 
   useEffect(() => {
-    fetchHoteles(); 
+    fetchHoteles();
   }, []);
 
   useEffect(() => {
@@ -171,33 +281,33 @@ const PaqueteList: React.FC<PaqueteListProps> = ({ paquetes: initialPaquetes, on
   };
 
 
-const onEditEstadia = (estadia: Estadia, paquetePadreId?: number) => {
-  const fechaInicio = new Date(estadia.fecha_ini).toISOString().split('T')[0];
-  const fechaFin = new Date(estadia.fecha_fin).toISOString().split('T')[0];
-  let paqueteId = estadia.id_paquete;
-  if (!paqueteId) {
-    const paquetePadre = paquetes.find((p) => Array.isArray(p.estadias) && p.estadias.some((e) => e.id === estadia.id));
-    if (paquetePadre) {
-      paqueteId = paquetePadre.id;
-    } else if (paquetePadreId) {
-      paqueteId = paquetePadreId;
+  const onEditEstadia = (estadia: Estadia, paquetePadreId?: number) => {
+    const fechaInicio = new Date(estadia.fecha_ini).toISOString().split('T')[0];
+    const fechaFin = new Date(estadia.fecha_fin).toISOString().split('T')[0];
+    let paqueteId = estadia.id_paquete;
+    if (!paqueteId) {
+      const paquetePadre = paquetes.find((p) => Array.isArray(p.estadias) && p.estadias.some((e) => e.id === estadia.id));
+      if (paquetePadre) {
+        paqueteId = paquetePadre.id;
+      } else if (paquetePadreId) {
+        paqueteId = paquetePadreId;
+      }
     }
-  }
-  const estadiaId = estadia.id;
+    const estadiaId = estadia.id;
 
-  MySwal.fire({
-    title: 'Editar Estadía',
-    html: `
+    MySwal.fire({
+      title: 'Editar Estadía',
+      html: `
       <div class="form-editar-estadia">
         <div class="sweet-form-row">
           <label for="swal-input-hotel">Hotel</label>
           <select id="swal-input-hotel">
             ${Object.values(hoteles)
-              .map(
-                (hotel: any) =>
-                  `<option value="${hotel.id}" ${hotel.id === (typeof estadia.hotel === 'object' ? estadia.hotel?.id : estadia.hotel) ? 'selected' : ''}>${hotel.nombre}</option>`
-              )
-              .join('')}
+          .map(
+            (hotel: any) =>
+              `<option value="${hotel.id}" ${hotel.id === (typeof estadia.hotel === 'object' ? estadia.hotel?.id : estadia.hotel) ? 'selected' : ''}>${hotel.nombre}</option>`
+          )
+          .join('')}
           </select>
         </div>
         <div class="sweet-form-row">
@@ -214,149 +324,149 @@ const onEditEstadia = (estadia: Estadia, paquetePadreId?: number) => {
         </div>
       </div>
     `,
-    showCancelButton: true,
-    confirmButtonText: 'Guardar',
-    cancelButtonText: 'Cancelar',
-    preConfirm: () => {
-      const newHotelId = parseInt((document.getElementById('swal-input-hotel') as HTMLSelectElement)?.value, 10);
-      const newFechaInicio = (document.getElementById('swal-input-fecha-inicio') as HTMLInputElement)?.value;
-      const newFechaFin = (document.getElementById('swal-input-fecha-fin') as HTMLInputElement)?.value;
-      const newPrecio = parseFloat((document.getElementById('swal-input-precio') as HTMLInputElement)?.value);
+      showCancelButton: true,
+      confirmButtonText: 'Guardar',
+      cancelButtonText: 'Cancelar',
+      preConfirm: () => {
+        const newHotelId = parseInt((document.getElementById('swal-input-hotel') as HTMLSelectElement)?.value, 10);
+        const newFechaInicio = (document.getElementById('swal-input-fecha-inicio') as HTMLInputElement)?.value;
+        const newFechaFin = (document.getElementById('swal-input-fecha-fin') as HTMLInputElement)?.value;
+        const newPrecio = parseFloat((document.getElementById('swal-input-precio') as HTMLInputElement)?.value);
 
-      if (!newHotelId || !newFechaInicio || !newFechaFin || isNaN(newPrecio) || !paqueteId) {
-        Swal.showValidationMessage("Todos los campos deben estar completos y válidos, incluyendo el paquete.");
-        return;
+        if (!newHotelId || !newFechaInicio || !newFechaFin || isNaN(newPrecio) || !paqueteId) {
+          Swal.showValidationMessage("Todos los campos deben estar completos y válidos, incluyendo el paquete.");
+          return;
+        }
+        if (typeof paqueteId !== 'number' || isNaN(paqueteId) || paqueteId <= 0) {
+          Swal.showValidationMessage("Error interno: el paquete no está definido correctamente. Intenta desde el botón 'Ver Estadías' del paquete.");
+          return;
+        }
+        return {
+          id: estadiaId,
+          id_paquete: paqueteId,
+          id_hotel: newHotelId,
+          fecha_ini: newFechaInicio,
+          fecha_fin: newFechaFin,
+          precio_x_dia: newPrecio,
+        };
+      },
+    }).then((result) => {
+      if (result.isConfirmed && result.value) {
+        const estadiaActualizada = result.value;
+        axios
+          .put(`/api/estadia/${estadiaActualizada.id}`, estadiaActualizada)
+          .then((response) => {
+            let paqueteId = estadiaActualizada.id_paquete;
+            fetchAndUpdatePaquete(paqueteId);
+            Swal.fire('Guardado', 'La estadía fue actualizada correctamente.', 'success');
+          })
+          .catch((error) => {
+            console.error('Error al actualizar la estadía:', error);
+            Swal.fire('Error', `No se pudo actualizar la estadía: ${error.message}`, 'error');
+          });
       }
-      if (typeof paqueteId !== 'number' || isNaN(paqueteId) || paqueteId <= 0) {
-        Swal.showValidationMessage("Error interno: el paquete no está definido correctamente. Intenta desde el botón 'Ver Estadías' del paquete.");
-        return;
+    });
+  };
+
+
+
+  const onDeleteEstadia = (estadia: any, paquetePadreId?: number) => {
+    console.log('🗑️ Eliminar estadía:', estadia);
+    let paqueteId = estadia.id_paquete;
+    if (!paqueteId) {
+      const paquetePadre = paquetes.find((p) => Array.isArray(p.estadias) && p.estadias.some((e) => e.id === estadia.id));
+      if (paquetePadre) {
+        paqueteId = paquetePadre.id;
+      } else if (paquetePadreId) {
+        paqueteId = paquetePadreId;
       }
-      return {
-        id: estadiaId,
-        id_paquete: paqueteId,
-        id_hotel: newHotelId,
-        fecha_ini: newFechaInicio,
-        fecha_fin: newFechaFin,
-        precio_x_dia: newPrecio,
-      };
-    },
-  }).then((result) => {
-    if (result.isConfirmed && result.value) {
-      const estadiaActualizada = result.value;
-      axios
-        .put(`/api/estadia/${estadiaActualizada.id}`, estadiaActualizada)
-        .then((response) => {
-          let paqueteId = estadiaActualizada.id_paquete;
-          fetchAndUpdatePaquete(paqueteId);
-          Swal.fire('Guardado', 'La estadía fue actualizada correctamente.', 'success');
-        })
-        .catch((error) => {
-          console.error('Error al actualizar la estadía:', error);
-          Swal.fire('Error', `No se pudo actualizar la estadía: ${error.message}`, 'error');
-        });
     }
-  });
-};
-
-
-
-const onDeleteEstadia = (estadia: any, paquetePadreId?: number) => {
-  console.log('🗑️ Eliminar estadía:', estadia);
-  let paqueteId = estadia.id_paquete;
-  if (!paqueteId) {
-    const paquetePadre = paquetes.find((p) => Array.isArray(p.estadias) && p.estadias.some((e) => e.id === estadia.id));
-    if (paquetePadre) {
-      paqueteId = paquetePadre.id;
-    } else if (paquetePadreId) {
-      paqueteId = paquetePadreId;
+    if (!paqueteId) {
+      Swal.fire('Error', 'No se pudo determinar el paquete de la estadía. Intenta desde el botón "Ver Estadías" del paquete.', 'error');
+      return;
     }
-  }
-  if (!paqueteId) {
-    Swal.fire('Error', 'No se pudo determinar el paquete de la estadía. Intenta desde el botón "Ver Estadías" del paquete.', 'error');
-    return;
-  }
-  Swal.fire({
-    title: '¿Estás seguro que deseas eliminar la estadía?',
-    text: 'Esta acción no se puede deshacer.',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#d33',
-    cancelButtonColor: '#3085d6',
-    confirmButtonText: 'Sí, eliminar',
-    cancelButtonText: 'Cancelar',
-  }).then((result) => {
-    if (result.isConfirmed) {
-      axios.delete(`/api/estadia/${estadia.id}`)
-        .then(() => {
-          console.log('✅ Estadía eliminada');
-          setPaquetes((prevPaquetes) =>
-            prevPaquetes.map((paquete) =>
-              paquete.id === paqueteId
-                ? { ...paquete, estadias: Array.isArray(paquete.estadias) ? paquete.estadias.filter((e) => e.id !== estadia.id) : [] }
-                : paquete
-            )
-          );
-          Swal.fire('Eliminado', 'La estadía fue eliminada correctamente.', 'success');
-        })
-        .catch((error) => {
-          console.error('❌ Error eliminando estadía:', error);
-          Swal.fire('Error', `No se pudo eliminar la estadía: ${error.response?.data?.message || error.message}`, 'error');
-        });
-    }
-  });
-};
+    Swal.fire({
+      title: '¿Estás seguro que deseas eliminar la estadía?',
+      text: 'Esta acción no se puede deshacer.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios.delete(`/api/estadia/${estadia.id}`)
+          .then(() => {
+            console.log('✅ Estadía eliminada');
+            setPaquetes((prevPaquetes) =>
+              prevPaquetes.map((paquete) =>
+                paquete.id === paqueteId
+                  ? { ...paquete, estadias: Array.isArray(paquete.estadias) ? paquete.estadias.filter((e) => e.id !== estadia.id) : [] }
+                  : paquete
+              )
+            );
+            Swal.fire('Eliminado', 'La estadía fue eliminada correctamente.', 'success');
+          })
+          .catch((error) => {
+            console.error('❌ Error eliminando estadía:', error);
+            Swal.fire('Error', `No se pudo eliminar la estadía: ${error.response?.data?.message || error.message}`, 'error');
+          });
+      }
+    });
+  };
 
-const handleAddEstadia = (id_paquete: number) => {
-  MySwal.fire({
-    title: 'Agregar Nueva Estadía',
-    html: `
+  const handleAddEstadia = (id_paquete: number) => {
+    MySwal.fire({
+      title: 'Agregar Nueva Estadía',
+      html: `
       <select id="swal-input-hotel" class="swal2-input">
         ${Object.values(hoteles).map(
-          (hotel: any) => `<option value="${hotel.id}">${hotel.nombre}</option>`
-        ).join('')}
+        (hotel: any) => `<option value="${hotel.id}">${hotel.nombre}</option>`
+      ).join('')}
       </select>
       <input id="swal-input-fecha-inicio" type="date" class="swal2-input" placeholder="Fecha Inicio" />
       <input id="swal-input-fecha-fin" type="date" class="swal2-input" placeholder="Fecha Fin" />
       <input id="swal-input-precio" type="number" class="swal2-input" placeholder="Precio por Día" />
     `,
-    showCancelButton: true,
-    confirmButtonText: 'Guardar',
-    cancelButtonText: 'Cancelar',
-    preConfirm: () => {
-      const newHotelId = parseInt((document.getElementById('swal-input-hotel') as HTMLSelectElement)?.value, 10);
-      const newFechaInicio = (document.getElementById('swal-input-fecha-inicio') as HTMLInputElement)?.value;
-      const newFechaFin = (document.getElementById('swal-input-fecha-fin') as HTMLInputElement)?.value;
-      const newPrecio = parseFloat((document.getElementById('swal-input-precio') as HTMLInputElement)?.value);
+      showCancelButton: true,
+      confirmButtonText: 'Guardar',
+      cancelButtonText: 'Cancelar',
+      preConfirm: () => {
+        const newHotelId = parseInt((document.getElementById('swal-input-hotel') as HTMLSelectElement)?.value, 10);
+        const newFechaInicio = (document.getElementById('swal-input-fecha-inicio') as HTMLInputElement)?.value;
+        const newFechaFin = (document.getElementById('swal-input-fecha-fin') as HTMLInputElement)?.value;
+        const newPrecio = parseFloat((document.getElementById('swal-input-precio') as HTMLInputElement)?.value);
 
-      if (!newHotelId || !newFechaInicio || !newFechaFin || isNaN(newPrecio)) {
-        Swal.showValidationMessage('Todos los campos son obligatorios y deben ser válidos');
-        return;
+        if (!newHotelId || !newFechaInicio || !newFechaFin || isNaN(newPrecio)) {
+          Swal.showValidationMessage('Todos los campos son obligatorios y deben ser válidos');
+          return;
+        }
+
+        return {
+          id_hotel: newHotelId,
+          fecha_ini: newFechaInicio,
+          fecha_fin: newFechaFin,
+          precio_x_dia: newPrecio,
+          id_paquete: id_paquete,
+        };
+      },
+    }).then((result) => {
+      if (result.isConfirmed && result.value) {
+        const nuevaEstadia = result.value;
+        axios
+          .post('/api/estadia', nuevaEstadia)
+          .then((response) => {
+            fetchAndUpdatePaquete(id_paquete);
+            Swal.fire('Guardado', 'La estadía fue agregada correctamente.', 'success');
+          })
+          .catch((error) => {
+            console.error('Error al agregar la estadía:', error.response?.data || error.message);
+            Swal.fire('Error', `No se pudo agregar la estadía: ${error.response?.data?.message || error.message}`, 'error');
+          });
       }
-
-      return {
-        id_hotel: newHotelId,
-        fecha_ini: newFechaInicio,
-        fecha_fin: newFechaFin,
-        precio_x_dia: newPrecio,
-        id_paquete: id_paquete,
-      };
-    },
-  }).then((result) => {
-    if (result.isConfirmed && result.value) {
-      const nuevaEstadia = result.value;
-      axios
-        .post('/api/estadia', nuevaEstadia)
-        .then((response) => {
-          fetchAndUpdatePaquete(id_paquete);
-          Swal.fire('Guardado', 'La estadía fue agregada correctamente.', 'success');
-        })
-        .catch((error) => {
-          console.error('Error al agregar la estadía:', error.response?.data || error.message);
-          Swal.fire('Error', `No se pudo agregar la estadía: ${error.response?.data?.message || error.message}`, 'error');
-        });
-    }
-  });
-};
+    });
+  };
 
 
   const handleSaveEstadia = () => {
@@ -461,9 +571,10 @@ const handleAddEstadia = (id_paquete: number) => {
               {paquete.estado === 1 ? (
                 <span className="circulo-verde"></span>
               ) : (
-                <span className="circulo-roja"></span>
+                <span className="circulo-rojo"></span>
               )}
             </h3>
+            <p>Descripción: {paquete.descripcion}</p>
             <p>Detalle: {paquete.detalle}</p>
           </div>
           <div className="card-actions">
@@ -499,6 +610,18 @@ const handleAddEstadia = (id_paquete: number) => {
           )}
         </div>
       ))}
+
+      {onCreate && (
+        <div className="crear-paquete-container">
+          <button
+            className="boton-crear"
+            onClick={() => handleCreatePaquete(onCreate, setPaquetes)}
+          >
+            Crear Paquete
+          </button>
+        </div>
+      )}
+
       {estadiaEditada && (
         <EstadiaForm
           estadiaEditada={estadiaEditada}

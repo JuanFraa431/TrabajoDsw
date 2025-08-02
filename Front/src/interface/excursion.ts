@@ -9,4 +9,9 @@ export interface Excursion {
   mail_empresa: string;
   precio: number;
   imagen: string;
+  id_ciudad?: number;
+  ciudad?: {
+    id: number;
+    nombre: string;
+  };
 }

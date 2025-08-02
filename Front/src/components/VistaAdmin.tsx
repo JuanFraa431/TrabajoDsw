@@ -138,9 +138,9 @@ const VistaAdmin: React.FC = () => {
         return (
           <ExcursionList
             excursiones={excursiones}
-            onEdit={(excursion) => setExcursionEditada(excursion)}
-            onDelete={(excursion) => handleEliminar(excursion.id, '/api/excursion', 'excursión', setExcursiones)}
-            onCreate={(excursion) => setExcursionEditada(excursion)}
+            onEdit={(excursion: Excursion) => setExcursionEditada(excursion)}
+            onDelete={(excursion: Excursion) => handleEliminar(excursion.id, '/api/excursion', 'excursión', setExcursiones)}
+            onCreate={(excursion: Excursion) => setExcursionEditada(excursion)}
           />
         );
       case 'paquetes':
@@ -151,6 +151,9 @@ const VistaAdmin: React.FC = () => {
             onDelete={(paquete) => handleEliminar(paquete.id, '/api/paquete', 'paquete', setPaquetes)}
             onAddEstadia={(newEstadia) => {
               console.log('Agregar estadía:', newEstadia);
+            }}
+            onCreate={async (paquete) => {
+              await loadEntities('/api/paquete', setPaquetes);
             }}
           />
         );
@@ -185,20 +188,20 @@ const VistaAdmin: React.FC = () => {
       )}
 
       {selectedCategory === 'clientes' && (
-        <button className='boton-crear' onClick={() => setClienteEditado({ id: 0, nombre: '', apellido: '', dni: '', email: '', fecha_nacimiento: '', estado: 1, username: '', password: '', tipo_usuario: 'cliente', imagen: '' })}>
+        <button className='boton-crear' onClick={() => setClienteEditado({
+          id: 0,
+          nombre: '',
+          apellido: '',
+          dni: '',
+          email: '',
+          fecha_nacimiento: '',
+          estado: 1,
+          username: '',
+          password: '',
+          tipo_usuario: 'cliente',
+          imagen: ''
+        })}>
           Crear Cliente
-        </button>
-      )}
-
-      {selectedCategory === 'excursiones' && (
-        <button className='boton-crear' onClick={() => setExcursionEditada({ id: 0, nombre: '', descripcion: '', detalle: '', tipo: '', nro_personas_max: 0, nombre_empresa: '', mail_empresa: '', precio: 0, imagen: '' })}>
-          Crear Excursión
-        </button>
-      )}
-
-      {selectedCategory === 'paquetes' && (
-        <button className='boton-crear' onClick={() => setPaqueteEditado({ id: 0, estado: 1, nombre: '', descripcion: '', detalle: '', precio: 0, fecha_ini: '', fecha_fin: '', imagen: '', comentarios: [], estadias: [], paqueteExcursiones: [] })}>
-          Crear Paquete
         </button>
       )}
     </div>
