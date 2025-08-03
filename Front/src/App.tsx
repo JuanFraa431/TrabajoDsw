@@ -19,14 +19,15 @@ import DetalleCliente from './components/Cliente/DetalleCliente';
 import CardDetailExcursion from './components/CardDetailExcursion';
 import Register from './components/Register';
 import EditarPerfil from './components/Cliente/EditarPerfil';
+import MisReservas from './components/Cliente/MisReservas';
 import ReservarPaquete from './components/Paquete/ReservarPaquete';
 import Tarjeta from './components/Tarjeta';
 
 const pageTransition = {
-    initial: { opacity: 0 }, 
+    initial: { opacity: 0 },
     animate: { opacity: 1 },
-    exit: { opacity: 0 }, 
-    transition: { duration: 0.4 } 
+    exit: { opacity: 0 },
+    transition: { duration: 0.4 }
 };
 
 const App: React.FC = () => {
@@ -40,23 +41,23 @@ const App: React.FC = () => {
                         path="/"
                         element={
                             <div>
-                                <Header/>
+                                <Header />
                                 <motion.div {...pageTransition}>
-                                    <Body/>
-                                    <CardList/>
-                                    <PreFooter/>
-                                    <Footer/>
+                                    <Body />
+                                    <CardList />
+                                    <PreFooter />
+                                    <Footer />
                                 </motion.div>
                             </div>
                         }
-                        
+
                     />
                     <Route
                         path="/cardDetail"
                         element={
                             <motion.div {...pageTransition}>
-                                <Header/>
-                                <CardDetail/>
+                                <Header />
+                                <CardDetail />
                             </motion.div>
                         }
                     />
@@ -64,9 +65,9 @@ const App: React.FC = () => {
                         path="/cardDetailExcursion"
                         element={
                             <div>
-                                <Header/>
+                                <Header />
                                 <motion.div {...pageTransition}>
-                                    <CardDetailExcursion/>
+                                    <CardDetailExcursion />
                                 </motion.div>
                             </div>
                         }
@@ -89,101 +90,117 @@ const App: React.FC = () => {
                     />
                     <Route path="/hoteles" element={
                         <div>
-                            <Header/>
+                            <Header />
                         </div>
-                        } />
+                    } />
                     <Route path="/paquetes" element={
                         <div>
-                            <Header/>
+                            <Header />
                             <motion.div {...pageTransition}>
-                                <Filtro/>
-                                <Paquetes/>
+                                <Filtro />
+                                <Paquetes />
                             </motion.div>
                         </div>
-                        } />
+                    } />
                     <Route path="/excursiones" element={
                         <div>
-                            <Header/>
+                            <Header />
                             <motion.div {...pageTransition}>
-                                <Excursiones/>
+                                <Excursiones />
                             </motion.div>
                         </div>
-                        } />
+                    } />
                     <Route path="/transportes" element={
                         <div>
-                            <Header/>
+                            <Header />
                         </div>
-                        } />
+                    } />
                     <Route path="/nosotros" element={
                         <div>
-                            <Header/>
+                            <Header />
                         </div>
-                        } />
-                    <Route path='/vistaAdmin' element = {
+                    } />
+                    <Route path='/vistaAdmin' element={
                         <div>
-                            <Header/>
+                            <Header />
                             <motion.div {...pageTransition}>
-                                <VistaAdmin/>
-                            </motion.div>   
-                        </div>
-                        
-                    }/>
-                    <Route path = '/login' element = {
-                        <motion.div {...pageTransition}>
-                            <Login/>
-                        </motion.div>
-                    }/>
-                    <Route path = '/detalleCliente' element = {
-                        <div>
-                            <Header/>
-                            <motion.div {...pageTransition}>
-                                <DetalleCliente/>
+                                <VistaAdmin />
                             </motion.div>
                         </div>
-                    }/>
+
+                    } />
+                    <Route path='/login' element={
+                        <motion.div {...pageTransition}>
+                            <Login />
+                        </motion.div>
+                    } />
+                    <Route path='/detalleCliente' element={
+                        <div>
+                            <Header />
+                            <motion.div {...pageTransition}>
+                                <DetalleCliente />
+                            </motion.div>
+                        </div>
+                    } />
                     <Route
                         path="/register"
                         element={
                             <div>
                                 <motion.div {...pageTransition}>
-                                    <Register/>
+                                    <Register />
                                 </motion.div>
                             </div>
                         }
-                        
+
                     />
                     <Route
                         path="/editar-perfil"
                         element={
                             <div>
                                 <motion.div {...pageTransition}>
-                                    <EditarPerfil/>
+                                    <EditarPerfil />
                                 </motion.div>
                             </div>
                         }
-                        
+
+                    />
+                    <Route
+                        path="/mis-reservas"
+                        element={
+                            <div>
+                                <motion.div {...pageTransition}>
+                                    <MisReservas />
+                                </motion.div>
+                            </div>
+                        }
+
                     />
                     <Route
                         path="/reservar"
                         element={
                             <div>
                                 <motion.div {...pageTransition}>
-                                    <ReservarPaquete/>
+                                    <ReservarPaquete />
                                 </motion.div>
                             </div>
                         }
-                        
+
                     />
                     <Route
                         path="/tarjeta"
                         element={
                             <div>
                                 <motion.div {...pageTransition}>
-                                    <Tarjeta/>
+                                    <Tarjeta
+                                        nombre={""}
+                                        setNombre={() => {}}
+                                        numeroTarjeta={""}
+                                        setNumeroTarjeta={() => {}}
+                                    />
                                 </motion.div>
                             </div>
                         }
-                        
+
                     />
                 </Routes>
             </AnimatePresence>

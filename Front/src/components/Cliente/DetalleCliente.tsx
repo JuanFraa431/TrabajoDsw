@@ -15,7 +15,7 @@ const DetalleCliente: React.FC = () => {
   const [uploading, setUploading] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  
+
   const cloudName = 'dy8lzfj2h';
   const uploadPreset = 'ml_default';
 
@@ -54,14 +54,14 @@ const DetalleCliente: React.FC = () => {
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (!files || files.length === 0) return;
-    
+
     const file = files[0];
     console.log("Archivo seleccionado:", file);
-  
+
     const formData = new FormData();
     formData.append('file', file);
     formData.append('upload_preset', uploadPreset);
-  
+
     try {
       setUploading(true);
       const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${cloudName}/upload`;
@@ -69,9 +69,9 @@ const DetalleCliente: React.FC = () => {
       console.log("Respuesta de Cloudinary:", response.data);
       const newImageUrl = response.data.secure_url;
       setImgUrl(newImageUrl);
-  
+
       await axios.put(`/api/cliente/${cliente?.id}`, { imagen: newImageUrl });
-      
+
       if (cliente) {
         const updatedCliente = { ...cliente, imagen: newImageUrl };
         localStorage.setItem('user', JSON.stringify(updatedCliente));
@@ -84,7 +84,7 @@ const DetalleCliente: React.FC = () => {
       setUploading(false);
     }
   };
-  
+
 
   if (!cliente) {
     return
@@ -119,16 +119,23 @@ const DetalleCliente: React.FC = () => {
         </div>
         <div className="profile-info">
           <h1>¡Hola, {cliente.nombre ? cliente.nombre : cliente.username}!</h1>
-          {cliente.tipo_usuario === 'admin' && (
-            <button onClick={() => navigate('/vistaAdmin')} className="btn-admin">
-              Administración
-            </button>
-          )}
-          {cliente.tipo_usuario === 'cliente' && (
-            <button onClick={handleAdministrarPerfil} className="btn-admin">
-              Administrar Perfil
-            </button>
-          )}
+          <div className="profile-buttons">
+            {cliente.tipo_usuario === 'admin' && (
+              <button onClick={() => navigate('/vistaAdmin')} className="btn-admin">
+                Administración
+              </button>
+            )}
+            {cliente.tipo_usuario === 'cliente' && (
+              <>
+                <button onClick={handleAdministrarPerfil} className="btn-admin">
+                  Administrar Perfil
+                </button>
+                <button onClick={() => navigate('/mis-reservas')} className="btn-reservas">
+                  Mis Reservas
+                </button>
+              </>
+            )}
+          </div>
         </div>
       </div>
 

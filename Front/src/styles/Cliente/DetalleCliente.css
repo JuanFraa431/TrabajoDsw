@@ -85,16 +85,23 @@
 
 .profile-info {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
+  align-items: flex-start;
   color: #007bff;
   width: 100%;
+  padding: 20px;
 }
 
 .profile-info h1 {
-  margin: 0;
+  margin: 0 0 15px 0;
   font-size: 24px;
   font-weight: bold;
+}
+
+.profile-buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
 .personal-info {
@@ -152,16 +159,33 @@
 .btn-admin {
   padding: 10px 20px;
   border: none;
-  margin-right: 20px;
   border-radius: 5px;
   font-size: 16px;
   cursor: pointer;
   background-color: #ffffff;
   color: #007bff;
-  transition: 0.5s all;
+  transition: 0.3s all;
   font-weight: bold;
 }
 
 .btn-admin:hover {
-  transform: scale(1.1);
+  transform: scale(1.05);
+  background-color: #f8f9fa;
+}
+
+.btn-reservas {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: #28a745;
+  color: white;
+  transition: 0.3s all;
+  font-weight: bold;
+}
+
+.btn-reservas:hover {
+  transform: scale(1.05);
+  background-color: #218838;
 }

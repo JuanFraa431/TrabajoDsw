@@ -11,8 +11,22 @@ const em = orm.em;
 
 async function findAll(req: Request, res: Response) {
   try {
-    const reservasPaquete = await em.find(ReservaPaquete, {});
+    const reservasPaquete = await em.find(ReservaPaquete, {}, {
+      populate: ['usuario', 'paquete', 'personas', 'pago', 'paquete.estadias', 'paquete.estadias.hotel', 'paquete.estadias.hotel.ciudad', 'paquete.paqueteExcursiones', 'paquete.paqueteExcursiones.excursion']
+    });
     res.status(200).json({ message: 'ReservasPaquete encontradas', data: reservasPaquete });
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+}
+
+async function findByUsuario(req: Request, res: Response) {
+  try {
+    const usuarioId = Number.parseInt(req.params.usuarioId);
+    const reservasPaquete = await em.find(ReservaPaquete, { usuario: usuarioId }, {
+      populate: ['usuario', 'paquete', 'personas', 'pago', 'paquete.estadias', 'paquete.estadias.hotel', 'paquete.estadias.hotel.ciudad', 'paquete.paqueteExcursiones', 'paquete.paqueteExcursiones.excursion']
+    });
+    res.status(200).json({ message: 'Reservas del usuario encontradas', data: reservasPaquete });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
@@ -45,7 +59,7 @@ async function create(req: Request, res: Response) {
     }
 
     const usuario = await em.findOneOrFail(Usuario, { id: usuarioId });
-    
+
     // Cargar el paquete con todas las relaciones necesarias para el email
     const paquete = await em.findOneOrFail(Paquete, { id: paqueteId }, {
       populate: [
@@ -155,4 +169,4 @@ async function remove(req: Request, res: Response) {
   }
 }
 
-export { findAll, findOne, create, update, remove };
+export { findAll, findOne, findByUsuario, create, update, remove };

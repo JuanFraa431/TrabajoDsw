@@ -1,6 +1,7 @@
 import {
   findAll,
   findOne,
+  findByUsuario,
   create,
   update,
   remove,
@@ -10,6 +11,8 @@ import { Router } from 'express';
 export const routerReservaPaquete = Router();
 
 routerReservaPaquete.get('/', findAll);
+
+routerReservaPaquete.get('/usuario/:usuarioId', findByUsuario);
 
 routerReservaPaquete.get('/:id', findOne);
 
