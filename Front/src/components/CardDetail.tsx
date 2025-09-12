@@ -239,6 +239,7 @@ const CardDetail: React.FC = () => {
                                     <div>
                                         <h4>{estadia.hotel?.nombre}</h4>
                                         <p>{estadia.hotel?.direccion}</p>
+                                        <p><strong>Ciudad:</strong> {estadia.hotel?.ciudad}</p>
                                         <p><strong>Desde:</strong> {new Date(estadia.fecha_ini).toLocaleDateString('es-ES')}</p>
                                         <p><strong>Hasta:</strong> {new Date(estadia.fecha_fin).toLocaleDateString('es-ES')}</p>
                                     </div>
