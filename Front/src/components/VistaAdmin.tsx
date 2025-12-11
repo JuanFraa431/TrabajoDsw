@@ -14,6 +14,8 @@ import ReservaPaqueteList from './ReservaPaquete/ReservaPaqueteList';
 
 import ExcursionList from './Excursion/ExcursionList';
 
+import TransporteList from './Transporte/TransporteList';
+
 
 import { Ciudad } from '../interface/ciudad';
 import { Cliente } from '../interface/cliente';
@@ -21,6 +23,7 @@ import { Hotel } from '../interface/hotel';
 import { Excursion } from '../interface/excursion';
 import { Paquete } from '../interface/paquete';
 import { ReservaPaquete } from '../interface/reserva';
+import { Transporte } from '../interface/transporte';
 
 import { fetchEntities, updateEntity, deleteEntity, createEntity } from '../services/crudService';
 
@@ -49,6 +52,7 @@ const VistaAdmin: React.FC = () => {
   const [excursiones, setExcursiones] = useState<Excursion[]>([]);
   const [paquetes, setPaquetes] = useState<Paquete[]>([]);
   const [reservas, setReservas] = useState<ReservaPaquete[]>([]);
+  const [transportes, setTransportes] = useState<Transporte[]>([]);
 
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
@@ -65,6 +69,7 @@ const VistaAdmin: React.FC = () => {
     loadEntities('/api/excursion', setExcursiones);
     loadEntities('/api/paquete', setPaquetes);
     loadEntities('/api/reservaPaquete', setReservas);
+    loadEntities('/api/transporte', setTransportes);
   }, []);
 
   const loadEntities = async (endpoint: string, setState: React.Dispatch<React.SetStateAction<any[]>>) => {
@@ -168,6 +173,14 @@ const VistaAdmin: React.FC = () => {
             onDelete={(reserva) => handleEliminar(reserva.id, '/api/reservaPaquete', 'reserva', setReservas)}
           />
         );
+      case 'transportes':
+        return (
+          <TransporteList
+            transportes={transportes}
+            onEdit={(transporte) => console.log('Transporte editado:', transporte)}
+            onDelete={(transporte) => handleEliminar(transporte.id, '/api/transporte', 'transporte', setTransportes)}
+          />
+        );
       default:
         return <div className='mensaje-noEncontro'><p>Selecciona una categoría para ver los registros.</p></div>;
     }
@@ -183,6 +196,7 @@ const VistaAdmin: React.FC = () => {
         <button onClick={() => setSelectedCategory('excursiones')}>Excursiones</button>
         <button onClick={() => setSelectedCategory('paquetes')}>Paquetes</button>
         <button onClick={() => setSelectedCategory('reservas')}>Reservas</button>
+        <button onClick={() => setSelectedCategory('transportes')}>Transportes</button>
       </div>
       <div>{errorMessage && <p className="error-message">{errorMessage}</p>}</div>
       <div>{renderList()}</div>

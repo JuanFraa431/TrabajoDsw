@@ -22,6 +22,8 @@ import EditarPerfil from './components/Cliente/EditarPerfil';
 import MisReservas from './components/Cliente/MisReservas';
 import ReservarPaquete from './components/Paquete/ReservarPaquete';
 import Tarjeta from './components/Tarjeta';
+import Transportes from './components/Transportes';
+import Nosotros from './components/Nosotros';
 
 const pageTransition = {
     initial: { opacity: 0 },
@@ -110,16 +112,6 @@ const App: React.FC = () => {
                             </motion.div>
                         </div>
                     } />
-                    <Route path="/transportes" element={
-                        <div>
-                            <Header />
-                        </div>
-                    } />
-                    <Route path="/nosotros" element={
-                        <div>
-                            <Header />
-                        </div>
-                    } />
                     <Route path='/vistaAdmin' element={
                         <div>
                             <Header />
@@ -185,6 +177,30 @@ const App: React.FC = () => {
                             </div>
                         }
 
+                    />
+                    <Route
+                        path="/transportes"
+                        element={
+                            <div>
+                                <Header />
+                                <motion.div {...pageTransition}>
+                                    <Transportes />
+                                </motion.div>
+                                <Footer />
+                            </div>
+                        }
+                    />
+                    <Route
+                        path="/nosotros"
+                        element={
+                            <div>
+                                <Header />
+                                <motion.div {...pageTransition}>
+                                    <Nosotros />
+                                </motion.div>
+                                <Footer />
+                            </div>
+                        }
                     />
                     <Route
                         path="/tarjeta"

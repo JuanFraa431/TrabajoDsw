@@ -26,6 +26,7 @@ import { routerPago } from './routes/pago.routes.js';
 import { routerPersona } from './routes/persona.routes.js';
 import { routerPaqueteExcursion } from './routes/paqueteExcursion.routes.js';
 import { emailRouter } from './routes/email.routes.js';
+import { routerTipoTransporte } from './routes/tipoTransporte.routes.js';
 
 import { RequestContext } from '@mikro-orm/core';
 
@@ -55,6 +56,7 @@ app.use('/api/ciudad', routerCiudad);
 app.use('/api/hotel',routerHotel);
 app.use('/api/excursion', routerExcursion);
 app.use('/api/transporte', routerTransporte);
+app.use('/api/tipoTransporte', routerTipoTransporte);
 app.use('/api/paquete', routerPaquete);
 app.use('/api/estadia', routerEstadia);
 app.use('/api/comentario', routerComentario);

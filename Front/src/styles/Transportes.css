@@ -1,0 +1,270 @@
+.transportes-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  background-color: white;
+  min-height: 100vh;
+}
+
+.transportes-header {
+  text-align: center;
+  margin-bottom: 40px;
+  background-color: white;
+}
+
+.transportes-header h1 {
+  font-size: 2.5em;
+  color: #2c3e50;
+  margin-bottom: 10px;
+}
+
+.transportes-header p {
+  font-size: 1.2em;
+  color: #7f8c8d;
+}
+
+.filtros-container {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  margin-bottom: 40px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  align-items: end;
+}
+
+.filtro-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.filtro-item label {
+  font-weight: 600;
+  color: #2c3e50;
+  font-size: 0.9em;
+}
+
+.filtro-item select,
+.filtro-item input {
+  padding: 12px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 1em;
+  transition: border-color 0.3s;
+}
+
+.filtro-item select:focus,
+.filtro-item input:focus {
+  outline: none;
+  border-color: #3498db;
+}
+
+.btn-limpiar {
+  padding: 12px 24px;
+  background-color: #95a5a6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s;
+}
+
+.btn-limpiar:hover {
+  background-color: #7f8c8d;
+}
+
+.transportes-resultados h2 {
+  margin-bottom: 20px;
+  color: #2c3e50;
+}
+
+.loading,
+.no-resultados {
+  text-align: center;
+  padding: 60px 20px;
+  font-size: 1.2em;
+  color: #7f8c8d;
+  background-color: white;
+  min-height: 200px;
+}
+
+.transportes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 30px;
+}
+
+.transporte-card {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.3s, box-shadow 0.3s;
+  display: flex;
+  flex-direction: column;
+}
+
+.transporte-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.transporte-card.avión {
+  border-top: 4px solid #3498db;
+}
+
+.transporte-card.colectivo {
+  border-top: 4px solid #e74c3c;
+}
+
+.transporte-header {
+  padding: 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.transporte-tipo {
+  background: white;
+  color: #667eea;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 0.9em;
+}
+
+.transporte-empresa {
+  color: white;
+  font-weight: 600;
+  font-size: 1em;
+}
+
+.transporte-ruta {
+  padding: 30px 20px;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 20px;
+  align-items: center;
+  background: #f8f9fa;
+}
+
+.ruta-origen,
+.ruta-destino {
+  text-align: center;
+}
+
+.ruta-origen h3,
+.ruta-destino h3 {
+  font-size: 1.3em;
+  color: #2c3e50;
+  margin-bottom: 5px;
+}
+
+.ruta-origen .pais,
+.ruta-destino .pais {
+  color: #7f8c8d;
+  font-size: 0.9em;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.ruta-origen .fecha,
+.ruta-destino .fecha {
+  color: #95a5a6;
+  font-size: 0.85em;
+  margin-top: 8px;
+}
+
+.ruta-icono {
+  font-size: 2.5em;
+  text-align: center;
+}
+
+.transporte-info {
+  padding: 20px;
+  flex-grow: 1;
+}
+
+.descripcion {
+  color: #555;
+  margin-bottom: 15px;
+  line-height: 1.5;
+}
+
+.info-detalles {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 0.9em;
+  color: #7f8c8d;
+}
+
+.transporte-footer {
+  padding: 20px;
+  background: #f8f9fa;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #e0e0e0;
+}
+
+.precio {
+  display: flex;
+  flex-direction: column;
+}
+
+.precio-label {
+  font-size: 0.85em;
+  color: #7f8c8d;
+}
+
+.precio-valor {
+  font-size: 1.8em;
+  font-weight: 700;
+  color: #27ae60;
+}
+
+.btn-reservar {
+  padding: 12px 32px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 25px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  font-size: 1em;
+}
+
+.btn-reservar:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.btn-reservar:active {
+  transform: scale(0.98);
+}
+
+@media (max-width: 768px) {
+  .transportes-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .filtros-container {
+    grid-template-columns: 1fr;
+  }
+
+  .transporte-ruta {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .ruta-icono {
+    transform: rotate(90deg);
+  }
+}

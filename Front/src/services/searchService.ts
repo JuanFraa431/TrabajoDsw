@@ -11,6 +11,7 @@ export const handleLinkClick = async (
     try {
         const response = await axios.get(`http://localhost:3000/api/${endpoint}`);
         navigate(`/${route}`, { state: { [route]: response.data.data } });
+        window.scrollTo(0, 0);
     } catch (error) {
         console.error(`Error al obtener ${endpoint}:`, error);
     }

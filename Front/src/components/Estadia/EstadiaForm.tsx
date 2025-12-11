@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Estadia } from '../../interface/estadia';
+import { Hotel } from '../../interface/hotel';
 import axios from 'axios';
 
 interface Props {
@@ -12,13 +13,24 @@ interface Props {
 const EstadiaForm: React.FC<Props> = ({ estadiaEditada, onChange, onCancel, onSave }) => {
   if (!estadiaEditada) return null;
 
-  const [hotels, setHotels] = useState<{ id: number; nombre: string }[]>([]);
+  const [hotels, setHotels] = useState<Hotel[]>([]);
 
-      useEffect(() => {
-        axios.get('/api/hotel/')
-          .then(response => setHotels(response.data.data))
-          .catch(error => console.error(error));
-      }, []);
+  useEffect(() => {
+    axios.get('/api/hotel/')
+      .then(response => setHotels(response.data.data))
+      .catch(error => console.error(error));
+  }, []);
+
+  const handleHotelChange = (hotelId: number) => {
+    const selectedHotel = hotels.find(h => h.id === hotelId);
+    if (selectedHotel) {
+      onChange({ 
+        ...estadiaEditada, 
+        id_hotel: hotelId,
+        precio_x_dia: selectedHotel.precio_x_dia 
+      });
+    }
+  };
 
   return (
     <form onSubmit={(e) => { e.preventDefault(); onSave(); }}>
@@ -27,7 +39,7 @@ const EstadiaForm: React.FC<Props> = ({ estadiaEditada, onChange, onCancel, onSa
       <select
         id="id_hotel"
         value={estadiaEditada.id_hotel}
-        onChange={(e) => onChange({ ...estadiaEditada, id_hotel: parseInt(e.target.value) })}
+        onChange={(e) => handleHotelChange(parseInt(e.target.value))}
         required
       >
         <option value="">Seleccione un hotel</option>
@@ -63,14 +75,10 @@ const EstadiaForm: React.FC<Props> = ({ estadiaEditada, onChange, onCancel, onSa
         required
       />
       
-      <label htmlFor="precio_x_dia">Precio por Día:</label>
-      <input
-        id="precio_x_dia"
-        type="number"
-        value={estadiaEditada.precio_x_dia}
-        onChange={(e) => onChange({ ...estadiaEditada, precio_x_dia: parseFloat(e.target.value) || 0 })}
-        required
-      />
+      <label>Precio por Día del Hotel:</label>
+      <p style={{ margin: '0', padding: '10px', backgroundColor: '#f0f0f0', borderRadius: '4px', fontWeight: 'bold' }}>
+        ${estadiaEditada.precio_x_dia || 0}
+      </p>
 
       <button type="submit">Guardar Cambios</button>
       <button type="button" onClick={onCancel}>Cancelar</button>

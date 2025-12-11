@@ -6,7 +6,9 @@ const em = orm.em;
 
 async function findAll(req: Request, res: Response) {
     try {
-        const transportes = await em.find(Transporte, {});
+        const transportes = await em.find(Transporte, {}, {
+            populate: ['ciudadOrigen', 'ciudadDestino', 'tipoTransporte']
+        });
         res.status(200).json({ message: 'Transportes encontrados', data: transportes });
     } catch (error: any) {
         res.status(500).json({ message: error.message });
@@ -17,7 +19,9 @@ async function findAll(req: Request, res: Response) {
 async function findOne(req: Request, res: Response) {
     try {
         const id = Number.parseInt(req.params.id);
-        const transporte = await em.findOneOrFail(Transporte, { id });
+        const transporte = await em.findOneOrFail(Transporte, { id }, {
+            populate: ['ciudadOrigen', 'ciudadDestino', 'tipoTransporte']
+        });
         res.status(200).json({ message: 'Transporte encontrado', data: transporte });
     } catch (error: any) {
         res.status(500).json({ message: error.message });

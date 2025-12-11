@@ -6,5 +6,5 @@ export interface Estadia {
   fecha_ini: string;
   fecha_fin: string;
   precio_x_dia: number;
-  hotel: Hotel; 
+  hotel: Hotel;
 }

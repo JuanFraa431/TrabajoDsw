@@ -1,0 +1,370 @@
+.nosotros-container {
+  width: 100%;
+  overflow-x: hidden;
+  min-height: 100vh;
+  background-color: white;
+  position: relative;
+}
+
+/* Hero Section */
+.nosotros-hero {
+  min-height: 500px;
+  height: 500px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  text-align: center;
+}
+
+.hero-overlay {
+  z-index: 2;
+  padding: 40px;
+  position: relative;
+}
+
+.nosotros-hero h1 {
+  font-size: 4em;
+  margin-bottom: 20px;
+  font-weight: 800;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  color: white;
+}
+
+.hero-subtitle {
+  font-size: 1.5em;
+  font-weight: 300;
+  opacity: 0.95;
+  color: white;
+}
+
+/* Secciones de contenido */
+.seccion-contenido {
+  padding: 80px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  background: white;
+}
+
+.contenido-wrapper h2 {
+  font-size: 2.5em;
+  color: #2c3e50;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.texto-principal {
+  font-size: 1.2em;
+  line-height: 1.8;
+  color: #34495e;
+  margin-bottom: 20px;
+  text-align: justify;
+}
+
+.texto-secundario {
+  font-size: 1.1em;
+  line-height: 1.7;
+  color: #7f8c8d;
+  text-align: justify;
+}
+
+/* Misión, Visión, Valores */
+.seccion-mvv {
+  padding: 80px 20px;
+  background: #f8f9fa;
+}
+
+.mvv-grid {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 40px;
+}
+
+.mvv-card {
+  background: white;
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.mvv-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.mvv-icon {
+  font-size: 4em;
+  margin-bottom: 20px;
+}
+
+.mvv-card h3 {
+  font-size: 1.8em;
+  color: #667eea;
+  margin-bottom: 20px;
+}
+
+.mvv-card p,
+.mvv-card ul {
+  font-size: 1.05em;
+  color: #555;
+  line-height: 1.7;
+}
+
+.mvv-card ul {
+  list-style: none;
+  padding: 0;
+}
+
+.mvv-card ul li {
+  padding: 8px 0;
+  position: relative;
+  padding-left: 25px;
+}
+
+.mvv-card ul li:before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: #27ae60;
+  font-weight: bold;
+}
+
+/* Beneficios */
+.seccion-beneficios {
+  padding: 80px 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.seccion-beneficios h2 {
+  font-size: 2.5em;
+  color: #2c3e50;
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.beneficios-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px;
+}
+
+.beneficio-item {
+  text-align: center;
+  padding: 30px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s;
+}
+
+.beneficio-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+}
+
+.beneficio-icono {
+  font-size: 3em;
+  margin-bottom: 15px;
+}
+
+.beneficio-item h4 {
+  font-size: 1.3em;
+  color: #2c3e50;
+  margin-bottom: 10px;
+}
+
+.beneficio-item p {
+  color: #7f8c8d;
+  line-height: 1.6;
+}
+
+/* Servicios */
+.seccion-servicios {
+  padding: 80px 20px;
+  background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+}
+
+.seccion-servicios h2 {
+  font-size: 2.5em;
+  color: #2c3e50;
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.servicios-grid {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
+}
+
+.servicio-card {
+  background: white;
+  padding: 35px;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s;
+}
+
+.servicio-card:hover {
+  transform: scale(1.03);
+}
+
+.servicio-card h3 {
+  font-size: 1.5em;
+  color: #667eea;
+  margin-bottom: 15px;
+}
+
+.servicio-card p {
+  color: #555;
+  line-height: 1.7;
+}
+
+/* Estadísticas */
+.seccion-estadisticas {
+  padding: 80px 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.estadisticas-grid {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 40px;
+  text-align: center;
+}
+
+.estadistica-item {
+  padding: 20px;
+}
+
+.estadistica-numero {
+  font-size: 4em;
+  font-weight: 800;
+  margin-bottom: 10px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.estadistica-label {
+  font-size: 1.2em;
+  opacity: 0.95;
+  font-weight: 300;
+}
+
+/* CTA Section */
+.seccion-cta {
+  padding: 100px 20px;
+  text-align: center;
+  background: #f8f9fa;
+}
+
+.seccion-cta h2 {
+  font-size: 2.8em;
+  color: #2c3e50;
+  margin-bottom: 20px;
+}
+
+.seccion-cta p {
+  font-size: 1.3em;
+  color: #7f8c8d;
+  margin-bottom: 40px;
+}
+
+.cta-buttons {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn-primary,
+.btn-secondary {
+  padding: 16px 48px;
+  font-size: 1.1em;
+  font-weight: 700;
+  border-radius: 30px;
+  text-decoration: none;
+  transition: all 0.3s;
+  display: inline-block;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.btn-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+  color: white;
+}
+
+.btn-secondary {
+  background: white;
+  color: #667eea;
+  border: 2px solid #667eea;
+}
+
+.btn-secondary:hover {
+  background: #667eea;
+  color: white;
+  transform: translateY(-3px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .nosotros-hero {
+    height: 350px;
+  }
+
+  .nosotros-hero h1 {
+    font-size: 2.5em;
+  }
+
+  .hero-subtitle {
+    font-size: 1.2em;
+  }
+
+  .contenido-wrapper h2,
+  .seccion-beneficios h2,
+  .seccion-servicios h2 {
+    font-size: 2em;
+  }
+
+  .mvv-grid,
+  .beneficios-grid,
+  .servicios-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .estadistica-numero {
+    font-size: 3em;
+  }
+
+  .seccion-cta h2 {
+    font-size: 2em;
+  }
+
+  .cta-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    width: 80%;
+    max-width: 300px;
+  }
+}

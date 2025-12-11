@@ -305,7 +305,7 @@ const PaqueteList: React.FC<PaqueteListProps> = ({ paquetes: initialPaquetes, on
             ${Object.values(hoteles)
           .map(
             (hotel: any) =>
-              `<option value="${hotel.id}" ${hotel.id === (typeof estadia.hotel === 'object' ? estadia.hotel?.id : estadia.hotel) ? 'selected' : ''}>${hotel.nombre}</option>`
+              `<option value="${hotel.id}" data-precio="${hotel.precio_x_dia}" ${hotel.id === (typeof estadia.hotel === 'object' ? estadia.hotel?.id : estadia.hotel) ? 'selected' : ''}>${hotel.nombre}</option>`
           )
           .join('')}
           </select>
@@ -319,14 +319,26 @@ const PaqueteList: React.FC<PaqueteListProps> = ({ paquetes: initialPaquetes, on
           <input id="swal-input-fecha-fin" type="date" value="${fechaFin}" />
         </div>
         <div class="sweet-form-row">
-          <label for="swal-input-precio">Precio por Día</label>
-          <input id="swal-input-precio" type="number" step="0.01" value="${estadia.precio_x_dia}" />
+          <label for="swal-input-precio">Precio por Día del Hotel</label>
+          <input id="swal-input-precio" type="number" step="0.01" value="${estadia.precio_x_dia}" readonly style="background-color: #f0f0f0; cursor: not-allowed;" />
         </div>
       </div>
     `,
       showCancelButton: true,
       confirmButtonText: 'Guardar',
       cancelButtonText: 'Cancelar',
+      didOpen: () => {
+        const hotelSelect = document.getElementById('swal-input-hotel') as HTMLSelectElement;
+        const precioInput = document.getElementById('swal-input-precio') as HTMLInputElement;
+        
+        hotelSelect?.addEventListener('change', () => {
+          const selectedOption = hotelSelect.options[hotelSelect.selectedIndex];
+          const precio = selectedOption.getAttribute('data-precio');
+          if (precio && precioInput) {
+            precioInput.value = precio;
+          }
+        });
+      },
       preConfirm: () => {
         const newHotelId = parseInt((document.getElementById('swal-input-hotel') as HTMLSelectElement)?.value, 10);
         const newFechaInicio = (document.getElementById('swal-input-fecha-inicio') as HTMLInputElement)?.value;
@@ -341,6 +353,42 @@ const PaqueteList: React.FC<PaqueteListProps> = ({ paquetes: initialPaquetes, on
           Swal.showValidationMessage("Error interno: el paquete no está definido correctamente. Intenta desde el botón 'Ver Estadías' del paquete.");
           return;
         }
+
+        // Validación: fecha inicio debe ser menor o igual a fecha fin
+        if (newFechaInicio > newFechaFin) {
+          Swal.showValidationMessage("La fecha de inicio no puede ser posterior a la fecha de fin.");
+          return;
+        }
+
+        // Obtener el paquete para validar fechas
+        const paquete = paquetes.find(p => p.id === paqueteId);
+        if (!paquete) {
+          Swal.showValidationMessage("No se encontró el paquete.");
+          return;
+        }
+
+        const paqueteFechaIni = new Date(paquete.fecha_ini).toISOString().split('T')[0];
+        const paqueteFechaFin = new Date(paquete.fecha_fin).toISOString().split('T')[0];
+
+        // Validación: la estadía debe estar dentro del rango del paquete
+        if (newFechaInicio < paqueteFechaIni || newFechaFin > paqueteFechaFin) {
+          Swal.showValidationMessage(`La estadía debe estar entre ${paqueteFechaIni} y ${paqueteFechaFin} (fechas del paquete).`);
+          return;
+        }
+
+        // Validación: no debe superponerse con otras estadías del mismo paquete
+        const otrasEstadias = (paquete.estadias || []).filter(e => e.id !== estadiaId);
+        for (const otraEstadia of otrasEstadias) {
+          const otraFechaIni = new Date(otraEstadia.fecha_ini).toISOString().split('T')[0];
+          const otraFechaFin = new Date(otraEstadia.fecha_fin).toISOString().split('T')[0];
+          
+          // Verificar superposición
+          if (!(newFechaFin < otraFechaIni || newFechaInicio > otraFechaFin)) {
+            Swal.showValidationMessage(`La estadía se superpone con otra que va del ${otraFechaIni} al ${otraFechaFin}.`);
+            return;
+          }
+        }
+
         return {
           id: estadiaId,
           id_paquete: paqueteId,
@@ -422,16 +470,38 @@ const PaqueteList: React.FC<PaqueteListProps> = ({ paquetes: initialPaquetes, on
       html: `
       <select id="swal-input-hotel" class="swal2-input">
         ${Object.values(hoteles).map(
-        (hotel: any) => `<option value="${hotel.id}">${hotel.nombre}</option>`
+        (hotel: any) => `<option value="${hotel.id}" data-precio="${hotel.precio_x_dia}">${hotel.nombre}</option>`
       ).join('')}
       </select>
       <input id="swal-input-fecha-inicio" type="date" class="swal2-input" placeholder="Fecha Inicio" />
       <input id="swal-input-fecha-fin" type="date" class="swal2-input" placeholder="Fecha Fin" />
-      <input id="swal-input-precio" type="number" class="swal2-input" placeholder="Precio por Día" />
+      <input id="swal-input-precio" type="number" class="swal2-input" placeholder="Precio por Día del Hotel" readonly style="background-color: #f0f0f0; cursor: not-allowed;" />
     `,
       showCancelButton: true,
       confirmButtonText: 'Guardar',
       cancelButtonText: 'Cancelar',
+      didOpen: () => {
+        const hotelSelect = document.getElementById('swal-input-hotel') as HTMLSelectElement;
+        const precioInput = document.getElementById('swal-input-precio') as HTMLInputElement;
+        
+        // Establecer precio inicial del primer hotel
+        if (hotelSelect && precioInput) {
+          const firstOption = hotelSelect.options[0];
+          const precio = firstOption.getAttribute('data-precio');
+          if (precio) {
+            precioInput.value = precio;
+          }
+        }
+        
+        // Actualizar precio cuando cambie el hotel
+        hotelSelect?.addEventListener('change', () => {
+          const selectedOption = hotelSelect.options[hotelSelect.selectedIndex];
+          const precio = selectedOption.getAttribute('data-precio');
+          if (precio && precioInput) {
+            precioInput.value = precio;
+          }
+        });
+      },
       preConfirm: () => {
         const newHotelId = parseInt((document.getElementById('swal-input-hotel') as HTMLSelectElement)?.value, 10);
         const newFechaInicio = (document.getElementById('swal-input-fecha-inicio') as HTMLInputElement)?.value;
@@ -441,6 +511,41 @@ const PaqueteList: React.FC<PaqueteListProps> = ({ paquetes: initialPaquetes, on
         if (!newHotelId || !newFechaInicio || !newFechaFin || isNaN(newPrecio)) {
           Swal.showValidationMessage('Todos los campos son obligatorios y deben ser válidos');
           return;
+        }
+
+        // Validación: fecha inicio debe ser menor o igual a fecha fin
+        if (newFechaInicio > newFechaFin) {
+          Swal.showValidationMessage("La fecha de inicio no puede ser posterior a la fecha de fin.");
+          return;
+        }
+
+        // Obtener el paquete para validar fechas
+        const paquete = paquetes.find(p => p.id === id_paquete);
+        if (!paquete) {
+          Swal.showValidationMessage("No se encontró el paquete.");
+          return;
+        }
+
+        const paqueteFechaIni = new Date(paquete.fecha_ini).toISOString().split('T')[0];
+        const paqueteFechaFin = new Date(paquete.fecha_fin).toISOString().split('T')[0];
+
+        // Validación: la estadía debe estar dentro del rango del paquete
+        if (newFechaInicio < paqueteFechaIni || newFechaFin > paqueteFechaFin) {
+          Swal.showValidationMessage(`La estadía debe estar entre ${paqueteFechaIni} y ${paqueteFechaFin} (fechas del paquete).`);
+          return;
+        }
+
+        // Validación: no debe superponerse con otras estadías del mismo paquete
+        const otrasEstadias = paquete.estadias || [];
+        for (const otraEstadia of otrasEstadias) {
+          const otraFechaIni = new Date(otraEstadia.fecha_ini).toISOString().split('T')[0];
+          const otraFechaFin = new Date(otraEstadia.fecha_fin).toISOString().split('T')[0];
+          
+          // Verificar superposición
+          if (!(newFechaFin < otraFechaIni || newFechaInicio > otraFechaFin)) {
+            Swal.showValidationMessage(`La estadía se superpone con otra que va del ${otraFechaIni} al ${otraFechaFin}.`);
+            return;
+          }
         }
 
         return {
