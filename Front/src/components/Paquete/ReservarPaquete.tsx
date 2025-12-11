@@ -75,6 +75,7 @@ const ReservarPaquete: React.FC = () => {
     const [numeroTarjeta, setNumeroTarjeta] = useState<string>("");
     const [error, setError] = useState<string | null>(null);
     const [reservaConfirmada, setReservaConfirmada] = useState(false);
+    const [isProcessing, setIsProcessing] = useState(false);
 
     if (!paquete) {
         return <p>Error: No se encontró el paquete</p>;
@@ -146,6 +147,14 @@ const ReservarPaquete: React.FC = () => {
     };
 
     const handleReservar = async () => {
+        // Prevenir múltiples clicks
+        if (isProcessing) {
+            return;
+        }
+
+        setIsProcessing(true);
+        setError(null);
+
         try {
 
             const responsePago = await axios.post("/api/pago", {
@@ -180,10 +189,12 @@ const ReservarPaquete: React.FC = () => {
             } else {
                 console.error("Error al crear la reserva:", responseReserva.data);
                 setError("Hubo un problema al confirmar la reserva.");
+                setIsProcessing(false);
             }
         } catch (error) {
             console.error("Error al enviar la reserva:", error);
             setError("Hubo un problema al confirmar la reserva.");
+            setIsProcessing(false);
         }
     };
 
@@ -628,8 +639,16 @@ const ReservarPaquete: React.FC = () => {
 
                             {error && <p className="error-message">{error}</p>}
                             <div className="botones-reserva">
-                                <button onClick={oppositeStep}>Atrás</button>
-                                <button onClick={handleReservar}>Confirmar Reserva</button>
+                                <button onClick={oppositeStep} disabled={isProcessing}>
+                                    Atrás
+                                </button>
+                                <button 
+                                    onClick={handleReservar} 
+                                    disabled={isProcessing}
+                                    className={isProcessing ? 'processing' : ''}
+                                >
+                                    {isProcessing ? 'Procesando...' : 'Confirmar Reserva'}
+                                </button>
                             </div>
                         </div>
                     )}

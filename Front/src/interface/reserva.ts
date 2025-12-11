@@ -10,8 +10,19 @@ export interface Persona {
 export interface Pago {
   id: number;
   monto: number;
-  metodo_pago: string;
+  metodoDePago: string;
   fecha: string;
+  estado?: string;
+  tipoFactura?: string;
+  nombreFacturacion?: string;
+  apellidoFacturacion?: string;
+  dniFacturacion?: string;
+  telefonoFacturacion?: string;
+  emailFacturacion?: string;
+  nombreTitular?: string;
+  ultimos4?: string;
+  proveedor?: string;
+  transaccionId?: string;
 }
 
 export interface Ciudad {

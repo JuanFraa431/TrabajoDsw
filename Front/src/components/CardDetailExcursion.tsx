@@ -36,6 +36,7 @@ const CardDetailExcursion: React.FC = () => {
     };
 
     const formatHorario = (horario: string) => {
+        if (!horario) return "No especificado";
         const [hours, minutes] = horario.split(":");
         return `${hours}:${minutes} hs`;
     };

@@ -47,3 +47,118 @@
 .card-actions button:hover {
     background-color: #0056b3;
 }
+
+/* Estilos para tablas de lista */
+.list-container {
+    width: 100%;
+    padding: 20px;
+}
+
+.list-container h2 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.list-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.list-table thead {
+    background-color: #007bff;
+    color: white;
+}
+
+.list-table th,
+.list-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.list-table th {
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.9em;
+}
+
+.list-table tbody tr:hover {
+    background-color: #f5f5f5;
+}
+
+.list-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Badges para estados */
+.badge {
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.85em;
+    font-weight: 600;
+    text-transform: capitalize;
+    display: inline-block;
+}
+
+.badge-confirmada {
+    background-color: #28a745;
+    color: white;
+}
+
+.badge-pendiente {
+    background-color: #ffc107;
+    color: #333;
+}
+
+.badge-cancelada {
+    background-color: #dc3545;
+    color: white;
+}
+
+.badge-default {
+    background-color: #6c757d;
+    color: white;
+}
+
+/* Info adicional en celdas */
+.reserva-paquete-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.reserva-paquete-info strong {
+    font-size: 0.95em;
+}
+
+.reserva-paquete-info small {
+    color: #666;
+    font-size: 0.85em;
+}
+
+/* Botones de acción */
+.btn-delete {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.3s ease;
+}
+
+.btn-delete:hover {
+    background-color: #c82333;
+}
+
+.mensaje-noEncontro {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+    font-size: 1.1em;
+}

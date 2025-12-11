@@ -10,6 +10,7 @@ import HotelList from './Hotel/HotelList';
 
 import CiudadList from './Ciudad/CiudadList';
 
+import ReservaPaqueteList from './ReservaPaquete/ReservaPaqueteList';
 
 import ExcursionList from './Excursion/ExcursionList';
 
@@ -19,6 +20,7 @@ import { Cliente } from '../interface/cliente';
 import { Hotel } from '../interface/hotel';
 import { Excursion } from '../interface/excursion';
 import { Paquete } from '../interface/paquete';
+import { ReservaPaquete } from '../interface/reserva';
 
 import { fetchEntities, updateEntity, deleteEntity, createEntity } from '../services/crudService';
 
@@ -46,6 +48,7 @@ const VistaAdmin: React.FC = () => {
   const [ciudades, setCiudades] = useState<Ciudad[]>([]);
   const [excursiones, setExcursiones] = useState<Excursion[]>([]);
   const [paquetes, setPaquetes] = useState<Paquete[]>([]);
+  const [reservas, setReservas] = useState<ReservaPaquete[]>([]);
 
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
@@ -61,6 +64,7 @@ const VistaAdmin: React.FC = () => {
     loadEntities('/api/ciudad', setCiudades);
     loadEntities('/api/excursion', setExcursiones);
     loadEntities('/api/paquete', setPaquetes);
+    loadEntities('/api/reservaPaquete', setReservas);
   }, []);
 
   const loadEntities = async (endpoint: string, setState: React.Dispatch<React.SetStateAction<any[]>>) => {
@@ -157,6 +161,13 @@ const VistaAdmin: React.FC = () => {
             }}
           />
         );
+      case 'reservas':
+        return (
+          <ReservaPaqueteList
+            reservas={reservas}
+            onDelete={(reserva) => handleEliminar(reserva.id, '/api/reservaPaquete', 'reserva', setReservas)}
+          />
+        );
       default:
         return <div className='mensaje-noEncontro'><p>Selecciona una categoría para ver los registros.</p></div>;
     }
@@ -171,6 +182,7 @@ const VistaAdmin: React.FC = () => {
         <button onClick={() => setSelectedCategory('ciudades')}>Ciudades</button>
         <button onClick={() => setSelectedCategory('excursiones')}>Excursiones</button>
         <button onClick={() => setSelectedCategory('paquetes')}>Paquetes</button>
+        <button onClick={() => setSelectedCategory('reservas')}>Reservas</button>
       </div>
       <div>{errorMessage && <p className="error-message">{errorMessage}</p>}</div>
       <div>{renderList()}</div>

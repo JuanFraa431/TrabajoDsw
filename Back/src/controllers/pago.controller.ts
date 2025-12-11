@@ -26,10 +26,13 @@ async function findOne(req: Request, res: Response) {
 
 async function create(req: Request, res: Response) {
   try {
+    console.log('Datos recibidos para crear pago:', req.body);
     const pago = em.create(Pago, req.body);
     await em.persistAndFlush(pago);
+    console.log('Pago creado:', pago);
     res.status(201).json( { message: 'Pago creado', data: pago } );
   } catch (error: any) {
+    console.error('Error al crear pago:', error);
     res.status(500).json({ message: error.message });
   }
 }

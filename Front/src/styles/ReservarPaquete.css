@@ -60,6 +60,17 @@ button:hover {
     width: 100px;
 }
 
+.botones-reserva button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background-color: #ccc;
+}
+
+.botones-reserva button.processing {
+    background-color: #ffc107;
+    cursor: wait;
+}
+
 .error-message {
     color: red;
     margin-top: 10px;
