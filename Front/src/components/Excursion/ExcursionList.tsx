@@ -380,9 +380,6 @@ const ExcursionList: React.FC<ExcursionListProps> = ({ excursiones: initialExcur
 
   return (
     <div className="card-list">
-      <button className="boton-crear" onClick={handleCreateExcursion}>
-        Crear Excursión
-      </button>
       {excursiones.map((excursion) => (
         <div key={excursion.id} className="card">
           <div className="card-content">

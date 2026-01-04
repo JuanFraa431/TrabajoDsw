@@ -238,9 +238,6 @@ const TransporteList: React.FC<TransporteListProps> = ({ transportes: initialTra
 
   return (
     <div className="list-container">
-      <button className="boton-crear" onClick={handleCreateTransporte}>
-        Crear Transporte
-      </button>
       <table className="list-table">
         <thead>
           <tr>

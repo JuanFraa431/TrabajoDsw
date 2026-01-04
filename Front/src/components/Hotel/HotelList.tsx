@@ -340,9 +340,6 @@ const HotelList: React.FC<HotelListProps> = ({ hoteles: initialHoteles, onEdit, 
 
   return (
     <div className="card-list">
-      <button className="boton-crear" onClick={handleCreateHotel}>
-        Crear Hotel
-      </button>
       {hoteles.map((hotel) => (
         <div key={hotel.id} className="card">
           <div className="card-content">

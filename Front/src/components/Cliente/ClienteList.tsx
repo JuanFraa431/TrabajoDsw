@@ -218,9 +218,6 @@ const ClienteList: React.FC<ClienteListProps> = ({ clientes: initialClientes, on
 
   return (
     <div className="card-list">
-      <button className="boton-crear" onClick={handleCreateCliente}>
-        Crear Cliente
-      </button>
       {clientes.map((cliente) => (
         <div key={cliente.id} className="card">
           <div className="card-content">

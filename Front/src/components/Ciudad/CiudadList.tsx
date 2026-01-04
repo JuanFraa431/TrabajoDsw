@@ -127,9 +127,6 @@ const CiudadList: React.FC<CiudadListProps> = ({ ciudades: initialCiudades, onEd
 
   return (
     <div className="card-list">
-      <button className="boton-crear" onClick={handleCreateCiudad}>
-        Crear Ciudad
-      </button>
       {ciudades.map((ciudad) => (
         <div key={ciudad.id} className="card">
           <div className="card-content">

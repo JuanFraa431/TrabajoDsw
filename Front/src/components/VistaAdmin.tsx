@@ -76,6 +76,7 @@ const VistaAdmin: React.FC = () => {
     try {
       const data = await fetchEntities(endpoint);
       setState(data);
+      setErrorMessage(null); // Clear error message on successful load
     } catch (error) {
       console.error(`Error fetching data from ${endpoint}:`, error);
       setErrorMessage('Error al cargar los datos.');
@@ -189,6 +190,7 @@ const VistaAdmin: React.FC = () => {
   return (
     <div className="vista-admin">
       <h1>Vista Admin</h1>
+      
       <div className="category-buttons">
         <button onClick={() => setSelectedCategory('clientes')}>Clientes</button>
         <button onClick={() => setSelectedCategory('hoteles')}>Hoteles</button>
@@ -198,37 +200,66 @@ const VistaAdmin: React.FC = () => {
         <button onClick={() => setSelectedCategory('reservas')}>Reservas</button>
         <button onClick={() => setSelectedCategory('transportes')}>Transportes</button>
       </div>
-      <div>{errorMessage && <p className="error-message">{errorMessage}</p>}</div>
-      <div>{renderList()}</div>
 
-      {selectedCategory === 'ciudades' && (
-        <button className='boton-crear' onClick={() => setCiudadEditada({ id: 0, nombre: '', descripcion: '', pais: '', latitud: '', longitud: '' })}>
-          Crear Ciudad
-        </button>
+      {errorMessage && (
+        <div className="error-message-container">
+          <p className="error-message">{errorMessage}</p>
+        </div>
       )}
 
-      {selectedCategory === 'hoteles' && (
-        <button className='boton-crear' onClick={() => setHotelEditado({ id: 0, nombre: '', direccion: '', descripcion: '', telefono: '', email: '', estrellas: 0, precio_x_dia: 0, id_ciudad: 0 })}>
-          Crear Hotel
-        </button>
-      )}
+      <div className="content-container">
+        {renderList()}
+      </div>
 
-      {selectedCategory === 'clientes' && (
-        <button className='boton-crear' onClick={() => setClienteEditado({
-          id: 0,
-          nombre: '',
-          apellido: '',
-          dni: '',
-          email: '',
-          fecha_nacimiento: '',
-          estado: 1,
-          username: '',
-          password: '',
-          tipo_usuario: 'cliente',
-          imagen: ''
-        })}>
-          Crear Cliente
-        </button>
+      {selectedCategory && (
+        <div className="boton-crear-container">
+          {selectedCategory === 'ciudades' && (
+            <button className='boton-crear' onClick={() => setCiudadEditada({ id: 0, nombre: '', descripcion: '', pais: '', latitud: '', longitud: '' })}>
+              + Crear Ciudad
+            </button>
+          )}
+
+          {selectedCategory === 'hoteles' && (
+            <button className='boton-crear' onClick={() => setHotelEditado({ id: 0, nombre: '', direccion: '', descripcion: '', telefono: '', email: '', estrellas: 0, precio_x_dia: 0, id_ciudad: 0 })}>
+              + Crear Hotel
+            </button>
+          )}
+
+          {selectedCategory === 'clientes' && (
+            <button className='boton-crear' onClick={() => setClienteEditado({
+              id: 0,
+              nombre: '',
+              apellido: '',
+              dni: '',
+              email: '',
+              fecha_nacimiento: '',
+              estado: 1,
+              username: '',
+              password: '',
+              tipo_usuario: 'cliente',
+              imagen: ''
+            })}>
+              + Crear Cliente
+            </button>
+          )}
+
+          {selectedCategory === 'excursiones' && (
+            <button className='boton-crear' onClick={() => setExcursionEditada({
+              id: 0,
+              nombre: '',
+              descripcion: '',
+              detalle: '',
+              tipo: '',
+              nro_personas_max: 0,
+              nombre_empresa: '',
+              mail_empresa: '',
+              precio: 0,
+              imagen: ''
+            })}>
+              + Crear Excursión
+            </button>
+          )}
+        </div>
       )}
     </div>
   );
