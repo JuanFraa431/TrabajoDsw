@@ -7,7 +7,9 @@ export const calcularPrecioTotalPaquete = (paquete: any): number => {
     paquete.estadias.forEach((estadia: any) => {
       const fechaIni = new Date(estadia.fecha_ini);
       const fechaFin = new Date(estadia.fecha_fin);
-      const diasEstadia = Math.ceil((fechaFin.getTime() - fechaIni.getTime()) / (1000 * 60 * 60 * 24));
+      const diasEstadia = Math.ceil(
+        (fechaFin.getTime() - fechaIni.getTime()) / (1000 * 60 * 60 * 24)
+      );
       total += estadia.precio_x_dia * diasEstadia;
     });
   }
@@ -19,11 +21,21 @@ export const calcularPrecioTotalPaquete = (paquete: any): number => {
     });
   }
 
+  // Calcular precio de transportes
+  if (paquete?.paqueteTransportes) {
+    paquete.paqueteTransportes.forEach((paqueteTrans: any) => {
+      total += paqueteTrans.precio || 0;
+    });
+  }
+
   return total;
 };
 
 // Función para truncar descripción
-export const descripcionTruncada = (descripcion: string, maxLength: number): string => {
+export const descripcionTruncada = (
+  descripcion: string,
+  maxLength: number
+): string => {
   if (descripcion.length > maxLength) {
     return descripcion.substring(0, maxLength) + "...";
   }
@@ -36,7 +48,9 @@ export const calcularDiasPaquete = (paquete: any): number => {
 
   const fechaIni = new Date(paquete.fecha_ini);
   const fechaFin = new Date(paquete.fecha_fin);
-  const dias = Math.ceil((fechaFin.getTime() - fechaIni.getTime()) / (1000 * 60 * 60 * 24));
+  const dias = Math.ceil(
+    (fechaFin.getTime() - fechaIni.getTime()) / (1000 * 60 * 60 * 24)
+  );
   return dias;
 };
 
@@ -68,11 +82,13 @@ export const obtenerCiudadesVisitadas = (paquete: any): string[] => {
 // Función para formatear la duración del paquete
 export const formatearDuracionPaquete = (paquete: any): string => {
   const dias = calcularDiasPaquete(paquete);
-  if (dias === 0) return 'Duración no especificada';
-  if (dias === 1) return '1 día';
+  if (dias === 0) return "Duración no especificada";
+  if (dias === 1) return "1 día";
 
   const noches = dias - 1;
-  if (noches <= 0) return `${dias} día${dias > 1 ? 's' : ''}`;
+  if (noches <= 0) return `${dias} día${dias > 1 ? "s" : ""}`;
 
-  return `${dias} día${dias > 1 ? 's' : ''}, ${noches} noche${noches > 1 ? 's' : ''}`;
+  return `${dias} día${dias > 1 ? "s" : ""}, ${noches} noche${
+    noches > 1 ? "s" : ""
+  }`;
 };

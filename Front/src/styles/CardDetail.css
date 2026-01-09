@@ -1,392 +1,660 @@
+/* =====================================================
+   CARD DETAIL - Diseño moderno con mejor contraste
+   ===================================================== */
+
 .card-detail-container {
-    max-width: 1200px;
-    margin: 50px auto;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 24px;
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  background: #f0f4f8;
+  min-height: 100vh;
 }
 
-.title {
-    font-size: 2rem;
-    margin-bottom: 20px;
+/* ===== HERO SECTION ===== */
+.detail-hero {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  margin-bottom: 48px;
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 0;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
+  overflow: hidden;
 }
 
-.package-id {
-    font-size: 1.2rem;
-    margin-bottom: 10px;
+.hero-image-container {
+  position: relative;
+  min-height: 450px;
 }
 
-.detail-layout {
-    display: flex;
-    justify-content: space-between;
-    gap: 20px;
+.hero-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
-.image-container {
-    flex: 2;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.hero-badge {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  padding: 10px 20px;
+  border-radius: 30px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: white;
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-.package-image {
-    width: 400px; 
-    height: 300px; 
-    object-fit: cover; 
-    border-radius: 8px;
+.hero-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 48px 48px 48px 24px;
+  gap: 32px;
 }
 
-.info-container {
-    flex: 3;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+.package-title {
+  font-size: 2.4rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0;
+  line-height: 1.2;
+  letter-spacing: -0.5px;
 }
 
-.details {
-    margin-bottom: 20px;
+.package-subtitle {
+  font-size: 1.1rem;
+  color: #64748b;
+  margin: 0 0 8px 0;
+  line-height: 1.7;
 }
 
-.details p {
-    font-size: 1.1rem;
-    margin: 10px 0;
+.date-range {
+  display: flex;
+  gap: 16px;
 }
 
-.price {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #333;
+.date-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 22px;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border-radius: 16px;
+  flex: 1;
+  border: 1px solid #e2e8f0;
 }
 
-.price-box {
-    background-color: #f9f9f9;
-    border: 1px solid #e0e0e0;
-    padding: 20px;
-    border-radius: 8px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
+.date-icon {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.2rem;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
 }
 
-.price-per-night {
-    font-size: 1.2rem;
-    margin-bottom: 5px;
-    color: #555;
+.date-content {
+  display: flex;
+  flex-direction: column;
 }
 
-.price-total {
-    font-size: 2rem;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 20px;
+.date-label {
+  font-size: 0.75rem;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 4px;
+  font-weight: 600;
 }
 
-
-.verMas-button {
-    margin-top: 10px;
-    background-color: #007bbf;;
-    color: #fff;
-    padding: 10px 20px;
-    font-size: 1.2rem;
-    border: none;
-    border-radius: 25px;
-    cursor: pointer;
-    transition: background-color 0.3s;
+.date-value {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #0f172a;
 }
 
-.verMas-button:hover {
-    background-color: #005f99;
+/* ===== PRICE SECTION - Sin cuadro oscuro ===== */
+.price-section {
+  margin-top: 8px;
 }
 
-.comments-section {
-    margin-top: 30px;
-    padding: 20px;
-    background-color: #f7f7f7;
-    border-radius: 8px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+.price-label {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: #64748b;
+  margin-bottom: 4px;
+  font-weight: 600;
 }
 
-.comments-section h3 {
-    font-size: 1.8rem;
-    margin-bottom: 20px;
-    color: #333;
-}
-
-.comments-list {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.comment {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    display: flex;
-    gap: 20px;
-}   
-
-.comentario-p {
-    margin: 5px 0;
-    font-size: 1rem;
-    color: #555;
-}
-
-.comment strong {
-    color: #333;
-}
-
-.client-info {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 100px;
-    height: 100px;
-}
-
-.client-image {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    object-fit: cover;
-}
-
-.add-comment {
-    margin-top: 30px;
-    display: flex;
-    flex-direction: column;
-}
-
-.add-comment textarea {
-    width: 100%;
-    height: 100px;
-    padding: 10px;
-    font-size: 1rem;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    margin-bottom: 10px;
-    resize: none;
-}
-
-.add-comment-button {
-    align-self: flex-start;
-    padding: 10px 20px;
-    font-size: 1rem;
-    background-color: #007bbd;
-    color: #fff;
-    border: none;
-    border-radius: 25px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.add-comment-button:hover {
-    background-color: #005f99;
-}
-
-.rating-section {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-}
-
-.rating-section select {
-    margin-left: 10px;
-    padding: 5px;
-    border-radius: 8px;
-}
-
-.rating-section label {
-    font-size: 1.1rem;
-    color: #555;
-}
-
-.stars-display {
-    color: #007bbd;
-    font-size: 1.2rem;
+.price-amount {
+  font-size: 2.8rem;
+  font-weight: 800;
+  margin-bottom: 20px;
+  color: #0f172a;
+  letter-spacing: -1px;
 }
 
 .reserve-button {
-    padding: 10px 20px;
-    font-size: 1.2rem;
-    background-color: #007bbf;
-    color: #fff;
-    border: none;
-    border-radius: 25px;
-    cursor: pointer;
-    transition: background-color 0.3s;
+  display: block;
+  width: 100%;
+  padding: 18px;
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  color: white;
+  font-size: 1.15rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.35);
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .reserve-button:hover {
-    background-color: #005f99;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(59, 130, 246, 0.5);
 }
 
+/* ===== DESCRIPTION SECTION ===== */
 .description-section {
-    margin-top: 20px;
-    padding: 20px;
-    background-color: #f7f7f7;
-    border-radius: 8px;
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 36px;
+  margin-bottom: 32px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  border-left: 5px solid #3b82f6;
 }
 
-.description-section h3 {
-    font-size: 1.8rem;
-    margin-bottom: 10px;
+.section-title {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 20px 0;
+  display: flex;
+  align-items: center;
+  gap: 14px;
 }
 
-.description-section p {
-    font-size: 1.1rem;
-    line-height: 1.6;
+.section-icon {
+  width: 44px;
+  height: 44px;
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.2rem;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
+}
+
+.description-text {
+  font-size: 1.1rem;
+  line-height: 1.9;
+  color: #334155;
+  margin: 0;
+}
+
+.toggle-description-btn {
+  background: none;
+  border: none;
+  color: #3b82f6;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 10px 0;
+  margin-top: 16px;
+  transition: color 0.2s;
+}
+
+.toggle-description-btn:hover {
+  color: #1d4ed8;
+}
+
+/* ===== CONTENT SECTIONS (Excursiones, Estadías, Transportes) ===== */
+.content-section {
+  margin-bottom: 48px;
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 36px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+}
+
+.content-section .section-title {
+  margin-bottom: 28px;
+}
+
+.content-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 28px;
+}
+
+/* ===== CARDS - REDISEÑADAS ===== */
+.item-card {
+  background: linear-gradient(145deg, #f8fafc 0%, #f1f5f9 100%);
+  border-radius: 20px;
+  overflow: hidden;
+  border: 2px solid #e2e8f0;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.item-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 40px rgba(59, 130, 246, 0.15);
+  border-color: #3b82f6;
+}
+
+.item-card-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
+}
+
+.item-card-content {
+  padding: 24px;
+}
+
+.item-card-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 12px 0;
+}
+
+.item-card-description {
+  font-size: 0.95rem;
+  color: #475569;
+  margin: 0 0 20px 0;
+  line-height: 1.6;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.item-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.meta-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: #ffffff;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  color: #334155;
+  font-weight: 600;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+.meta-tag-icon {
+  color: #3b82f6;
+  font-size: 0.95rem;
+}
+
+/* ===== TRANSPORTE ESPECÍFICO ===== */
+.transport-type-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 30px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 16px;
+}
+
+.transport-type-badge.ida {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  box-shadow: 0 3px 10px rgba(16, 185, 129, 0.3);
+}
+
+.transport-type-badge.vuelta {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: white;
+  box-shadow: 0 3px 10px rgba(245, 158, 11, 0.3);
+}
+
+.route-display {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  border-radius: 14px;
+  margin-top: 16px;
+}
+
+.route-city {
+  font-weight: 700;
+  color: #ffffff;
+  font-size: 0.95rem;
+}
+
+.route-arrow {
+  color: #10b981;
+  font-size: 1.3rem;
+}
+
+/* ===== EMPTY STATE ===== */
+.empty-state {
+  text-align: center;
+  padding: 60px 24px;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border-radius: 16px;
+  border: 2px dashed #cbd5e1;
+}
+
+.empty-state-text {
+  color: #64748b;
+  font-size: 1.1rem;
+  margin: 0;
+  font-weight: 500;
+}
+
+/* ===== COMENTARIOS ===== */
+.comments-section {
+  margin-top: 32px;
+  padding: 36px;
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+}
+
+.comments-section h3 {
+  font-size: 1.8rem;
+  font-weight: 800;
+  margin-bottom: 28px;
+  color: #0f172a;
+}
+
+.comments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.comment {
+  background: linear-gradient(145deg, #f8fafc 0%, #f1f5f9 100%);
+  padding: 24px;
+  border-radius: 16px;
+  display: flex;
+  gap: 20px;
+  border: 1px solid #e2e8f0;
+  transition: all 0.3s ease;
+}
+
+.comment:hover {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+}
+
+.comentario-p {
+  margin: 6px 0;
+  font-size: 1rem;
+  color: #334155;
+}
+
+.comment strong {
+  color: #0f172a;
+}
+
+.client-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 80px;
+}
+
+.client-image {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #3b82f6;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+}
+
+.add-comment {
+  margin-top: 32px;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(145deg, #f8fafc 0%, #f1f5f9 100%);
+  padding: 28px;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+}
+
+.add-comment textarea {
+  width: 100%;
+  height: 120px;
+  padding: 16px;
+  font-size: 1rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  margin-bottom: 16px;
+  resize: none;
+  transition: border-color 0.3s ease;
+  background: white;
+}
+
+.add-comment textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+}
+
+.add-comment-button {
+  align-self: flex-start;
+  padding: 14px 28px;
+  font-size: 1rem;
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 700;
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+}
+
+.add-comment-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+}
+
+.rating-section {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+  gap: 12px;
+}
+
+.rating-section select {
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: 2px solid #e2e8f0;
+  font-size: 1rem;
+  background: white;
+  cursor: pointer;
+}
+
+.rating-section select:focus {
+  outline: none;
+  border-color: #3b82f6;
+}
+
+.rating-section label {
+  font-size: 1.1rem;
+  color: #334155;
+  font-weight: 600;
+}
+
+.stars-display {
+  color: #f59e0b;
+  font-size: 1.3rem;
+  letter-spacing: 2px;
 }
 
 .nombre-fecha-comentario {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.fecha-comentario {
+  color: #64748b;
+  font-size: 0.9rem;
 }
 
 .comment-details {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
 }
 
 .delete-button {
-    background-color: red;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;
-    margin-left: 10px;
-    border-radius: 5px;
-    font-size: 12px;
-    position: absolute;
-    right: 0; 
-    bottom: 0; 
-    display: flex;
-    align-items: center;
-    gap: 5px;
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  cursor: pointer;
+  border-radius: 10px;
+  font-size: 13px;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 10px rgba(239, 68, 68, 0.3);
 }
 
 .delete-button:hover {
-    background-color: darkred;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(239, 68, 68, 0.4);
 }
 
 .trash-icon {
-    font-size: 14px;
+  font-size: 14px;
 }
 
-.excursiones-section {
-    margin-top: 30px;
+/* ===== RESPONSIVE ===== */
+@media (max-width: 900px) {
+  .detail-hero {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .hero-image-container {
+    min-height: 300px;
+  }
+
+  .hero-info {
+    padding: 32px 24px;
+  }
+
+  .date-range {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .package-title {
+    font-size: 1.9rem;
+  }
+
+  .price-amount {
+    font-size: 2.6rem;
+  }
+
+  .content-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .card-detail-container {
+    padding: 20px 16px;
+  }
+
+  .hero-image-container {
+    min-height: 250px;
+  }
+
+  .hero-info {
+    padding: 24px 20px;
+  }
+
+  .package-title {
+    font-size: 1.6rem;
+  }
+
+  .section-title {
+    font-size: 1.4rem;
+  }
+
+  .content-section {
+    padding: 24px 20px;
+  }
+
+  .content-grid {
+    gap: 20px;
+  }
+
+  .item-card-content {
     padding: 20px;
-    background-color: #f7f7f7;
-    border-radius: 8px;
-}
+  }
 
-.excursiones-section h3 {
-    font-size: 1.8rem;
-    margin-bottom: 20px;
-    color: #333;
-}
-
-.excursiones-list,
-.estadias-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 24px;
-    justify-content: flex-start;
-}
-
-.excursion-card,
-.estadia-card {
-    background: #fff;
-    border-radius: 16px;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.10);
-    padding: 0;
-    overflow: hidden;
-    display: flex;
+  .comment {
     flex-direction: column;
     align-items: center;
-    width: 270px;
-    transition: box-shadow 0.2s, transform 0.2s;
-    border: 1px solid #e6e6e6;
-}
+    text-align: center;
+  }
 
-.excursion-card:hover,
-.estadia-card:hover {
-    box-shadow: 0 8px 24px rgba(0,123,189,0.15);
-    transform: translateY(-4px) scale(1.02);
-    border-color: #b3e0ff;
-}
-
-.excursion-image,
-.estadia-image {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-    border-radius: 10px;
-    margin-bottom: 16px;
-    background: #f0f4f8;
-    display: block;
-}
-
-.excursion-info h4,
-.estadia-details h4 {
-    margin: 0 0 10px 0;
-    font-size: 1.25rem;
-    color: #007bbd;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-}
-
-.excursion-info p,
-.estadia-details p {
-    margin: 6px 0;
-    font-size: 1rem;
-    color: #444;
-    line-height: 1.4;
-}
-
-.excursion-details,
-.estadia-details {
-    width: 100%;
-    display: flex;
+  .nombre-fecha-comentario {
     flex-direction: column;
-    align-items: flex-start;
-    padding: 20px;
-    box-sizing: border-box;
-    flex-grow: 1;
-}
+    gap: 4px;
+  }
 
-.excursion-details > div,
-.estadia-details > div {
-    width: 100%;
-}
+  .delete-button {
+    position: static;
+    margin-top: 12px;
+  }
 
-.excursion-card strong,
-.estadia-card strong {
-    color: #007bbd;
-    font-weight: 500;
-}
-
-.excursiones-section,
-.estadias-section {
-    margin-top: 30px;
-    padding: 24px;
-    background-color: #f7fafd;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0,123,189,0.04);
-}
-
-.excursiones-section h3,
-.estadias-section h3 {
-    font-size: 1.7rem;
-    margin-bottom: 18px;
-    color: #007bbd;
-    font-weight: 700;
-    letter-spacing: 0.5px;
+  .comments-section {
+    padding: 24px 20px;
+  }
 }

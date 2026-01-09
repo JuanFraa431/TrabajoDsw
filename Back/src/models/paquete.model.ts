@@ -1,8 +1,15 @@
-import { BaseModel } from '../shared/db/baseModel.model.js';
-import { OneToMany, Property, Collection, Entity, Cascade } from '@mikro-orm/core';
-import { Comentario } from './comentario.model.js';
-import { Estadia } from './estadia.model.js';
-import { PaqueteExcursion } from './paqueteExcursion.model.js';
+import { BaseModel } from "../shared/db/baseModel.model.js";
+import {
+  OneToMany,
+  Property,
+  Collection,
+  Entity,
+  Cascade,
+} from "@mikro-orm/core";
+import { Comentario } from "./comentario.model.js";
+import { Estadia } from "./estadia.model.js";
+import { PaqueteExcursion } from "./paqueteExcursion.model.js";
+import { PaqueteTransporte } from "./paqueteTransporte.model.js";
 
 @Entity()
 export class Paquete extends BaseModel {
@@ -38,13 +45,27 @@ export class Paquete extends BaseModel {
 
   @OneToMany(() => Estadia, (estadia) => estadia.paquete, {
     cascade: [Cascade.ALL],
-    orphanRemoval: true
+    orphanRemoval: true,
   })
   estadias = new Collection<Estadia>(this);
 
-  @OneToMany(() => PaqueteExcursion, (paqueteExcursion) => paqueteExcursion.paquete, {
-    cascade: [Cascade.ALL],
-    orphanRemoval: true
-  })
+  @OneToMany(
+    () => PaqueteExcursion,
+    (paqueteExcursion) => paqueteExcursion.paquete,
+    {
+      cascade: [Cascade.ALL],
+      orphanRemoval: true,
+    }
+  )
   paqueteExcursiones = new Collection<PaqueteExcursion>(this);
+
+  @OneToMany(
+    () => PaqueteTransporte,
+    (paqueteTransporte) => paqueteTransporte.paquete,
+    {
+      cascade: [Cascade.ALL],
+      orphanRemoval: true,
+    }
+  )
+  paqueteTransportes = new Collection<PaqueteTransporte>(this);
 }

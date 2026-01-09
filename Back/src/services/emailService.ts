@@ -147,33 +147,7 @@ class EmailService {
                 )
                 .join("") || "<p>Solo el titular</p>";
 
-        return `<html>
-    <head>
-                
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Anda a Cagar Serena</title>
-        <style>
-            body {
-                font-family: Arial, sans-serif;
-                background-color: #f4f4f4;
-                color: #333;
-                margin: 0;
-                padding: 0;
-            }
-        </style>
-    </head>
-    <body>
-        <div style="max-width: 600px; margin: 50px auto; padding: 20px; background-color: #fff; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
-            <h1 style="color: #e74c3c;">Anda a Cagar Serena</h1>
-            <p>Andate a la concha de tu madre</p>
-            </div>
-        </div>
-    </body>
-</html>
-    `;
-    /*`
-<!DOCTYPE html>
+        return `<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -675,7 +649,7 @@ class EmailService {
     </div>
 </body>
 </html>
-*/
+    `;
     }
 
     async enviarEmailReserva(data: ReservaEmailData): Promise<void> {
