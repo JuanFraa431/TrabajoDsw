@@ -7,8 +7,6 @@ import cors from "cors";
 import session from "express-session";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
-import passport from "passport";
-import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -39,13 +37,20 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: { secure: false },
-  })
+  }),
 );
 
 app.use(
   cors({
-    origin: "http://localhost:8080",
-  })
+    origin: [
+      "http://localhost:8080",
+      "https://accounts.google.com",
+      "https://accounts.google.com/gsi/",
+    ],
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
+  }),
 );
 
 app.use(express.json());
@@ -71,21 +76,6 @@ app.use("/api/paqueteTransporte", routerPaqueteTransporte);
 app.use("/api/email", emailRouter);
 
 app.use(express.static(path.join(__dirname, "dist")));
-
-app.use(passport.initialize());
-passport.use(
-  new GoogleStrategy(
-    {
-      clientID:
-        "1013873914332-sf1up07lqjoch6tork8cpfohi32st8pi.apps.googleusercontent.com",
-      clientSecret: "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",
-      callbackURL: "http://localhost:8080/login",
-    },
-    (accessToken, refreshToken, profile, done) => {
-      return done(null, profile);
-    }
-  )
-);
 
 app.get("/home", (req, res) => {
   res.sendFile(path.join(__dirname, "index.html"));

@@ -20,24 +20,106 @@ const Login: React.FC = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [googleReady, setGoogleReady] = useState(false);
   const navigate = useNavigate();
+  const googleButtonRef = React.useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!window.google) {
-      const script = document.createElement("script");
-      script.src = "https://accounts.google.com/gsi/client";
-      script.async = true;
-      script.defer = true;
-      script.onload = () =>
-        console.log("Google Identity Services script loaded");
-      script.onerror = () => console.error("Error loading Google script");
-      document.body.appendChild(script);
+    // Cargar el script de Google
+    const script = document.createElement("script");
+    script.src = "https://accounts.google.com/gsi/client";
+    script.async = true;
+    script.defer = true;
 
-      return () => {
-        document.body.removeChild(script);
-      };
-    }
+    script.onload = () => {
+      console.log("Google Identity Services script loaded successfully");
+      // Inicializar Google después de cargar el script
+      initializeGoogle();
+    };
+
+    script.onerror = () => {
+      console.error("Error loading Google script");
+    };
+
+    document.head.appendChild(script);
+
+    return () => {
+      // Cleanup
+      const existingScript = document.querySelector(
+        'script[src="https://accounts.google.com/gsi/client"]',
+      );
+      if (existingScript) {
+        existingScript.remove();
+      }
+    };
   }, []);
+
+  const initializeGoogle = () => {
+    if (!window.google?.accounts?.id) {
+      console.log("Google not ready yet");
+      return;
+    }
+
+    try {
+      window.google.accounts.id.initialize({
+        client_id:
+          "1013873914332-sf1up07lqjoch6tork8cpfohi32st8pi.apps.googleusercontent.com",
+        callback: handleGoogleCallback,
+        auto_select: false,
+        cancel_on_tap_outside: true,
+      });
+
+      // Renderizar el botón de Google como alternativa
+      if (googleButtonRef.current) {
+        window.google.accounts.id.renderButton(googleButtonRef.current, {
+          theme: "outline",
+          size: "large",
+          width: 250,
+          text: "continue_with",
+          locale: "es",
+        });
+      }
+
+      setGoogleReady(true);
+      console.log("Google initialized successfully");
+    } catch (error) {
+      console.error("Error initializing Google:", error);
+    }
+  };
+
+  const handleGoogleCallback = async (response: any) => {
+    if (!response?.credential) {
+      console.error("No se recibió un token de Google");
+      setError("No se pudo obtener el token de Google.");
+      return;
+    }
+
+    console.log("Google token received, sending to backend...");
+
+    try {
+      const res = await axios.post(
+        "/api/cliente/auth/google",
+        { token: response.credential },
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        },
+      );
+
+      if (res.status === 200) {
+        const { usuario, token } = res.data.data;
+        localStorage.setItem("token", token);
+        localStorage.setItem("user", JSON.stringify(usuario));
+        setError("");
+        navigate(usuario.tipo_usuario === "admin" ? "/vistaAdmin" : "/");
+      }
+    } catch (error: any) {
+      console.error("Google login failed:", error);
+      const errorMsg =
+        error.response?.data?.message || "Error al iniciar sesión con Google.";
+      setError(errorMsg);
+    }
+  };
 
   async function handleLogin(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -67,56 +149,33 @@ const Login: React.FC = () => {
   }
 
   const handleGoogleLogin = () => {
-    if (
-      !window.google ||
-      !window.google.accounts ||
-      !window.google.accounts.id
-    ) {
-      setError("Error al cargar Google. Inténtalo de nuevo.");
+    if (!window.google?.accounts?.id) {
+      setError("Google no está listo. Espera un momento y vuelve a intentar.");
+      // Intentar inicializar de nuevo
+      setTimeout(initializeGoogle, 1000);
       return;
     }
 
-    console.log("Google login clicked");
+    console.log("Showing Google login prompt");
+    setError(""); // Limpiar errores previos
 
-    window.google.accounts.id.initialize({
-      client_id:
-        "1013873914332-sf1up07lqjoch6tork8cpfohi32st8pi.apps.googleusercontent.com",
-      callback: async (response: any) => {
-        if (!response || !response.credential) {
-          console.error("No se recibió un token de Google");
-          setError("No se pudo obtener el token de Google.");
-          return;
+    try {
+      window.google.accounts.id.prompt((notification: any) => {
+        console.log("Prompt notification:", notification);
+        if (notification.isNotDisplayed()) {
+          console.log("Prompt was not displayed");
+          // Intentar con renderButton como alternativa
+          setError(
+            "No se pudo mostrar el diálogo de Google. Intenta con otra cuenta o recarga la página.",
+          );
+        } else if (notification.isSkippedMoment()) {
+          console.log("User closed the prompt");
         }
-
-        console.log("Google token received:", response.credential);
-        try {
-          const res = await axios.post("/api/cliente/auth/google", {
-            token: response.credential,
-          });
-          if (res.status === 200) {
-            const { usuario, token } = res.data.data;
-            localStorage.setItem("token", token);
-            localStorage.setItem("user", JSON.stringify(usuario));
-            navigate(usuario.tipo_usuario === "admin" ? "/vistaAdmin" : "/");
-          }
-        } catch (error) {
-          console.error("Google login failed:", error);
-          setError("Error al iniciar sesión con Google.");
-        }
-      },
-      prompt: "select_account",
-    });
-    window.google.accounts.id.prompt((notification: any) => {
-      if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
-        console.error(
-          "Google login prompt not displayed or skipped:",
-          notification
-        );
-        setError("Error al mostrar el prompt de Google.");
-      } else {
-        console.log("Google login prompt displayed successfully");
-      }
-    });
+      });
+    } catch (error) {
+      console.error("Error showing Google prompt:", error);
+      setError("Error al abrir Google. Intenta recargar la página.");
+    }
   };
 
   return (
@@ -166,9 +225,15 @@ const Login: React.FC = () => {
         <div className="right-side">
           <div className="social-login">
             <p>O inicia sesión con</p>
-            <button className="google-btn" onClick={handleGoogleLogin}>
-              <FontAwesomeIcon icon={faGoogle} /> Google
-            </button>
+            {/* Contenedor para el botón renderizado de Google */}
+            <div ref={googleButtonRef} style={{ marginBottom: "10px" }}></div>
+
+            {/* Botón alternativo si el renderizado falla */}
+            {!googleReady && (
+              <button className="google-btn" onClick={handleGoogleLogin}>
+                <FontAwesomeIcon icon={faGoogle} /> Google
+              </button>
+            )}
             <button
               className="facebook-btn"
               onClick={() => console.log("Implementar login con Facebook")}
