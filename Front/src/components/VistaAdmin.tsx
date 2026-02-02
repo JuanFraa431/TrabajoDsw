@@ -16,6 +16,8 @@ import ExcursionList from "./Excursion/ExcursionList";
 
 import TransporteList from "./Transporte/TransporteList";
 
+import ReservasPorPeriodo from "./Estadisticas/ReservasPorPeriodo";
+
 import { Ciudad } from "../interface/ciudad";
 import { Cliente } from "../interface/cliente";
 import { Hotel } from "../interface/hotel";
@@ -58,7 +60,8 @@ const VistaAdmin: React.FC = () => {
   const [transportes, setTransportes] = useState<Transporte[]>([]);
 
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [isClasesOpen, setIsClasesOpen] = useState<boolean>(true);
+  const [isClasesOpen, setIsClasesOpen] = useState<boolean>(false);
+  const [isEstadisticasOpen, setIsEstadisticasOpen] = useState<boolean>(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(false);
   const [loadedCategories, setLoadedCategories] = useState<Set<string>>(
     new Set(),
@@ -119,20 +122,6 @@ const VistaAdmin: React.FC = () => {
       setErrorMessage(null);
     } catch (error) {
       setErrorMessage("Error al crear la entidad.");
-    }
-  };
-
-  const handleEditar = async (
-    entity: any,
-    endpoint: string,
-    setState: React.Dispatch<React.SetStateAction<any[]>>,
-  ) => {
-    try {
-      await updateEntity(endpoint, entity.id, entity);
-      await loadEntities(endpoint, setState);
-      setErrorMessage(null);
-    } catch (error) {
-      setErrorMessage("Error al actualizar la entidad.");
     }
   };
 
@@ -253,6 +242,15 @@ const VistaAdmin: React.FC = () => {
             }
           />
         );
+      case "reservasPorPeriodo":
+        return <ReservasPorPeriodo />;
+      case "destinosPopulares":
+      case "ingresos":
+        return (
+          <div className="mensaje-noEncontro">
+            <p>🚧 En construcción 🚧</p>
+          </div>
+        );
       default:
         return (
           <div className="mensaje-noEncontro">
@@ -271,6 +269,9 @@ const VistaAdmin: React.FC = () => {
       paquetes: "Paquetes",
       reservas: "Reservas",
       transportes: "Transportes",
+      reservasPorPeriodo: "Reservas por Período",
+      destinosPopulares: "Destinos Más Populares",
+      ingresos: "Ingresos y Facturación",
     };
     return selectedCategory ? titles[selectedCategory] : "Vista Admin";
   };
@@ -375,6 +376,53 @@ const VistaAdmin: React.FC = () => {
                 onClick={() => setSelectedCategory("transportes")}
               >
                 Transportes
+              </button>
+            </div>
+          )}
+        </div>
+
+        <div className="sidebar-section">
+          <button
+            className="sidebar-toggle-button"
+            onClick={() => setIsEstadisticasOpen(!isEstadisticasOpen)}
+          >
+            <span className="toggle-icon">
+              {isEstadisticasOpen ? "▼" : "▶"}
+            </span>
+            Estadísticas
+          </button>
+
+          {isEstadisticasOpen && (
+            <div className="sidebar-items">
+              <button
+                className={
+                  selectedCategory === "reservasPorPeriodo"
+                    ? "sidebar-item active"
+                    : "sidebar-item"
+                }
+                onClick={() => setSelectedCategory("reservasPorPeriodo")}
+              >
+                Reservas por Período
+              </button>
+              <button
+                className={
+                  selectedCategory === "destinosPopulares"
+                    ? "sidebar-item active"
+                    : "sidebar-item"
+                }
+                onClick={() => setSelectedCategory("destinosPopulares")}
+              >
+                Destinos Más Populares
+              </button>
+              <button
+                className={
+                  selectedCategory === "ingresos"
+                    ? "sidebar-item active"
+                    : "sidebar-item"
+                }
+                onClick={() => setSelectedCategory("ingresos")}
+              >
+                Ingresos y Facturación
               </button>
             </div>
           )}
