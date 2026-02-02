@@ -23,7 +23,7 @@ const MySwal = withReactContent(Swal);
 const handleEditPaquete = (
   paquete: Paquete,
   onEdit: (paquete: Paquete) => void,
-  setPaquetes: React.Dispatch<React.SetStateAction<Paquete[]>>
+  setPaquetes: React.Dispatch<React.SetStateAction<Paquete[]>>,
 ) => {
   let nombre = paquete.nombre;
   let descripcion = paquete.descripcion;
@@ -99,7 +99,7 @@ const handleEditPaquete = (
       const newEstado = parseInt(
         (document.getElementById("swal-input-estado") as HTMLSelectElement)
           ?.value,
-        10
+        10,
       );
       const newDescripcion = (
         document.getElementById("swal-input-descripcion") as HTMLTextAreaElement
@@ -109,7 +109,7 @@ const handleEditPaquete = (
       )?.value;
       const newPrecio = parseFloat(
         (document.getElementById("swal-input-precio") as HTMLInputElement)
-          ?.value
+          ?.value,
       );
       const newFechaInicio = (
         document.getElementById("swal-input-fecha-inicio") as HTMLInputElement
@@ -132,7 +132,7 @@ const handleEditPaquete = (
         !newImagen
       ) {
         Swal.showValidationMessage(
-          "Todos los campos son obligatorios y deben ser válidos"
+          "Todos los campos son obligatorios y deben ser válidos",
         );
         return;
       }
@@ -159,26 +159,26 @@ const handleEditPaquete = (
           onEdit(updatedPaquete);
           setPaquetes((prevPaquetes) =>
             prevPaquetes.map((p) =>
-              p.id === updatedPaquete.id ? updatedPaquete : p
-            )
+              p.id === updatedPaquete.id ? updatedPaquete : p,
+            ),
           );
           Swal.fire(
             "Guardado",
             "El paquete fue actualizado correctamente.",
-            "success"
+            "success",
           );
         })
         .catch((error) => {
           console.error(
             "Error al actualizar el paquete:",
-            error.response?.data || error.message
+            error.response?.data || error.message,
           );
           Swal.fire(
             "Error",
             `No se pudo actualizar el paquete: ${
               error.response?.data?.message || error.message
             }`,
-            "error"
+            "error",
           );
         });
     }
@@ -187,7 +187,7 @@ const handleEditPaquete = (
 
 const handleCreatePaquete = (
   onCreate: (paquete: Paquete) => void,
-  setPaquetes: React.Dispatch<React.SetStateAction<Paquete[]>>
+  setPaquetes: React.Dispatch<React.SetStateAction<Paquete[]>>,
 ) => {
   MySwal.fire({
     title: "Crear Paquete",
@@ -252,7 +252,7 @@ const handleCreatePaquete = (
       const estado = parseInt(
         (document.getElementById("swal-input-estado") as HTMLSelectElement)
           ?.value,
-        10
+        10,
       );
       const descripcion = (
         document.getElementById("swal-input-descripcion") as HTMLTextAreaElement
@@ -262,7 +262,7 @@ const handleCreatePaquete = (
       )?.value;
       const precio = parseFloat(
         (document.getElementById("swal-input-precio") as HTMLInputElement)
-          ?.value
+          ?.value,
       );
       const fechaInicio = (
         document.getElementById("swal-input-fecha-inicio") as HTMLInputElement
@@ -285,7 +285,7 @@ const handleCreatePaquete = (
         !imagen
       ) {
         Swal.showValidationMessage(
-          "Todos los campos son obligatorios y deben ser válidos"
+          "Todos los campos son obligatorios y deben ser válidos",
         );
         return;
       }
@@ -314,20 +314,20 @@ const handleCreatePaquete = (
           Swal.fire(
             "Creado",
             "El paquete fue creado correctamente.",
-            "success"
+            "success",
           );
         })
         .catch((error) => {
           console.error(
             "Error al crear el paquete:",
-            error.response?.data || error.message
+            error.response?.data || error.message,
           );
           Swal.fire(
             "Error",
             `No se pudo crear el paquete: ${
               error.response?.data?.message || error.message
             }`,
-            "error"
+            "error",
           );
         });
     }
@@ -368,17 +368,17 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
           response.data.data.reduce((acc: any, hotel: any) => {
             acc[hotel.id] = hotel;
             return acc;
-          }, {})
+          }, {}),
         );
       } else {
         console.error(
           "La respuesta del servidor no contiene un array válido:",
-          response.data
+          response.data,
         );
         Swal.fire(
           "Error",
           "No se pudieron cargar los hoteles. Respuesta inválida del servidor.",
-          "error"
+          "error",
         );
       }
     } catch (error) {
@@ -386,7 +386,7 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
       Swal.fire(
         "Error",
         "No se pudieron cargar los hoteles. Verifique su conexión o contacte al administrador.",
-        "error"
+        "error",
       );
     }
   };
@@ -418,7 +418,7 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
       const paquetePadre = paquetes.find(
         (p) =>
           Array.isArray(p.estadias) &&
-          p.estadias.some((e) => e.id === estadia.id)
+          p.estadias.some((e) => e.id === estadia.id),
       );
       if (paquetePadre) {
         paqueteId = paquetePadre.id;
@@ -447,7 +447,7 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
                       : estadia.hotel)
                       ? "selected"
                       : ""
-                  }>${hotel.nombre}</option>`
+                  }>${hotel.nombre}</option>`,
               )
               .join("")}
           </select>
@@ -473,10 +473,10 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
       cancelButtonText: "Cancelar",
       didOpen: () => {
         const hotelSelect = document.getElementById(
-          "swal-input-hotel"
+          "swal-input-hotel",
         ) as HTMLSelectElement;
         const precioInput = document.getElementById(
-          "swal-input-precio"
+          "swal-input-precio",
         ) as HTMLInputElement;
 
         hotelSelect?.addEventListener("change", () => {
@@ -491,7 +491,7 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
         const newHotelId = parseInt(
           (document.getElementById("swal-input-hotel") as HTMLSelectElement)
             ?.value,
-          10
+          10,
         );
         const newFechaInicio = (
           document.getElementById("swal-input-fecha-inicio") as HTMLInputElement
@@ -501,7 +501,7 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
         )?.value;
         const newPrecio = parseFloat(
           (document.getElementById("swal-input-precio") as HTMLInputElement)
-            ?.value
+            ?.value,
         );
 
         if (
@@ -512,7 +512,7 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
           !paqueteId
         ) {
           Swal.showValidationMessage(
-            "Todos los campos deben estar completos y válidos, incluyendo el paquete."
+            "Todos los campos deben estar completos y válidos, incluyendo el paquete.",
           );
           return;
         }
@@ -522,7 +522,7 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
           paqueteId <= 0
         ) {
           Swal.showValidationMessage(
-            "Error interno: el paquete no está definido correctamente. Intenta desde el botón 'Ver Estadías' del paquete."
+            "Error interno: el paquete no está definido correctamente. Intenta desde el botón 'Ver Estadías' del paquete.",
           );
           return;
         }
@@ -530,7 +530,7 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
         // Validación: fecha inicio debe ser menor o igual a fecha fin
         if (newFechaInicio > newFechaFin) {
           Swal.showValidationMessage(
-            "La fecha de inicio no puede ser posterior a la fecha de fin."
+            "La fecha de inicio no puede ser posterior a la fecha de fin.",
           );
           return;
         }
@@ -552,14 +552,14 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
         // Validación: la estadía debe estar dentro del rango del paquete
         if (newFechaInicio < paqueteFechaIni || newFechaFin > paqueteFechaFin) {
           Swal.showValidationMessage(
-            `La estadía debe estar entre ${paqueteFechaIni} y ${paqueteFechaFin} (fechas del paquete).`
+            `La estadía debe estar entre ${paqueteFechaIni} y ${paqueteFechaFin} (fechas del paquete).`,
           );
           return;
         }
 
         // Validación: no debe superponerse con otras estadías del mismo paquete
         const otrasEstadias = (paquete.estadias || []).filter(
-          (e) => e.id !== estadiaId
+          (e) => e.id !== estadiaId,
         );
         for (const otraEstadia of otrasEstadias) {
           const otraFechaIni = new Date(otraEstadia.fecha_ini)
@@ -572,7 +572,7 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
           // Verificar superposición
           if (!(newFechaFin < otraFechaIni || newFechaInicio > otraFechaFin)) {
             Swal.showValidationMessage(
-              `La estadía se superpone con otra que va del ${otraFechaIni} al ${otraFechaFin}.`
+              `La estadía se superpone con otra que va del ${otraFechaIni} al ${otraFechaFin}.`,
             );
             return;
           }
@@ -598,7 +598,7 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
             Swal.fire(
               "Guardado",
               "La estadía fue actualizada correctamente.",
-              "success"
+              "success",
             );
           })
           .catch((error) => {
@@ -606,7 +606,7 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
             Swal.fire(
               "Error",
               `No se pudo actualizar la estadía: ${error.message}`,
-              "error"
+              "error",
             );
           });
       }
@@ -620,7 +620,7 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
       const paquetePadre = paquetes.find(
         (p) =>
           Array.isArray(p.estadias) &&
-          p.estadias.some((e) => e.id === estadia.id)
+          p.estadias.some((e) => e.id === estadia.id),
       );
       if (paquetePadre) {
         paqueteId = paquetePadre.id;
@@ -632,7 +632,7 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
       Swal.fire(
         "Error",
         'No se pudo determinar el paquete de la estadía. Intenta desde el botón "Ver Estadías" del paquete.',
-        "error"
+        "error",
       );
       return;
     }
@@ -660,13 +660,13 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
                         ? paquete.estadias.filter((e) => e.id !== estadia.id)
                         : [],
                     }
-                  : paquete
-              )
+                  : paquete,
+              ),
             );
             Swal.fire(
               "Eliminado",
               "La estadía fue eliminada correctamente.",
-              "success"
+              "success",
             );
           })
           .catch((error) => {
@@ -676,7 +676,7 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
               `No se pudo eliminar la estadía: ${
                 error.response?.data?.message || error.message
               }`,
-              "error"
+              "error",
             );
           });
       }
@@ -691,7 +691,7 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
         ${Object.values(hoteles)
           .map(
             (hotel: any) =>
-              `<option value="${hotel.id}" data-precio="${hotel.precio_x_dia}">${hotel.nombre}</option>`
+              `<option value="${hotel.id}" data-precio="${hotel.precio_x_dia}">${hotel.nombre}</option>`,
           )
           .join("")}
       </select>
@@ -704,10 +704,10 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
       cancelButtonText: "Cancelar",
       didOpen: () => {
         const hotelSelect = document.getElementById(
-          "swal-input-hotel"
+          "swal-input-hotel",
         ) as HTMLSelectElement;
         const precioInput = document.getElementById(
-          "swal-input-precio"
+          "swal-input-precio",
         ) as HTMLInputElement;
 
         // Establecer precio inicial del primer hotel
@@ -732,7 +732,7 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
         const newHotelId = parseInt(
           (document.getElementById("swal-input-hotel") as HTMLSelectElement)
             ?.value,
-          10
+          10,
         );
         const newFechaInicio = (
           document.getElementById("swal-input-fecha-inicio") as HTMLInputElement
@@ -742,7 +742,7 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
         )?.value;
         const newPrecio = parseFloat(
           (document.getElementById("swal-input-precio") as HTMLInputElement)
-            ?.value
+            ?.value,
         );
 
         if (
@@ -752,7 +752,7 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
           isNaN(newPrecio)
         ) {
           Swal.showValidationMessage(
-            "Todos los campos son obligatorios y deben ser válidos"
+            "Todos los campos son obligatorios y deben ser válidos",
           );
           return;
         }
@@ -760,7 +760,7 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
         // Validación: fecha inicio debe ser menor o igual a fecha fin
         if (newFechaInicio > newFechaFin) {
           Swal.showValidationMessage(
-            "La fecha de inicio no puede ser posterior a la fecha de fin."
+            "La fecha de inicio no puede ser posterior a la fecha de fin.",
           );
           return;
         }
@@ -782,7 +782,7 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
         // Validación: la estadía debe estar dentro del rango del paquete
         if (newFechaInicio < paqueteFechaIni || newFechaFin > paqueteFechaFin) {
           Swal.showValidationMessage(
-            `La estadía debe estar entre ${paqueteFechaIni} y ${paqueteFechaFin} (fechas del paquete).`
+            `La estadía debe estar entre ${paqueteFechaIni} y ${paqueteFechaFin} (fechas del paquete).`,
           );
           return;
         }
@@ -800,7 +800,7 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
           // Verificar superposición
           if (!(newFechaFin < otraFechaIni || newFechaInicio > otraFechaFin)) {
             Swal.showValidationMessage(
-              `La estadía se superpone con otra que va del ${otraFechaIni} al ${otraFechaFin}.`
+              `La estadía se superpone con otra que va del ${otraFechaIni} al ${otraFechaFin}.`,
             );
             return;
           }
@@ -824,20 +824,20 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
             Swal.fire(
               "Guardado",
               "La estadía fue agregada correctamente.",
-              "success"
+              "success",
             );
           })
           .catch((error) => {
             console.error(
               "Error al agregar la estadía:",
-              error.response?.data || error.message
+              error.response?.data || error.message,
             );
             Swal.fire(
               "Error",
               `No se pudo agregar la estadía: ${
                 error.response?.data?.message || error.message
               }`,
-              "error"
+              "error",
             );
           });
       }
@@ -874,18 +874,18 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
           (estadia: any) =>
             estadia.id_hotel && hoteles[estadia.id_hotel]
               ? { ...estadia, hotel: hoteles[estadia.id_hotel] }
-              : estadia
+              : estadia,
         );
       }
       setPaquetes((prevPaquetes) =>
-        prevPaquetes.map((p) => (p.id === paqueteId ? paqueteActualizado : p))
+        prevPaquetes.map((p) => (p.id === paqueteId ? paqueteActualizado : p)),
       );
     } catch (error) {
       console.error("Error recargando el paquete:", error);
       Swal.fire(
         "Error",
         "No se pudo recargar el paquete actualizado.",
-        "error"
+        "error",
       );
     }
   };
@@ -898,7 +898,7 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
         (t) =>
           `<option value="${t.id}" data-precio="${t.precio || 0}">${
             t.nombre
-          } - ${t.tipoTransporte?.nombre || "Sin tipo"}</option>`
+          } - ${t.tipoTransporte?.nombre || "Sin tipo"}</option>`,
       )
       .join("");
 
@@ -944,10 +944,10 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
       cancelButtonColor: "#6c757d",
       didOpen: () => {
         const transporteSelect = document.getElementById(
-          "swal-input-transporte"
+          "swal-input-transporte",
         ) as HTMLSelectElement;
         const precioInput = document.getElementById(
-          "swal-input-precio"
+          "swal-input-precio",
         ) as HTMLInputElement;
 
         transporteSelect?.addEventListener("change", () => {
@@ -963,9 +963,9 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
         const transporteId = parseInt(
           (
             document.getElementById(
-              "swal-input-transporte"
+              "swal-input-transporte",
             ) as HTMLSelectElement
-          )?.value
+          )?.value,
         );
         const dia = (
           document.getElementById("swal-input-dia") as HTMLInputElement
@@ -975,7 +975,7 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
         )?.value;
         const precio = parseFloat(
           (document.getElementById("swal-input-precio") as HTMLInputElement)
-            ?.value
+            ?.value,
         );
         const es_ida =
           (document.getElementById("swal-input-esida") as HTMLSelectElement)
@@ -1004,7 +1004,7 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
             Swal.fire(
               "Guardado",
               "El transporte fue agregado correctamente.",
-              "success"
+              "success",
             );
           })
           .catch((error) => {
@@ -1013,7 +1013,7 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
               `No se pudo agregar el transporte: ${
                 error.response?.data?.message || error.message
               }`,
-              "error"
+              "error",
             );
           });
       }
@@ -1026,7 +1026,7 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
         (t) =>
           `<option value="${t.id}" data-precio="${t.precio || 0}" ${
             t.id === paqueteTransporte.transporte?.id ? "selected" : ""
-          }>${t.nombre} - ${t.tipoTransporte?.nombre || "Sin tipo"}</option>`
+          }>${t.nombre} - ${t.tipoTransporte?.nombre || "Sin tipo"}</option>`,
       )
       .join("");
 
@@ -1083,9 +1083,9 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
         const transporteId = parseInt(
           (
             document.getElementById(
-              "swal-input-transporte"
+              "swal-input-transporte",
             ) as HTMLSelectElement
-          )?.value
+          )?.value,
         );
         const dia = (
           document.getElementById("swal-input-dia") as HTMLInputElement
@@ -1095,7 +1095,7 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
         )?.value;
         const precio = parseFloat(
           (document.getElementById("swal-input-precio") as HTMLInputElement)
-            ?.value
+            ?.value,
         );
         const es_ida =
           (document.getElementById("swal-input-esida") as HTMLSelectElement)
@@ -1124,7 +1124,7 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
             Swal.fire(
               "Guardado",
               "El transporte fue actualizado correctamente.",
-              "success"
+              "success",
             );
           })
           .catch((error) => {
@@ -1133,7 +1133,7 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
               `No se pudo actualizar el transporte: ${
                 error.response?.data?.message || error.message
               }`,
-              "error"
+              "error",
             );
           });
       }
@@ -1159,7 +1159,7 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
             Swal.fire(
               "Eliminado",
               "El transporte fue eliminado correctamente.",
-              "success"
+              "success",
             );
           })
           .catch((error) => {
@@ -1168,7 +1168,7 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
               `No se pudo eliminar el transporte: ${
                 error.response?.data?.message || error.message
               }`,
-              "error"
+              "error",
             );
           });
       }
@@ -1205,7 +1205,7 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
                 }, ${paquete.id})">Eliminar</button>
               </div>
             </div>
-          `
+          `,
                   )
                   .join("")
           }
@@ -1219,10 +1219,10 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
       didOpen: () => {
         (window as any).editTransporteSwal = (
           ptId: number,
-          paqueteId: number
+          paqueteId: number,
         ) => {
           const pt = paquete.paqueteTransportes?.find(
-            (t: any) => t.id === ptId
+            (t: any) => t.id === ptId,
           );
           if (pt) {
             Swal.close();
@@ -1231,10 +1231,10 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
         };
         (window as any).deleteTransporteSwal = (
           ptId: number,
-          paqueteId: number
+          paqueteId: number,
         ) => {
           const pt = paquete.paqueteTransportes?.find(
-            (t: any) => t.id === ptId
+            (t: any) => t.id === ptId,
           );
           if (pt) {
             Swal.close();
@@ -1269,10 +1269,10 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
                 estadia.hotel ? estadia.hotel.nombre : "Cargando hotel..."
               }</p>
               <p style="margin:0 0 2px 0;">Fecha Inicio: ${new Date(
-                estadia.fecha_ini
+                estadia.fecha_ini,
               ).toLocaleDateString("es-ES")}</p>
               <p style="margin:0 0 2px 0;">Fecha Fin: ${new Date(
-                estadia.fecha_fin
+                estadia.fecha_fin,
               ).toLocaleDateString("es-ES")}</p>
               <p style="margin:0 0 6px 0;">Precio por Día: $${
                 estadia.precio_x_dia
@@ -1286,7 +1286,7 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
                 }, ${paquete.id})">Eliminar</button>
               </div>
             </div>
-          `
+          `,
             )
             .join("")}
           <button class="swal2-confirm swal2-styled" style="width:90%;margin-top:8px;" onclick="window.addEstadiaSwal(${
@@ -1300,10 +1300,10 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
         // Exponer funciones globales para los botones
         (window as any).editEstadiaSwal = (
           estadiaId: number,
-          paqueteId: number
+          paqueteId: number,
         ) => {
           const estadia = paquete.estadias?.find(
-            (e: any) => e.id === estadiaId
+            (e: any) => e.id === estadiaId,
           );
           if (estadia) {
             Swal.close();
@@ -1312,10 +1312,10 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
         };
         (window as any).deleteEstadiaSwal = (
           estadiaId: number,
-          paqueteId: number
+          paqueteId: number,
         ) => {
           const estadia = paquete.estadias?.find(
-            (e: any) => e.id === estadiaId
+            (e: any) => e.id === estadiaId,
           );
           if (estadia) {
             Swal.close();
@@ -1338,10 +1338,19 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
 
   return (
     <div className="list-container">
+      <div className="list-header">
+        {onCreate && (
+          <button
+            className="btn-create"
+            onClick={() => handleCreatePaquete(onCreate, setPaquetes)}
+          >
+            + Crear Paquete
+          </button>
+        )}
+      </div>
       <table className="list-table">
         <thead>
           <tr>
-            <th>ID</th>
             <th>Nombre</th>
             <th>Descripción</th>
             <th>Fechas</th>
@@ -1356,7 +1365,7 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
           {paquetes.length === 0 ? (
             <tr>
               <td
-                colSpan={9}
+                colSpan={8}
                 style={{ textAlign: "center", padding: "20px", color: "#666" }}
               >
                 No hay paquetes registrados
@@ -1365,17 +1374,15 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
           ) : (
             paquetes.map((paquete) => (
               <tr key={paquete.id}>
-                <td>{paquete.id}</td>
                 <td>
                   <strong>{paquete.nombre}</strong>
                 </td>
                 <td>
                   <div
                     style={{
-                      maxWidth: "200px",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      whiteSpace: "nowrap",
+                      maxWidth: "250px",
+                      wordWrap: "break-word",
+                      overflowWrap: "break-word",
                     }}
                   >
                     {paquete.descripcion}
@@ -1469,17 +1476,6 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
           )}
         </tbody>
       </table>
-
-      {onCreate && (
-        <div className="crear-paquete-container" style={{ marginTop: "20px" }}>
-          <button
-            className="boton-crear"
-            onClick={() => handleCreatePaquete(onCreate, setPaquetes)}
-          >
-            Crear Paquete
-          </button>
-        </div>
-      )}
 
       {estadiaEditada && (
         <EstadiaForm

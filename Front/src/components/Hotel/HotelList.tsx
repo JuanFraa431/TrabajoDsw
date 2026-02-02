@@ -106,7 +106,7 @@ const HotelList: React.FC<HotelListProps> = ({
       cancelButtonColor: "#6c757d",
       didOpen: () => {
         const ciudadSelect = document.getElementById(
-          "swal-input-ciudad"
+          "swal-input-ciudad",
         ) as HTMLSelectElement;
         if (ciudadSelect && ciudadId) {
           ciudadSelect.value = ciudadId.toString();
@@ -118,7 +118,7 @@ const HotelList: React.FC<HotelListProps> = ({
         )?.value;
         const descripcion = (
           document.getElementById(
-            "swal-input-descripcion"
+            "swal-input-descripcion",
           ) as HTMLTextAreaElement
         )?.value;
         const direccion = (
@@ -133,16 +133,16 @@ const HotelList: React.FC<HotelListProps> = ({
         const estrellas = parseInt(
           (document.getElementById("swal-input-estrellas") as HTMLInputElement)
             ?.value,
-          10
+          10,
         );
         const precio_x_dia = parseFloat(
           (document.getElementById("swal-input-precio") as HTMLInputElement)
-            ?.value
+            ?.value,
         );
         const id_ciudad = parseInt(
           (document.getElementById("swal-input-ciudad") as HTMLInputElement)
             ?.value,
-          10
+          10,
         );
 
         // Validación mejorada
@@ -168,13 +168,13 @@ const HotelList: React.FC<HotelListProps> = ({
         }
         if (isNaN(estrellas) || estrellas < 1 || estrellas > 5) {
           Swal.showValidationMessage(
-            "Las estrellas deben ser un número entre 1 y 5"
+            "Las estrellas deben ser un número entre 1 y 5",
           );
           return;
         }
         if (isNaN(precio_x_dia) || precio_x_dia <= 0) {
           Swal.showValidationMessage(
-            "El precio por día debe ser un número mayor a 0"
+            "El precio por día debe ser un número mayor a 0",
           );
           return;
         }
@@ -198,7 +198,7 @@ const HotelList: React.FC<HotelListProps> = ({
         try {
           const response = await axios.put(
             `/api/hotel/${hotel.id}`,
-            result.value
+            result.value,
           );
 
           // Recargar todos los hoteles para obtener datos completos y actualizados
@@ -208,13 +208,13 @@ const HotelList: React.FC<HotelListProps> = ({
           Swal.fire(
             "Guardado",
             "El hotel fue actualizado correctamente.",
-            "success"
+            "success",
           );
         } catch (error: any) {
           Swal.fire(
             "Error",
             error.response?.data?.message || "No se pudo actualizar el hotel",
-            "error"
+            "error",
           );
         }
       }
@@ -242,13 +242,13 @@ const HotelList: React.FC<HotelListProps> = ({
           Swal.fire(
             "Eliminado",
             "El hotel fue eliminado correctamente.",
-            "success"
+            "success",
           );
         } catch (error: any) {
           Swal.fire(
             "Error",
             error.response?.data?.message || "No se pudo eliminar el hotel",
-            "error"
+            "error",
           );
         }
       }
@@ -315,7 +315,7 @@ const HotelList: React.FC<HotelListProps> = ({
         )?.value?.trim();
         const descripcion = (
           document.getElementById(
-            "swal-input-descripcion"
+            "swal-input-descripcion",
           ) as HTMLTextAreaElement
         )?.value?.trim();
         const direccion = (
@@ -330,16 +330,16 @@ const HotelList: React.FC<HotelListProps> = ({
         const estrellas = parseInt(
           (document.getElementById("swal-input-estrellas") as HTMLInputElement)
             ?.value,
-          10
+          10,
         );
         const precio_x_dia = parseFloat(
           (document.getElementById("swal-input-precio") as HTMLInputElement)
-            ?.value
+            ?.value,
         );
         const id_ciudad = parseInt(
           (document.getElementById("swal-input-ciudad") as HTMLInputElement)
             ?.value,
-          10
+          10,
         );
 
         // Validación mejorada para crear
@@ -365,13 +365,13 @@ const HotelList: React.FC<HotelListProps> = ({
         }
         if (isNaN(estrellas) || estrellas < 1 || estrellas > 5) {
           Swal.showValidationMessage(
-            "Las estrellas deben ser un número entre 1 y 5"
+            "Las estrellas deben ser un número entre 1 y 5",
           );
           return;
         }
         if (isNaN(precio_x_dia) || precio_x_dia <= 0) {
           Swal.showValidationMessage(
-            "El precio por día debe ser un número mayor a 0"
+            "El precio por día debe ser un número mayor a 0",
           );
           return;
         }
@@ -404,7 +404,7 @@ const HotelList: React.FC<HotelListProps> = ({
           Swal.fire(
             "Error",
             error.response?.data?.message || "No se pudo crear el hotel",
-            "error"
+            "error",
           );
         }
       }
@@ -421,7 +421,6 @@ const HotelList: React.FC<HotelListProps> = ({
       <table className="list-table">
         <thead>
           <tr>
-            <th>ID</th>
             <th>Nombre</th>
             <th>Ciudad</th>
             <th>Dirección</th>
@@ -435,7 +434,7 @@ const HotelList: React.FC<HotelListProps> = ({
           {hoteles.length === 0 ? (
             <tr>
               <td
-                colSpan={8}
+                colSpan={7}
                 style={{ textAlign: "center", padding: "20px", color: "#666" }}
               >
                 No hay hoteles registrados
@@ -444,7 +443,6 @@ const HotelList: React.FC<HotelListProps> = ({
           ) : (
             hoteles.map((hotel) => (
               <tr key={hotel.id}>
-                <td>{hotel.id}</td>
                 <td>
                   <strong>{hotel.nombre}</strong>
                 </td>

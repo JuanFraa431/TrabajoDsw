@@ -82,4 +82,5 @@ export interface ReservaPaquete {
   paquete: Paquete;
   personas: Persona[];
   pago: Pago;
+  usuario?: any; // Usuario que hizo la reserva
 }

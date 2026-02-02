@@ -133,6 +133,7 @@
 .list-container {
   width: 100%;
   padding: 20px;
+  overflow-x: auto;
 }
 
 .list-container h2 {
@@ -147,6 +148,8 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
   overflow: hidden;
+  font-size: 0.9rem;
+  table-layout: auto;
 }
 
 .list-table thead {
@@ -156,15 +159,21 @@
 
 .list-table th,
 .list-table td {
-  padding: 12px 15px;
+  padding: 10px 12px;
   text-align: left;
   border-bottom: 1px solid #ddd;
+  white-space: normal;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  vertical-align: middle;
+  max-width: 250px;
 }
 
 .list-table th {
   font-weight: 600;
   text-transform: uppercase;
-  font-size: 0.9em;
+  font-size: 0.85em;
+  padding: 12px;
 }
 
 .list-table tbody tr:hover {
@@ -226,15 +235,47 @@
   background-color: #dc3545;
   color: white;
   border: none;
-  padding: 6px 12px;
+  padding: 5px 10px;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 0.9em;
+  font-size: 0.85em;
   transition: background-color 0.3s ease;
+  white-space: nowrap;
 }
 
 .btn-delete:hover {
   background-color: #c82333;
+}
+
+.btn-edit {
+  background-color: #ffc107;
+  color: #333;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85em;
+  transition: background-color 0.3s ease;
+  white-space: nowrap;
+  margin-right: 5px;
+}
+
+.btn-edit:hover {
+  background-color: #e0a800;
+}
+
+/* Hacer botones de tabla más compactos */
+.list-table td button {
+  padding: 5px 10px;
+  font-size: 0.85em;
+  white-space: nowrap;
+}
+
+/* Ajustar contenedores de botones en las tablas */
+.list-table td > div {
+  display: flex;
+  gap: 5px;
+  flex-wrap: nowrap;
 }
 
 .mensaje-noEncontro {
@@ -323,7 +364,9 @@
   border: 1px solid #ddd;
   border-radius: 6px;
   font-size: 0.95rem;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
   box-sizing: border-box;
 }
 
@@ -353,5 +396,57 @@
   .swal2-popup.swal-wide {
     width: 95vw !important;
     padding: 1.5rem !important;
+  }
+}
+
+/* Optimización de ancho de columnas para evitar scroll horizontal */
+@media (min-width: 1024px) {
+  .list-table th:nth-child(1),
+  .list-table td:nth-child(1) {
+    max-width: 150px;
+  }
+
+  .list-table th:nth-child(2),
+  .list-table td:nth-child(2) {
+    max-width: 120px;
+  }
+
+  .list-table th:nth-child(3),
+  .list-table td:nth-child(3) {
+    max-width: 150px;
+  }
+}
+
+/* Hacer las celdas más compactas */
+.list-table td small {
+  font-size: 0.8em;
+  color: #666;
+}
+
+.list-table td strong {
+  font-weight: 600;
+  font-size: 0.95em;
+}
+
+/* Responsive table scroll */
+@media (max-width: 1200px) {
+  .list-container {
+    overflow-x: auto;
+  }
+
+  .list-table {
+    min-width: 800px;
+  }
+}
+
+@media (max-width: 768px) {
+  .list-table {
+    min-width: 600px;
+    font-size: 0.85rem;
+  }
+
+  .list-table th,
+  .list-table td {
+    padding: 8px 10px;
   }
 }

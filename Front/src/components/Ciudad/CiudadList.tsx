@@ -77,7 +77,7 @@ const CiudadList: React.FC<CiudadListProps> = ({
         )?.value;
         if (!nombre || !descripcion || !pais || !latitud || !longitud) {
           Swal.showValidationMessage(
-            "Todos los campos son obligatorios y deben ser válidos"
+            "Todos los campos son obligatorios y deben ser válidos",
           );
           return;
         }
@@ -87,28 +87,28 @@ const CiudadList: React.FC<CiudadListProps> = ({
       if (result.isConfirmed && result.value) {
         console.log(
           "Datos que se van a enviar al editar ciudad:",
-          result.value
+          result.value,
         );
         try {
           await axios.put(`/api/ciudad/${ciudad.id}`, result.value);
           setCiudades((prev) =>
-            prev.map((c) => (c.id === ciudad.id ? result.value : c))
+            prev.map((c) => (c.id === ciudad.id ? result.value : c)),
           );
           onEdit(result.value);
           Swal.fire(
             "Guardado",
             "La ciudad fue actualizada correctamente.",
-            "success"
+            "success",
           );
         } catch (error: any) {
           console.error(
             "Error al editar ciudad:",
-            error.response?.data || error
+            error.response?.data || error,
           );
           Swal.fire(
             "Error",
             error.response?.data?.message || "No se pudo actualizar la ciudad",
-            "error"
+            "error",
           );
         }
       }
@@ -134,13 +134,13 @@ const CiudadList: React.FC<CiudadListProps> = ({
           Swal.fire(
             "Eliminado",
             "La ciudad fue eliminada correctamente.",
-            "success"
+            "success",
           );
         } catch (error: any) {
           Swal.fire(
             "Error",
             error.response?.data?.message || "No se pudo eliminar la ciudad",
-            "error"
+            "error",
           );
         }
       }
@@ -200,7 +200,7 @@ const CiudadList: React.FC<CiudadListProps> = ({
         )?.value;
         if (!nombre || !descripcion || !pais || !latitud || !longitud) {
           Swal.showValidationMessage(
-            "Todos los campos son obligatorios y deben ser válidos"
+            "Todos los campos son obligatorios y deben ser válidos",
           );
           return;
         }
@@ -216,12 +216,12 @@ const CiudadList: React.FC<CiudadListProps> = ({
         } catch (error: any) {
           console.error(
             "Error al crear ciudad:",
-            error.response?.data || error
+            error.response?.data || error,
           );
           Swal.fire(
             "Error",
             error.response?.data?.message || "No se pudo crear la ciudad",
-            "error"
+            "error",
           );
         }
       }
@@ -238,7 +238,6 @@ const CiudadList: React.FC<CiudadListProps> = ({
       <table className="list-table">
         <thead>
           <tr>
-            <th>ID</th>
             <th>Nombre</th>
             <th>Descripción</th>
             <th>País</th>
@@ -250,7 +249,7 @@ const CiudadList: React.FC<CiudadListProps> = ({
           {ciudades.length === 0 ? (
             <tr>
               <td
-                colSpan={6}
+                colSpan={5}
                 style={{ textAlign: "center", padding: "20px", color: "#666" }}
               >
                 No hay ciudades registradas
@@ -259,7 +258,6 @@ const CiudadList: React.FC<CiudadListProps> = ({
           ) : (
             ciudades.map((ciudad) => (
               <tr key={ciudad.id}>
-                <td>{ciudad.id}</td>
                 <td>
                   <strong>{ciudad.nombre}</strong>
                 </td>

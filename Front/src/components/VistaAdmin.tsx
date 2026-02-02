@@ -58,20 +58,45 @@ const VistaAdmin: React.FC = () => {
   const [transportes, setTransportes] = useState<Transporte[]>([]);
 
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [isClasesOpen, setIsClasesOpen] = useState<boolean>(true);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(false);
+  const [loadedCategories, setLoadedCategories] = useState<Set<string>>(
+    new Set(),
+  );
 
+  // Cargar datos solo cuando se selecciona una categoría
   useEffect(() => {
-    loadEntities("/api/cliente", setClientes);
-    loadEntities("/api/hotel", setHoteles);
-    loadEntities("/api/ciudad", setCiudades);
-    loadEntities("/api/excursion", setExcursiones);
-    loadEntities("/api/paquete", setPaquetes);
-    loadEntities("/api/reservaPaquete", setReservas);
-    loadEntities("/api/transporte", setTransportes);
-  }, []);
+    if (selectedCategory && !loadedCategories.has(selectedCategory)) {
+      loadCategoryData(selectedCategory);
+    }
+  }, [selectedCategory]);
+
+  const loadCategoryData = async (category: string) => {
+    const categoryMap: {
+      [key: string]: {
+        endpoint: string;
+        setState: React.Dispatch<React.SetStateAction<any[]>>;
+      };
+    } = {
+      clientes: { endpoint: "/api/cliente", setState: setClientes },
+      hoteles: { endpoint: "/api/hotel", setState: setHoteles },
+      ciudades: { endpoint: "/api/ciudad", setState: setCiudades },
+      excursiones: { endpoint: "/api/excursion", setState: setExcursiones },
+      paquetes: { endpoint: "/api/paquete", setState: setPaquetes },
+      reservas: { endpoint: "/api/reservaPaquete", setState: setReservas },
+      transportes: { endpoint: "/api/transporte", setState: setTransportes },
+    };
+
+    const categoryData = categoryMap[category];
+    if (categoryData) {
+      await loadEntities(categoryData.endpoint, categoryData.setState);
+      setLoadedCategories((prev) => new Set(prev).add(category));
+    }
+  };
 
   const loadEntities = async (
     endpoint: string,
-    setState: React.Dispatch<React.SetStateAction<any[]>>
+    setState: React.Dispatch<React.SetStateAction<any[]>>,
   ) => {
     try {
       const data = await fetchEntities(endpoint);
@@ -86,7 +111,7 @@ const VistaAdmin: React.FC = () => {
   const handleCrear = async (
     entity: any,
     endpoint: string,
-    setState: React.Dispatch<React.SetStateAction<any[]>>
+    setState: React.Dispatch<React.SetStateAction<any[]>>,
   ) => {
     try {
       await createEntity(endpoint, entity);
@@ -100,7 +125,7 @@ const VistaAdmin: React.FC = () => {
   const handleEditar = async (
     entity: any,
     endpoint: string,
-    setState: React.Dispatch<React.SetStateAction<any[]>>
+    setState: React.Dispatch<React.SetStateAction<any[]>>,
   ) => {
     try {
       await updateEntity(endpoint, entity.id, entity);
@@ -115,10 +140,10 @@ const VistaAdmin: React.FC = () => {
     id: number,
     endpoint: string,
     entityName: string,
-    setState: React.Dispatch<React.SetStateAction<any[]>>
+    setState: React.Dispatch<React.SetStateAction<any[]>>,
   ) => {
     const confirmacion = window.confirm(
-      `¿Seguro que deseas eliminar el ${entityName} con id ${id}?`
+      `¿Seguro que deseas eliminar el ${entityName} con id ${id}?`,
     );
     if (!confirmacion) {
       return;
@@ -139,7 +164,7 @@ const VistaAdmin: React.FC = () => {
         return (
           <ClienteList
             clientes={clientes}
-            onEdit={(cliente) => setClienteEditado(cliente)}
+            onEdit={() => loadEntities("/api/cliente", setClientes)}
             onDelete={(cliente) =>
               handleEliminar(cliente.id, "/api/cliente", "cliente", setClientes)
             }
@@ -149,7 +174,7 @@ const VistaAdmin: React.FC = () => {
         return (
           <HotelList
             hoteles={hoteles}
-            onEdit={(hotel) => setHotelEditado(hotel)}
+            onEdit={() => loadEntities("/api/hotel", setHoteles)}
             onDelete={(hotel) =>
               handleEliminar(hotel.id, "/api/hotel", "hotel", setHoteles)
             }
@@ -159,7 +184,7 @@ const VistaAdmin: React.FC = () => {
         return (
           <CiudadList
             ciudades={ciudades}
-            onEdit={(ciudad) => setCiudadEditada(ciudad)}
+            onEdit={() => loadEntities("/api/ciudad", setCiudades)}
             onDelete={(ciudad) =>
               handleEliminar(ciudad.id, "/api/ciudad", "ciudad", setCiudades)
             }
@@ -169,30 +194,30 @@ const VistaAdmin: React.FC = () => {
         return (
           <ExcursionList
             excursiones={excursiones}
-            onEdit={(excursion: Excursion) => setExcursionEditada(excursion)}
+            onEdit={() => loadEntities("/api/excursion", setExcursiones)}
             onDelete={(excursion: Excursion) =>
               handleEliminar(
                 excursion.id,
                 "/api/excursion",
                 "excursión",
-                setExcursiones
+                setExcursiones,
               )
             }
-            onCreate={(excursion: Excursion) => setExcursionEditada(excursion)}
+            onCreate={() => loadEntities("/api/excursion", setExcursiones)}
           />
         );
       case "paquetes":
         return (
           <PaqueteList
             paquetes={paquetes}
-            onEdit={(paquete) => setPaqueteEditado(paquete)}
+            onEdit={() => loadEntities("/api/paquete", setPaquetes)}
             onDelete={(paquete) =>
               handleEliminar(paquete.id, "/api/paquete", "paquete", setPaquetes)
             }
             onAddEstadia={(newEstadia) => {
               console.log("Agregar estadía:", newEstadia);
             }}
-            onCreate={async (paquete) => {
+            onCreate={async () => {
               await loadEntities("/api/paquete", setPaquetes);
             }}
           />
@@ -206,7 +231,7 @@ const VistaAdmin: React.FC = () => {
                 reserva.id,
                 "/api/reservaPaquete",
                 "reserva",
-                setReservas
+                setReservas,
               )
             }
           />
@@ -223,7 +248,7 @@ const VistaAdmin: React.FC = () => {
                 transporte.id,
                 "/api/transporte",
                 "transporte",
-                setTransportes
+                setTransportes,
               )
             }
           />
@@ -237,39 +262,136 @@ const VistaAdmin: React.FC = () => {
     }
   };
 
-  return (
-    <div className="vista-admin">
-      <h1>Vista Admin</h1>
+  const getCategoryTitle = () => {
+    const titles: { [key: string]: string } = {
+      clientes: "Clientes",
+      hoteles: "Hoteles",
+      ciudades: "Ciudades",
+      excursiones: "Excursiones",
+      paquetes: "Paquetes",
+      reservas: "Reservas",
+      transportes: "Transportes",
+    };
+    return selectedCategory ? titles[selectedCategory] : "Vista Admin";
+  };
 
-      <div className="category-buttons">
-        <button onClick={() => setSelectedCategory("clientes")}>
-          Clientes
-        </button>
-        <button onClick={() => setSelectedCategory("hoteles")}>Hoteles</button>
-        <button onClick={() => setSelectedCategory("ciudades")}>
-          Ciudades
-        </button>
-        <button onClick={() => setSelectedCategory("excursiones")}>
-          Excursiones
-        </button>
-        <button onClick={() => setSelectedCategory("paquetes")}>
-          Paquetes
-        </button>
-        <button onClick={() => setSelectedCategory("reservas")}>
-          Reservas
-        </button>
-        <button onClick={() => setSelectedCategory("transportes")}>
-          Transportes
-        </button>
+  return (
+    <div
+      className={`vista-admin ${isSidebarCollapsed ? "sidebar-collapsed" : ""}`}
+    >
+      <div className="admin-sidebar">
+        <div className="sidebar-header">
+          <h2>Admin Panel</h2>
+          <button
+            className="sidebar-collapse-button"
+            onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+            title={
+              isSidebarCollapsed
+                ? "Expandir barra lateral"
+                : "Minimizar barra lateral"
+            }
+          >
+            {isSidebarCollapsed ? "▶" : "◀"}
+          </button>
+        </div>
+
+        <div className="sidebar-section">
+          <button
+            className="sidebar-toggle-button"
+            onClick={() => setIsClasesOpen(!isClasesOpen)}
+          >
+            <span className="toggle-icon">{isClasesOpen ? "▼" : "▶"}</span>
+            Clases
+          </button>
+
+          {isClasesOpen && (
+            <div className="sidebar-items">
+              <button
+                className={
+                  selectedCategory === "clientes"
+                    ? "sidebar-item active"
+                    : "sidebar-item"
+                }
+                onClick={() => setSelectedCategory("clientes")}
+              >
+                Clientes
+              </button>
+              <button
+                className={
+                  selectedCategory === "hoteles"
+                    ? "sidebar-item active"
+                    : "sidebar-item"
+                }
+                onClick={() => setSelectedCategory("hoteles")}
+              >
+                Hoteles
+              </button>
+              <button
+                className={
+                  selectedCategory === "ciudades"
+                    ? "sidebar-item active"
+                    : "sidebar-item"
+                }
+                onClick={() => setSelectedCategory("ciudades")}
+              >
+                Ciudades
+              </button>
+              <button
+                className={
+                  selectedCategory === "excursiones"
+                    ? "sidebar-item active"
+                    : "sidebar-item"
+                }
+                onClick={() => setSelectedCategory("excursiones")}
+              >
+                Excursiones
+              </button>
+              <button
+                className={
+                  selectedCategory === "paquetes"
+                    ? "sidebar-item active"
+                    : "sidebar-item"
+                }
+                onClick={() => setSelectedCategory("paquetes")}
+              >
+                Paquetes
+              </button>
+              <button
+                className={
+                  selectedCategory === "reservas"
+                    ? "sidebar-item active"
+                    : "sidebar-item"
+                }
+                onClick={() => setSelectedCategory("reservas")}
+              >
+                Reservas
+              </button>
+              <button
+                className={
+                  selectedCategory === "transportes"
+                    ? "sidebar-item active"
+                    : "sidebar-item"
+                }
+                onClick={() => setSelectedCategory("transportes")}
+              >
+                Transportes
+              </button>
+            </div>
+          )}
+        </div>
       </div>
 
-      {errorMessage && (
-        <div className="error-message-container">
-          <p className="error-message">{errorMessage}</p>
-        </div>
-      )}
+      <div className="admin-main-content">
+        <h1>{getCategoryTitle()}</h1>
 
-      <div className="content-container">{renderList()}</div>
+        {errorMessage && (
+          <div className="error-message-container">
+            <p className="error-message">{errorMessage}</p>
+          </div>
+        )}
+
+        <div className="content-container">{renderList()}</div>
+      </div>
     </div>
   );
 };
