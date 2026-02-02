@@ -26,7 +26,7 @@ const EstadiaForm: React.FC<Props> = ({ estadiaEditada, onChange, onCancel, onSa
     if (selectedHotel) {
       onChange({ 
         ...estadiaEditada, 
-        id_hotel: hotelId,
+        hotel: selectedHotel,
         precio_x_dia: selectedHotel.precio_x_dia 
       });
     }
@@ -38,7 +38,7 @@ const EstadiaForm: React.FC<Props> = ({ estadiaEditada, onChange, onCancel, onSa
       <label htmlFor="id_hotel">Hotel:</label>
       <select
         id="id_hotel"
-        value={estadiaEditada.id_hotel}
+        value={estadiaEditada.hotel?.id || ''}
         onChange={(e) => handleHotelChange(parseInt(e.target.value))}
         required
       >
