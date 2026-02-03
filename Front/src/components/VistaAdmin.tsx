@@ -12,6 +12,8 @@ import CiudadList from "./Ciudad/CiudadList";
 
 import ReservaPaqueteList from "./ReservaPaquete/ReservaPaqueteList";
 
+import ReservasPendientes from "./ReservaPaquete/ReservasPendientes";
+
 import ExcursionList from "./Excursion/ExcursionList";
 
 import TransporteList from "./Transporte/TransporteList";
@@ -19,6 +21,8 @@ import TransporteList from "./Transporte/TransporteList";
 import ReservasPorPeriodo from "./Estadisticas/ReservasPorPeriodo";
 
 import DestinosPopulares from "./Estadisticas/DestinosPopulares";
+
+import IngresosFacturacion from "./Estadisticas/IngresosFacturacion";
 
 import { Ciudad } from "../interface/ciudad";
 import { Cliente } from "../interface/cliente";
@@ -62,7 +66,7 @@ const VistaAdmin: React.FC = () => {
   const [transportes, setTransportes] = useState<Transporte[]>([]);
 
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [isClasesOpen, setIsClasesOpen] = useState<boolean>(false);
+  const [isDatosOpen, setIsDatosOpen] = useState<boolean>(false);
   const [isEstadisticasOpen, setIsEstadisticasOpen] = useState<boolean>(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(false);
   const [loadedCategories, setLoadedCategories] = useState<Set<string>>(
@@ -248,6 +252,10 @@ const VistaAdmin: React.FC = () => {
         return <ReservasPorPeriodo />;
       case "destinosPopulares":
         return <DestinosPopulares />;
+      case "ingresosFacturacion":
+        return <IngresosFacturacion />;
+      case "reservasPendientes":
+        return <ReservasPendientes />;
       case "ingresos":
         return (
           <div className="mensaje-noEncontro">
@@ -272,9 +280,10 @@ const VistaAdmin: React.FC = () => {
       paquetes: "Paquetes",
       reservas: "Reservas",
       transportes: "Transportes",
+      reservasPendientes: "Reservas y Pagos Pendientes",
       reservasPorPeriodo: "Reservas por Período",
       destinosPopulares: "Destinos Más Populares",
-      ingresos: "Ingresos y Facturación",
+      ingresosFacturacion: "Ingresos y Facturación",
     };
     return selectedCategory ? titles[selectedCategory] : "Vista Admin";
   };
@@ -300,15 +309,28 @@ const VistaAdmin: React.FC = () => {
         </div>
 
         <div className="sidebar-section">
+          <div className="sidebar-section">
+          <button
+            className={
+              selectedCategory === "reservasPendientes"
+                ? "sidebar-item active standalone"
+                : "sidebar-item standalone"
+            }
+            onClick={() => setSelectedCategory("reservasPendientes")}
+          >
+            Reservas Pendientes
+          </button>
+        </div>
+        
           <button
             className="sidebar-toggle-button"
-            onClick={() => setIsClasesOpen(!isClasesOpen)}
+            onClick={() => setIsDatosOpen(!isDatosOpen)}
           >
-            <span className="toggle-icon">{isClasesOpen ? "▼" : "▶"}</span>
-            Clases
+            <span className="toggle-icon">{isDatosOpen ? "▼" : "▶"}</span>
+            Datos
           </button>
 
-          {isClasesOpen && (
+          {isDatosOpen && (
             <div className="sidebar-items">
               <button
                 className={
@@ -423,7 +445,7 @@ const VistaAdmin: React.FC = () => {
                     ? "sidebar-item active"
                     : "sidebar-item"
                 }
-                onClick={() => setSelectedCategory("ingresos")}
+                onClick={() => setSelectedCategory("ingresosFacturacion")}
               >
                 Ingresos y Facturación
               </button>

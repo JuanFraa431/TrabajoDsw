@@ -115,6 +115,11 @@
   border-left-color: #28a745;
 }
 
+.stat-card.pendientes:hover {
+  border-left-color: #ffc107;
+  border-left-width: 6px;
+}
+
 .stat-card.canceladas:hover {
   border-left-color: #dc3545;
 }

@@ -11,24 +11,43 @@ const em = orm.em;
 
 async function findAll(req: Request, res: Response) {
   try {
-    const reservasPaquete = await em.find(
-      ReservaPaquete,
-      {},
-      {
-        populate: [
-          "usuario",
-          "paquete",
-          "paquete.ciudad",
-          "personas",
-          "pago",
-          "paquete.estadias",
-          "paquete.estadias.hotel",
-          "paquete.estadias.hotel.ciudad",
-          "paquete.paqueteExcursiones",
-          "paquete.paqueteExcursiones.excursion",
-        ],
-      },
-    );
+    const { fechaInicio, fechaFin, estado } = req.query;
+
+    let whereClause: any = {};
+
+    // Filtrar por rango de fechas si se proporcionan
+    if (fechaInicio && fechaFin) {
+      const inicio = new Date(fechaInicio as string);
+      inicio.setUTCHours(0, 0, 0, 0);
+
+      const fin = new Date(fechaFin as string);
+      fin.setUTCHours(23, 59, 59, 999);
+
+      whereClause.fecha = {
+        $gte: inicio,
+        $lte: fin,
+      };
+    }
+
+    // Filtrar por estado si se proporciona
+    if (estado && estado !== "todos") {
+      whereClause.estado = estado;
+    }
+
+    const reservasPaquete = await em.find(ReservaPaquete, whereClause, {
+      populate: [
+        "usuario",
+        "paquete",
+        "paquete.ciudad",
+        "personas",
+        "pago",
+        "paquete.estadias",
+        "paquete.estadias.hotel",
+        "paquete.estadias.hotel.ciudad",
+        "paquete.paqueteExcursiones",
+        "paquete.paqueteExcursiones.excursion",
+      ],
+    });
     res
       .status(200)
       .json({ message: "ReservasPaquete encontradas", data: reservasPaquete });
@@ -58,12 +77,10 @@ async function findByUsuario(req: Request, res: Response) {
         ],
       },
     );
-    res
-      .status(200)
-      .json({
-        message: "Reservas del usuario encontradas",
-        data: reservasPaquete,
-      });
+    res.status(200).json({
+      message: "Reservas del usuario encontradas",
+      data: reservasPaquete,
+    });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }

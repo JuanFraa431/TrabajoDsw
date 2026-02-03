@@ -63,17 +63,14 @@ const DestinosPopulares: React.FC = () => {
   const cargarDatos = async () => {
     setLoading(true);
     try {
-      const response = await axios.get("/api/reservaPaquete");
-      let reservasData = response.data.data || [];
-
-      // Filtrar por fechas
-      reservasData = reservasData.filter((r: any) => {
-        const fechaReserva = new Date(r.fecha);
-        const inicio = new Date(fechaInicio);
-        const fin = new Date(fechaFin);
-        fin.setHours(23, 59, 59, 999); // Incluir todo el día final
-        return fechaReserva >= inicio && fechaReserva <= fin;
+      const response = await axios.get("/api/reservaPaquete", {
+        params: {
+          fechaInicio: fechaInicio,
+          fechaFin: fechaFin,
+          estado: "reservado",
+        },
       });
+      let reservasData = response.data.data || [];
 
       procesarCiudades(reservasData);
       procesarPaquetes(reservasData);

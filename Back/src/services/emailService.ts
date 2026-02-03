@@ -4,155 +4,861 @@ import dotenv from "dotenv";
 dotenv.config();
 
 interface ReservaEmailData {
-    usuario: {
-        nombre: string;
-        apellido: string;
-        email: string;
-    };
-    paquete: {
-        id: number;
-        nombre: string;
-        descripcion: string;
-        detalle: string;
-        fecha_ini: string;
-        fecha_fin: string;
-        precio: number;
-        imagen: string;
-        estadias?: any[];
-        paqueteExcursiones?: any[];
-    };
-    reserva: {
-        id: number;
-        fecha_reserva: string;
-        cantidad_personas: number;
-        precio_total: number;
-        estado: string;
-    };
-    acompanantes?: any[];
+  usuario: {
+    nombre: string;
+    apellido: string;
+    email: string;
+  };
+  paquete: {
+    id: number;
+    nombre: string;
+    descripcion: string;
+    detalle: string;
+    fecha_ini: string;
+    fecha_fin: string;
+    precio: number;
+    imagen: string;
+    estadias?: any[];
+    paqueteExcursiones?: any[];
+  };
+  reserva: {
+    id: number;
+    fecha_reserva: string;
+    cantidad_personas: number;
+    precio_total: number;
+    estado: string;
+  };
+  acompanantes?: any[];
 }
 
 class EmailService {
-    private transporter;
+  private transporter;
 
-    constructor() {
-        this.transporter = nodemailer.createTransport({
-            service: process.env.EMAIL_SERVICE || "gmail",
-            host: "smtp.gmail.com",
-            port: 587,
-            secure: false,
-            auth: {
-                user: process.env.EMAIL_USER || "juanfraa032@gmail.com",
-                pass: process.env.EMAIL_PASS || "zuls ezqr bgtf jaqj",
-            },
-            tls: {
-                rejectUnauthorized: false
+  constructor() {
+    this.transporter = nodemailer.createTransport({
+      service: process.env.EMAIL_SERVICE || "gmail",
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false,
+      auth: {
+        user: process.env.EMAIL_USER || "juanfraa032@gmail.com",
+        pass: process.env.EMAIL_PASS || "zuls ezqr bgtf jaqj",
+      },
+      tls: {
+        rejectUnauthorized: false,
+      },
+    });
+  }
+
+  private calcularDiasPaquete(fechaIni: string, fechaFin: string): number {
+    const inicio = new Date(fechaIni);
+    const fin = new Date(fechaFin);
+    const dias = Math.ceil(
+      (fin.getTime() - inicio.getTime()) / (1000 * 60 * 60 * 24),
+    );
+    return dias;
+  }
+
+  private formatearDuracion(fechaIni: string, fechaFin: string): string {
+    const dias = this.calcularDiasPaquete(fechaIni, fechaFin);
+    if (dias === 0) return "Duración no especificada";
+    if (dias === 1) return "1 día";
+
+    const noches = dias - 1;
+    if (noches <= 0) return `${dias} día${dias > 1 ? "s" : ""}`;
+
+    return `${dias} día${dias > 1 ? "s" : ""}, ${noches} noche${
+      noches > 1 ? "s" : ""
+    }`;
+  }
+
+  private generarHtmlRechazoReserva(
+    data: ReservaEmailData & { motivo: string },
+  ): string {
+    const { usuario, paquete, reserva, motivo } = data;
+
+    return `
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reserva Rechazada</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #fc8181 0%, #f56565 100%);
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .email-container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.95;
+        }
+
+        .content {
+            padding: 40px 30px;
+        }
+
+        .greeting {
+            font-size: 1.1rem;
+            color: #2d3748;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #fff5f5 0%, #fed7d7 100%);
+            border-radius: 10px;
+            border-left: 4px solid #f56565;
+        }
+
+        .motivo-box {
+            background: linear-gradient(135deg, #fff5f5 0%, #fed7d7 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 30px 0;
+            border-left: 5px solid #e53e3e;
+        }
+
+        .motivo-box h3 {
+            color: #e53e3e;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .motivo-box p {
+            color: #2d3748;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .package-info {
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            text-align: center;
+            border: 2px solid #e2e8f0;
+        }
+
+        .package-title {
+            color: #2d3748;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .package-subtitle {
+            color: #4a5568;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+
+        .package-image {
+            width: 100%;
+            max-width: 500px;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-top: 15px;
+            opacity: 0.7;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .info-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #e2e8f0;
+        }
+
+        .info-card h3 {
+            color: #2d3748;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            border-bottom: 2px solid #f56565;
+            padding-bottom: 10px;
+        }
+
+        .info-card p {
+            color: #4a5568;
+            margin-bottom: 8px;
+        }
+
+        .divider {
+            border: none;
+            border-top: 2px dashed #cbd5e0;
+            margin: 30px 0;
+        }
+
+        .next-steps {
+            background: linear-gradient(135deg, #ebf8ff 0%, #bee3f8 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 30px;
+            border-left: 5px solid #4299e1;
+        }
+
+        .next-steps h3 {
+            color: #2c5282;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .next-steps ul {
+            color: #2d3748;
+            padding-left: 25px;
+        }
+
+        .next-steps li {
+            margin-bottom: 10px;
+            line-height: 1.8;
+        }
+
+        .footer {
+            background: #2d3748;
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .footer p {
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+
+        .contact-info {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        @media only screen and (max-width: 600px) {
+            .header h1 {
+                font-size: 2rem;
             }
-        });
-    }
+            
+            .package-title {
+                font-size: 1.6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="header">
+            <h1>❌ Reserva Rechazada</h1>
+            <p>Lamentamos informarte sobre tu reserva</p>
+        </div>
+        
+        <div class="content">
+            <div class="greeting">
+                Hola <strong>${usuario.nombre} ${usuario.apellido}</strong>,<br>
+                Lamentamos informarte que tu solicitud de reserva no ha podido ser aprobada. A continuación te explicamos el motivo y qué pasos puedes seguir.
+            </div>
 
-    private calcularDiasPaquete(fechaIni: string, fechaFin: string): number {
-        const inicio = new Date(fechaIni);
-        const fin = new Date(fechaFin);
-        const dias = Math.ceil(
-            (fin.getTime() - inicio.getTime()) / (1000 * 60 * 60 * 24)
-        );
-        return dias;
-    }
+            <div class="motivo-box">
+                <h3>📋 Motivo del Rechazo</h3>
+                <p>${motivo}</p>
+            </div>
+            
+            <div class="package-info">
+                <h2 class="package-title">${paquete.nombre}</h2>
+                <p class="package-subtitle">${paquete.descripcion}</p>
+                <img src="${paquete.imagen}" alt="${paquete.nombre}" class="package-image" onerror="this.style.display='none'">
+            </div>
 
-    private formatearDuracion(fechaIni: string, fechaFin: string): string {
-        const dias = this.calcularDiasPaquete(fechaIni, fechaFin);
-        if (dias === 0) return "Duración no especificada";
-        if (dias === 1) return "1 día";
+            <div class="info-grid">
+                <div class="info-card">
+                    <h3>📅 Fechas Solicitadas</h3>
+                    <p><strong>Inicio:</strong> ${new Date(paquete.fecha_ini).toLocaleDateString("es-ES", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}</p>
+                    <p><strong>Fin:</strong> ${new Date(paquete.fecha_fin).toLocaleDateString("es-ES", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}</p>
+                </div>
+                
+                <div class="info-card">
+                    <h3>🎫 Detalles de Solicitud</h3>
+                    <p><strong>Número:</strong> #${reserva.id}</p>
+                    <p><strong>Fecha:</strong> ${new Date(reserva.fecha_reserva).toLocaleDateString("es-ES")}</p>
+                    <p><strong>Estado:</strong> <span style="color: #e53e3e; font-weight: 600;">❌ RECHAZADA</span></p>
+                </div>
+            </div>
 
-        const noches = dias - 1;
-        if (noches <= 0) return `${dias} día${dias > 1 ? "s" : ""}`;
+            <hr class="divider">
 
-        return `${dias} día${dias > 1 ? "s" : ""}, ${noches} noche${noches > 1 ? "s" : ""
-            }`;
-    }
+            <div class="next-steps">
+                <h3>🔄 Próximos Pasos</h3>
+                <ul>
+                    <li>Puedes realizar una nueva reserva corrigiendo la información según el motivo indicado</li>
+                    <li>Si tienes dudas sobre el rechazo, contáctanos directamente</li>
+                    <li>Revisa otros paquetes disponibles que puedan interesarte</li>
+                    <li>Nuestro equipo está disponible para ayudarte con cualquier consulta</li>
+                </ul>
+            </div>
+        </div>
 
-    private generarHtmlReserva(data: ReservaEmailData): string {
-        const { usuario, paquete, reserva, acompanantes } = data;
-        const duracion = this.formatearDuracion(
-            paquete.fecha_ini,
-            paquete.fecha_fin
-        );
+        <div class="footer">
+            <p><strong>¿Necesitas ayuda?</strong></p>
+            <p>Estamos aquí para asistirte. No dudes en contactarnos si tienes alguna pregunta.</p>
+            
+            <div class="contact-info">
+                <p>📧 Email: juanfraa032@gmail.com</p>
+                <p>🌐 www.tupaqueteturismo.com</p>
+            </div>
+            
+            <p style="margin-top: 20px; font-size: 0.9rem; opacity: 0.7;">
+                © 2026 Tu Paquete Turismo. Todos los derechos reservados.
+            </p>
+        </div>
+    </div>
+</body>
+</html>
+    `;
+  }
 
-        const estadiasHtml =
-            paquete.estadias
-                ?.map(
-                    (estadia) => `
+  private generarHtmlConfirmacionPago(data: ReservaEmailData): string {
+    const { usuario, paquete, reserva, acompanantes } = data;
+    const duracion = this.formatearDuracion(
+      paquete.fecha_ini,
+      paquete.fecha_fin,
+    );
+
+    const estadiasHtml =
+      paquete.estadias
+        ?.map(
+          (estadia) => `
       <div class="item-card">
         <div class="item-header">
           <h4>🏨 ${estadia.hotel?.nombre || "Hotel"}</h4>
         </div>
         <div class="item-details">
-          <p><strong>Dirección:</strong> ${estadia.hotel?.direccion || "No especificada"
-                        }</p>
+          <p><strong>Dirección:</strong> ${
+            estadia.hotel?.direccion || "No especificada"
+          }</p>
           <p><strong>Check-in:</strong> ${new Date(
-                            estadia.fecha_ini
-                        ).toLocaleDateString("es-ES")}</p>
+            estadia.fecha_ini,
+          ).toLocaleDateString("es-ES")}</p>
           <p><strong>Check-out:</strong> ${new Date(
-                            estadia.fecha_fin
-                        ).toLocaleDateString("es-ES")}</p>
+            estadia.fecha_fin,
+          ).toLocaleDateString("es-ES")}</p>
           <p><strong>Precio por día:</strong> $${estadia.precio_x_dia}</p>
         </div>
       </div>
-    `
-                )
-                .join("") || "<p>No hay estadías especificadas</p>";
+    `,
+        )
+        .join("") || "<p>No hay estadías especificadas</p>";
 
-        // Generar lista de excursiones
-        const excursionesHtml =
-            paquete.paqueteExcursiones
-                ?.map(
-                    (paqueteExc) => `
+    const excursionesHtml =
+      paquete.paqueteExcursiones
+        ?.map(
+          (paqueteExc) => `
         <div class="item-card">
             <div class="item-header">
             <h4>🎯 ${paqueteExc.excursion?.nombre || "Excursión"}</h4>
             </div>
             <div class="item-details">
-            <p><strong>Descripción:</strong> ${paqueteExc.excursion?.descripcion || "No especificada"
-                            }</p>
+            <p><strong>Descripción:</strong> ${
+              paqueteExc.excursion?.descripcion || "No especificada"
+            }</p>
             <p><strong>Día:</strong> ${paqueteExc.dia}</p>
             <p><strong>Horario:</strong> ${paqueteExc.horario}</p>
             <p><strong>Precio:</strong> $${paqueteExc.precio}</p>
             </div>
         </div>
-    `
-                )
-                .join("") || "<p>No hay excursiones incluidas</p>";
+    `,
+        )
+        .join("") || "<p>No hay excursiones incluidas</p>";
 
-        // Generar lista de acompañantes
-        const calcularEdad = (fechaNacimiento: string): number => {
-            const nacimiento = new Date(fechaNacimiento);
-            const hoy = new Date();
-            let edad = hoy.getFullYear() - nacimiento.getFullYear();
-            const m = hoy.getMonth() - nacimiento.getMonth();
-            if (m < 0 || (m === 0 && hoy.getDate() < nacimiento.getDate())) {
-                edad--;
-            }
-            return edad;
-        };
+    const calcularEdad = (fechaNacimiento: string): number => {
+      const nacimiento = new Date(fechaNacimiento);
+      const hoy = new Date();
+      let edad = hoy.getFullYear() - nacimiento.getFullYear();
+      const m = hoy.getMonth() - nacimiento.getMonth();
+      if (m < 0 || (m === 0 && hoy.getDate() < nacimiento.getDate())) {
+        edad--;
+      }
+      return edad;
+    };
 
-        const acompanantesHtml =
-            acompanantes
-                ?.map(
-                    (acompanante) => `
+    const acompanantesHtml =
+      acompanantes
+        ?.map(
+          (acompanante) => `
             <div class="companion-item">
                 <span class="companion-name">${acompanante.nombre} ${acompanante.apellido}</span>
-                <span class="companion-age">Edad: ${acompanante.fecha_nacimiento ? calcularEdad(acompanante.fecha_nacimiento) : ''} años</span>
+                <span class="companion-age">Edad: ${acompanante.fecha_nacimiento ? calcularEdad(acompanante.fecha_nacimiento) : ""} años</span>
             </div>
-        `
-                )
-                .join("") || "<p>Solo el titular</p>";
+        `,
+        )
+        .join("") || "<p>No hay acompañantes</p>";
 
-        return `<!DOCTYPE html>
+    return `
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Confirmación de Reserva</title>
+    <title>¡Reserva Confirmada!</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .email-container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.95;
+        }
+
+        .content {
+            padding: 40px 30px;
+        }
+
+        .greeting {
+            font-size: 1.1rem;
+            color: #2d3748;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #e6fffa 0%, #b2f5ea 100%);
+            border-radius: 10px;
+            border-left: 4px solid #48bb78;
+        }
+
+        .package-hero {
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            text-align: center;
+            border: 2px solid #e2e8f0;
+        }
+
+        .package-title {
+            color: #2d3748;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .package-subtitle {
+            color: #4a5568;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+
+        .package-image {
+            width: 100%;
+            max-width: 500px;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-top: 15px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .info-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .info-card h3 {
+            color: #2d3748;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            border-bottom: 2px solid #48bb78;
+            padding-bottom: 10px;
+        }
+
+        .info-card p {
+            color: #4a5568;
+            margin-bottom: 8px;
+        }
+
+        .divider {
+            border: none;
+            border-top: 2px dashed #cbd5e0;
+            margin: 30px 0;
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            color: #2d3748;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #48bb78;
+        }
+
+        .item-card {
+            background: #f7fafc;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border-left: 4px solid #48bb78;
+        }
+
+        .item-header h4 {
+            color: #2d3748;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .item-details p {
+            color: #4a5568;
+            margin-bottom: 8px;
+            padding-left: 10px;
+        }
+
+        .companions-list {
+            background: #f7fafc;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #48bb78;
+        }
+
+        .companion-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            margin-bottom: 10px;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .companion-name {
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .companion-age {
+            color: #718096;
+            font-size: 0.95rem;
+        }
+
+        .price-summary {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .price-label {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+
+        .price-amount {
+            font-size: 3rem;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .footer {
+            background: #2d3748;
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .footer p {
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+
+        .contact-info {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        @media only screen and (max-width: 600px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .package-title {
+                font-size: 1.6rem;
+            }
+            
+            .price-amount {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="header">
+            <h1>🎉 ¡Reserva Confirmada!</h1>
+            <p>Tu pago ha sido verificado y aprobado</p>
+        </div>
+        
+        <div class="content">
+            <div class="greeting">
+                ¡Excelentes noticias, <strong>${usuario.nombre} ${usuario.apellido}</strong>! 🎊<br>
+                Tu pago ha sido verificado y aceptado exitosamente. Tu reserva está confirmada y lista para tu próxima aventura. ¡Prepárate para vivir una experiencia inolvidable!
+            </div>
+            
+            <div class="package-hero">
+                <h2 class="package-title">${paquete.nombre}</h2>
+                <p class="package-subtitle">${paquete.descripcion}</p>
+                <img src="${paquete.imagen}" alt="${paquete.nombre}" class="package-image" onerror="this.style.display='none'">
+            </div>
+
+            <div class="info-grid">
+                <div class="info-card">
+                    <h3>📅 Fechas del Viaje</h3>
+                    <p><strong>Inicio:</strong> ${new Date(
+                      paquete.fecha_ini,
+                    ).toLocaleDateString("es-ES", {
+                      weekday: "long",
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}</p>
+                    <p><strong>Fin:</strong> ${new Date(
+                      paquete.fecha_fin,
+                    ).toLocaleDateString("es-ES", {
+                      weekday: "long",
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}</p>
+                    <p><strong>Duración:</strong> ${duracion}</p>
+                </div>
+                
+                <div class="info-card">
+                    <h3>🎫 Detalles de Reserva</h3>
+                    <p><strong>Número:</strong> #${reserva.id}</p>
+                    <p><strong>Fecha:</strong> ${new Date(reserva.fecha_reserva).toLocaleDateString("es-ES")}</p>
+                    <p><strong>Estado:</strong> <span style="color: #48bb78; font-weight: 600;">✅ CONFIRMADA</span></p>
+                    <p><strong>Personas:</strong> ${reserva.cantidad_personas}</p>
+                </div>
+
+                <div class="info-card">
+                    <h3>📧 Información de Contacto</h3>
+                    <p><strong>Email:</strong> ${usuario.email}</p>
+                    <p><strong>Confirmada el:</strong> ${new Date().toLocaleDateString("es-ES")}</p>
+                </div>
+            </div>
+
+            <hr class="divider">
+
+            <div class="section">
+                <h3 class="section-title">🏨 Alojamientos Incluidos</h3>
+                ${estadiasHtml}
+            </div>
+
+            <div class="section">
+                <h3 class="section-title">🎯 Actividades y Excursiones</h3>
+                ${excursionesHtml}
+            </div>
+
+            ${
+              acompanantes && acompanantes.length > 0
+                ? `
+            <div class="section">
+                <h3 class="section-title">👥 Acompañantes (${acompanantes.length})</h3>
+                <div class="companions-list">
+                    ${acompanantesHtml}
+                </div>
+            </div>
+            `
+                : ""
+            }
+
+            <div class="price-summary">
+                <div class="price-label">💰 Total Pagado</div>
+                <div class="price-amount">$${reserva.precio_total.toLocaleString("es-AR")}</div>
+                <p style="margin-top: 15px; opacity: 0.9;">Pago verificado y confirmado ✅</p>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p><strong>¿Tienes alguna pregunta?</strong></p>
+            <p>No dudes en contactarnos. Estamos aquí para ayudarte a que tu viaje sea perfecto.</p>
+            
+            <div class="contact-info">
+                <p>📧 Email: juanfraa032@gmail.com</p>
+                <p>🌐 www.tupaqueteturismo.com</p>
+            </div>
+            
+            <p style="margin-top: 20px; font-size: 0.9rem; opacity: 0.7;">
+                © 2026 Tu Paquete Turismo. Todos los derechos reservados.
+            </p>
+        </div>
+    </div>
+</body>
+</html>
+    `;
+  }
+
+  private generarHtmlReserva(data: ReservaEmailData): string {
+    const { usuario, paquete, reserva, acompanantes } = data;
+    const duracion = this.formatearDuracion(
+      paquete.fecha_ini,
+      paquete.fecha_fin,
+    );
+
+    const estadiasHtml =
+      paquete.estadias
+        ?.map(
+          (estadia) => `
+      <div class="item-card">
+        <div class="item-header">
+          <h4>🏨 ${estadia.hotel?.nombre || "Hotel"}</h4>
+        </div>
+        <div class="item-details">
+          <p><strong>Dirección:</strong> ${
+            estadia.hotel?.direccion || "No especificada"
+          }</p>
+          <p><strong>Check-in:</strong> ${new Date(
+            estadia.fecha_ini,
+          ).toLocaleDateString("es-ES")}</p>
+          <p><strong>Check-out:</strong> ${new Date(
+            estadia.fecha_fin,
+          ).toLocaleDateString("es-ES")}</p>
+          <p><strong>Precio por día:</strong> $${estadia.precio_x_dia}</p>
+        </div>
+      </div>
+    `,
+        )
+        .join("") || "<p>No hay estadías especificadas</p>";
+
+    // Generar lista de excursiones
+    const excursionesHtml =
+      paquete.paqueteExcursiones
+        ?.map(
+          (paqueteExc) => `
+        <div class="item-card">
+            <div class="item-header">
+            <h4>🎯 ${paqueteExc.excursion?.nombre || "Excursión"}</h4>
+            </div>
+            <div class="item-details">
+            <p><strong>Descripción:</strong> ${
+              paqueteExc.excursion?.descripcion || "No especificada"
+            }</p>
+            <p><strong>Día:</strong> ${paqueteExc.dia}</p>
+            <p><strong>Horario:</strong> ${paqueteExc.horario}</p>
+            <p><strong>Precio:</strong> $${paqueteExc.precio}</p>
+            </div>
+        </div>
+    `,
+        )
+        .join("") || "<p>No hay excursiones incluidas</p>";
+
+    // Generar lista de acompañantes
+    const calcularEdad = (fechaNacimiento: string): number => {
+      const nacimiento = new Date(fechaNacimiento);
+      const hoy = new Date();
+      let edad = hoy.getFullYear() - nacimiento.getFullYear();
+      const m = hoy.getMonth() - nacimiento.getMonth();
+      if (m < 0 || (m === 0 && hoy.getDate() < nacimiento.getDate())) {
+        edad--;
+      }
+      return edad;
+    };
+
+    const acompanantesHtml =
+      acompanantes
+        ?.map(
+          (acompanante) => `
+            <div class="companion-item">
+                <span class="companion-name">${acompanante.nombre} ${acompanante.apellido}</span>
+                <span class="companion-age">Edad: ${acompanante.fecha_nacimiento ? calcularEdad(acompanante.fecha_nacimiento) : ""} años</span>
+            </div>
+        `,
+        )
+        .join("") || "<p>Solo el titular</p>";
+
+    return `<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solicitud de Reserva Recibida</title>
     <style>
         * {
             margin: 0;
@@ -550,14 +1256,14 @@ class EmailService {
 <body>
     <div class="email-container">
         <div class="header">
-            <h1>🎉 ¡Reserva Confirmada!</h1>
-            <p>Tu aventura está por comenzar</p>
+            <h1>✅ ¡Solicitud Recibida!</h1>
+            <p>Tu solicitud de reserva está siendo procesada</p>
         </div>
         
         <div class="content">
             <div class="greeting">
                 ¡Hola <strong>${usuario.nombre} ${usuario.apellido}</strong>! 👋<br>
-                Nos complace confirmar tu reserva. Aquí tienes todos los detalles:
+                Hemos recibido tu solicitud de reserva. Nuestro equipo está verificando tu pago y te enviaremos un correo con la confirmación o rechazo en las próximas horas. Aquí tienes los detalles de tu solicitud:
             </div>
             
             <div class="package-hero">
@@ -569,25 +1275,29 @@ class EmailService {
             <div class="info-grid">
                 <div class="info-card">
                     <h3>📅 Fechas del Viaje</h3>
-                    <p><strong>Inicio:</strong> ${new Date(paquete.fecha_ini).toLocaleDateString('es-ES', {
-            weekday: 'long',
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-        })}</p>
-                    <p><strong>Fin:</strong> ${new Date(paquete.fecha_fin).toLocaleDateString('es-ES', {
-            weekday: 'long',
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-        })}</p>
+                    <p><strong>Inicio:</strong> ${new Date(
+                      paquete.fecha_ini,
+                    ).toLocaleDateString("es-ES", {
+                      weekday: "long",
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}</p>
+                    <p><strong>Fin:</strong> ${new Date(
+                      paquete.fecha_fin,
+                    ).toLocaleDateString("es-ES", {
+                      weekday: "long",
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}</p>
                     <p><strong>Duración:</strong> ${duracion}</p>
                 </div>
                 
                 <div class="info-card">
                     <h3>🎫 Detalles de Reserva</h3>
                     <p><strong>Número:</strong> #${reserva.id}</p>
-                    <p><strong>Fecha:</strong> ${new Date(reserva.fecha_reserva).toLocaleDateString('es-ES')}</p>
+                    <p><strong>Fecha:</strong> ${new Date(reserva.fecha_reserva).toLocaleDateString("es-ES")}</p>
                     <p><strong>Estado:</strong> <span style="color: #48bb78; font-weight: 600;">✅ ${reserva.estado.toUpperCase()}</span></p>
                     <p><strong>Personas:</strong> ${reserva.cantidad_personas}</p>
                 </div>
@@ -595,7 +1305,7 @@ class EmailService {
                 <div class="info-card">
                     <h3>� Información de Contacto</h3>
                     <p><strong>Email:</strong> ${usuario.email}</p>
-                    <p><strong>Reservado el:</strong> ${new Date(reserva.fecha_reserva).toLocaleDateString('es-ES')}</p>
+                    <p><strong>Reservado el:</strong> ${new Date(reserva.fecha_reserva).toLocaleDateString("es-ES")}</p>
                 </div>
             </div>
 
@@ -611,21 +1321,25 @@ class EmailService {
                 ${excursionesHtml}
             </div>
 
-            ${acompanantes && acompanantes.length > 0 ? `
+            ${
+              acompanantes && acompanantes.length > 0
+                ? `
             <div class="section">
                 <h3 class="section-title">👥 Acompañantes</h3>
                 <div class="companions-section">
                     ${acompanantesHtml}
                 </div>
-            </div>` : ''}
+            </div>`
+                : ""
+            }
 
             <hr class="divider">
 
             <div class="price-summary">
-                <div class="price-amount">$${reserva.precio_total.toLocaleString('es-ES')}</div>
+                <div class="price-amount">$${reserva.precio_total.toLocaleString("es-ES")}</div>
                 <div class="price-label">Precio Total del Paquete</div>
                 <p style="color: #718096; font-size: 0.9rem; margin-top: 15px;">
-                    Incluye todos los servicios detallados • ${reserva.cantidad_personas} persona${reserva.cantidad_personas > 1 ? 's' : ''}
+                    Incluye todos los servicios detallados • ${reserva.cantidad_personas} persona${reserva.cantidad_personas > 1 ? "s" : ""}
                 </p>
             </div>
 
@@ -650,42 +1364,80 @@ class EmailService {
 </body>
 </html>
     `;
-    }
+  }
 
-    async enviarEmailReserva(data: ReservaEmailData): Promise<void> {
-        try {
-            const mailOptions = {
-                from: process.env.FROM_EMAIL || "juanfraa032@gmail.com",
-                to: data.usuario.email,
-                subject: `🎉 Confirmación de Reserva - ${data.paquete.nombre}`,
-                html: this.generarHtmlReserva(data),
-            };
+  async enviarEmailReserva(data: ReservaEmailData): Promise<void> {
+    try {
+      const mailOptions = {
+        from: process.env.FROM_EMAIL || "juanfraa032@gmail.com",
+        to: data.usuario.email,
+        subject: `⏳ Solicitud de Reserva Recibida - ${data.paquete.nombre}`,
+        html: this.generarHtmlReserva(data),
+      };
 
-            await this.transporter.sendMail(mailOptions);
-            console.log(`Email de confirmación enviado a: ${data.usuario.email}`);
-        } catch (error) {
-            console.error("Error al enviar email de confirmación:", error);
-            throw error;
-        }
+      await this.transporter.sendMail(mailOptions);
+      console.log(`Email de confirmación enviado a: ${data.usuario.email}`);
+    } catch (error) {
+      console.error("Error al enviar email de confirmación:", error);
+      throw error;
     }
-    async verificarConexion(): Promise<boolean> {
-        try {
-            await this.transporter.verify();
-            console.log('✅ Conexión SMTP verificada exitosamente');
-            return true;
-        } catch (error) {
-            console.error('❌ Error en la conexión SMTP:', error);
-            return false;
-        }
-    }
+  }
+  async enviarConfirmacionPago(data: ReservaEmailData): Promise<void> {
+    try {
+      const mailOptions = {
+        from: process.env.FROM_EMAIL || "juanfraa032@gmail.com",
+        to: data.usuario.email,
+        subject: `🎉 ¡Reserva Confirmada! - ${data.paquete.nombre}`,
+        html: this.generarHtmlConfirmacionPago(data),
+      };
 
-    async enviarEmailPrueba(destinatario: string): Promise<boolean> {
-        try {
-            const mailOptions = {
-                from: process.env.FROM_EMAIL || "juanfraa032@gmail.com",
-                to: destinatario,
-                subject: "🧪 Email de Prueba - Sistema de Reservas",
-                html: `
+      await this.transporter.sendMail(mailOptions);
+      console.log(
+        `Email de confirmación de pago enviado a: ${data.usuario.email}`,
+      );
+    } catch (error) {
+      console.error("Error al enviar email de confirmación de pago:", error);
+      throw error;
+    }
+  }
+
+  async enviarRechazoReserva(
+    data: ReservaEmailData & { motivo: string },
+  ): Promise<void> {
+    try {
+      const mailOptions = {
+        from: process.env.FROM_EMAIL || "juanfraa032@gmail.com",
+        to: data.usuario.email,
+        subject: `❌ Reserva Rechazada - ${data.paquete.nombre}`,
+        html: this.generarHtmlRechazoReserva(data),
+      };
+
+      await this.transporter.sendMail(mailOptions);
+      console.log(`Email de rechazo enviado a: ${data.usuario.email}`);
+    } catch (error) {
+      console.error("Error al enviar email de rechazo:", error);
+      throw error;
+    }
+  }
+
+  async verificarConexion(): Promise<boolean> {
+    try {
+      await this.transporter.verify();
+      console.log("✅ Conexión SMTP verificada exitosamente");
+      return true;
+    } catch (error) {
+      console.error("❌ Error en la conexión SMTP:", error);
+      return false;
+    }
+  }
+
+  async enviarEmailPrueba(destinatario: string): Promise<boolean> {
+    try {
+      const mailOptions = {
+        from: process.env.FROM_EMAIL || "juanfraa032@gmail.com",
+        to: destinatario,
+        subject: "🧪 Email de Prueba - Sistema de Reservas",
+        html: `
                     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
                         <h2 style="color: #007bff;">Email de Prueba</h2>
                         <p>Si recibes este email, la configuración SMTP está funcionando correctamente.</p>
@@ -695,17 +1447,17 @@ class EmailService {
                             Este es un email de prueba del Sistema de Reservas de Paquetes Turísticos.
                         </p>
                     </div>
-                `
-            };
+                `,
+      };
 
-            await this.transporter.sendMail(mailOptions);
-            console.log(`✅ Email de prueba enviado exitosamente a: ${destinatario}`);
-            return true;
-        } catch (error) {
-            console.error('❌ Error al enviar email de prueba:', error);
-            return false;
-        }
+      await this.transporter.sendMail(mailOptions);
+      console.log(`✅ Email de prueba enviado exitosamente a: ${destinatario}`);
+      return true;
+    } catch (error) {
+      console.error("❌ Error al enviar email de prueba:", error);
+      return false;
     }
+  }
 }
 
 export const emailService = new EmailService();

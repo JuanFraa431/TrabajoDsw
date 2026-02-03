@@ -193,6 +193,24 @@
   font-weight: 600;
 }
 
+.sidebar-item.standalone {
+  padding-left: 40px;
+  font-weight: 500;
+  background-color: #ffc107;
+  color: #333;
+}
+
+.sidebar-item.standalone:hover {
+  background-color: #e0a800;
+  color: #000;
+}
+
+.sidebar-item.standalone.active {
+  background-color: #ffc107;
+  color: #000;
+  font-weight: 700;
+}
+
 /* Main Content */
 .admin-main-content {
   margin-left: 280px;
