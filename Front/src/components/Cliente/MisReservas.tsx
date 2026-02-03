@@ -11,6 +11,10 @@ const MisReservas: React.FC = () => {
   const [reservas, setReservas] = useState<ReservaPaquete[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>('');
+  const [showCancelModal, setShowCancelModal] = useState<boolean>(false);
+  const [selectedReserva, setSelectedReserva] = useState<ReservaPaquete | null>(null);
+  const [motivoCancelacion, setMotivoCancelacion] = useState<string>('');
+  const [cancelando, setCancelando] = useState<boolean>(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -67,6 +71,52 @@ const MisReservas: React.FC = () => {
 
   const verDetallePaquete = (paqueteId: number) => {
     navigate(`/cardDetail`, { state: { id: paqueteId } });
+  };
+
+  const abrirModalCancelacion = (reserva: ReservaPaquete) => {
+    setSelectedReserva(reserva);
+    setMotivoCancelacion('');
+    setShowCancelModal(true);
+  };
+
+  const cerrarModalCancelacion = () => {
+    setShowCancelModal(false);
+    setSelectedReserva(null);
+    setMotivoCancelacion('');
+  };
+
+  const confirmarCancelacion = async () => {
+    if (!selectedReserva) return;
+
+    if (!motivoCancelacion.trim()) {
+      alert('Por favor, ingrese un motivo de cancelación');
+      return;
+    }
+
+    try {
+      setCancelando(true);
+      
+      const response = await axios.patch(
+        `/api/reservaPaquete/${selectedReserva.id}/cancelar`,
+        { motivo: motivoCancelacion.trim() }
+      );
+
+      if (response.status === 200) {
+        alert('Reserva cancelada exitosamente');
+        cerrarModalCancelacion();
+        
+        // Recargar las reservas para reflejar el cambio
+        if (cliente) {
+          cargarReservas(cliente.id);
+        }
+      }
+    } catch (error: any) {
+      console.error('Error al cancelar la reserva:', error);
+      const mensaje = error.response?.data?.message || 'Error al cancelar la reserva';
+      alert(mensaje);
+    } finally {
+      setCancelando(false);
+    }
   };
 
   const storedUser = localStorage.getItem('user');
@@ -189,10 +239,7 @@ const MisReservas: React.FC = () => {
                   {reserva.estado.toLowerCase() === 'reservado' && (
                     <button
                       className="btn-cancelar"
-                      onClick={() => {
-                        // Aquí podrías implementar la funcionalidad de cancelación
-                        alert('Funcionalidad de cancelación próximamente');
-                      }}
+                      onClick={() => abrirModalCancelacion(reserva)}
                     >
                       Cancelar Reserva
                     </button>
@@ -216,6 +263,75 @@ const MisReservas: React.FC = () => {
           </div>
         )}
       </div>
+
+      {/* Modal de cancelación */}
+      {showCancelModal && selectedReserva && (
+        <div className="modal-overlay" onClick={cerrarModalCancelacion}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>Cancelar Reserva</h2>
+              <button className="modal-close" onClick={cerrarModalCancelacion}>
+                ×
+              </button>
+            </div>
+
+            <div className="modal-body">
+              <div className="reserva-info-modal">
+                <h3>{selectedReserva.paquete.nombre}</h3>
+                <p>
+                  <strong>Fecha del viaje:</strong>{' '}
+                  {formatearFecha(selectedReserva.paquete.fecha_ini)} -{' '}
+                  {formatearFecha(selectedReserva.paquete.fecha_fin)}
+                </p>
+                <p>
+                  <strong>Total pagado:</strong> ${selectedReserva.pago.monto.toLocaleString()}
+                </p>
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="motivoCancelacion">
+                  Motivo de cancelación <span className="required">*</span>
+                </label>
+                <textarea
+                  id="motivoCancelacion"
+                  className="form-control"
+                  rows={4}
+                  placeholder="Por favor, indique el motivo de la cancelación..."
+                  value={motivoCancelacion}
+                  onChange={(e) => setMotivoCancelacion(e.target.value)}
+                  maxLength={500}
+                  disabled={cancelando}
+                />
+                <small className="char-counter">
+                  {motivoCancelacion.length}/500 caracteres
+                </small>
+              </div>
+
+              <div className="modal-warning">
+                <p>⚠️ Esta acción no se puede deshacer. ¿Está seguro que desea cancelar esta reserva?</p>
+              </div>
+            </div>
+
+            <div className="modal-footer">
+              <button
+                className="btn-secondary"
+                onClick={cerrarModalCancelacion}
+                disabled={cancelando}
+              >
+                Volver
+              </button>
+              <button
+                className="btn-confirmar-cancelacion"
+                onClick={confirmarCancelacion}
+                disabled={cancelando || !motivoCancelacion.trim()}
+              >
+                {cancelando ? 'Cancelando...' : 'Confirmar Cancelación'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <Footer />
     </div>
   );
