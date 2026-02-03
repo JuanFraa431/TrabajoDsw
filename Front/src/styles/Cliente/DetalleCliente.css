@@ -1,7 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap");
 
 * {
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   margin: 0;
   padding: 0;
 }
@@ -62,15 +62,15 @@
   justify-content: center;
   align-items: center;
   opacity: 0;
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
 }
-
 
 .profile-pic:hover .edit-icon {
   opacity: 1;
   transform: translate(-50%, -50%) scale(1.1);
 }
-
 
 .uploading {
   position: absolute;
@@ -122,7 +122,7 @@
   justify-content: space-between;
 }
 
-.btn {
+.detalle-cliente-btn {
   padding: 10px 20px;
   border: none;
   border-radius: 5px;
@@ -130,29 +130,29 @@
   cursor: pointer;
 }
 
-.btn.danger {
+.detalle-cliente-btn.danger {
   background-color: #dc3545;
   color: white;
   transition: 0.5s all;
   font-weight: bold;
 }
 
-.btn.danger:hover {
+.detalle-cliente-btn.danger:hover {
   transform: scale(1.1);
 }
 
-.btn.logout {
+.detalle-cliente-btn.logout {
   background-color: #007bff;
   color: white;
   transition: 0.5s all;
   font-weight: bold;
 }
 
-.btn.logout:hover {
+.detalle-cliente-btn.logout:hover {
   transform: scale(1.1);
 }
 
-.btn:hover {
+.detalle-cliente-btn:hover {
   opacity: 0.9;
 }
 
