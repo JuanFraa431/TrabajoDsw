@@ -60,6 +60,21 @@ const DestinosPopulares: React.FC = () => {
     }
   }, [fechaInicio, fechaFin]);
 
+  const obtenerCiudadNombre = (reserva: any) => {
+    const paquete = reserva?.paquete;
+    const ciudadDirecta = paquete?.ciudad?.nombre || paquete?.ciudad;
+    if (ciudadDirecta) return ciudadDirecta;
+
+    const ciudadEstadia = paquete?.estadias?.[0]?.hotel?.ciudad?.nombre;
+    if (ciudadEstadia) return ciudadEstadia;
+
+    const ciudadExcursion =
+      paquete?.paqueteExcursiones?.[0]?.excursion?.ciudad?.nombre;
+    if (ciudadExcursion) return ciudadExcursion;
+
+    return "Sin ciudad";
+  };
+
   const cargarDatos = async () => {
     setLoading(true);
     try {
@@ -86,7 +101,7 @@ const DestinosPopulares: React.FC = () => {
     const ciudadesMap: { [key: string]: number } = {};
 
     reservasData.forEach((reserva) => {
-      const ciudad = reserva.paquete?.ciudad?.nombre || "Sin ciudad";
+      const ciudad = obtenerCiudadNombre(reserva);
       ciudadesMap[ciudad] = (ciudadesMap[ciudad] || 0) + 1;
     });
 
@@ -133,7 +148,7 @@ const DestinosPopulares: React.FC = () => {
 
   const calcularEstadisticas = (reservasData: any[]) => {
     const ciudadesUnicas = new Set(
-      reservasData.map((r) => r.paquete?.ciudad?.nombre).filter(Boolean),
+      reservasData.map((r) => obtenerCiudadNombre(r)).filter(Boolean),
     );
     const paquetesUnicos = new Set(
       reservasData.map((r) => r.paquete?.nombre).filter(Boolean),
@@ -143,7 +158,7 @@ const DestinosPopulares: React.FC = () => {
     const paquetesCount: { [key: string]: number } = {};
 
     reservasData.forEach((r) => {
-      const ciudad = r.paquete?.ciudad?.nombre;
+      const ciudad = obtenerCiudadNombre(r);
       const paquete = r.paquete?.nombre;
       if (ciudad) ciudadesCount[ciudad] = (ciudadesCount[ciudad] || 0) + 1;
       if (paquete) paquetesCount[paquete] = (paquetesCount[paquete] || 0) + 1;
