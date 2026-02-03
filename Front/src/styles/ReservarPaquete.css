@@ -276,7 +276,7 @@
   color: var(--gray-400);
 }
 
-.section-title {
+.reservar-section-title {
   font-size: 1.1rem;
   font-weight: 600;
   color: var(--gray-800);
@@ -288,11 +288,11 @@
   gap: 10px;
 }
 
-.section-title:first-child {
+.reservar-section-title:first-child {
   margin-top: 0;
 }
 
-.section-title .icon {
+.reservar-section-title .icon {
   font-size: 1.2rem;
 }
 
@@ -616,7 +616,7 @@
   border-top: 1px solid var(--gray-200);
 }
 
-.btn {
+.reservar-btn {
   padding: 12px 28px;
   border: none;
   border-radius: var(--radius-sm);
@@ -630,42 +630,42 @@
   gap: 8px;
 }
 
-.btn-secondary {
+.reservar-btn-secondary {
   background: var(--gray-200);
   color: var(--gray-700);
 }
 
-.btn-secondary:hover {
+.reservar-btn-secondary:hover {
   background: var(--gray-300);
 }
 
-.btn-primary {
+.reservar-btn-primary {
   background: var(--primary-color);
   color: white;
 }
 
-.btn-primary:hover {
+.reservar-btn-primary:hover {
   background: var(--primary-dark);
   transform: translateY(-1px);
   box-shadow: var(--shadow-md);
 }
 
-.btn-success {
+.reservar-btn-success {
   background: var(--success-color);
   color: white;
 }
 
-.btn-success:hover {
+.reservar-btn-success:hover {
   background: #218838;
 }
 
-.btn:disabled {
+.reservar-btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
   transform: none;
 }
 
-.btn.processing {
+.reservar-btn.processing {
   background: var(--warning-color);
   color: var(--gray-800);
 }
@@ -724,7 +724,39 @@
 .success-message-text {
   font-size: 1.1rem;
   color: var(--gray-600);
-  margin-bottom: 30px;
+  margin-bottom: 20px;
+}
+
+.pending-notice {
+  background: #fff8e1;
+  border: 2px solid #ffc107;
+  border-radius: var(--radius-md);
+  padding: 20px;
+  margin: 0 auto 30px;
+  max-width: 500px;
+  display: flex;
+  gap: 15px;
+  align-items: flex-start;
+}
+
+.notice-icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.pending-notice p {
+  margin: 0;
+  text-align: left;
+  color: var(--gray-700);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.pending-notice strong {
+  color: var(--gray-800);
+  font-size: 1rem;
+  display: block;
+  margin-bottom: 5px;
 }
 
 .success-details {
@@ -747,7 +779,7 @@
   border-bottom: none;
 }
 
-.btn-home {
+.reservar-btn-home {
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -809,7 +841,7 @@
     gap: 15px;
   }
 
-  .btn {
+  .reservar-btn {
     width: 100%;
     justify-content: center;
   }

@@ -1,0 +1,216 @@
+.destinos-populares-container {
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+}
+
+/* Sección de filtros */
+.filtros-section {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.filtros-section h3 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  color: #333;
+  font-size: 1.3rem;
+}
+
+.filtros-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.filtro-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.filtro-group label {
+  font-weight: 600;
+  color: #555;
+  font-size: 0.9rem;
+}
+
+.filtro-group input,
+.filtro-group select {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.2s ease;
+}
+
+.filtro-group input:focus,
+.filtro-group select:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+/* Períodos rápidos */
+.periodos-rapidos {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.periodos-rapidos button {
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.periodos-rapidos button:hover {
+  background-color: #0056b3;
+  transform: translateY(-1px);
+}
+
+/* Tarjetas de estadísticas */
+.estadisticas-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.stat-card {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  border-left: 4px solid transparent;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-left-color 0.2s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.stat-card.ciudades:hover {
+  border-left-color: #007bff;
+}
+
+.stat-card.paquetes:hover {
+  border-left-color: #28a745;
+}
+
+.stat-card.destino-top:hover {
+  border-left-color: #ffc107;
+}
+
+.stat-card.paquete-top:hover {
+  border-left-color: #17a2b8;
+}
+
+.stat-content {
+  flex: 1;
+}
+
+.stat-content h4 {
+  margin: 0 0 8px 0;
+  color: #666;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stat-value {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #2c3e50;
+}
+
+.stat-value-text {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #2c3e50;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Gráficos */
+.graficos-section {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  align-items: start;
+  margin-bottom: 20px;
+}
+
+.grafico-container {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+}
+
+.grafico-full-width {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+.grafico-container h3 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  color: #333;
+  font-size: 1.2rem;
+  text-align: center;
+}
+
+.loading-message {
+  text-align: center;
+  padding: 60px;
+  font-size: 1.2rem;
+  color: #666;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .filtros-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .periodos-rapidos {
+    flex-direction: column;
+  }
+
+  .periodos-rapidos button {
+    width: 100%;
+  }
+
+  .estadisticas-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .graficos-section {
+    grid-template-columns: 1fr;
+  }
+}

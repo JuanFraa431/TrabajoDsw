@@ -48,7 +48,7 @@ const ExcursionList: React.FC<ExcursionListProps> = ({
         (ciudad) =>
           `<option value="${ciudad.id}" ${
             ciudad.id === ciudadId ? "selected" : ""
-          }>${ciudad.nombre}</option>`
+          }>${ciudad.nombre}</option>`,
       )
       .join("");
 
@@ -133,7 +133,7 @@ const ExcursionList: React.FC<ExcursionListProps> = ({
         )?.value;
         const descripcion = (
           document.getElementById(
-            "swal-input-descripcion"
+            "swal-input-descripcion",
           ) as HTMLTextAreaElement
         )?.value;
         const detalle = (
@@ -145,14 +145,14 @@ const ExcursionList: React.FC<ExcursionListProps> = ({
         const nro_personas_max = parseInt(
           (
             document.getElementById(
-              "swal-input-nro-personas"
+              "swal-input-nro-personas",
             ) as HTMLInputElement
           )?.value,
-          10
+          10,
         );
         const nombre_empresa = (
           document.getElementById(
-            "swal-input-nombre-empresa"
+            "swal-input-nombre-empresa",
           ) as HTMLInputElement
         )?.value;
         const mail_empresa = (
@@ -160,7 +160,7 @@ const ExcursionList: React.FC<ExcursionListProps> = ({
         )?.value;
         const precio = parseFloat(
           (document.getElementById("swal-input-precio") as HTMLInputElement)
-            ?.value
+            ?.value,
         );
         const imagen = (
           document.getElementById("swal-input-imagen") as HTMLInputElement
@@ -168,7 +168,7 @@ const ExcursionList: React.FC<ExcursionListProps> = ({
         const id_ciudad = parseInt(
           (document.getElementById("swal-input-ciudad") as HTMLSelectElement)
             ?.value,
-          10
+          10,
         );
 
         // Validación
@@ -190,7 +190,7 @@ const ExcursionList: React.FC<ExcursionListProps> = ({
         }
         if (isNaN(nro_personas_max) || nro_personas_max <= 0) {
           Swal.showValidationMessage(
-            "El número máximo de personas debe ser un número mayor a 0"
+            "El número máximo de personas debe ser un número mayor a 0",
           );
           return;
         }
@@ -205,7 +205,7 @@ const ExcursionList: React.FC<ExcursionListProps> = ({
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(mail_empresa)) {
           Swal.showValidationMessage(
-            "El email de la empresa debe tener un formato válido"
+            "El email de la empresa debe tener un formato válido",
           );
           return;
         }
@@ -241,20 +241,20 @@ const ExcursionList: React.FC<ExcursionListProps> = ({
         try {
           await axios.put(`/api/excursion/${excursion.id}`, result.value);
           setExcursiones((prev) =>
-            prev.map((e) => (e.id === excursion.id ? result.value : e))
+            prev.map((e) => (e.id === excursion.id ? result.value : e)),
           );
           onEdit(result.value);
           Swal.fire(
             "Guardado",
             "La excursión fue actualizada correctamente.",
-            "success"
+            "success",
           );
         } catch (error: any) {
           Swal.fire(
             "Error",
             error.response?.data?.message ||
               "No se pudo actualizar la excursión",
-            "error"
+            "error",
           );
         }
       }
@@ -280,13 +280,13 @@ const ExcursionList: React.FC<ExcursionListProps> = ({
           Swal.fire(
             "Eliminado",
             "La excursión fue eliminada correctamente.",
-            "success"
+            "success",
           );
         } catch (error: any) {
           Swal.fire(
             "Error",
             error.response?.data?.message || "No se pudo eliminar la excursión",
-            "error"
+            "error",
           );
         }
       }
@@ -361,7 +361,7 @@ const ExcursionList: React.FC<ExcursionListProps> = ({
         )?.value;
         const descripcion = (
           document.getElementById(
-            "swal-input-descripcion"
+            "swal-input-descripcion",
           ) as HTMLTextAreaElement
         )?.value;
         const detalle = (
@@ -373,14 +373,14 @@ const ExcursionList: React.FC<ExcursionListProps> = ({
         const nro_personas_max = parseInt(
           (
             document.getElementById(
-              "swal-input-nro-personas"
+              "swal-input-nro-personas",
             ) as HTMLInputElement
           )?.value,
-          10
+          10,
         );
         const nombre_empresa = (
           document.getElementById(
-            "swal-input-nombre-empresa"
+            "swal-input-nombre-empresa",
           ) as HTMLInputElement
         )?.value;
         const mail_empresa = (
@@ -388,7 +388,7 @@ const ExcursionList: React.FC<ExcursionListProps> = ({
         )?.value;
         const precio = parseFloat(
           (document.getElementById("swal-input-precio") as HTMLInputElement)
-            ?.value
+            ?.value,
         );
         const imagen = (
           document.getElementById("swal-input-imagen") as HTMLInputElement
@@ -396,7 +396,7 @@ const ExcursionList: React.FC<ExcursionListProps> = ({
         const id_ciudad = parseInt(
           (document.getElementById("swal-input-ciudad") as HTMLSelectElement)
             ?.value,
-          10
+          10,
         );
 
         // Validación
@@ -418,7 +418,7 @@ const ExcursionList: React.FC<ExcursionListProps> = ({
         }
         if (isNaN(nro_personas_max) || nro_personas_max <= 0) {
           Swal.showValidationMessage(
-            "El número máximo de personas debe ser un número mayor a 0"
+            "El número máximo de personas debe ser un número mayor a 0",
           );
           return;
         }
@@ -433,7 +433,7 @@ const ExcursionList: React.FC<ExcursionListProps> = ({
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(mail_empresa)) {
           Swal.showValidationMessage(
-            "El email de la empresa debe tener un formato válido"
+            "El email de la empresa debe tener un formato válido",
           );
           return;
         }
@@ -475,13 +475,13 @@ const ExcursionList: React.FC<ExcursionListProps> = ({
           Swal.fire(
             "Creado",
             "La excursión fue creada correctamente.",
-            "success"
+            "success",
           );
         } catch (error: any) {
           Swal.fire(
             "Error",
             error.response?.data?.message || "No se pudo crear la excursión",
-            "error"
+            "error",
           );
         }
       }
@@ -498,7 +498,6 @@ const ExcursionList: React.FC<ExcursionListProps> = ({
       <table className="list-table">
         <thead>
           <tr>
-            <th>ID</th>
             <th>Nombre</th>
             <th>Tipo</th>
             <th>Ciudad</th>
@@ -512,7 +511,7 @@ const ExcursionList: React.FC<ExcursionListProps> = ({
           {excursiones.length === 0 ? (
             <tr>
               <td
-                colSpan={8}
+                colSpan={7}
                 style={{ textAlign: "center", padding: "20px", color: "#666" }}
               >
                 No hay excursiones registradas
@@ -521,7 +520,6 @@ const ExcursionList: React.FC<ExcursionListProps> = ({
           ) : (
             excursiones.map((excursion) => (
               <tr key={excursion.id}>
-                <td>{excursion.id}</td>
                 <td>
                   <strong>{excursion.nombre}</strong>
                 </td>

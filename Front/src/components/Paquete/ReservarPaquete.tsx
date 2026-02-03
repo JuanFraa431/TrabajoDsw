@@ -26,7 +26,7 @@ const ReservarPaquete: React.FC = () => {
       try {
         if (paquete?.estadias[0]?.hotel) {
           const responseReserva = await axios.get(
-            `/api/hotel/${paquete.estadias[0].hotel}`
+            `/api/hotel/${paquete.estadias[0].hotel}`,
           );
           if (responseReserva.status === 200) {
             const hotelData = responseReserva.data.data;
@@ -98,7 +98,7 @@ const ReservarPaquete: React.FC = () => {
   }
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
@@ -106,7 +106,7 @@ const ReservarPaquete: React.FC = () => {
   const handleAcompananteChange = (
     index: number,
     field: string,
-    value: string
+    value: string,
   ) => {
     const newAcompanantes = [...form.acompanantesData];
     newAcompanantes[index] = { ...newAcompanantes[index], [field]: value };
@@ -189,7 +189,7 @@ const ReservarPaquete: React.FC = () => {
       const responsePago = await axios.post("/api/pago", {
         fecha: new Date(),
         monto: paquete.precio,
-        estado: "pagado",
+        estado: "pendiente",
         metodoDePago: pagoSeleccionado,
         tipoFactura: form.tipoFactura,
         nombreFacturacion: form.nombre,
@@ -207,7 +207,7 @@ const ReservarPaquete: React.FC = () => {
         fecha: new Date(),
         paqueteId: paquete.id,
         usuarioId: user.id,
-        estado: "reservado",
+        estado: "pendiente",
         personas: form.acompanantesData,
       });
 
@@ -280,11 +280,20 @@ const ReservarPaquete: React.FC = () => {
             className="success-container"
           >
             <div className="success-icon">🎉</div>
-            <h2 className="success-title">¡Reserva Confirmada!</h2>
+            <h2 className="success-title">¡Solicitud Recibida!</h2>
             <p className="success-message-text">
-              Tu paquete ha sido reservado exitosamente. Te enviaremos un correo
-              con los detalles.
+              Tu solicitud de reserva ha sido recibida exitosamente.
             </p>
+            <div className="pending-notice">
+              <div className="notice-icon">⏳</div>
+              <p>
+                <strong>Pago pendiente de aprobación</strong>
+                <br />
+                Tu pago está siendo verificado por nuestro equipo. Recibirás un
+                correo electrónico con la confirmación o rechazo de tu reserva
+                en las próximas horas.
+              </p>
+            </div>
             <div className="success-details">
               <div className="success-detail-item">
                 <span>Paquete</span>
@@ -298,11 +307,14 @@ const ReservarPaquete: React.FC = () => {
                 </strong>
               </div>
               <div className="success-detail-item">
-                <span>Total pagado</span>
+                <span>Monto a pagar</span>
                 <strong>${paquete.precio}</strong>
               </div>
             </div>
-            <Link to="/" className="btn btn-primary btn-home">
+            <Link
+              to="/"
+              className="reservar-btn reservar-btn-primary reservar-btn-home"
+            >
               ← Volver al inicio
             </Link>
           </motion.div>
@@ -359,10 +371,13 @@ const ReservarPaquete: React.FC = () => {
                 {error && <p className="error-message">{error}</p>}
 
                 <div className="form-actions">
-                  <Link to="/" className="btn btn-secondary">
+                  <Link to="/" className="reservar-btn reservar-btn-secondary">
                     ← Cancelar
                   </Link>
-                  <button className="btn btn-primary" onClick={nextStep}>
+                  <button
+                    className="reservar-btn reservar-btn-primary"
+                    onClick={nextStep}
+                  >
                     Continuar →
                   </button>
                 </div>
@@ -378,7 +393,7 @@ const ReservarPaquete: React.FC = () => {
                 </p>
 
                 <div className="billing-section">
-                  <div className="section-title">
+                  <div className="reservar-section-title">
                     <span className="icon">📄</span> Tipo de Factura
                   </div>
                   <div className="form-row single">
@@ -397,7 +412,7 @@ const ReservarPaquete: React.FC = () => {
                     </div>
                   </div>
 
-                  <div className="section-title">
+                  <div className="reservar-section-title">
                     <span className="icon">👤</span> Datos Personales
                   </div>
                   <div className="form-row">
@@ -461,10 +476,16 @@ const ReservarPaquete: React.FC = () => {
                 {error && <p className="error-message">{error}</p>}
 
                 <div className="form-actions">
-                  <button className="btn btn-secondary" onClick={prevStep}>
+                  <button
+                    className="reservar-btn reservar-btn-secondary"
+                    onClick={prevStep}
+                  >
                     ← Atrás
                   </button>
-                  <button className="btn btn-primary" onClick={nextStep}>
+                  <button
+                    className="reservar-btn reservar-btn-primary"
+                    onClick={nextStep}
+                  >
                     Continuar →
                   </button>
                 </div>
@@ -540,7 +561,7 @@ const ReservarPaquete: React.FC = () => {
                                 handleAcompananteChange(
                                   form.currentAcompanante,
                                   "nombre",
-                                  e.target.value
+                                  e.target.value,
                                 )
                               }
                               placeholder="Nombre"
@@ -558,7 +579,7 @@ const ReservarPaquete: React.FC = () => {
                                 handleAcompananteChange(
                                   form.currentAcompanante,
                                   "apellido",
-                                  e.target.value
+                                  e.target.value,
                                 )
                               }
                               placeholder="Apellido"
@@ -578,7 +599,7 @@ const ReservarPaquete: React.FC = () => {
                                 handleAcompananteChange(
                                   form.currentAcompanante,
                                   "dni",
-                                  e.target.value
+                                  e.target.value,
                                 )
                               }
                               placeholder="12345678"
@@ -596,7 +617,7 @@ const ReservarPaquete: React.FC = () => {
                                 handleAcompananteChange(
                                   form.currentAcompanante,
                                   "fechaNacimiento",
-                                  e.target.value
+                                  e.target.value,
                                 )
                               }
                             />
@@ -615,7 +636,7 @@ const ReservarPaquete: React.FC = () => {
                                 handleAcompananteChange(
                                   form.currentAcompanante,
                                   "email",
-                                  e.target.value
+                                  e.target.value,
                                 )
                               }
                               placeholder="email@ejemplo.com"
@@ -637,10 +658,16 @@ const ReservarPaquete: React.FC = () => {
                 {error && <p className="error-message">{error}</p>}
 
                 <div className="form-actions">
-                  <button className="btn btn-secondary" onClick={prevStep}>
+                  <button
+                    className="reservar-btn reservar-btn-secondary"
+                    onClick={prevStep}
+                  >
                     ← Atrás
                   </button>
-                  <button className="btn btn-primary" onClick={nextStep}>
+                  <button
+                    className="reservar-btn reservar-btn-primary"
+                    onClick={nextStep}
+                  >
                     Continuar →
                   </button>
                 </div>
@@ -676,10 +703,16 @@ const ReservarPaquete: React.FC = () => {
                 {error && <p className="error-message">{error}</p>}
 
                 <div className="form-actions">
-                  <button className="btn btn-secondary" onClick={prevStep}>
+                  <button
+                    className="reservar-btn reservar-btn-secondary"
+                    onClick={prevStep}
+                  >
                     ← Atrás
                   </button>
-                  <button className="btn btn-primary" onClick={nextStep}>
+                  <button
+                    className="reservar-btn reservar-btn-primary"
+                    onClick={nextStep}
+                  >
                     Continuar →
                   </button>
                 </div>
@@ -798,14 +831,14 @@ const ReservarPaquete: React.FC = () => {
 
                 <div className="form-actions">
                   <button
-                    className="btn btn-secondary"
+                    className="reservar-btn reservar-btn-secondary"
                     onClick={prevStep}
                     disabled={isProcessing}
                   >
                     ← Atrás
                   </button>
                   <button
-                    className={`btn btn-success ${
+                    className={`reservar-btn reservar-btn-success ${
                       isProcessing ? "processing" : ""
                     }`}
                     onClick={handleReservar}

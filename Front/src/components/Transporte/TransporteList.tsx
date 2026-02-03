@@ -45,7 +45,7 @@ const TransporteList: React.FC<TransporteListProps> = ({
         (tipo) =>
           `<option value="${tipo.id}" ${
             transporte.tipoTransporte?.id === tipo.id ? "selected" : ""
-          }>${tipo.nombre}</option>`
+          }>${tipo.nombre}</option>`,
       )
       .join("");
     const ciudadOrigenOptions = ciudades
@@ -53,7 +53,7 @@ const TransporteList: React.FC<TransporteListProps> = ({
         (ciudad) =>
           `<option value="${ciudad.id}" ${
             transporte.ciudadOrigen?.id === ciudad.id ? "selected" : ""
-          }>${ciudad.nombre}</option>`
+          }>${ciudad.nombre}</option>`,
       )
       .join("");
     const ciudadDestinoOptions = ciudades
@@ -61,7 +61,7 @@ const TransporteList: React.FC<TransporteListProps> = ({
         (ciudad) =>
           `<option value="${ciudad.id}" ${
             transporte.ciudadDestino?.id === ciudad.id ? "selected" : ""
-          }>${ciudad.nombre}</option>`
+          }>${ciudad.nombre}</option>`,
       )
       .join("");
 
@@ -174,16 +174,16 @@ const TransporteList: React.FC<TransporteListProps> = ({
         )?.value;
         const descripcion = (
           document.getElementById(
-            "swal-input-descripcion"
+            "swal-input-descripcion",
           ) as HTMLTextAreaElement
         )?.value;
         const capacidad = parseInt(
           (document.getElementById("swal-input-capacidad") as HTMLInputElement)
-            ?.value
+            ?.value,
         );
         const tipoTransporteId = parseInt(
           (document.getElementById("swal-input-tipo") as HTMLSelectElement)
-            ?.value
+            ?.value,
         );
         const nombre_empresa = (
           document.getElementById("swal-input-empresa") as HTMLInputElement
@@ -202,16 +202,16 @@ const TransporteList: React.FC<TransporteListProps> = ({
         )?.value;
         const fecha_llegada = (
           document.getElementById(
-            "swal-input-fecha-llegada"
+            "swal-input-fecha-llegada",
           ) as HTMLInputElement
         )?.value;
         const precio = parseFloat(
           (document.getElementById("swal-input-precio") as HTMLInputElement)
-            ?.value
+            ?.value,
         );
         const asientos_disponibles = parseInt(
           (document.getElementById("swal-input-asientos") as HTMLInputElement)
-            ?.value
+            ?.value,
         );
         const activo =
           (document.getElementById("swal-input-activo") as HTMLSelectElement)
@@ -226,7 +226,7 @@ const TransporteList: React.FC<TransporteListProps> = ({
           !mail_empresa
         ) {
           Swal.showValidationMessage(
-            "Los campos nombre, descripción, capacidad, tipo, empresa y email son obligatorios"
+            "Los campos nombre, descripción, capacidad, tipo, empresa y email son obligatorios",
           );
           return;
         }
@@ -253,28 +253,28 @@ const TransporteList: React.FC<TransporteListProps> = ({
         try {
           const response = await axios.put(
             `/api/transporte/${transporte.id}`,
-            result.value
+            result.value,
           );
           const updatedTransporte = response.data.data || response.data;
           setTransportes((prev) =>
-            prev.map((t) => (t.id === transporte.id ? updatedTransporte : t))
+            prev.map((t) => (t.id === transporte.id ? updatedTransporte : t)),
           );
           onEdit(updatedTransporte);
           Swal.fire(
             "Guardado",
             "El transporte fue actualizado correctamente.",
-            "success"
+            "success",
           );
         } catch (error: any) {
           console.error(
             "Error al editar transporte:",
-            error.response?.data || error
+            error.response?.data || error,
           );
           Swal.fire(
             "Error",
             error.response?.data?.message ||
               "No se pudo actualizar el transporte",
-            "error"
+            "error",
           );
         }
       }
@@ -300,14 +300,14 @@ const TransporteList: React.FC<TransporteListProps> = ({
           Swal.fire(
             "Eliminado",
             "El transporte fue eliminado correctamente.",
-            "success"
+            "success",
           );
         } catch (error: any) {
           Swal.fire(
             "Error",
             error.response?.data?.message ||
               "No se pudo eliminar el transporte",
-            "error"
+            "error",
           );
         }
       }
@@ -406,16 +406,16 @@ const TransporteList: React.FC<TransporteListProps> = ({
         )?.value;
         const descripcion = (
           document.getElementById(
-            "swal-input-descripcion"
+            "swal-input-descripcion",
           ) as HTMLTextAreaElement
         )?.value;
         const capacidad = parseInt(
           (document.getElementById("swal-input-capacidad") as HTMLInputElement)
-            ?.value
+            ?.value,
         );
         const tipoTransporteId = parseInt(
           (document.getElementById("swal-input-tipo") as HTMLSelectElement)
-            ?.value
+            ?.value,
         );
         const nombre_empresa = (
           document.getElementById("swal-input-empresa") as HTMLInputElement
@@ -434,16 +434,16 @@ const TransporteList: React.FC<TransporteListProps> = ({
         )?.value;
         const fecha_llegada = (
           document.getElementById(
-            "swal-input-fecha-llegada"
+            "swal-input-fecha-llegada",
           ) as HTMLInputElement
         )?.value;
         const precio = parseFloat(
           (document.getElementById("swal-input-precio") as HTMLInputElement)
-            ?.value
+            ?.value,
         );
         const asientos_disponibles = parseInt(
           (document.getElementById("swal-input-asientos") as HTMLInputElement)
-            ?.value
+            ?.value,
         );
         const activo =
           (document.getElementById("swal-input-activo") as HTMLSelectElement)
@@ -458,7 +458,7 @@ const TransporteList: React.FC<TransporteListProps> = ({
           !mail_empresa
         ) {
           Swal.showValidationMessage(
-            "Los campos nombre, descripción, capacidad, tipo, empresa y email son obligatorios"
+            "Los campos nombre, descripción, capacidad, tipo, empresa y email son obligatorios",
           );
           return;
         }
@@ -488,17 +488,17 @@ const TransporteList: React.FC<TransporteListProps> = ({
           Swal.fire(
             "Creado",
             "El transporte fue creado correctamente.",
-            "success"
+            "success",
           );
         } catch (error: any) {
           console.error(
             "Error al crear transporte:",
-            error.response?.data || error
+            error.response?.data || error,
           );
           Swal.fire(
             "Error",
             error.response?.data?.message || "No se pudo crear el transporte",
-            "error"
+            "error",
           );
         }
       }
@@ -515,7 +515,6 @@ const TransporteList: React.FC<TransporteListProps> = ({
       <table className="list-table">
         <thead>
           <tr>
-            <th>ID</th>
             <th>Nombre</th>
             <th>Tipo</th>
             <th>Empresa</th>
@@ -530,7 +529,7 @@ const TransporteList: React.FC<TransporteListProps> = ({
           {transportes.length === 0 ? (
             <tr>
               <td
-                colSpan={9}
+                colSpan={8}
                 style={{ textAlign: "center", padding: "20px", color: "#666" }}
               >
                 No hay transportes registrados
@@ -539,7 +538,6 @@ const TransporteList: React.FC<TransporteListProps> = ({
           ) : (
             transportes.map((transporte) => (
               <tr key={transporte.id}>
-                <td>{transporte.id}</td>
                 <td>
                   <strong>{transporte.nombre}</strong>
                 </td>

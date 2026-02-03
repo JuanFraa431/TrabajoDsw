@@ -1,12 +1,15 @@
 import { BaseModel } from "../shared/db/baseModel.model.js";
 import {
   OneToMany,
+  ManyToOne,
   Property,
   Collection,
   Entity,
   Cascade,
+  Rel,
 } from "@mikro-orm/core";
 import { Comentario } from "./comentario.model.js";
+import { Ciudad } from "./ciudad.model.js";
 import { Estadia } from "./estadia.model.js";
 import { PaqueteExcursion } from "./paqueteExcursion.model.js";
 import { PaqueteTransporte } from "./paqueteTransporte.model.js";
@@ -37,6 +40,9 @@ export class Paquete extends BaseModel {
   @Property({ nullable: false })
   imagen!: string;
 
+  @ManyToOne(() => Ciudad, { nullable: false })
+  ciudad!: Rel<Ciudad>;
+
   @OneToMany(() => Comentario, (comentario) => comentario.paquete, {
     cascade: [Cascade.ALL],
     orphanRemoval: true,
@@ -55,7 +61,7 @@ export class Paquete extends BaseModel {
     {
       cascade: [Cascade.ALL],
       orphanRemoval: true,
-    }
+    },
   )
   paqueteExcursiones = new Collection<PaqueteExcursion>(this);
 
@@ -65,7 +71,7 @@ export class Paquete extends BaseModel {
     {
       cascade: [Cascade.ALL],
       orphanRemoval: true,
-    }
+    },
   )
   paqueteTransportes = new Collection<PaqueteTransporte>(this);
 }

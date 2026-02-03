@@ -69,6 +69,7 @@ export interface Paquete {
   fecha_fin: string;
   precio: number;
   imagen: string;
+  ciudad: Ciudad;
   estadias: Estadia[];
   paqueteExcursiones: PaqueteExcursion[];
 }
@@ -82,4 +83,5 @@ export interface ReservaPaquete {
   paquete: Paquete;
   personas: Persona[];
   pago: Pago;
+  usuario?: any; // Usuario que hizo la reserva
 }
