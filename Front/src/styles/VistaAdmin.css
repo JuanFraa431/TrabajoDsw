@@ -133,14 +133,33 @@
   margin-bottom: 20px;
 }
 
+/* Grupo de botones principales */
+.main-buttons-group {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #34495e;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.main-buttons-group .sidebar-toggle-button {
+  border-radius: 0;
+  border-bottom: 1px solid #2c3e50;
+}
+
+.main-buttons-group .sidebar-toggle-button:last-child {
+  border-bottom: none;
+}
+
 .sidebar-toggle-button {
   width: 100%;
   background-color: #34495e;
   color: white;
   border: none;
-  padding: 15px 20px;
+  padding: 10px 20px;
   border-radius: 8px;
-  font-size: 1.1rem;
+  font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -154,6 +173,12 @@
   background-color: #3f5771;
 }
 
+.sidebar-toggle-button.active {
+  background-color: #007bff;
+  color: white;
+  font-weight: 700;
+}
+
 .toggle-icon {
   font-size: 0.9rem;
   display: inline-block;
@@ -161,25 +186,34 @@
 }
 
 .sidebar-items {
-  margin-top: 10px;
+  margin-top: 0;
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 0;
   animation: slideDown 0.3s ease-out;
+  border: 1px solid #2c3e50;
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+  overflow: hidden;
 }
 
 .sidebar-item {
   background-color: transparent;
   color: #bdc3c7;
   border: none;
+  border-bottom: 1px solid #2c3e50;
   padding: 12px 20px;
   padding-left: 40px;
-  border-radius: 6px;
+  border-radius: 0;
   font-size: 1rem;
   font-weight: 400;
   cursor: pointer;
   transition: all 0.2s ease;
   text-align: left;
+}
+
+.sidebar-item:last-child {
+  border-bottom: none;
 }
 
 .sidebar-item:hover {
@@ -191,24 +225,6 @@
   background-color: #007bff;
   color: white;
   font-weight: 600;
-}
-
-.sidebar-item.standalone {
-  padding-left: 40px;
-  font-weight: 500;
-  background-color: #ffc107;
-  color: #333;
-}
-
-.sidebar-item.standalone:hover {
-  background-color: #e0a800;
-  color: #000;
-}
-
-.sidebar-item.standalone.active {
-  background-color: #ffc107;
-  color: #000;
-  font-weight: 700;
 }
 
 /* Main Content */

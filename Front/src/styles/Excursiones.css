@@ -318,6 +318,7 @@
 /* Price highlight effect */
 .price-amount {
   position: relative;
+  padding-bottom: 25px;
 }
 
 .price-amount::after {

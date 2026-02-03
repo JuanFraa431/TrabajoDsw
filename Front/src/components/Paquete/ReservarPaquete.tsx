@@ -311,7 +311,10 @@ const ReservarPaquete: React.FC = () => {
                 <strong>${paquete.precio}</strong>
               </div>
             </div>
-            <Link to="/" className="btn btn-primary btn-home">
+            <Link
+              to="/"
+              className="reservar-btn reservar-btn-primary reservar-btn-home"
+            >
               ← Volver al inicio
             </Link>
           </motion.div>
@@ -368,10 +371,13 @@ const ReservarPaquete: React.FC = () => {
                 {error && <p className="error-message">{error}</p>}
 
                 <div className="form-actions">
-                  <Link to="/" className="btn btn-secondary">
+                  <Link to="/" className="reservar-btn reservar-btn-secondary">
                     ← Cancelar
                   </Link>
-                  <button className="btn btn-primary" onClick={nextStep}>
+                  <button
+                    className="reservar-btn reservar-btn-primary"
+                    onClick={nextStep}
+                  >
                     Continuar →
                   </button>
                 </div>
@@ -387,7 +393,7 @@ const ReservarPaquete: React.FC = () => {
                 </p>
 
                 <div className="billing-section">
-                  <div className="section-title">
+                  <div className="reservar-section-title">
                     <span className="icon">📄</span> Tipo de Factura
                   </div>
                   <div className="form-row single">
@@ -406,7 +412,7 @@ const ReservarPaquete: React.FC = () => {
                     </div>
                   </div>
 
-                  <div className="section-title">
+                  <div className="reservar-section-title">
                     <span className="icon">👤</span> Datos Personales
                   </div>
                   <div className="form-row">
@@ -470,10 +476,16 @@ const ReservarPaquete: React.FC = () => {
                 {error && <p className="error-message">{error}</p>}
 
                 <div className="form-actions">
-                  <button className="btn btn-secondary" onClick={prevStep}>
+                  <button
+                    className="reservar-btn reservar-btn-secondary"
+                    onClick={prevStep}
+                  >
                     ← Atrás
                   </button>
-                  <button className="btn btn-primary" onClick={nextStep}>
+                  <button
+                    className="reservar-btn reservar-btn-primary"
+                    onClick={nextStep}
+                  >
                     Continuar →
                   </button>
                 </div>
@@ -646,10 +658,16 @@ const ReservarPaquete: React.FC = () => {
                 {error && <p className="error-message">{error}</p>}
 
                 <div className="form-actions">
-                  <button className="btn btn-secondary" onClick={prevStep}>
+                  <button
+                    className="reservar-btn reservar-btn-secondary"
+                    onClick={prevStep}
+                  >
                     ← Atrás
                   </button>
-                  <button className="btn btn-primary" onClick={nextStep}>
+                  <button
+                    className="reservar-btn reservar-btn-primary"
+                    onClick={nextStep}
+                  >
                     Continuar →
                   </button>
                 </div>
@@ -685,10 +703,16 @@ const ReservarPaquete: React.FC = () => {
                 {error && <p className="error-message">{error}</p>}
 
                 <div className="form-actions">
-                  <button className="btn btn-secondary" onClick={prevStep}>
+                  <button
+                    className="reservar-btn reservar-btn-secondary"
+                    onClick={prevStep}
+                  >
                     ← Atrás
                   </button>
-                  <button className="btn btn-primary" onClick={nextStep}>
+                  <button
+                    className="reservar-btn reservar-btn-primary"
+                    onClick={nextStep}
+                  >
                     Continuar →
                   </button>
                 </div>
@@ -807,14 +831,14 @@ const ReservarPaquete: React.FC = () => {
 
                 <div className="form-actions">
                   <button
-                    className="btn btn-secondary"
+                    className="reservar-btn reservar-btn-secondary"
                     onClick={prevStep}
                     disabled={isProcessing}
                   >
                     ← Atrás
                   </button>
                   <button
-                    className={`btn btn-success ${
+                    className={`reservar-btn reservar-btn-success ${
                       isProcessing ? "processing" : ""
                     }`}
                     onClick={handleReservar}

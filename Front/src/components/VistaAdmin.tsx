@@ -309,148 +309,144 @@ const VistaAdmin: React.FC = () => {
         </div>
 
         <div className="sidebar-section">
-          <div className="sidebar-section">
-          <button
-            className={
-              selectedCategory === "reservasPendientes"
-                ? "sidebar-item active standalone"
-                : "sidebar-item standalone"
-            }
-            onClick={() => setSelectedCategory("reservasPendientes")}
-          >
-            Reservas Pendientes
-          </button>
-        </div>
-        
-          <button
-            className="sidebar-toggle-button"
-            onClick={() => setIsDatosOpen(!isDatosOpen)}
-          >
-            <span className="toggle-icon">{isDatosOpen ? "▼" : "▶"}</span>
-            Datos
-          </button>
+          <div className="main-buttons-group">
+            <button
+              className={
+                selectedCategory === "reservasPendientes"
+                  ? "sidebar-toggle-button active"
+                  : "sidebar-toggle-button"
+              }
+              onClick={() => setSelectedCategory("reservasPendientes")}
+            >
+              Reservas Pendientes
+            </button>
 
-          {isDatosOpen && (
-            <div className="sidebar-items">
-              <button
-                className={
-                  selectedCategory === "clientes"
-                    ? "sidebar-item active"
-                    : "sidebar-item"
-                }
-                onClick={() => setSelectedCategory("clientes")}
-              >
-                Clientes
-              </button>
-              <button
-                className={
-                  selectedCategory === "hoteles"
-                    ? "sidebar-item active"
-                    : "sidebar-item"
-                }
-                onClick={() => setSelectedCategory("hoteles")}
-              >
-                Hoteles
-              </button>
-              <button
-                className={
-                  selectedCategory === "ciudades"
-                    ? "sidebar-item active"
-                    : "sidebar-item"
-                }
-                onClick={() => setSelectedCategory("ciudades")}
-              >
-                Ciudades
-              </button>
-              <button
-                className={
-                  selectedCategory === "excursiones"
-                    ? "sidebar-item active"
-                    : "sidebar-item"
-                }
-                onClick={() => setSelectedCategory("excursiones")}
-              >
-                Excursiones
-              </button>
-              <button
-                className={
-                  selectedCategory === "paquetes"
-                    ? "sidebar-item active"
-                    : "sidebar-item"
-                }
-                onClick={() => setSelectedCategory("paquetes")}
-              >
-                Paquetes
-              </button>
-              <button
-                className={
-                  selectedCategory === "reservas"
-                    ? "sidebar-item active"
-                    : "sidebar-item"
-                }
-                onClick={() => setSelectedCategory("reservas")}
-              >
-                Reservas
-              </button>
-              <button
-                className={
-                  selectedCategory === "transportes"
-                    ? "sidebar-item active"
-                    : "sidebar-item"
-                }
-                onClick={() => setSelectedCategory("transportes")}
-              >
-                Transportes
-              </button>
-            </div>
-          )}
-        </div>
+            <button
+              className="sidebar-toggle-button"
+              onClick={() => setIsDatosOpen(!isDatosOpen)}
+            >
+              <span className="toggle-icon">{isDatosOpen ? "▼" : "▶"}</span>
+              Datos
+            </button>
+            {isDatosOpen && (
+              <div className="sidebar-items">
+                <button
+                  className={
+                    selectedCategory === "clientes"
+                      ? "sidebar-item active"
+                      : "sidebar-item"
+                  }
+                  onClick={() => setSelectedCategory("clientes")}
+                >
+                  Clientes
+                </button>
+                <button
+                  className={
+                    selectedCategory === "hoteles"
+                      ? "sidebar-item active"
+                      : "sidebar-item"
+                  }
+                  onClick={() => setSelectedCategory("hoteles")}
+                >
+                  Hoteles
+                </button>
+                <button
+                  className={
+                    selectedCategory === "ciudades"
+                      ? "sidebar-item active"
+                      : "sidebar-item"
+                  }
+                  onClick={() => setSelectedCategory("ciudades")}
+                >
+                  Ciudades
+                </button>
+                <button
+                  className={
+                    selectedCategory === "excursiones"
+                      ? "sidebar-item active"
+                      : "sidebar-item"
+                  }
+                  onClick={() => setSelectedCategory("excursiones")}
+                >
+                  Excursiones
+                </button>
+                <button
+                  className={
+                    selectedCategory === "paquetes"
+                      ? "sidebar-item active"
+                      : "sidebar-item"
+                  }
+                  onClick={() => setSelectedCategory("paquetes")}
+                >
+                  Paquetes
+                </button>
+                <button
+                  className={
+                    selectedCategory === "reservas"
+                      ? "sidebar-item active"
+                      : "sidebar-item"
+                  }
+                  onClick={() => setSelectedCategory("reservas")}
+                >
+                  Reservas
+                </button>
+                <button
+                  className={
+                    selectedCategory === "transportes"
+                      ? "sidebar-item active"
+                      : "sidebar-item"
+                  }
+                  onClick={() => setSelectedCategory("transportes")}
+                >
+                  Transportes
+                </button>
+              </div>
+            )}
 
-        <div className="sidebar-section">
-          <button
-            className="sidebar-toggle-button"
-            onClick={() => setIsEstadisticasOpen(!isEstadisticasOpen)}
-          >
-            <span className="toggle-icon">
-              {isEstadisticasOpen ? "▼" : "▶"}
-            </span>
-            Estadísticas
-          </button>
-
-          {isEstadisticasOpen && (
-            <div className="sidebar-items">
-              <button
-                className={
-                  selectedCategory === "reservasPorPeriodo"
-                    ? "sidebar-item active"
-                    : "sidebar-item"
-                }
-                onClick={() => setSelectedCategory("reservasPorPeriodo")}
-              >
-                Reservas por Período
-              </button>
-              <button
-                className={
-                  selectedCategory === "destinosPopulares"
-                    ? "sidebar-item active"
-                    : "sidebar-item"
-                }
-                onClick={() => setSelectedCategory("destinosPopulares")}
-              >
-                Destinos Más Populares
-              </button>
-              <button
-                className={
-                  selectedCategory === "ingresos"
-                    ? "sidebar-item active"
-                    : "sidebar-item"
-                }
-                onClick={() => setSelectedCategory("ingresosFacturacion")}
-              >
-                Ingresos y Facturación
-              </button>
-            </div>
-          )}
+            <button
+              className="sidebar-toggle-button"
+              onClick={() => setIsEstadisticasOpen(!isEstadisticasOpen)}
+            >
+              <span className="toggle-icon">
+                {isEstadisticasOpen ? "▼" : "▶"}
+              </span>
+              Estadísticas
+            </button>
+            {isEstadisticasOpen && (
+              <div className="sidebar-items">
+                <button
+                  className={
+                    selectedCategory === "reservasPorPeriodo"
+                      ? "sidebar-item active"
+                      : "sidebar-item"
+                  }
+                  onClick={() => setSelectedCategory("reservasPorPeriodo")}
+                >
+                  Reservas por Período
+                </button>
+                <button
+                  className={
+                    selectedCategory === "destinosPopulares"
+                      ? "sidebar-item active"
+                      : "sidebar-item"
+                  }
+                  onClick={() => setSelectedCategory("destinosPopulares")}
+                >
+                  Destinos Más Populares
+                </button>
+                <button
+                  className={
+                    selectedCategory === "ingresos"
+                      ? "sidebar-item active"
+                      : "sidebar-item"
+                  }
+                  onClick={() => setSelectedCategory("ingresosFacturacion")}
+                >
+                  Ingresos y Facturación
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 

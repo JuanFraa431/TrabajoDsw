@@ -37,7 +37,7 @@ const CardDetail: React.FC = () => {
     const fetchPaquete = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/api/paquete/${id}`
+          `http://localhost:3000/api/paquete/${id}`,
         );
         setPaquete(response.data.data);
       } catch (error) {
@@ -53,6 +53,10 @@ const CardDetail: React.FC = () => {
   useEffect(() => {
     if (paquete) {
       setComentarios(paquete.comentarios);
+      // Scroll al principio después de que todo el contenido haya cargado
+      setTimeout(() => {
+        window.scrollTo({ top: 0, behavior: "auto" });
+      }, 0);
     }
   }, [paquete]);
 
@@ -73,7 +77,7 @@ const CardDetail: React.FC = () => {
 
       const response = await axios.post(
         "http://localhost:3000/api/comentario",
-        newComentario
+        newComentario,
       );
 
       const comentarioCreado: Comentario = {
@@ -94,7 +98,7 @@ const CardDetail: React.FC = () => {
 
   const handleDeleteComentario = async (comentarioId: number) => {
     const confirmacion = window.confirm(
-      "¿Estás seguro que deseas borrar este comentario?"
+      "¿Estás seguro que deseas borrar este comentario?",
     );
     if (!confirmacion) {
       return;
@@ -102,10 +106,10 @@ const CardDetail: React.FC = () => {
 
     try {
       await axios.delete(
-        `http://localhost:3000/api/comentario/${comentarioId}`
+        `http://localhost:3000/api/comentario/${comentarioId}`,
       );
       setComentarios((prev) =>
-        prev.filter((comentario) => comentario.id !== comentarioId)
+        prev.filter((comentario) => comentario.id !== comentarioId),
       );
     } catch (error) {
       console.error("Error al borrar el comentario:", error);
@@ -125,7 +129,7 @@ const CardDetail: React.FC = () => {
     const fechaIni = new Date(paquete.fecha_ini);
     const fechaFin = new Date(paquete.fecha_fin);
     return Math.ceil(
-      (fechaFin.getTime() - fechaIni.getTime()) / (1000 * 60 * 60 * 24)
+      (fechaFin.getTime() - fechaIni.getTime()) / (1000 * 60 * 60 * 24),
     );
   };
 
@@ -163,7 +167,7 @@ const CardDetail: React.FC = () => {
                             day: "numeric",
                             month: "short",
                             year: "numeric",
-                          }
+                          },
                         )}
                       </span>
                     </div>
@@ -182,7 +186,7 @@ const CardDetail: React.FC = () => {
                             day: "numeric",
                             month: "short",
                             year: "numeric",
-                          }
+                          },
                         )}
                       </span>
                     </div>
@@ -211,202 +215,205 @@ const CardDetail: React.FC = () => {
             </div>
           </div>
 
-          {/* DESCRIPCIÓN */}
-          <div className="description-section">
-            <h2 className="section-title">
-              <span className="section-icon">
-                <MdOutlineDescription />
-              </span>
-              Descripción
-            </h2>
-            <p className="description-text">
-              {mostrarDescripcionCompleta
-                ? paquete?.descripcion
-                : descripcionTruncada(paquete?.descripcion || "", 200)}
-            </p>
-            {paquete?.descripcion?.length > 200 && (
-              <button
-                onClick={toggleDescripcion}
-                className="toggle-description-btn"
-              >
-                {mostrarDescripcionCompleta ? "Ver menos" : "Ver más"}
-              </button>
-            )}
-          </div>
+          {/* CONTENEDOR DE SECCIONES */}
+          <div className="sections-wrapper">
+            {/* DESCRIPCIÓN */}
+            <div className="description-section">
+              <h2 className="section-title">
+                <span className="section-icon">
+                  <MdOutlineDescription />
+                </span>
+                Descripción
+              </h2>
+              <p className="description-text">
+                {mostrarDescripcionCompleta
+                  ? paquete?.descripcion
+                  : descripcionTruncada(paquete?.descripcion || "", 200)}
+              </p>
+              {paquete?.descripcion?.length > 200 && (
+                <button
+                  onClick={toggleDescripcion}
+                  className="toggle-description-btn"
+                >
+                  {mostrarDescripcionCompleta ? "Ver menos" : "Ver más"}
+                </button>
+              )}
+            </div>
 
-          {/* EXCURSIONES */}
-          <div className="content-section">
-            <h2 className="section-title">
-              <span className="section-icon">
-                <MdTour />
-              </span>
-              Excursiones incluidas
-            </h2>
-            {paquete?.paqueteExcursiones?.length > 0 ? (
-              <div className="content-grid">
-                {paquete.paqueteExcursiones.map((paqueteExc: any) => (
-                  <div key={paqueteExc.id} className="item-card">
-                    {paqueteExc.excursion?.imagen && (
-                      <img
-                        src={paqueteExc.excursion.imagen}
-                        alt={paqueteExc.excursion.nombre}
-                        className="item-card-image"
-                        onError={(e) => {
-                          e.currentTarget.style.display = "none";
-                        }}
-                      />
-                    )}
-                    <div className="item-card-content">
-                      <h3 className="item-card-title">
-                        {paqueteExc.excursion?.nombre}
-                      </h3>
-                      <p className="item-card-description">
-                        {paqueteExc.excursion?.descripcion}
-                      </p>
-                      <div className="item-card-meta">
-                        <span className="meta-tag">
-                          <FaCalendarAlt className="meta-tag-icon" />
-                          {paqueteExc.dia}
-                        </span>
-                        <span className="meta-tag">
-                          <FaClock className="meta-tag-icon" />
-                          {paqueteExc.horario}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="empty-state">
-                <p className="empty-state-text">
-                  No hay excursiones incluidas en este paquete
-                </p>
-              </div>
-            )}
-          </div>
-
-          {/* ESTADÍAS */}
-          <div className="content-section">
-            <h2 className="section-title">
-              <span className="section-icon">
-                <FaHotel />
-              </span>
-              Estadías incluidas
-            </h2>
-            {paquete?.estadias?.length > 0 ? (
-              <div className="content-grid">
-                {paquete.estadias.map((estadia: any) => (
-                  <div key={estadia.id} className="item-card">
-                    {estadia.hotel?.imagen && (
-                      <img
-                        src={estadia.hotel.imagen}
-                        alt={estadia.hotel.nombre}
-                        className="item-card-image"
-                        onError={(e) => {
-                          e.currentTarget.style.display = "none";
-                        }}
-                      />
-                    )}
-                    <div className="item-card-content">
-                      <h3 className="item-card-title">
-                        {estadia.hotel?.nombre}
-                      </h3>
-                      <p className="item-card-description">
-                        {estadia.hotel?.direccion}
-                      </p>
-                      <div className="item-card-meta">
-                        <span className="meta-tag">
-                          <FaCalendarAlt className="meta-tag-icon" />
-                          {new Date(estadia.fecha_ini).toLocaleDateString(
-                            "es-ES"
-                          )}
-                        </span>
-                        <span className="meta-tag">
-                          <FaArrowRight className="meta-tag-icon" />
-                          {new Date(estadia.fecha_fin).toLocaleDateString(
-                            "es-ES"
-                          )}
-                        </span>
-                        {estadia.hotel?.ciudad?.nombre && (
+            {/* EXCURSIONES */}
+            <div className="content-section">
+              <h2 className="section-title">
+                <span className="section-icon">
+                  <MdTour />
+                </span>
+                Excursiones incluidas
+              </h2>
+              {paquete?.paqueteExcursiones?.length > 0 ? (
+                <div className="content-grid">
+                  {paquete.paqueteExcursiones.map((paqueteExc: any) => (
+                    <div key={paqueteExc.id} className="item-card">
+                      {paqueteExc.excursion?.imagen && (
+                        <img
+                          src={paqueteExc.excursion.imagen}
+                          alt={paqueteExc.excursion.nombre}
+                          className="item-card-image"
+                          onError={(e) => {
+                            e.currentTarget.style.display = "none";
+                          }}
+                        />
+                      )}
+                      <div className="item-card-content">
+                        <h3 className="item-card-title">
+                          {paqueteExc.excursion?.nombre}
+                        </h3>
+                        <p className="item-card-description">
+                          {paqueteExc.excursion?.descripcion}
+                        </p>
+                        <div className="item-card-meta">
                           <span className="meta-tag">
-                            <FaMapMarkerAlt className="meta-tag-icon" />
-                            {estadia.hotel.ciudad.nombre}
+                            <FaCalendarAlt className="meta-tag-icon" />
+                            {paqueteExc.dia}
                           </span>
-                        )}
+                          <span className="meta-tag">
+                            <FaClock className="meta-tag-icon" />
+                            {paqueteExc.horario}
+                          </span>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="empty-state">
-                <p className="empty-state-text">
-                  No hay estadías incluidas en este paquete
-                </p>
-              </div>
-            )}
-          </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="empty-state">
+                  <p className="empty-state-text">
+                    No hay excursiones incluidas en este paquete
+                  </p>
+                </div>
+              )}
+            </div>
 
-          {/* TRANSPORTES */}
-          <div className="content-section">
-            <h2 className="section-title">
-              <span className="section-icon">
-                <FaBus />
-              </span>
-              Transportes incluidos
-            </h2>
-            {paquete?.paqueteTransportes?.length > 0 ? (
-              <div className="content-grid">
-                {paquete.paqueteTransportes.map((paqueteTrans: any) => (
-                  <div key={paqueteTrans.id} className="item-card">
-                    <div className="item-card-content">
-                      <span
-                        className={`transport-type-badge ${
-                          paqueteTrans.es_ida ? "ida" : "vuelta"
-                        }`}
-                      >
-                        {paqueteTrans.es_ida ? "Ida" : "Vuelta"}
-                      </span>
-                      <h3 className="item-card-title">
-                        {paqueteTrans.transporte?.nombre}
-                      </h3>
-                      <p className="item-card-description">
-                        {paqueteTrans.transporte?.descripcion}
-                      </p>
-                      <div className="item-card-meta">
-                        <span className="meta-tag">
-                          <FaCalendarAlt className="meta-tag-icon" />
-                          {paqueteTrans.dia}
-                        </span>
-                        <span className="meta-tag">
-                          <FaClock className="meta-tag-icon" />
-                          {paqueteTrans.horario}
-                        </span>
+            {/* ESTADÍAS */}
+            <div className="content-section">
+              <h2 className="section-title">
+                <span className="section-icon">
+                  <FaHotel />
+                </span>
+                Estadías incluidas
+              </h2>
+              {paquete?.estadias?.length > 0 ? (
+                <div className="content-grid">
+                  {paquete.estadias.map((estadia: any) => (
+                    <div key={estadia.id} className="item-card">
+                      {estadia.hotel?.imagen && (
+                        <img
+                          src={estadia.hotel.imagen}
+                          alt={estadia.hotel.nombre}
+                          className="item-card-image"
+                          onError={(e) => {
+                            e.currentTarget.style.display = "none";
+                          }}
+                        />
+                      )}
+                      <div className="item-card-content">
+                        <h3 className="item-card-title">
+                          {estadia.hotel?.nombre}
+                        </h3>
+                        <p className="item-card-description">
+                          {estadia.hotel?.direccion}
+                        </p>
+                        <div className="item-card-meta">
+                          <span className="meta-tag">
+                            <FaCalendarAlt className="meta-tag-icon" />
+                            {new Date(estadia.fecha_ini).toLocaleDateString(
+                              "es-ES",
+                            )}
+                          </span>
+                          <span className="meta-tag">
+                            <FaArrowRight className="meta-tag-icon" />
+                            {new Date(estadia.fecha_fin).toLocaleDateString(
+                              "es-ES",
+                            )}
+                          </span>
+                          {estadia.hotel?.ciudad?.nombre && (
+                            <span className="meta-tag">
+                              <FaMapMarkerAlt className="meta-tag-icon" />
+                              {estadia.hotel.ciudad.nombre}
+                            </span>
+                          )}
+                        </div>
                       </div>
-                      {paqueteTrans.transporte?.ciudadOrigen &&
-                        paqueteTrans.transporte?.ciudadDestino && (
-                          <div className="route-display">
-                            <span className="route-city">
-                              {paqueteTrans.transporte.ciudadOrigen.nombre}
-                            </span>
-                            <FaArrowRight className="route-arrow" />
-                            <span className="route-city">
-                              {paqueteTrans.transporte.ciudadDestino.nombre}
-                            </span>
-                          </div>
-                        )}
                     </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="empty-state">
-                <p className="empty-state-text">
-                  No hay transportes incluidos en este paquete
-                </p>
-              </div>
-            )}
+                  ))}
+                </div>
+              ) : (
+                <div className="empty-state">
+                  <p className="empty-state-text">
+                    No hay estadías incluidas en este paquete
+                  </p>
+                </div>
+              )}
+            </div>
+
+            {/* TRANSPORTES */}
+            <div className="content-section">
+              <h2 className="section-title">
+                <span className="section-icon">
+                  <FaBus />
+                </span>
+                Transportes incluidos
+              </h2>
+              {paquete?.paqueteTransportes?.length > 0 ? (
+                <div className="content-grid">
+                  {paquete.paqueteTransportes.map((paqueteTrans: any) => (
+                    <div key={paqueteTrans.id} className="item-card">
+                      <div className="item-card-content">
+                        <span
+                          className={`transport-type-badge ${
+                            paqueteTrans.es_ida ? "ida" : "vuelta"
+                          }`}
+                        >
+                          {paqueteTrans.es_ida ? "Ida" : "Vuelta"}
+                        </span>
+                        <h3 className="item-card-title">
+                          {paqueteTrans.transporte?.nombre}
+                        </h3>
+                        <p className="item-card-description">
+                          {paqueteTrans.transporte?.descripcion}
+                        </p>
+                        <div className="item-card-meta">
+                          <span className="meta-tag">
+                            <FaCalendarAlt className="meta-tag-icon" />
+                            {paqueteTrans.dia}
+                          </span>
+                          <span className="meta-tag">
+                            <FaClock className="meta-tag-icon" />
+                            {paqueteTrans.horario}
+                          </span>
+                        </div>
+                        {paqueteTrans.transporte?.ciudadOrigen &&
+                          paqueteTrans.transporte?.ciudadDestino && (
+                            <div className="route-display">
+                              <span className="route-city">
+                                {paqueteTrans.transporte.ciudadOrigen.nombre}
+                              </span>
+                              <FaArrowRight className="route-arrow" />
+                              <span className="route-city">
+                                {paqueteTrans.transporte.ciudadDestino.nombre}
+                              </span>
+                            </div>
+                          )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="empty-state">
+                  <p className="empty-state-text">
+                    No hay transportes incluidos en este paquete
+                  </p>
+                </div>
+              )}
+            </div>
           </div>
         </>
       )}
