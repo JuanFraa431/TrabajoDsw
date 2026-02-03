@@ -16,17 +16,54 @@ const Paquetes: React.FC = () => {
     const { paquetes } = location.state || { paquetes: [] } as { paquetes: Paquete[] };
 
     const [visiblePackages, setVisiblePackages] = useState<string[]>([]);
+    const [filteredPaquetes, setFilteredPaquetes] = useState<Paquete[]>(paquetes);
+    const [activeFilters, setActiveFilters] = useState<any>(null);
+
+    useEffect(() => {
+        setFilteredPaquetes(paquetes);
+    }, [paquetes]);
 
     useEffect(() => {
         const timeout = setTimeout(() => {
-            if (paquetes.length > 0) {
-                setVisiblePackages(paquetes.map((paquete: Paquete) => paquete.id.toString()));
+            if (filteredPaquetes.length > 0) {
+                setVisiblePackages(filteredPaquetes.map((paquete: Paquete) => paquete.id.toString()));
             }
-
         }, 200);
-        console.log('paquetes:', paquetes);
         return () => clearTimeout(timeout);
-    }, [paquetes]);
+    }, [filteredPaquetes]);
+
+    const handleFilterChange = (filters: any) => {
+        setActiveFilters(filters);
+        
+        let filtered = [...paquetes];
+
+        // Filtrar por ciudad del paquete
+        if (filters.ciudades && filters.ciudades.length > 0) {
+            filtered = filtered.filter(paquete => 
+                paquete.ciudad && filters.ciudades.includes(paquete.ciudad.nombre)
+            );
+        }
+
+        // Filtrar por estrellas del hotel
+        if (filters.estrellas && filters.estrellas.length > 0) {
+            filtered = filtered.filter(paquete => 
+                paquete.estadias?.some(estadia => 
+                    estadia.hotel && filters.estrellas.includes(estadia.hotel.estrellas)
+                )
+            );
+        }
+
+        // Filtrar por nombre del hotel
+        if (filters.hoteles && filters.hoteles.length > 0) {
+            filtered = filtered.filter(paquete => 
+                paquete.estadias?.some(estadia => 
+                    estadia.hotel && filters.hoteles.includes(estadia.hotel.nombre)
+                )
+            );
+        }
+
+        setFilteredPaquetes(filtered);
+    };
 
     const handleViewPackage = (id: string) => {
         navigate(`/cardDetail`, { state: { id } });
@@ -34,15 +71,20 @@ const Paquetes: React.FC = () => {
 
     return (
         <div className="paquetes-container">
-            <Filtros />
+            <Filtros paquetes={paquetes} onFilterChange={handleFilterChange} />
             <div className="paquetes-content">
                 <div className="paquetes-header">
                     <h1 className="paquetes-title">Paquetes de Viaje</h1>
-                    <p className="paquetes-subtitle">Descubre destinos increíbles con nuestros paquetes todo incluido</p>
+                    <p className="paquetes-subtitle">
+                        {filteredPaquetes.length === paquetes.length 
+                            ? `Descubre destinos increíbles con nuestros ${paquetes.length} paquetes todo incluido`
+                            : `Mostrando ${filteredPaquetes.length} de ${paquetes.length} paquetes`
+                        }
+                    </p>
                 </div>
                 <div className="paquetes-grid">
-                    {paquetes.length > 0 ? (
-                        paquetes.map((paquete: Paquete) => (
+                    {filteredPaquetes.length > 0 ? (
+                        filteredPaquetes.map((paquete: Paquete) => (
                             <div
                                 className={`paquete-card ${visiblePackages.includes(paquete.id.toString()) ? 'paquete-visible' : ''}`}
                                 key={paquete.id}
@@ -89,7 +131,12 @@ const Paquetes: React.FC = () => {
                         <div className="paquetes-empty">
                             <div className="empty-icon">🏖️</div>
                             <h3>No se encontraron paquetes</h3>
-                            <p>Intenta ajustar los filtros para encontrar más opciones</p>
+                            <p>
+                                {paquetes.length > 0 
+                                    ? 'Intenta ajustar los filtros para encontrar más opciones'
+                                    : 'No hay paquetes disponibles en este momento'
+                                }
+                            </p>
                         </div>
                     )}
                 </div>

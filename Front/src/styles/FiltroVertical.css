@@ -37,6 +37,74 @@
   overflow-x: hidden;
 }
 
+/* Header del filtro con título y botón de limpiar */
+.filtro-vertical-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 20px 16px 20px;
+  border-bottom: 2px solid #e2e8f0;
+  background: #ffffff;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.filtro-vertical-main-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+}
+
+.filtro-vertical-clear {
+  background: #f1f5f9;
+  color: #64748b;
+  border: 1px solid #e2e8f0;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filtro-vertical-clear:hover {
+  background: #027BFF;
+  color: white;
+  border-color: #027BFF;
+  transform: translateY(-1px);
+}
+
+.filtro-vertical-clear:active {
+  transform: translateY(0);
+}
+
+/* Lista de filtros con scroll interno si es necesario */
+.filtro-vertical-list {
+  max-height: 250px;
+  overflow-y: auto;
+  padding-right: 8px;
+}
+
+.filtro-vertical-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.filtro-vertical-list::-webkit-scrollbar-track {
+  background: #f8fafc;
+  border-radius: 2px;
+}
+
+.filtro-vertical-list::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 2px;
+}
+
+.filtro-vertical-list::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
 /* Personalizar scrollbar */
 .filtro-vertical-scroll-container::-webkit-scrollbar {
   width: 6px;
