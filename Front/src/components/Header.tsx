@@ -27,7 +27,11 @@ const Header = () => {
             {/* Menú desktop */}
             <nav className="header-nav d-none d-lg-flex justify-content-center align-items-center">
                 <ul>
-                    <li><Link to="/hoteles">Hoteles</Link></li>
+                    <li>
+                        <Link to="/hoteles" onClick={(event) => handleLinkClick(event, 'hotel', 'hoteles', navigate)}>
+                            Hoteles
+                        </Link>
+                    </li>
                     <li>
                         <Link to="/paquetes" onClick={(event) => handleLinkClick(event, 'paquete/user', 'paquetes', navigate)}>Paquetes</Link>
                     </li>
@@ -76,7 +80,11 @@ const Header = () => {
                     </div>
                     <div className="offcanvas-body">
                         <ul className="navbar-nav">
-                            <li className="nav-item"><Link className="nav-link" to="/hoteles">Hoteles</Link></li>
+                            <li className="nav-item">
+                                <Link className="nav-link" to="/hoteles" onClick={(event) => handleLinkClick(event, 'hotel', 'hoteles', navigate)}>
+                                    Hoteles
+                                </Link>
+                            </li>
                             <li className="nav-item"><Link className="nav-link" to="/paquetes" onClick={(event) => handleLinkClick(event, 'paquete/user', 'paquetes', navigate)}>Paquetes</Link></li>
                             <li className="nav-item"><Link className="nav-link" to="/excursiones" onClick={(event) => handleLinkClick(event, 'excursion', 'excursiones', navigate)}>Excursiones</Link></li>
                             <li className="nav-item"><Link className="nav-link" to="/transportes">Transportes</Link></li>

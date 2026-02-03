@@ -24,6 +24,7 @@ import ReservarPaquete from './components/Paquete/ReservarPaquete';
 import Tarjeta from './components/Tarjeta';
 import Transportes from './components/Transportes';
 import Nosotros from './components/Nosotros';
+import Hoteles from './components/Hoteles';
 
 const pageTransition = {
     initial: { opacity: 0 },
@@ -93,6 +94,9 @@ const App: React.FC = () => {
                     <Route path="/hoteles" element={
                         <div>
                             <Header />
+                            <motion.div {...pageTransition}>
+                                <Hoteles />
+                            </motion.div>
                         </div>
                     } />
                     <Route path="/paquetes" element={

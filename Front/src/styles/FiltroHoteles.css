@@ -1,0 +1,208 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+.filtro-hoteles-sidebar {
+  width: 300px;
+  min-width: 300px;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 24px;
+  height: fit-content;
+  position: sticky;
+  top: 24px;
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.05),
+    0 4px 6px rgba(0, 0, 0, 0.05),
+    0 10px 15px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  font-family: 'Inter', sans-serif;
+}
+
+.filtro-hoteles-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.filtro-hoteles-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+}
+
+.filtro-hoteles-clear {
+  background: none;
+  border: 1px solid #e2e8f0;
+  color: #64748b;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.filtro-hoteles-clear:hover {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+  color: #475569;
+}
+
+.filtro-hoteles-section {
+  margin-bottom: 24px;
+}
+
+.filtro-hoteles-section-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #374151;
+  margin: 0 0 16px 0;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #f3f4f6;
+}
+
+.filtro-hoteles-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.filtro-hoteles-option {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid transparent;
+  background: #f8fafc;
+  position: relative;
+  overflow: hidden;
+}
+
+.filtro-hoteles-option:hover {
+  background: #e2e8f0;
+  border-color: #cbd5e1;
+}
+
+.filtro-hoteles-option:has(.filtro-hoteles-checkbox:checked) {
+  background: linear-gradient(135deg, #e0f2fe, #bae6fd);
+  border-color: #0ea5e9;
+}
+
+.filtro-hoteles-checkbox {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.filtro-hoteles-checkmark {
+  position: relative;
+  height: 20px;
+  width: 20px;
+  background: #ffffff;
+  border: 2px solid #d1d5db;
+  border-radius: 6px;
+  margin-right: 12px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  flex-shrink: 0;
+}
+
+.filtro-hoteles-checkmark::after {
+  content: "";
+  position: absolute;
+  display: none;
+  left: 6px;
+  top: 2px;
+  width: 6px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.filtro-hoteles-checkbox:checked ~ .filtro-hoteles-checkmark {
+  background: #0ea5e9;
+  border-color: #0ea5e9;
+}
+
+.filtro-hoteles-checkbox:checked ~ .filtro-hoteles-checkmark::after {
+  display: block;
+}
+
+.filtro-hoteles-label {
+  font-size: 0.875rem;
+  color: #374151;
+  font-weight: 500;
+  line-height: 1.4;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.filtro-hoteles-count {
+  font-size: 0.75rem;
+  color: #64748b;
+  background: #e2e8f0;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-weight: 700;
+  margin-left: 8px;
+}
+
+.filtro-hoteles-search {
+  display: flex;
+}
+
+.filtro-hoteles-input {
+  width: 100%;
+  padding: 12px 12px;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  outline: none;
+  font-size: 0.9rem;
+  background: #ffffff;
+}
+
+.filtro-hoteles-input:focus {
+  border-color: #0ea5e9;
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.20);
+}
+
+.filtro-hoteles-range {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.filtro-hoteles-range input[type="range"] {
+  width: 100%;
+}
+
+.filtro-hoteles-range-label {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.filtro-hoteles-empty {
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 1024px) {
+  .filtro-hoteles-sidebar {
+    width: 100%;
+    min-width: unset;
+    position: relative;
+    top: unset;
+  }
+}
