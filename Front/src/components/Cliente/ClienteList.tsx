@@ -30,7 +30,7 @@ const ClienteList: React.FC<ClienteListProps> = ({
     const date = new Date(dateString);
     // Add timezone offset to avoid showing previous day
     const localDate = new Date(
-      date.getTime() + date.getTimezoneOffset() * 60000
+      date.getTime() + date.getTimezoneOffset() * 60000,
     );
     return localDate.toLocaleDateString();
   };
@@ -135,7 +135,7 @@ const ClienteList: React.FC<ClienteListProps> = ({
         )?.value;
         const fecha_nacimiento = (
           document.getElementById(
-            "swal-input-fecha-nacimiento"
+            "swal-input-fecha-nacimiento",
           ) as HTMLInputElement
         )?.value;
         const username = (
@@ -146,11 +146,11 @@ const ClienteList: React.FC<ClienteListProps> = ({
         )?.value;
         const estado = parseInt(
           (document.getElementById("swal-input-estado") as HTMLSelectElement)
-            ?.value
+            ?.value,
         );
         const tipo_usuario = (
           document.getElementById(
-            "swal-input-tipo-usuario"
+            "swal-input-tipo-usuario",
           ) as HTMLSelectElement
         )?.value;
         const imagen = (
@@ -159,7 +159,7 @@ const ClienteList: React.FC<ClienteListProps> = ({
 
         if (!nombre || !apellido || !dni || !email || !username) {
           Swal.showValidationMessage(
-            "Nombre, apellido, DNI, email y nombre de usuario son obligatorios"
+            "Nombre, apellido, DNI, email y nombre de usuario son obligatorios",
           );
           return;
         }
@@ -171,7 +171,7 @@ const ClienteList: React.FC<ClienteListProps> = ({
 
         if (username && username.includes("@")) {
           Swal.showValidationMessage(
-            "El nombre de usuario no puede contener un @"
+            "El nombre de usuario no puede contener un @",
           );
           return;
         }
@@ -200,19 +200,19 @@ const ClienteList: React.FC<ClienteListProps> = ({
         try {
           await axios.put(`/api/cliente/${cliente.id}`, result.value);
           setClientes((prev) =>
-            prev.map((c) => (c.id === cliente.id ? result.value : c))
+            prev.map((c) => (c.id === cliente.id ? result.value : c)),
           );
           onEdit(result.value);
           Swal.fire(
             "Guardado",
             "El cliente fue actualizado correctamente.",
-            "success"
+            "success",
           );
         } catch (error: any) {
           Swal.fire(
             "Error",
             error.response?.data?.message || "No se pudo actualizar el cliente",
-            "error"
+            "error",
           );
         }
       }
@@ -238,13 +238,13 @@ const ClienteList: React.FC<ClienteListProps> = ({
           Swal.fire(
             "Eliminado",
             "El cliente fue eliminado correctamente.",
-            "success"
+            "success",
           );
         } catch (error: any) {
           Swal.fire(
             "Error",
             error.response?.data?.message || "No se pudo eliminar el cliente",
-            "error"
+            "error",
           );
         }
       }
@@ -327,7 +327,7 @@ const ClienteList: React.FC<ClienteListProps> = ({
         )?.value;
         const fecha_nacimiento = (
           document.getElementById(
-            "swal-input-fecha-nacimiento"
+            "swal-input-fecha-nacimiento",
           ) as HTMLInputElement
         )?.value;
         const username = (
@@ -338,11 +338,11 @@ const ClienteList: React.FC<ClienteListProps> = ({
         )?.value;
         const estado = parseInt(
           (document.getElementById("swal-input-estado") as HTMLSelectElement)
-            ?.value
+            ?.value,
         );
         const tipo_usuario = (
           document.getElementById(
-            "swal-input-tipo-usuario"
+            "swal-input-tipo-usuario",
           ) as HTMLSelectElement
         )?.value;
         const imagen = (
@@ -351,7 +351,7 @@ const ClienteList: React.FC<ClienteListProps> = ({
 
         if (!nombre || !apellido || !dni || !email || !username || !password) {
           Swal.showValidationMessage(
-            "Nombre, apellido, DNI, email, nombre de usuario y contraseña son obligatorios"
+            "Nombre, apellido, DNI, email, nombre de usuario y contraseña son obligatorios",
           );
           return;
         }
@@ -363,7 +363,7 @@ const ClienteList: React.FC<ClienteListProps> = ({
 
         if (username && username.includes("@")) {
           Swal.showValidationMessage(
-            "El nombre de usuario no puede contener un @"
+            "El nombre de usuario no puede contener un @",
           );
           return;
         }
@@ -389,13 +389,13 @@ const ClienteList: React.FC<ClienteListProps> = ({
           Swal.fire(
             "Creado",
             "El cliente fue creado correctamente.",
-            "success"
+            "success",
           );
         } catch (error: any) {
           Swal.fire(
             "Error",
             error.response?.data?.message || "No se pudo crear el cliente",
-            "error"
+            "error",
           );
         }
       }
@@ -412,7 +412,6 @@ const ClienteList: React.FC<ClienteListProps> = ({
       <table className="list-table">
         <thead>
           <tr>
-            <th>ID</th>
             <th>Nombre</th>
             <th>DNI</th>
             <th>Email</th>
@@ -426,7 +425,7 @@ const ClienteList: React.FC<ClienteListProps> = ({
           {clientes.length === 0 ? (
             <tr>
               <td
-                colSpan={8}
+                colSpan={7}
                 style={{ textAlign: "center", padding: "20px", color: "#666" }}
               >
                 No hay clientes registrados
@@ -435,7 +434,6 @@ const ClienteList: React.FC<ClienteListProps> = ({
           ) : (
             clientes.map((cliente) => (
               <tr key={cliente.id}>
-                <td>{cliente.id}</td>
                 <td>
                   <strong>
                     {cliente.nombre} {cliente.apellido}

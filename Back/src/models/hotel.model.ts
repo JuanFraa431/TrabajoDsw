@@ -1,4 +1,4 @@
-import { Cascade, Entity, ManyToOne, PrimaryKey, Property } from '@mikro-orm/core';
+import { Entity, ManyToOne, Property, Rel } from '@mikro-orm/core';
 import { Ciudad } from './ciudad.model.js';
 import { BaseModel } from '../shared/db/baseModel.model.js';
 
@@ -26,5 +26,5 @@ export class Hotel extends BaseModel {
   precio_x_dia!: number;
 
   @ManyToOne(() => Ciudad, { nullable: false })
-  ciudad!: Ciudad;
+  ciudad!: Rel<Ciudad>;
 }
