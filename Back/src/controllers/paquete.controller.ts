@@ -12,6 +12,7 @@ async function findAll(req: Request, res: Response) {
       {},
       {
         populate: [
+          "ciudad",
           "estadias",
           "estadias.hotel",
           "estadias.hotel.ciudad",
@@ -22,7 +23,7 @@ async function findAll(req: Request, res: Response) {
           "paqueteTransportes.transporte.ciudadOrigen",
           "paqueteTransportes.transporte.ciudadDestino",
         ],
-      }
+      },
     );
     res.status(200).json({ message: "Paquetes encontrados", data: paquetes });
   } catch (error: any) {
@@ -37,13 +38,14 @@ async function findAllUser(req: Request, res: Response) {
       { estado: 1 },
       {
         populate: [
+          "ciudad",
           "estadias.hotel.ciudad",
           "paqueteExcursiones.excursion",
           "paqueteTransportes.transporte",
           "paqueteTransportes.transporte.ciudadOrigen",
           "paqueteTransportes.transporte.ciudadDestino",
         ] as any,
-      }
+      },
     );
     res.status(200).json({ message: "Paquetes encontrados", data: paquetes });
   } catch (error: any) {
@@ -59,6 +61,7 @@ async function findOne(req: Request, res: Response) {
       { id },
       {
         populate: [
+          "ciudad",
           "comentarios",
           "estadias",
           "comentarios.cliente",
@@ -71,7 +74,7 @@ async function findOne(req: Request, res: Response) {
           "paqueteTransportes.transporte.ciudadOrigen",
           "paqueteTransportes.transporte.ciudadDestino",
         ],
-      }
+      },
     );
     res.status(200).json({ message: "Paquete encontrado", data: paquete });
   } catch (error: any) {
@@ -132,7 +135,7 @@ async function search(req: Request, res: Response) {
             AND p.precio <= ?
             AND p.estado = '1'
         `,
-      [ciudad, ciudad, fechaInicio, fechaFin, precioMaximo]
+      [ciudad, ciudad, fechaInicio, fechaFin, precioMaximo],
     );
     res.status(200).json({ message: "Paquetes encontrados", data: paquetes });
   } catch (error: any) {
@@ -149,7 +152,7 @@ async function getExcursionesByPaquete(req: Request, res: Response) {
     const paquete = await em.findOneOrFail(
       Paquete,
       { id },
-      { populate: ["comentarios", "estadias"] }
+      { populate: ["comentarios", "estadias"] },
     ); // Ajusta aquí si tienes la relación correcta
     res.status(200).json({
       message: "Excursiones encontradas",

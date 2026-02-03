@@ -70,6 +70,7 @@ const ReservasPorPeriodo: React.FC = () => {
         const fechaReserva = new Date(r.fecha);
         const inicio = new Date(fechaInicio);
         const fin = new Date(fechaFin);
+        fin.setHours(23, 59, 59, 999); // Incluir todo el día final
         return fechaReserva >= inicio && fechaReserva <= fin;
       });
 

@@ -69,6 +69,7 @@ export interface Paquete {
   fecha_fin: string;
   precio: number;
   imagen: string;
+  ciudad: Ciudad;
   estadias: Estadia[];
   paqueteExcursiones: PaqueteExcursion[];
 }

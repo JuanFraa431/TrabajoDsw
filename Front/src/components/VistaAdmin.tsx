@@ -18,6 +18,8 @@ import TransporteList from "./Transporte/TransporteList";
 
 import ReservasPorPeriodo from "./Estadisticas/ReservasPorPeriodo";
 
+import DestinosPopulares from "./Estadisticas/DestinosPopulares";
+
 import { Ciudad } from "../interface/ciudad";
 import { Cliente } from "../interface/cliente";
 import { Hotel } from "../interface/hotel";
@@ -245,6 +247,7 @@ const VistaAdmin: React.FC = () => {
       case "reservasPorPeriodo":
         return <ReservasPorPeriodo />;
       case "destinosPopulares":
+        return <DestinosPopulares />;
       case "ingresos":
         return (
           <div className="mensaje-noEncontro">
