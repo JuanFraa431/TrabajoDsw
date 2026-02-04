@@ -10,6 +10,8 @@ import { Persona } from "../models/persona.model.js";
 import { Pago } from "../models/pago.model.js";
 import { emailService } from "../services/emailService.js";
 import { calcularPrecioPaquete } from "../utils/paqueteUtils.js";
+import { Cancelacion } from "../models/cancelacion.model.js";
+
 
 const em = orm.em;
 
@@ -295,4 +297,70 @@ async function remove(req: Request, res: Response) {
   }
 }
 
-export { findAll, findOne, findByUsuario, create, update, remove };
+async function cancelar(req: Request, res: Response) {
+  try {
+    const id = Number.parseInt(req.params.id);
+    const { motivo } = req.body;
+
+    if (!motivo || motivo.trim() === '') {
+      return res.status(400).json({ message: 'El motivo de cancelación es obligatorio' });
+    }
+
+    // Cargar la reserva con todas sus relaciones
+    const reserva = await em.findOneOrFail(ReservaPaquete, { id }, {
+      populate: ['usuario', 'paquete', 'personas']
+    });
+
+    // Verificar que la reserva esté en estado "reservado"
+    if (reserva.estado.toLowerCase() !== 'reservado') {
+      return res.status(400).json({ 
+        message: 'Solo se pueden cancelar reservas con estado "reservado"',
+        estadoActual: reserva.estado 
+      });
+    }
+
+    // Verificar que no exista ya una cancelación
+    const cancelacionExistente = await em.findOne(Cancelacion, { reserva: id });
+    if (cancelacionExistente) {
+      return res.status(400).json({ message: 'Esta reserva ya ha sido cancelada' });
+    }
+
+    // Crear la cancelación
+    const cancelacion = new Cancelacion();
+    cancelacion.reserva = em.getReference(ReservaPaquete, id);
+    cancelacion.motivo = motivo.trim();
+    cancelacion.fecha_cancelacion = new Date();
+
+    // Actualizar la reserva
+    reserva.estado = 'cancelado';
+    reserva.fecha_cancelacion = cancelacion.fecha_cancelacion;
+    reserva.motivo_cancelacion = cancelacion.motivo;
+
+    em.persist(cancelacion);
+    em.persist(reserva);
+    await em.flush();
+
+    res.status(200).json({ 
+      message: 'Reserva cancelada exitosamente', 
+      data: {
+        reserva: {
+          id: reserva.id,
+          estado: reserva.estado,
+          fecha_cancelacion: reserva.fecha_cancelacion,
+          motivo_cancelacion: reserva.motivo_cancelacion
+        },
+        cancelacion: {
+          id: cancelacion.id,
+          fecha_cancelacion: cancelacion.fecha_cancelacion,
+          motivo: cancelacion.motivo
+        }
+      }
+    });
+  } catch (error: any) {
+    console.error('Error al cancelar la reserva:', error);
+    res.status(500).json({ message: error.message });
+  }
+}
+
+export { findAll, findOne, findByUsuario, create, update, remove, cancelar };
+}

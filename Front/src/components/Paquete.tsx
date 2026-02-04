@@ -17,18 +17,49 @@ const Paquetes: React.FC = () => {
     location.state || ({ paquetes: [] } as { paquetes: Paquete[] });
 
   const [visiblePackages, setVisiblePackages] = useState<string[]>([]);
+  const [filteredPaquetes, setFilteredPaquetes] = useState<Paquete[]>(paquetes);
+  const [activeFilters, setActiveFilters] = useState<any>(null);
+
+  useEffect(() => {
+    setFilteredPaquetes(paquetes);
+  }, [paquetes]);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      if (paquetes.length > 0) {
+      if (filteredPaquetes.length > 0) {
         setVisiblePackages(
-          paquetes.map((paquete: Paquete) => paquete.id.toString()),
+          filteredPaquetes.map((paquete: Paquete) => paquete.id.toString()),
         );
       }
     }, 200);
-    console.log("paquetes:", paquetes);
     return () => clearTimeout(timeout);
-  }, [paquetes]);
+  }, [filteredPaquetes]);
+
+  const handleFilterChange = (filters: any) => {
+    setActiveFilters(filters);
+
+    let filtered = [...paquetes];
+
+    const estrellasSeleccionadas: number[] = [];
+    if (filters?.cuatroEstrellas) estrellasSeleccionadas.push(4);
+    if (filters?.tresEstrellas) estrellasSeleccionadas.push(3);
+
+    if (estrellasSeleccionadas.length > 0) {
+    filtered = filtered.filter((paquete: Paquete) =>
+      paquete.estadias?.some((estadia) =>
+        estrellasSeleccionadas.includes(estadia.hotel?.estrellas ?? 0),
+      ),
+    );
+    }
+
+    if (filters?.hotel) {
+      filtered = filtered.filter(
+        (paquete) => (paquete.estadias?.length || 0) > 0,
+      );
+    }
+
+    setFilteredPaquetes(filtered);
+  };
 
   const handleViewPackage = (id: string) => {
     navigate(`/cardDetail`, { state: { id } });
@@ -36,17 +67,19 @@ const Paquetes: React.FC = () => {
 
   return (
     <div className="paquetes-container">
-      <Filtros />
+      <Filtros paquetes={paquetes} onFilterChange={handleFilterChange} />
       <div className="paquetes-content">
         <div className="paquetes-header">
           <h1 className="paquetes-title">Paquetes de Viaje</h1>
           <p className="paquetes-subtitle">
-            Descubre destinos increíbles con nuestros paquetes todo incluido
+            {filteredPaquetes.length === paquetes.length
+              ? `Descubre destinos increíbles con nuestros ${paquetes.length} paquetes todo incluido`
+              : `Mostrando ${filteredPaquetes.length} de ${paquetes.length} paquetes`}
           </p>
         </div>
         <div className="paquetes-grid">
-          {paquetes.length > 0 ? (
-            paquetes.map((paquete: Paquete) => (
+          {filteredPaquetes.length > 0 ? (
+            filteredPaquetes.map((paquete: Paquete) => (
               <div
                 className={`paquete-card ${visiblePackages.includes(paquete.id.toString()) ? "paquete-visible" : ""}`}
                 key={paquete.id}
@@ -109,7 +142,11 @@ const Paquetes: React.FC = () => {
             <div className="paquetes-empty">
               <div className="empty-icon">🏖️</div>
               <h3>No se encontraron paquetes</h3>
-              <p>Intenta ajustar los filtros para encontrar más opciones</p>
+              <p>
+                {paquetes.length > 0
+                  ? "Intenta ajustar los filtros para encontrar más opciones"
+                  : "No hay paquetes disponibles en este momento"}
+              </p>
             </div>
           )}
         </div>

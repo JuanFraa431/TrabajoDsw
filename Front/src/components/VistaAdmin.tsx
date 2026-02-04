@@ -18,6 +18,8 @@ import ExcursionList from "./Excursion/ExcursionList";
 
 import TransporteList from "./Transporte/TransporteList";
 
+import TipoTransporteList from "./TipoTransporte/TipoTransporteList";
+
 import ReservasPorPeriodo from "./Estadisticas/ReservasPorPeriodo";
 
 import DestinosPopulares from "./Estadisticas/DestinosPopulares";
@@ -31,6 +33,7 @@ import { Excursion } from "../interface/excursion";
 import { Paquete } from "../interface/paquete";
 import { ReservaPaquete } from "../interface/reserva";
 import { Transporte } from "../interface/transporte";
+import { TipoTransporte } from "../interface/tipoTransporte";
 
 import {
   fetchEntities,
@@ -68,6 +71,7 @@ const VistaAdmin: React.FC = () => {
   const [paquetes, setPaquetes] = useState<Paquete[]>([]);
   const [reservas, setReservas] = useState<ReservaPaquete[]>([]);
   const [transportes, setTransportes] = useState<Transporte[]>([]);
+  const [tiposTransporte, setTiposTransporte] = useState<TipoTransporte[]>([]);
 
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [isDatosOpen, setIsDatosOpen] = useState<boolean>(false);
@@ -98,6 +102,7 @@ const VistaAdmin: React.FC = () => {
       paquetes: { endpoint: "/api/paquete", setState: setPaquetes },
       reservas: { endpoint: "/api/reservaPaquete", setState: setReservas },
       transportes: { endpoint: "/api/transporte", setState: setTransportes },
+      tiposTransporte: { endpoint: "/api/tipoTransporte", setState: setTiposTransporte },
     };
 
     const categoryData = categoryMap[category];
@@ -252,6 +257,21 @@ const VistaAdmin: React.FC = () => {
             }
           />
         );
+      case "tiposTransporte":
+        return (
+          <TipoTransporteList
+            tiposTransporte={tiposTransporte}
+            onEdit={() => loadEntities("/api/tipoTransporte", setTiposTransporte)}
+            onDelete={(tipoTransporte) =>
+              handleEliminar(
+                tipoTransporte.id,
+                "/api/tipoTransporte",
+                "tipo de transporte",
+                setTiposTransporte,
+              )
+            }
+          />
+        );
       case "reservasPorPeriodo":
         return <ReservasPorPeriodo />;
       case "destinosPopulares":
@@ -284,6 +304,7 @@ const VistaAdmin: React.FC = () => {
       paquetes: "Paquetes",
       reservas: "Reservas",
       transportes: "Transportes",
+      tiposTransporte: "Tipos de Transporte",
       reservasPendientes: "Reservas y Pagos Pendientes",
       reservasPorPeriodo: "Reservas por Período",
       destinosPopulares: "Destinos Más Populares",
@@ -403,6 +424,16 @@ const VistaAdmin: React.FC = () => {
                   onClick={() => setSelectedCategory("transportes")}
                 >
                   Transportes
+                </button>
+                <button
+                  className={
+                    selectedCategory === "tiposTransporte"
+                      ? "sidebar-item active"
+                      : "sidebar-item"
+                  }
+                  onClick={() => setSelectedCategory("tiposTransporte")}
+                >
+                  Tipos de Transporte
                 </button>
               </div>
             )}

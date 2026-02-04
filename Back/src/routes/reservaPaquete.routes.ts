@@ -5,6 +5,7 @@ import {
   create,
   update,
   remove,
+  cancelar,
 } from '../controllers/reservaPaquete.controller.js';
 import { Router } from 'express';
 
@@ -19,5 +20,7 @@ routerReservaPaquete.get('/:id', findOne);
 routerReservaPaquete.post('/', create);
 
 routerReservaPaquete.put('/:id', update);
+
+routerReservaPaquete.patch('/:id/cancelar', cancelar);
 
 routerReservaPaquete.delete('/:id', remove);

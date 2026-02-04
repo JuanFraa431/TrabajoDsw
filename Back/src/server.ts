@@ -26,6 +26,7 @@ import { routerPaqueteExcursion } from "./routes/paqueteExcursion.routes.js";
 import { routerPaqueteTransporte } from "./routes/paqueteTransporte.routes.js";
 import { emailRouter } from "./routes/email.routes.js";
 import { routerTipoTransporte } from "./routes/tipoTransporte.routes.js";
+import { routerCancelacion } from "./routes/cancelacion.routes.js";
 
 import { RequestContext } from "@mikro-orm/core";
 
@@ -74,6 +75,7 @@ app.use("/api/persona", routerPersona);
 app.use("/api/paqueteExcursion", routerPaqueteExcursion);
 app.use("/api/paqueteTransporte", routerPaqueteTransporte);
 app.use("/api/email", emailRouter);
+app.use("/api/cancelacion", routerCancelacion);
 
 app.use(express.static(path.join(__dirname, "dist")));
 
