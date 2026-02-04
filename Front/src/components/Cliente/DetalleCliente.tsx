@@ -11,6 +11,15 @@ const DetalleCliente: React.FC = () => {
   const navigate = useNavigate();
   const storedUser = localStorage.getItem("user");
   const cliente = storedUser ? (JSON.parse(storedUser) as Cliente) : null;
+  const roleValue = cliente
+    ? ((cliente as any).tipo_usuario ??
+      (cliente as any).tipoUsuario ??
+      (cliente as any).rol)
+    : null;
+  const normalizedRole =
+    typeof roleValue === "string" ? roleValue.toUpperCase() : "";
+  const isAdmin = normalizedRole === "ADMIN";
+  const isCliente = normalizedRole === "CLIENTE";
   const [imgUrl, setImgUrl] = useState<string>(cliente?.imagen || "");
   const [uploading, setUploading] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -89,7 +98,7 @@ const DetalleCliente: React.FC = () => {
   };
 
   if (!cliente) {
-    return;
+    return null;
   }
 
   const fecha = new Date(cliente.fecha_nacimiento);
@@ -118,7 +127,7 @@ const DetalleCliente: React.FC = () => {
         <div className="profile-info">
           <h1>¡Hola, {cliente.nombre ? cliente.nombre : cliente.username}!</h1>
           <div className="profile-buttons">
-            {cliente.tipo_usuario === "admin" && (
+            {isAdmin && (
               <button
                 onClick={() => navigate("/vistaAdmin")}
                 className="btn-admin"
@@ -126,7 +135,7 @@ const DetalleCliente: React.FC = () => {
                 Administración
               </button>
             )}
-            {cliente.tipo_usuario === "cliente" && (
+            {isCliente && (
               <>
                 <button onClick={handleAdministrarPerfil} className="btn-admin">
                   Administrar Perfil

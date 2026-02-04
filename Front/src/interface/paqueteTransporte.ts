@@ -5,8 +5,6 @@ export interface PaqueteTransporte {
   id: number;
   paquete: Paquete;
   transporte: Transporte;
-  dia: string;
-  horario: string;
-  precio: number;
-  es_ida: boolean;
+  fecha: string;
+  tipo: "IDA" | "VUELTA";
 }

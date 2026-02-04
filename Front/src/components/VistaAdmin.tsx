@@ -50,7 +50,11 @@ const VistaAdmin: React.FC = () => {
       return;
     }
     const user = JSON.parse(userStr);
-    if (user.tipo_usuario !== "admin") {
+    const roleValue =
+      user?.tipo_usuario ?? user?.tipoUsuario ?? user?.rol ?? user?.role;
+    const normalizedRole =
+      typeof roleValue === "string" ? roleValue.toUpperCase() : "";
+    if (normalizedRole !== "ADMIN") {
       navigate("/");
     }
   }, [navigate]);

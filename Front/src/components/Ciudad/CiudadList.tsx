@@ -43,11 +43,11 @@ const CiudadList: React.FC<CiudadListProps> = ({
           </div>
           <div class="swal-form-group">
             <label>Latitud</label>
-            <input id="swal-input-latitud" type="text" value="${ciudad.latitud}" />
+            <input id="swal-input-latitud" type="number" step="0.000001" min="-90" max="90" value="${ciudad.latitud}" />
           </div>
           <div class="swal-form-group">
             <label>Longitud</label>
-            <input id="swal-input-longitud" type="text" value="${ciudad.longitud}" />
+            <input id="swal-input-longitud" type="number" step="0.000001" min="-180" max="180" value="${ciudad.longitud}" />
           </div>
         </div>
       `,
@@ -69,15 +69,34 @@ const CiudadList: React.FC<CiudadListProps> = ({
         const pais = (
           document.getElementById("swal-input-pais") as HTMLInputElement
         )?.value;
-        const latitud = (
+        const latitudRaw = (
           document.getElementById("swal-input-latitud") as HTMLInputElement
         )?.value;
-        const longitud = (
+        const longitudRaw = (
           document.getElementById("swal-input-longitud") as HTMLInputElement
         )?.value;
-        if (!nombre || !descripcion || !pais || !latitud || !longitud) {
+        const latitud = Number.parseFloat(latitudRaw);
+        const longitud = Number.parseFloat(longitudRaw);
+        if (!nombre || !descripcion || !pais) {
           Swal.showValidationMessage(
             "Todos los campos son obligatorios y deben ser válidos",
+          );
+          return;
+        }
+        if (Number.isNaN(latitud) || Number.isNaN(longitud)) {
+          Swal.showValidationMessage(
+            "Todos los campos son obligatorios y deben ser válidos",
+          );
+          return;
+        }
+        if (
+          latitud < -90 ||
+          latitud > 90 ||
+          longitud < -180 ||
+          longitud > 180
+        ) {
+          Swal.showValidationMessage(
+            "Latitud debe estar entre -90 y 90, y longitud entre -180 y 180",
           );
           return;
         }
@@ -166,11 +185,11 @@ const CiudadList: React.FC<CiudadListProps> = ({
           </div>
           <div class="swal-form-group">
             <label>Latitud</label>
-            <input id="swal-input-latitud" type="text" placeholder="Ej: -34.6037" />
+            <input id="swal-input-latitud" type="number" step="0.000001" min="-90" max="90" placeholder="Ej: -34.6037" />
           </div>
           <div class="swal-form-group">
             <label>Longitud</label>
-            <input id="swal-input-longitud" type="text" placeholder="Ej: -58.3816" />
+            <input id="swal-input-longitud" type="number" step="0.000001" min="-180" max="180" placeholder="Ej: -58.3816" />
           </div>
         </div>
       `,
@@ -192,15 +211,34 @@ const CiudadList: React.FC<CiudadListProps> = ({
         const pais = (
           document.getElementById("swal-input-pais") as HTMLInputElement
         )?.value;
-        const latitud = (
+        const latitudRaw = (
           document.getElementById("swal-input-latitud") as HTMLInputElement
         )?.value;
-        const longitud = (
+        const longitudRaw = (
           document.getElementById("swal-input-longitud") as HTMLInputElement
         )?.value;
-        if (!nombre || !descripcion || !pais || !latitud || !longitud) {
+        const latitud = Number.parseFloat(latitudRaw);
+        const longitud = Number.parseFloat(longitudRaw);
+        if (!nombre || !descripcion || !pais) {
           Swal.showValidationMessage(
             "Todos los campos son obligatorios y deben ser válidos",
+          );
+          return;
+        }
+        if (Number.isNaN(latitud) || Number.isNaN(longitud)) {
+          Swal.showValidationMessage(
+            "Todos los campos son obligatorios y deben ser válidos",
+          );
+          return;
+        }
+        if (
+          latitud < -90 ||
+          latitud > 90 ||
+          longitud < -180 ||
+          longitud > 180
+        ) {
+          Swal.showValidationMessage(
+            "Latitud debe estar entre -90 y 90, y longitud entre -180 y 180",
           );
           return;
         }

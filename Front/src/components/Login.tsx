@@ -111,7 +111,7 @@ const Login: React.FC = () => {
         localStorage.setItem("token", token);
         localStorage.setItem("user", JSON.stringify(usuario));
         setError("");
-        navigate(usuario.tipo_usuario === "admin" ? "/vistaAdmin" : "/");
+        navigate(usuario.tipo_usuario === "ADMIN" ? "/vistaAdmin" : "/");
       }
     } catch (error: any) {
       console.error("Google login failed:", error);
@@ -135,7 +135,7 @@ const Login: React.FC = () => {
           setError("");
           localStorage.setItem("token", token);
           localStorage.setItem("user", JSON.stringify(usuario));
-          navigate(usuario.tipo_usuario === "admin" ? "/vistaAdmin" : "/");
+          navigate(usuario.tipo_usuario === "ADMIN" ? "/vistaAdmin" : "/");
         } else {
           setError("La cuenta ha sido deshabilitada.");
         }

@@ -2,9 +2,9 @@ import { Hotel } from "./hotel";
 
 export interface Estadia {
   id: number;
-  id_paquete: number;
+  id_paquete?: number;
+  paquete?: any;
   fecha_ini: string;
   fecha_fin: string;
-  precio_x_dia: number;
   hotel: Hotel;
 }

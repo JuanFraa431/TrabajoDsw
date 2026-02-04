@@ -96,11 +96,11 @@ const ClienteList: React.FC<ClienteListProps> = ({
           <div class="swal-form-group">
             <label>Tipo de Usuario</label>
             <select id="swal-input-tipo-usuario">
-              <option value="cliente" ${
-                cliente.tipo_usuario === "cliente" ? "selected" : ""
+              <option value="CLIENTE" ${
+                cliente.tipo_usuario === "CLIENTE" ? "selected" : ""
               }>Cliente</option>
-              <option value="admin" ${
-                cliente.tipo_usuario === "admin" ? "selected" : ""
+              <option value="ADMIN" ${
+                cliente.tipo_usuario === "ADMIN" ? "selected" : ""
               }>Admin</option>
             </select>
           </div>
@@ -294,8 +294,8 @@ const ClienteList: React.FC<ClienteListProps> = ({
           <div class="swal-form-group">
             <label>Tipo de Usuario</label>
             <select id="swal-input-tipo-usuario">
-              <option value="cliente" selected>Cliente</option>
-              <option value="admin">Admin</option>
+              <option value="CLIENTE" selected>Cliente</option>
+              <option value="ADMIN">Admin</option>
             </select>
           </div>
           <div class="swal-form-group full-width">

@@ -14,9 +14,9 @@ interface ReservaEmailData {
     nombre: string;
     descripcion: string;
     detalle: string;
-    fecha_ini: string;
-    fecha_fin: string;
-    precio: number;
+    fecha_ini?: string | null;
+    fecha_fin?: string | null;
+    precio?: number;
     imagen: string;
     estadias?: any[];
     paqueteExcursiones?: any[];
@@ -50,7 +50,11 @@ class EmailService {
     });
   }
 
-  private calcularDiasPaquete(fechaIni: string, fechaFin: string): number {
+  private calcularDiasPaquete(
+    fechaIni?: string | null,
+    fechaFin?: string | null,
+  ): number {
+    if (!fechaIni || !fechaFin) return 0;
     const inicio = new Date(fechaIni);
     const fin = new Date(fechaFin);
     const dias = Math.ceil(
@@ -59,7 +63,10 @@ class EmailService {
     return dias;
   }
 
-  private formatearDuracion(fechaIni: string, fechaFin: string): string {
+  private formatearDuracion(
+    fechaIni?: string | null,
+    fechaFin?: string | null,
+  ): string {
     const dias = this.calcularDiasPaquete(fechaIni, fechaFin);
     if (dias === 0) return "Duración no especificada";
     if (dias === 1) return "1 día";
@@ -70,6 +77,44 @@ class EmailService {
     return `${dias} día${dias > 1 ? "s" : ""}, ${noches} noche${
       noches > 1 ? "s" : ""
     }`;
+  }
+
+  private formatearFecha(fecha?: string | null): string {
+    if (!fecha) return "No especificada";
+    return new Date(fecha).toLocaleDateString("es-ES", {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  }
+
+  private calcularEdad(fechaNacimiento?: string | Date | null): number | null {
+    if (!fechaNacimiento) return null;
+    const nacimiento = new Date(fechaNacimiento);
+    if (Number.isNaN(nacimiento.getTime())) return null;
+
+    const nacimientoUTC = new Date(
+      Date.UTC(
+        nacimiento.getUTCFullYear(),
+        nacimiento.getUTCMonth(),
+        nacimiento.getUTCDate(),
+      ),
+    );
+    const hoy = new Date();
+    const hoyUTC = new Date(
+      Date.UTC(hoy.getUTCFullYear(), hoy.getUTCMonth(), hoy.getUTCDate()),
+    );
+
+    let edad = hoyUTC.getUTCFullYear() - nacimientoUTC.getUTCFullYear();
+    const mes = hoyUTC.getUTCMonth() - nacimientoUTC.getUTCMonth();
+    if (
+      mes < 0 ||
+      (mes === 0 && hoyUTC.getUTCDate() < nacimientoUTC.getUTCDate())
+    ) {
+      edad--;
+    }
+    return edad;
   }
 
   private generarHtmlRechazoReserva(
@@ -303,8 +348,8 @@ class EmailService {
             <div class="info-grid">
                 <div class="info-card">
                     <h3>📅 Fechas Solicitadas</h3>
-                    <p><strong>Inicio:</strong> ${new Date(paquete.fecha_ini).toLocaleDateString("es-ES", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}</p>
-                    <p><strong>Fin:</strong> ${new Date(paquete.fecha_fin).toLocaleDateString("es-ES", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}</p>
+                    <p><strong>Inicio:</strong> ${this.formatearFecha(paquete.fecha_ini)}</p>
+                    <p><strong>Fin:</strong> ${this.formatearFecha(paquete.fecha_fin)}</p>
                 </div>
                 
                 <div class="info-card">
@@ -372,7 +417,7 @@ class EmailService {
           <p><strong>Check-out:</strong> ${new Date(
             estadia.fecha_fin,
           ).toLocaleDateString("es-ES")}</p>
-          <p><strong>Precio por día:</strong> $${estadia.precio_x_dia}</p>
+          <p><strong>Precio por día:</strong> ${estadia.hotel?.precio_x_dia != null ? "$" + estadia.hotel.precio_x_dia : "No especificado"}</p>
         </div>
       </div>
     `,
@@ -391,25 +436,13 @@ class EmailService {
             <p><strong>Descripción:</strong> ${
               paqueteExc.excursion?.descripcion || "No especificada"
             }</p>
-            <p><strong>Día:</strong> ${paqueteExc.dia}</p>
-            <p><strong>Horario:</strong> ${paqueteExc.horario}</p>
-            <p><strong>Precio:</strong> $${paqueteExc.precio}</p>
+            <p><strong>Fecha:</strong> ${this.formatearFecha(paqueteExc.fecha)}</p>
+            <p><strong>Precio:</strong> ${paqueteExc.excursion?.precio != null ? "$" + paqueteExc.excursion.precio : "No especificado"}</p>
             </div>
         </div>
     `,
         )
         .join("") || "<p>No hay excursiones incluidas</p>";
-
-    const calcularEdad = (fechaNacimiento: string): number => {
-      const nacimiento = new Date(fechaNacimiento);
-      const hoy = new Date();
-      let edad = hoy.getFullYear() - nacimiento.getFullYear();
-      const m = hoy.getMonth() - nacimiento.getMonth();
-      if (m < 0 || (m === 0 && hoy.getDate() < nacimiento.getDate())) {
-        edad--;
-      }
-      return edad;
-    };
 
     const acompanantesHtml =
       acompanantes
@@ -417,7 +450,13 @@ class EmailService {
           (acompanante) => `
             <div class="companion-item">
                 <span class="companion-name">${acompanante.nombre} ${acompanante.apellido}</span>
-                <span class="companion-age">Edad: ${acompanante.fecha_nacimiento ? calcularEdad(acompanante.fecha_nacimiento) : ""} años</span>
+                                <span class="companion-age">${
+                                  this.calcularEdad(
+                                    acompanante.fecha_nacimiento,
+                                  ) !== null
+                                    ? `Edad: ${this.calcularEdad(acompanante.fecha_nacimiento)} años`
+                                    : ""
+                                }</span>
             </div>
         `,
         )
@@ -688,26 +727,12 @@ class EmailService {
             </div>
 
             <div class="info-grid">
-                <div class="info-card">
-                    <h3>📅 Fechas del Viaje</h3>
-                    <p><strong>Inicio:</strong> ${new Date(
-                      paquete.fecha_ini,
-                    ).toLocaleDateString("es-ES", {
-                      weekday: "long",
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    })}</p>
-                    <p><strong>Fin:</strong> ${new Date(
-                      paquete.fecha_fin,
-                    ).toLocaleDateString("es-ES", {
-                      weekday: "long",
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    })}</p>
-                    <p><strong>Duración:</strong> ${duracion}</p>
-                </div>
+                                <div class="info-card">
+                                        <h3>📅 Fechas del Viaje</h3>
+                                        <p><strong>Inicio:</strong> ${this.formatearFecha(paquete.fecha_ini)}</p>
+                                        <p><strong>Fin:</strong> ${this.formatearFecha(paquete.fecha_fin)}</p>
+                                        <p><strong>Duración:</strong> ${duracion}</p>
+                                </div>
                 
                 <div class="info-card">
                     <h3>🎫 Detalles de Reserva</h3>
@@ -800,7 +825,7 @@ class EmailService {
           <p><strong>Check-out:</strong> ${new Date(
             estadia.fecha_fin,
           ).toLocaleDateString("es-ES")}</p>
-          <p><strong>Precio por día:</strong> $${estadia.precio_x_dia}</p>
+          <p><strong>Precio por día:</strong> ${estadia.hotel?.precio_x_dia != null ? "$" + estadia.hotel.precio_x_dia : "No especificado"}</p>
         </div>
       </div>
     `,
@@ -820,9 +845,8 @@ class EmailService {
             <p><strong>Descripción:</strong> ${
               paqueteExc.excursion?.descripcion || "No especificada"
             }</p>
-            <p><strong>Día:</strong> ${paqueteExc.dia}</p>
-            <p><strong>Horario:</strong> ${paqueteExc.horario}</p>
-            <p><strong>Precio:</strong> $${paqueteExc.precio}</p>
+            <p><strong>Fecha:</strong> ${this.formatearFecha(paqueteExc.fecha)}</p>
+            <p><strong>Precio:</strong> ${paqueteExc.excursion?.precio != null ? "$" + paqueteExc.excursion.precio : "No especificado"}</p>
             </div>
         </div>
     `,
@@ -830,24 +854,19 @@ class EmailService {
         .join("") || "<p>No hay excursiones incluidas</p>";
 
     // Generar lista de acompañantes
-    const calcularEdad = (fechaNacimiento: string): number => {
-      const nacimiento = new Date(fechaNacimiento);
-      const hoy = new Date();
-      let edad = hoy.getFullYear() - nacimiento.getFullYear();
-      const m = hoy.getMonth() - nacimiento.getMonth();
-      if (m < 0 || (m === 0 && hoy.getDate() < nacimiento.getDate())) {
-        edad--;
-      }
-      return edad;
-    };
-
     const acompanantesHtml =
       acompanantes
         ?.map(
           (acompanante) => `
             <div class="companion-item">
                 <span class="companion-name">${acompanante.nombre} ${acompanante.apellido}</span>
-                <span class="companion-age">Edad: ${acompanante.fecha_nacimiento ? calcularEdad(acompanante.fecha_nacimiento) : ""} años</span>
+                                <span class="companion-age">${
+                                  this.calcularEdad(
+                                    acompanante.fecha_nacimiento,
+                                  ) !== null
+                                    ? `Edad: ${this.calcularEdad(acompanante.fecha_nacimiento)} años`
+                                    : ""
+                                }</span>
             </div>
         `,
         )
@@ -1275,22 +1294,8 @@ class EmailService {
             <div class="info-grid">
                 <div class="info-card">
                     <h3>📅 Fechas del Viaje</h3>
-                    <p><strong>Inicio:</strong> ${new Date(
-                      paquete.fecha_ini,
-                    ).toLocaleDateString("es-ES", {
-                      weekday: "long",
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    })}</p>
-                    <p><strong>Fin:</strong> ${new Date(
-                      paquete.fecha_fin,
-                    ).toLocaleDateString("es-ES", {
-                      weekday: "long",
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    })}</p>
+                                        <p><strong>Inicio:</strong> ${this.formatearFecha(paquete.fecha_ini)}</p>
+                                        <p><strong>Fin:</strong> ${this.formatearFecha(paquete.fecha_fin)}</p>
                     <p><strong>Duración:</strong> ${duracion}</p>
                 </div>
                 
@@ -1303,7 +1308,7 @@ class EmailService {
                 </div>
 
                 <div class="info-card">
-                    <h3>� Información de Contacto</h3>
+                    <h3>📧 Información de Contacto</h3>
                     <p><strong>Email:</strong> ${usuario.email}</p>
                     <p><strong>Reservado el:</strong> ${new Date(reserva.fecha_reserva).toLocaleDateString("es-ES")}</p>
                 </div>

@@ -73,14 +73,14 @@ const IngresosFacturacion: React.FC = () => {
         params: {
           fechaInicio: fechaInicio,
           fechaFin: fechaFin,
-          estado: "reservado",
+          estado: "PAGADA",
         },
       });
       let reservasData = response.data.data || [];
 
       // Filtrar solo pagos confirmados
       reservasData = reservasData.filter(
-        (r: any) => r.pago?.estado === "pagado",
+        (r: any) => r.pago?.estado === "APROBADO",
       );
 
       procesarIngresosPorDia(reservasData);

@@ -2,29 +2,40 @@
 export const calcularPrecioTotalPaquete = (paquete: any): number => {
   let total = 0;
 
+  const toDateOnly = (value: any): Date | null => {
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return null;
+    return new Date(
+      Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()),
+    );
+  };
+
   // Calcular precio de estadías
   if (paquete?.estadias) {
     paquete.estadias.forEach((estadia: any) => {
-      const fechaIni = new Date(estadia.fecha_ini);
-      const fechaFin = new Date(estadia.fecha_fin);
-      const diasEstadia = Math.ceil(
-        (fechaFin.getTime() - fechaIni.getTime()) / (1000 * 60 * 60 * 24)
+      const fechaIni = toDateOnly(estadia.fecha_ini);
+      const fechaFin = toDateOnly(estadia.fecha_fin);
+      if (!fechaIni || !fechaFin) return;
+      const diasEstadia = Math.max(
+        0,
+        Math.floor((fechaFin.getTime() - fechaIni.getTime()) / 86400000),
       );
-      total += estadia.precio_x_dia * diasEstadia;
+      const precioHotel = estadia.hotel?.precio_x_dia ?? 0;
+      total += precioHotel * diasEstadia;
     });
   }
 
   // Calcular precio de excursiones
   if (paquete?.paqueteExcursiones) {
     paquete.paqueteExcursiones.forEach((paqueteExc: any) => {
-      total += paqueteExc.precio || 0;
+      total += paqueteExc.excursion?.precio || 0;
     });
   }
 
   // Calcular precio de transportes
   if (paquete?.paqueteTransportes) {
     paquete.paqueteTransportes.forEach((paqueteTrans: any) => {
-      total += paqueteTrans.precio || 0;
+      total += paqueteTrans.transporte?.precio || 0;
     });
   }
 
@@ -34,7 +45,7 @@ export const calcularPrecioTotalPaquete = (paquete: any): number => {
 // Función para truncar descripción
 export const descripcionTruncada = (
   descripcion: string,
-  maxLength: number
+  maxLength: number,
 ): string => {
   if (descripcion.length > maxLength) {
     return descripcion.substring(0, maxLength) + "...";
@@ -43,13 +54,35 @@ export const descripcionTruncada = (
 };
 
 // Función para calcular los días del paquete
-export const calcularDiasPaquete = (paquete: any): number => {
-  if (!paquete.fecha_ini || !paquete.fecha_fin) return 0;
+export const obtenerRangoFechasPaquete = (paquete: any) => {
+  if (!paquete?.estadias || paquete.estadias.length === 0) return null;
 
-  const fechaIni = new Date(paquete.fecha_ini);
-  const fechaFin = new Date(paquete.fecha_fin);
+  const fechasInicio = paquete.estadias
+    .map((e: any) => new Date(e.fecha_ini))
+    .filter((d: Date) => !Number.isNaN(d.getTime()));
+  const fechasFin = paquete.estadias
+    .map((e: any) => new Date(e.fecha_fin))
+    .filter((d: Date) => !Number.isNaN(d.getTime()));
+
+  if (fechasInicio.length === 0 || fechasFin.length === 0) return null;
+
+  const fechaIni = new Date(
+    Math.min(...fechasInicio.map((d: Date) => d.getTime())),
+  );
+  const fechaFin = new Date(
+    Math.max(...fechasFin.map((d: Date) => d.getTime())),
+  );
+
+  return { fechaIni, fechaFin };
+};
+
+export const calcularDiasPaquete = (paquete: any): number => {
+  const rango = obtenerRangoFechasPaquete(paquete);
+  if (!rango) return 0;
+
   const dias = Math.ceil(
-    (fechaFin.getTime() - fechaIni.getTime()) / (1000 * 60 * 60 * 24)
+    (rango.fechaFin.getTime() - rango.fechaIni.getTime()) /
+      (1000 * 60 * 60 * 24),
   );
   return dias;
 };

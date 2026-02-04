@@ -6,6 +6,10 @@ import withReactContent from "sweetalert2-react-content";
 import { Paquete } from "../../interface/paquete";
 import { Estadia } from "../../interface/estadia";
 import EstadiaForm from "../Estadia/EstadiaForm";
+import {
+  calcularPrecioTotalPaquete,
+  obtenerRangoFechasPaquete,
+} from "../../utils/paqueteUtils";
 
 import "../../styles/List.css";
 import "../../styles/Cliente/ClienteList.css";
@@ -29,9 +33,6 @@ const handleEditPaquete = (
   let descripcion = paquete.descripcion;
   let detalle = paquete.detalle;
   let estado = paquete.estado;
-  let precio = paquete.precio;
-  let fecha_inicio = new Date(paquete.fecha_ini).toISOString().split("T")[0];
-  let fecha_fin = new Date(paquete.fecha_fin).toISOString().split("T")[0];
   let imagen = paquete.imagen;
 
   MySwal.fire({
@@ -64,23 +65,8 @@ const handleEditPaquete = (
         </div>
 
         <div class="sweet-form-row">
-          <label for="swal-input-precio">Precio ($)</label>
-          <input id="swal-input-precio" type="number" placeholder="Precio" value="${precio}" />
-        </div>
-
-        <div class="sweet-form-row">
           <label for="swal-input-imagen">URL de Imagen</label>
           <input id="swal-input-imagen" placeholder="https://..." value="${imagen}" />
-        </div>
-
-        <div class="sweet-form-row">
-          <label for="swal-input-fecha-inicio">Fecha Inicio</label>
-          <input id="swal-input-fecha-inicio" type="date" value="${fecha_inicio}" />
-        </div>
-
-        <div class="sweet-form-row">
-          <label for="swal-input-fecha-fin">Fecha Fin</label>
-          <input id="swal-input-fecha-fin" type="date" value="${fecha_fin}" />
         </div>
       </div>
     `,
@@ -107,16 +93,6 @@ const handleEditPaquete = (
       const newDetalle = (
         document.getElementById("swal-input-detalle") as HTMLTextAreaElement
       )?.value;
-      const newPrecio = parseFloat(
-        (document.getElementById("swal-input-precio") as HTMLInputElement)
-          ?.value,
-      );
-      const newFechaInicio = (
-        document.getElementById("swal-input-fecha-inicio") as HTMLInputElement
-      )?.value;
-      const newFechaFin = (
-        document.getElementById("swal-input-fecha-fin") as HTMLInputElement
-      )?.value;
       const newImagen = (
         document.getElementById("swal-input-imagen") as HTMLInputElement
       )?.value;
@@ -126,9 +102,6 @@ const handleEditPaquete = (
         isNaN(newEstado) ||
         !newDescripcion ||
         !newDetalle ||
-        isNaN(newPrecio) ||
-        !newFechaInicio ||
-        !newFechaFin ||
         !newImagen
       ) {
         Swal.showValidationMessage(
@@ -143,9 +116,6 @@ const handleEditPaquete = (
         estado: newEstado,
         descripcion: newDescripcion,
         detalle: newDetalle,
-        precio: newPrecio,
-        fecha_ini: newFechaInicio,
-        fecha_fin: newFechaFin,
         imagen: newImagen,
       };
     },
@@ -217,23 +187,8 @@ const handleCreatePaquete = (
         </div>
 
         <div class="sweet-form-row">
-          <label for="swal-input-precio">Precio ($)</label>
-          <input id="swal-input-precio" type="number" placeholder="0.00" />
-        </div>
-
-        <div class="sweet-form-row">
           <label for="swal-input-imagen">URL de Imagen</label>
           <input id="swal-input-imagen" placeholder="https://..." />
-        </div>
-
-        <div class="sweet-form-row">
-          <label for="swal-input-fecha-inicio">Fecha Inicio</label>
-          <input id="swal-input-fecha-inicio" type="date" />
-        </div>
-
-        <div class="sweet-form-row">
-          <label for="swal-input-fecha-fin">Fecha Fin</label>
-          <input id="swal-input-fecha-fin" type="date" />
         </div>
       </div>
     `,
@@ -260,30 +215,11 @@ const handleCreatePaquete = (
       const detalle = (
         document.getElementById("swal-input-detalle") as HTMLTextAreaElement
       )?.value;
-      const precio = parseFloat(
-        (document.getElementById("swal-input-precio") as HTMLInputElement)
-          ?.value,
-      );
-      const fechaInicio = (
-        document.getElementById("swal-input-fecha-inicio") as HTMLInputElement
-      )?.value;
-      const fechaFin = (
-        document.getElementById("swal-input-fecha-fin") as HTMLInputElement
-      )?.value;
       const imagen = (
         document.getElementById("swal-input-imagen") as HTMLInputElement
       )?.value;
 
-      if (
-        !nombre ||
-        isNaN(estado) ||
-        !descripcion ||
-        !detalle ||
-        isNaN(precio) ||
-        !fechaInicio ||
-        !fechaFin ||
-        !imagen
-      ) {
+      if (!nombre || isNaN(estado) || !descripcion || !detalle || !imagen) {
         Swal.showValidationMessage(
           "Todos los campos son obligatorios y deben ser válidos",
         );
@@ -295,9 +231,6 @@ const handleCreatePaquete = (
         estado,
         descripcion,
         detalle,
-        precio,
-        fecha_ini: fechaInicio,
-        fecha_fin: fechaFin,
         imagen,
       };
     },
@@ -463,7 +396,7 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
         <div class="sweet-form-row">
           <label for="swal-input-precio">Precio por Día del Hotel</label>
           <input id="swal-input-precio" type="number" step="0.01" value="${
-            estadia.precio_x_dia
+            estadia.hotel?.precio_x_dia ?? ""
           }" readonly style="background-color: #f0f0f0; cursor: not-allowed;" />
         </div>
       </div>
@@ -499,18 +432,8 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
         const newFechaFin = (
           document.getElementById("swal-input-fecha-fin") as HTMLInputElement
         )?.value;
-        const newPrecio = parseFloat(
-          (document.getElementById("swal-input-precio") as HTMLInputElement)
-            ?.value,
-        );
 
-        if (
-          !newHotelId ||
-          !newFechaInicio ||
-          !newFechaFin ||
-          isNaN(newPrecio) ||
-          !paqueteId
-        ) {
+        if (!newHotelId || !newFechaInicio || !newFechaFin || !paqueteId) {
           Swal.showValidationMessage(
             "Todos los campos deben estar completos y válidos, incluyendo el paquete.",
           );
@@ -542,21 +465,6 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
           return;
         }
 
-        const paqueteFechaIni = new Date(paquete.fecha_ini)
-          .toISOString()
-          .split("T")[0];
-        const paqueteFechaFin = new Date(paquete.fecha_fin)
-          .toISOString()
-          .split("T")[0];
-
-        // Validación: la estadía debe estar dentro del rango del paquete
-        if (newFechaInicio < paqueteFechaIni || newFechaFin > paqueteFechaFin) {
-          Swal.showValidationMessage(
-            `La estadía debe estar entre ${paqueteFechaIni} y ${paqueteFechaFin} (fechas del paquete).`,
-          );
-          return;
-        }
-
         // Validación: no debe superponerse con otras estadías del mismo paquete
         const otrasEstadias = (paquete.estadias || []).filter(
           (e) => e.id !== estadiaId,
@@ -584,7 +492,6 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
           id_hotel: newHotelId,
           fecha_ini: newFechaInicio,
           fecha_fin: newFechaFin,
-          precio_x_dia: newPrecio,
         };
       },
     }).then((result) => {
@@ -740,17 +647,8 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
         const newFechaFin = (
           document.getElementById("swal-input-fecha-fin") as HTMLInputElement
         )?.value;
-        const newPrecio = parseFloat(
-          (document.getElementById("swal-input-precio") as HTMLInputElement)
-            ?.value,
-        );
 
-        if (
-          !newHotelId ||
-          !newFechaInicio ||
-          !newFechaFin ||
-          isNaN(newPrecio)
-        ) {
+        if (!newHotelId || !newFechaInicio || !newFechaFin) {
           Swal.showValidationMessage(
             "Todos los campos son obligatorios y deben ser válidos",
           );
@@ -769,21 +667,6 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
         const paquete = paquetes.find((p) => p.id === id_paquete);
         if (!paquete) {
           Swal.showValidationMessage("No se encontró el paquete.");
-          return;
-        }
-
-        const paqueteFechaIni = new Date(paquete.fecha_ini)
-          .toISOString()
-          .split("T")[0];
-        const paqueteFechaFin = new Date(paquete.fecha_fin)
-          .toISOString()
-          .split("T")[0];
-
-        // Validación: la estadía debe estar dentro del rango del paquete
-        if (newFechaInicio < paqueteFechaIni || newFechaFin > paqueteFechaFin) {
-          Swal.showValidationMessage(
-            `La estadía debe estar entre ${paqueteFechaIni} y ${paqueteFechaFin} (fechas del paquete).`,
-          );
           return;
         }
 
@@ -810,7 +693,6 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
           id_hotel: newHotelId,
           fecha_ini: newFechaInicio,
           fecha_fin: newFechaFin,
-          precio_x_dia: newPrecio,
           id_paquete: id_paquete,
         };
       },
@@ -914,22 +796,18 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
             </select>
           </div>
           <div class="swal-form-group">
-            <label>Día</label>
-            <input id="swal-input-dia" type="text" placeholder="Ej: Día 1" />
-          </div>
-          <div class="swal-form-group">
-            <label>Horario</label>
-            <input id="swal-input-horario" type="time" />
+            <label>Fecha y hora</label>
+            <input id="swal-input-fecha" type="datetime-local" />
           </div>
           <div class="swal-form-group">
             <label>Precio ($)</label>
-            <input id="swal-input-precio" type="number" step="0.01" />
+            <input id="swal-input-precio" type="number" step="0.01" readonly style="background-color: #f0f0f0; cursor: not-allowed;" />
           </div>
           <div class="swal-form-group">
             <label>Tipo</label>
-            <select id="swal-input-esida">
-              <option value="true">Ida</option>
-              <option value="false">Vuelta</option>
+            <select id="swal-input-tipo">
+              <option value="IDA">Ida</option>
+              <option value="VUELTA">Vuelta</option>
             </select>
           </div>
         </div>
@@ -967,21 +845,14 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
             ) as HTMLSelectElement
           )?.value,
         );
-        const dia = (
-          document.getElementById("swal-input-dia") as HTMLInputElement
+        const fecha = (
+          document.getElementById("swal-input-fecha") as HTMLInputElement
         )?.value;
-        const horario = (
-          document.getElementById("swal-input-horario") as HTMLInputElement
-        )?.value;
-        const precio = parseFloat(
-          (document.getElementById("swal-input-precio") as HTMLInputElement)
-            ?.value,
-        );
-        const es_ida =
-          (document.getElementById("swal-input-esida") as HTMLSelectElement)
-            ?.value === "true";
+        const tipo = (
+          document.getElementById("swal-input-tipo") as HTMLSelectElement
+        )?.value as "IDA" | "VUELTA";
 
-        if (!transporteId || !dia || !horario || isNaN(precio)) {
+        if (!transporteId || !fecha) {
           Swal.showValidationMessage("Todos los campos son obligatorios");
           return;
         }
@@ -989,10 +860,8 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
         return {
           id_transporte: transporteId,
           id_paquete: id_paquete,
-          dia,
-          horario,
-          precio,
-          es_ida,
+          fecha,
+          tipo,
         };
       },
     }).then((result) => {
@@ -1041,31 +910,27 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
             </select>
           </div>
           <div class="swal-form-group">
-            <label>Día</label>
-            <input id="swal-input-dia" type="text" value="${
-              paqueteTransporte.dia
-            }" />
-          </div>
-          <div class="swal-form-group">
-            <label>Horario</label>
-            <input id="swal-input-horario" type="time" value="${
-              paqueteTransporte.horario
+            <label>Fecha y hora</label>
+            <input id="swal-input-fecha" type="datetime-local" value="${
+              paqueteTransporte.fecha
+                ? new Date(paqueteTransporte.fecha).toISOString().slice(0, 16)
+                : ""
             }" />
           </div>
           <div class="swal-form-group">
             <label>Precio ($)</label>
             <input id="swal-input-precio" type="number" step="0.01" value="${
-              paqueteTransporte.precio
-            }" />
+              paqueteTransporte.transporte?.precio ?? 0
+            }" readonly style="background-color: #f0f0f0; cursor: not-allowed;" />
           </div>
           <div class="swal-form-group">
             <label>Tipo</label>
-            <select id="swal-input-esida">
-              <option value="true" ${
-                paqueteTransporte.es_ida ? "selected" : ""
+            <select id="swal-input-tipo">
+              <option value="IDA" ${
+                paqueteTransporte.tipo === "IDA" ? "selected" : ""
               }>Ida</option>
-              <option value="false" ${
-                !paqueteTransporte.es_ida ? "selected" : ""
+              <option value="VUELTA" ${
+                paqueteTransporte.tipo === "VUELTA" ? "selected" : ""
               }>Vuelta</option>
             </select>
           </div>
@@ -1087,21 +952,14 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
             ) as HTMLSelectElement
           )?.value,
         );
-        const dia = (
-          document.getElementById("swal-input-dia") as HTMLInputElement
+        const fecha = (
+          document.getElementById("swal-input-fecha") as HTMLInputElement
         )?.value;
-        const horario = (
-          document.getElementById("swal-input-horario") as HTMLInputElement
-        )?.value;
-        const precio = parseFloat(
-          (document.getElementById("swal-input-precio") as HTMLInputElement)
-            ?.value,
-        );
-        const es_ida =
-          (document.getElementById("swal-input-esida") as HTMLSelectElement)
-            ?.value === "true";
+        const tipo = (
+          document.getElementById("swal-input-tipo") as HTMLSelectElement
+        )?.value as "IDA" | "VUELTA";
 
-        if (!transporteId || !dia || !horario || isNaN(precio)) {
+        if (!transporteId || !fecha) {
           Swal.showValidationMessage("Todos los campos son obligatorios");
           return;
         }
@@ -1109,10 +967,8 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
         return {
           id_transporte: transporteId,
           id_paquete: paqueteId,
-          dia,
-          horario,
-          precio,
-          es_ida,
+          fecha,
+          tipo,
         };
       },
     }).then((result) => {
@@ -1191,11 +1047,18 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
                 pt.transporte ? pt.transporte.nombre : "Cargando transporte..."
               }</p>
               <p style="margin:0 0 2px 0;"><strong>${
-                pt.es_ida ? "🚀 Ida" : "🔙 Vuelta"
+                pt.tipo === "IDA" ? "🚀 Ida" : "🔙 Vuelta"
               }</strong></p>
-              <p style="margin:0 0 2px 0;">Día: ${pt.dia}</p>
-              <p style="margin:0 0 2px 0;">Horario: ${pt.horario}</p>
-              <p style="margin:0 0 6px 0;">Precio: $${pt.precio}</p>
+              <p style="margin:0 0 2px 0;">Fecha: ${
+                pt.fecha
+                  ? new Date(pt.fecha).toLocaleString("es-ES")
+                  : "No especificada"
+              }</p>
+              <p style="margin:0 0 6px 0;">Precio: ${
+                pt.transporte?.precio != null
+                  ? "$" + pt.transporte.precio
+                  : "No especificado"
+              }</p>
               <div style="display:flex;gap:8px;justify-content:center;">
                 <button class="swal2-confirm swal2-styled" style="background:#3085d6;padding:2px 10px;font-size:0.95em;" onclick="window.editTransporteSwal(${
                   pt.id
@@ -1274,8 +1137,10 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
               <p style="margin:0 0 2px 0;">Fecha Fin: ${new Date(
                 estadia.fecha_fin,
               ).toLocaleDateString("es-ES")}</p>
-              <p style="margin:0 0 6px 0;">Precio por Día: $${
-                estadia.precio_x_dia
+              <p style="margin:0 0 6px 0;">Precio por Día: ${
+                estadia.hotel?.precio_x_dia != null
+                  ? "$" + estadia.hotel.precio_x_dia
+                  : "No especificado"
               }</p>
               <div style="display:flex;gap:8px;justify-content:center;">
                 <button class="swal2-confirm swal2-styled" style="background:#3085d6;padding:2px 10px;font-size:0.95em;" onclick="window.editEstadiaSwal(${
@@ -1397,14 +1262,22 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
                     }}
                   >
                     <small>
-                      {new Date(paquete.fecha_ini).toLocaleDateString("es-ES")}
+                      {obtenerRangoFechasPaquete(paquete)?.fechaIni
+                        ? obtenerRangoFechasPaquete(
+                            paquete,
+                          )!.fechaIni.toLocaleDateString("es-ES")
+                        : "N/A"}
                     </small>
                     <small>
-                      {new Date(paquete.fecha_fin).toLocaleDateString("es-ES")}
+                      {obtenerRangoFechasPaquete(paquete)?.fechaFin
+                        ? obtenerRangoFechasPaquete(
+                            paquete,
+                          )!.fechaFin.toLocaleDateString("es-ES")
+                        : "N/A"}
                     </small>
                   </div>
                 </td>
-                <td>${paquete.precio}</td>
+                <td>${calcularPrecioTotalPaquete(paquete)}</td>
                 <td>
                   <span
                     className={`badge ${

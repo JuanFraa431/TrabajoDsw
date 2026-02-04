@@ -33,6 +33,9 @@ async function findOne(req: Request, res: Response) {
 async function create(req: Request, res: Response) {
   try {
     const { password, email, username, ...data } = req.body;
+    if (data.estado !== undefined && data.estado !== 0 && data.estado !== 1) {
+      return res.status(400).json({ message: "Estado de usuario inválido" });
+    }
 
     if (!password) {
       return res.status(400).json({ message: "La contraseña es obligatoria" });
@@ -75,12 +78,20 @@ async function create(req: Request, res: Response) {
     const userData = { ...data };
     if (userData.fecha_nacimiento) {
       const fechaUTC = new Date(userData.fecha_nacimiento);
+      if (Number.isNaN(fechaUTC.getTime())) {
+        return res
+          .status(400)
+          .json({ message: "Fecha de nacimiento inválida" });
+      }
       fechaUTC.setUTCHours(10, 0, 0, 0);
       userData.fecha_nacimiento = fechaUTC;
     }
 
     const usuario = em.create(Usuario, {
       ...userData,
+      nombre: userData.nombre ?? "",
+      apellido: userData.apellido ?? "",
+      dni: userData.dni ?? "",
       email,
       username,
       password: hashedPassword,
@@ -99,6 +110,13 @@ async function update(req: Request, res: Response) {
     const id = Number.parseInt(req.params.id);
 
     const usuario = await em.findOneOrFail(Usuario, { id });
+    if (
+      req.body.estado !== undefined &&
+      req.body.estado !== 0 &&
+      req.body.estado !== 1
+    ) {
+      return res.status(400).json({ message: "Estado de usuario inválido" });
+    }
 
     // Validar email único si se está actualizando
     if (req.body.email && req.body.email !== usuario.email) {
@@ -136,6 +154,11 @@ async function update(req: Request, res: Response) {
     if (req.body.fecha_nacimiento) {
       console.log(req.body.fecha_nacimiento);
       const fechaUTC = new Date(req.body.fecha_nacimiento);
+      if (Number.isNaN(fechaUTC.getTime())) {
+        return res
+          .status(400)
+          .json({ message: "Fecha de nacimiento inválida" });
+      }
       fechaUTC.setUTCHours(10, 0, 0, 0);
       req.body.fecha_nacimiento = fechaUTC;
       console.log(req.body.fecha_nacimiento);
@@ -251,7 +274,7 @@ async function googleLogin(req: Request, res: Response) {
         email: payload.email,
         password: "", // Usuario de Google no necesita contraseña
         estado: 1,
-        tipo_usuario: "cliente",
+        tipo_usuario: "CLIENTE",
         imagen: payload.picture || "",
         nombre: payload.given_name || "",
         apellido: payload.family_name || "",

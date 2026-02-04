@@ -8,11 +8,7 @@ import { calcularPrecioTotalPaquete } from "../utils/paqueteUtils";
 const Card: React.FC<Paquete> = ({
   id,
   nombre,
-  descripcion,
   detalle,
-  precio,
-  fecha_ini,
-  fecha_fin,
   imagen,
   estadias,
   paqueteExcursiones,
@@ -35,7 +31,7 @@ const Card: React.FC<Paquete> = ({
         <p className="p-body">{detalle}</p>
         <div className="card-footer">
           <p className="p-footer">Precio por persona</p>
-          <h4>${precioCalculado > 0 ? precioCalculado : precio}</h4>
+          <h4>${precioCalculado}</h4>
           <p>Incluye impuestos, tasas y cargos</p>
         </div>
         <button className="boton-ver" onClick={handleViewPackage}>

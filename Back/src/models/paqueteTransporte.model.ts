@@ -12,14 +12,8 @@ export class PaqueteTransporte extends BaseModel {
   transporte!: Rel<Transporte>;
 
   @Property({ nullable: false })
-  dia!: string;
+  fecha!: Date;
 
   @Property({ nullable: false })
-  horario!: string;
-
-  @Property({ nullable: false })
-  precio!: number;
-
-  @Property({ nullable: false, default: true })
-  es_ida!: boolean;
+  tipo!: "IDA" | "VUELTA";
 }

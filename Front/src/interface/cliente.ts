@@ -8,6 +8,6 @@ export interface Cliente {
   estado: number;
   username: string;
   password: string;
-  tipo_usuario: string;
+  tipo_usuario: "ADMIN" | "CLIENTE";
   imagen: string;
 }

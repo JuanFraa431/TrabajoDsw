@@ -7,12 +7,15 @@ export interface Persona {
   fecha_nacimiento: string;
 }
 
+export type ReservaEstado = "PENDIENTE" | "PAGADA" | "CANCELADA";
+export type PagoEstado = "PENDIENTE" | "APROBADO" | "RECHAZADO";
+
 export interface Pago {
   id: number;
   monto: number;
   metodoDePago: string;
   fecha: string;
-  estado?: string;
+  estado?: PagoEstado;
   tipoFactura?: string;
   nombreFacturacion?: string;
   apellidoFacturacion?: string;
@@ -58,6 +61,14 @@ export interface Excursion {
 export interface PaqueteExcursion {
   id: number;
   excursion: Excursion;
+  fecha?: string;
+}
+
+export interface PaqueteTransporte {
+  id: number;
+  transporte: any;
+  fecha?: string;
+  tipo?: "IDA" | "VUELTA";
 }
 
 export interface Paquete {
@@ -65,13 +76,11 @@ export interface Paquete {
   nombre: string;
   descripcion: string;
   detalle: string;
-  fecha_ini: string;
-  fecha_fin: string;
-  precio: number;
   imagen: string;
   ciudad: Ciudad;
   estadias: Estadia[];
   paqueteExcursiones: PaqueteExcursion[];
+  paqueteTransportes?: PaqueteTransporte[];
 }
 
 export interface ReservaPaquete {
@@ -79,7 +88,7 @@ export interface ReservaPaquete {
   fecha: string;
   fecha_cancelacion?: string;
   motivo_cancelacion?: string;
-  estado: string;
+  estado: ReservaEstado;
   paquete: Paquete;
   personas: Persona[];
   pago: Pago;

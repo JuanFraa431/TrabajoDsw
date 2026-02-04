@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import { orm, syncSchema } from "./shared/db/orm.js";
+import { orm } from "./shared/db/orm.js";
 
 import express from "express";
 import path from "path";
@@ -84,8 +84,6 @@ app.get("/home", (req, res) => {
 const PORT = process.env.PORT || 3000;
 
 console.log(`Iniciando el servidor en el puerto ${PORT}`);
-
-await syncSchema(); // solo para desarrollo
 
 app.listen(PORT, () => {
   const url = `http://localhost:${PORT}`;
