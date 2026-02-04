@@ -54,11 +54,11 @@ const FiltroVertical: React.FC<FiltroVerticalProps> = ({ paquetes, onFilterChang
     const defaultLng = -60.6393;
 
     const lat = paquetes.length > 0 && paquetes[0].ciudad?.latitud 
-        ? parseFloat(paquetes[0].ciudad.latitud) 
-        : defaultLat;
+            ? paquetes[0].ciudad.latitud 
+            : defaultLat;
     const lng = paquetes.length > 0 && paquetes[0].ciudad?.longitud 
-        ? parseFloat(paquetes[0].ciudad.longitud) 
-        : defaultLng;
+            ? paquetes[0].ciudad.longitud 
+            : defaultLng;
 
     const { isLoaded } = useLoadScript({
         googleMapsApiKey: 'AIzaSyCHdkM9EAUAUnqvDk8FcOWBUUnBPFEisgQ',

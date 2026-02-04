@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { Cancelacion } from '../models/cancelacion.model.js';
 import { orm } from '../shared/db/orm.js';
-import { ReservaPaquete } from '../models/reservaPaquete.model.js';
+import { ReservaPaquete, ReservaEstado } from '../models/reservaPaquete.model.js';
 
 const em = orm.em;
 
@@ -78,7 +78,7 @@ async function create(req: Request, res: Response) {
         cancelacion.fecha_cancelacion = new Date();
 
         // Actualizar el estado de la reserva
-        reserva.estado = 'cancelado';
+        reserva.estado = ReservaEstado.CANCELADA;
         reserva.fecha_cancelacion = cancelacion.fecha_cancelacion;
         reserva.motivo_cancelacion = cancelacion.motivo;
 

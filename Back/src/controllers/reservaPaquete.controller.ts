@@ -332,7 +332,7 @@ async function cancelar(req: Request, res: Response) {
     cancelacion.fecha_cancelacion = new Date();
 
     // Actualizar la reserva
-    reserva.estado = 'cancelado';
+    reserva.estado = ReservaEstado.CANCELADA;
     reserva.fecha_cancelacion = cancelacion.fecha_cancelacion;
     reserva.motivo_cancelacion = cancelacion.motivo;
 
@@ -363,4 +363,3 @@ async function cancelar(req: Request, res: Response) {
 }
 
 export { findAll, findOne, findByUsuario, create, update, remove, cancelar };
-}
