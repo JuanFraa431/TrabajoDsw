@@ -3,6 +3,6 @@ export interface Ciudad {
   nombre: string;
   descripcion: string;
   pais: string;
-  latitud: string;
-  longitud: string;
+  latitud: number;
+  longitud: number;
 }

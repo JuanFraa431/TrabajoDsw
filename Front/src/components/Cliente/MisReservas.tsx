@@ -1,71 +1,79 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import Header from '../Header';
-import Footer from '../Footer';
-import { Cliente } from '../../interface/cliente';
-import { ReservaPaquete } from '../../interface/reserva';
-import '../../styles/Cliente/MisReservas.css';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import Header from "../Header";
+import Footer from "../Footer";
+import { Cliente } from "../../interface/cliente";
+import { ReservaPaquete } from "../../interface/reserva";
+import { obtenerRangoFechasPaquete } from "../../utils/paqueteUtils";
+import "../../styles/Cliente/MisReservas.css";
 
 const MisReservas: React.FC = () => {
   const [reservas, setReservas] = useState<ReservaPaquete[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string>('');
+  const [error, setError] = useState<string>("");
   const [showCancelModal, setShowCancelModal] = useState<boolean>(false);
-  const [selectedReserva, setSelectedReserva] = useState<ReservaPaquete | null>(null);
-  const [motivoCancelacion, setMotivoCancelacion] = useState<string>('');
+  const [selectedReserva, setSelectedReserva] = useState<ReservaPaquete | null>(
+    null,
+  );
+  const [motivoCancelacion, setMotivoCancelacion] = useState<string>("");
   const [cancelando, setCancelando] = useState<boolean>(false);
   const navigate = useNavigate();
+  const storedUser = localStorage.getItem("user");
+  const cliente = storedUser ? (JSON.parse(storedUser) as Cliente) : null;
 
   useEffect(() => {
-    const storedUser = localStorage.getItem('user');
+    const storedUser = localStorage.getItem("user");
     const cliente = storedUser ? (JSON.parse(storedUser) as Cliente) : null;
 
     if (!cliente) {
-      navigate('/login');
+      navigate("/login");
       return;
     }
 
     cargarReservas(cliente.id);
   }, []); // Solo ejecutar una vez al montar el componente
-
   const cargarReservas = async (clienteId: number) => {
     try {
-      console.log('Cargando reservas para usuario:', clienteId);
+      console.log("Cargando reservas para usuario:", clienteId);
       setLoading(true);
-      setError('');
+      setError("");
 
-      const response = await axios.get(`/api/reservaPaquete/usuario/${clienteId}`);
-      console.log('Reservas recibidas:', response.data.data);
+      const response = await axios.get(
+        `/api/reservaPaquete/usuario/${clienteId}`,
+      );
+      console.log("Reservas recibidas:", response.data.data);
 
       setReservas(response.data.data);
     } catch (error) {
-      console.error('Error al cargar las reservas:', error);
-      setError('Error al cargar las reservas');
+      console.error("Error al cargar las reservas:", error);
+      setError("Error al cargar las reservas");
     } finally {
       setLoading(false);
     }
   };
 
-  const formatearFecha = (fecha: string) => {
+  const formatearFecha = (fecha: string | Date) => {
     const date = new Date(fecha);
-    return date.toLocaleDateString('es-ES', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric'
+    return date.toLocaleDateString("es-ES", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
     });
   };
 
   const getEstadoClass = (estado: string) => {
-    switch (estado.toLowerCase()) {
-      case 'reservado':
-        return 'estado-reservado';
-      case 'cancelado':
-        return 'estado-cancelado';
-      case 'completado':
-        return 'estado-completado';
+    switch (estado.toUpperCase()) {
+      case "PAGADA":
+        return "estado-reservado";
+      case "PENDIENTE":
+        return "estado-pendiente";
+      case "CANCELADA":
+        return "estado-cancelado";
+      case "COMPLETADA":
+        return "estado-completado";
       default:
-        return 'estado-default';
+        return "estado-default";
     }
   };
 
@@ -75,52 +83,52 @@ const MisReservas: React.FC = () => {
 
   const abrirModalCancelacion = (reserva: ReservaPaquete) => {
     setSelectedReserva(reserva);
-    setMotivoCancelacion('');
+    setMotivoCancelacion("");
     setShowCancelModal(true);
   };
 
   const cerrarModalCancelacion = () => {
     setShowCancelModal(false);
     setSelectedReserva(null);
-    setMotivoCancelacion('');
+    setMotivoCancelacion("");
   };
 
   const confirmarCancelacion = async () => {
     if (!selectedReserva) return;
 
     if (!motivoCancelacion.trim()) {
-      alert('Por favor, ingrese un motivo de cancelación');
+      alert("Por favor, ingrese un motivo de cancelación");
       return;
     }
 
     try {
       setCancelando(true);
-      
-      const response = await axios.patch(
-        `/api/reservaPaquete/${selectedReserva.id}/cancelar`,
-        { motivo: motivoCancelacion.trim() }
+      const response = await axios.put(
+        `/api/reservaPaquete/${selectedReserva.id}`,
+        {
+          estado: "CANCELADA",
+          fecha_cancelacion: new Date(),
+          motivo_cancelacion: motivoCancelacion.trim(),
+        },
       );
 
       if (response.status === 200) {
-        alert('Reserva cancelada exitosamente');
+        alert("Reserva cancelada exitosamente");
         cerrarModalCancelacion();
-        
-        // Recargar las reservas para reflejar el cambio
+
         if (cliente) {
           cargarReservas(cliente.id);
         }
       }
     } catch (error: any) {
-      console.error('Error al cancelar la reserva:', error);
-      const mensaje = error.response?.data?.message || 'Error al cancelar la reserva';
+      console.error("Error al cancelar la reserva:", error);
+      const mensaje =
+        error.response?.data?.message || "Error al cancelar la reserva";
       alert(mensaje);
     } finally {
       setCancelando(false);
     }
   };
-
-  const storedUser = localStorage.getItem('user');
-  const cliente = storedUser ? (JSON.parse(storedUser) as Cliente) : null;
 
   if (!cliente) {
     return null;
@@ -145,25 +153,21 @@ const MisReservas: React.FC = () => {
         <div className="mis-reservas-header">
           <h1>Mis Reservas</h1>
           <button
-            onClick={() => navigate('/detalleCliente')}
+            onClick={() => navigate("/detalleCliente")}
             className="btn-volver"
           >
             Volver al Perfil
           </button>
         </div>
 
-        {error && (
-          <div className="error-message">
-            {error}
-          </div>
-        )}
+        {error && <div className="error-message">{error}</div>}
 
         {reservas.length === 0 ? (
           <div className="no-reservas">
             <h2>No tienes reservas realizadas</h2>
             <p>¡Explora nuestros paquetes y realiza tu primera reserva!</p>
             <button
-              onClick={() => navigate('/paquetes')}
+              onClick={() => navigate("/paquetes")}
               className="btn-explorar"
             >
               Explorar Paquetes
@@ -185,7 +189,7 @@ const MisReservas: React.FC = () => {
                     src={reserva.paquete.imagen}
                     alt={reserva.paquete.nombre}
                     onError={(e) => {
-                      e.currentTarget.src = '/images/default-package.jpg';
+                      e.currentTarget.src = "/images/default-package.jpg";
                     }}
                   />
                 </div>
@@ -199,7 +203,16 @@ const MisReservas: React.FC = () => {
                   <div className="info-row">
                     <strong>Fecha del Viaje:</strong>
                     <span>
-                      {formatearFecha(reserva.paquete.fecha_ini)} - {formatearFecha(reserva.paquete.fecha_fin)}
+                      {obtenerRangoFechasPaquete(reserva.paquete)?.fechaIni &&
+                      obtenerRangoFechasPaquete(reserva.paquete)?.fechaFin
+                        ? `${formatearFecha(
+                            obtenerRangoFechasPaquete(reserva.paquete)!
+                              .fechaIni,
+                          )} - ${formatearFecha(
+                            obtenerRangoFechasPaquete(reserva.paquete)!
+                              .fechaFin,
+                          )}`
+                        : "No especificadas"}
                     </span>
                   </div>
 
@@ -210,7 +223,9 @@ const MisReservas: React.FC = () => {
 
                   <div className="info-row">
                     <strong>Total Pagado:</strong>
-                    <span className="precio">${reserva.pago.monto.toLocaleString()}</span>
+                    <span className="precio">
+                      ${reserva.pago.monto.toLocaleString()}
+                    </span>
                   </div>
 
                   {reserva.fecha_cancelacion && (
@@ -236,7 +251,7 @@ const MisReservas: React.FC = () => {
                     Ver Paquete
                   </button>
 
-                  {reserva.estado.toLowerCase() === 'reservado' && (
+                  {reserva.estado.toUpperCase() === "PAGADA" && (
                     <button
                       className="btn-cancelar"
                       onClick={() => abrirModalCancelacion(reserva)}
@@ -252,7 +267,8 @@ const MisReservas: React.FC = () => {
                     <ul>
                       {reserva.personas.map((persona, index) => (
                         <li key={index}>
-                          {persona.nombre} {persona.apellido} - DNI: {persona.dni}
+                          {persona.nombre} {persona.apellido} - DNI:{" "}
+                          {persona.dni}
                         </li>
                       ))}
                     </ul>
@@ -263,8 +279,6 @@ const MisReservas: React.FC = () => {
           </div>
         )}
       </div>
-
-      {/* Modal de cancelación */}
       {showCancelModal && selectedReserva && (
         <div className="modal-overlay" onClick={cerrarModalCancelacion}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
@@ -279,9 +293,19 @@ const MisReservas: React.FC = () => {
               <div className="reserva-info-modal">
                 <h3>{selectedReserva.paquete.nombre}</h3>
                 <p>
-                  <strong>Fecha del viaje:</strong>{' '}
-                  {formatearFecha(selectedReserva.paquete.fecha_ini)} -{' '}
-                  {formatearFecha(selectedReserva.paquete.fecha_fin)}
+                  <strong>Fecha del viaje:</strong>{" "}
+                  {obtenerRangoFechasPaquete(selectedReserva.paquete)?.fechaIni &&
+                  obtenerRangoFechasPaquete(selectedReserva.paquete)?.fechaFin
+                    ? `${formatearFecha(
+                        obtenerRangoFechasPaquete(
+                          selectedReserva.paquete,
+                        )!.fechaIni,
+                      )} - ${formatearFecha(
+                        obtenerRangoFechasPaquete(
+                          selectedReserva.paquete,
+                        )!.fechaFin,
+                      )}`
+                    : "No especificadas"}
                 </p>
                 <p>
                   <strong>Total pagado:</strong> ${selectedReserva.pago.monto.toLocaleString()}
@@ -308,7 +332,10 @@ const MisReservas: React.FC = () => {
               </div>
 
               <div className="modal-warning">
-                <p>⚠️ Esta acción no se puede deshacer. ¿Está seguro que desea cancelar esta reserva?</p>
+                <p>
+                  ⚠️ Esta acción no se puede deshacer. ¿Está seguro que desea
+                  cancelar esta reserva?
+                </p>
               </div>
             </div>
 
@@ -325,13 +352,12 @@ const MisReservas: React.FC = () => {
                 onClick={confirmarCancelacion}
                 disabled={cancelando || !motivoCancelacion.trim()}
               >
-                {cancelando ? 'Cancelando...' : 'Confirmar Cancelación'}
+                {cancelando ? "Cancelando..." : "Confirmar Cancelación"}
               </button>
             </div>
           </div>
         </div>
       )}
-
       <Footer />
     </div>
   );

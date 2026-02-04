@@ -12,14 +12,12 @@ async function findAll(req: Request, res: Response) {
     const paqueteTransportes = await em.find(
       PaqueteTransporte,
       {},
-      { populate: ["transporte", "paquete"] }
+      { populate: ["transporte", "paquete"] },
     );
-    res
-      .status(200)
-      .json({
-        message: "PaqueteTransportes encontrados",
-        data: paqueteTransportes,
-      });
+    res.status(200).json({
+      message: "PaqueteTransportes encontrados",
+      data: paqueteTransportes,
+    });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
@@ -31,14 +29,12 @@ async function findOne(req: Request, res: Response) {
     const paqueteTransporte = await em.findOneOrFail(
       PaqueteTransporte,
       { id },
-      { populate: ["transporte", "paquete"] }
+      { populate: ["transporte", "paquete"] },
     );
-    res
-      .status(200)
-      .json({
-        message: "PaqueteTransporte encontrado",
-        data: paqueteTransporte,
-      });
+    res.status(200).json({
+      message: "PaqueteTransporte encontrado",
+      data: paqueteTransporte,
+    });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
@@ -57,14 +53,12 @@ async function findByPaquete(req: Request, res: Response) {
           "transporte.ciudadOrigen",
           "transporte.ciudadDestino",
         ],
-      }
+      },
     );
-    res
-      .status(200)
-      .json({
-        message: "PaqueteTransportes del paquete encontrados",
-        data: paqueteTransportes,
-      });
+    res.status(200).json({
+      message: "PaqueteTransportes del paquete encontrados",
+      data: paqueteTransportes,
+    });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
@@ -72,7 +66,32 @@ async function findByPaquete(req: Request, res: Response) {
 
 async function create(req: Request, res: Response) {
   try {
-    const { id_transporte, id_paquete, ...rest } = req.body;
+    const { id_transporte, id_paquete, dia, horario, precio, es_ida, ...rest } =
+      req.body;
+    if (typeof rest.fecha === "string") {
+      rest.fecha = new Date(rest.fecha);
+    }
+    if (rest.fecha && Number.isNaN(new Date(rest.fecha).getTime())) {
+      return res.status(400).json({ message: "Fecha inválida." });
+    }
+    if (!rest.tipo && typeof es_ida === "boolean") {
+      rest.tipo = es_ida ? "IDA" : "VUELTA";
+    }
+    if (!rest.fecha) {
+      return res
+        .status(400)
+        .json({ message: "La fecha del transporte es obligatoria." });
+    }
+    if (rest.tipo !== "IDA" && rest.tipo !== "VUELTA") {
+      return res.status(400).json({
+        message: "El tipo de transporte debe ser IDA o VUELTA.",
+      });
+    }
+    if (!id_paquete || !id_transporte) {
+      return res.status(400).json({
+        message: "Los IDs de paquete y transporte son obligatorios.",
+      });
+    }
 
     const transporte = await em.getReference(Transporte, id_transporte);
     const paquete = await em.getReference(Paquete, id_paquete);
@@ -102,7 +121,30 @@ async function update(req: Request, res: Response) {
     const id = Number.parseInt(req.params.id);
     const paqueteTransporte = await em.findOneOrFail(PaqueteTransporte, { id });
 
-    const { id_transporte, id_paquete, ...rest } = req.body;
+    const { id_transporte, id_paquete, dia, horario, precio, es_ida, ...rest } =
+      req.body;
+    if (typeof rest.fecha === "string") {
+      rest.fecha = new Date(rest.fecha);
+    }
+    if (rest.fecha && Number.isNaN(new Date(rest.fecha).getTime())) {
+      return res.status(400).json({ message: "Fecha inválida." });
+    }
+    if (!rest.tipo && typeof es_ida === "boolean") {
+      rest.tipo = es_ida ? "IDA" : "VUELTA";
+    }
+
+    const tipoFinal = rest.tipo ?? paqueteTransporte.tipo;
+    if (tipoFinal !== "IDA" && tipoFinal !== "VUELTA") {
+      return res.status(400).json({
+        message: "El tipo de transporte debe ser IDA o VUELTA.",
+      });
+    }
+    const fechaFinal = rest.fecha ?? paqueteTransporte.fecha;
+    if (!fechaFinal) {
+      return res
+        .status(400)
+        .json({ message: "La fecha del transporte es obligatoria." });
+    }
 
     if (!id_paquete) {
       return res
@@ -112,6 +154,8 @@ async function update(req: Request, res: Response) {
 
     const updatedData: any = {
       ...rest,
+      tipo: tipoFinal,
+      fecha: fechaFinal,
       transporte: id_transporte
         ? em.getReference(Transporte, id_transporte)
         : paqueteTransporte.transporte,
@@ -125,12 +169,10 @@ async function update(req: Request, res: Response) {
     // Actualizar el precio del paquete automáticamente
     await actualizarPrecioPaquete(id_paquete);
 
-    res
-      .status(200)
-      .json({
-        message: "PaqueteTransporte actualizado",
-        data: paqueteTransporte,
-      });
+    res.status(200).json({
+      message: "PaqueteTransporte actualizado",
+      data: paqueteTransporte,
+    });
   } catch (error: any) {
     console.error("Error al actualizar PaqueteTransporte:", error);
     res.status(500).json({ message: error.message });
@@ -143,7 +185,7 @@ async function remove(req: Request, res: Response) {
     const paqueteTransporte = await em.findOneOrFail(
       PaqueteTransporte,
       { id },
-      { populate: ["paquete"] }
+      { populate: ["paquete"] },
     );
     const paqueteId = paqueteTransporte.paquete.id;
 

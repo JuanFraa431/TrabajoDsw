@@ -17,14 +17,16 @@ import {
 import { MdOutlineDescription, MdTour } from "react-icons/md";
 import {
   calcularPrecioTotalPaquete,
+  calcularDiasPaquete,
   descripcionTruncada,
+  obtenerRangoFechasPaquete,
 } from "../utils/paqueteUtils";
 
 const CardDetail: React.FC = () => {
   const location = useLocation();
   const clienteLogueado = localStorage.getItem("user");
   const userData = clienteLogueado ? JSON.parse(clienteLogueado) : null;
-  const isAdmin = userData && userData.tipo_usuario === "admin";
+  const isAdmin = userData && userData.tipo_usuario === "ADMIN";
   const { id } = location.state || { id: null };
   const [paquete, setPaquete] = useState<any>(null);
   const [comentarios, setComentarios] = useState<Comentario[]>([]);
@@ -124,14 +126,7 @@ const CardDetail: React.FC = () => {
     return "★".repeat(estrellas) + "☆".repeat(5 - estrellas);
   };
 
-  const calcularDiasPaquete = () => {
-    if (!paquete?.fecha_ini || !paquete?.fecha_fin) return 0;
-    const fechaIni = new Date(paquete.fecha_ini);
-    const fechaFin = new Date(paquete.fecha_fin);
-    return Math.ceil(
-      (fechaFin.getTime() - fechaIni.getTime()) / (1000 * 60 * 60 * 24),
-    );
-  };
+  const rangoFechas = paquete ? obtenerRangoFechasPaquete(paquete) : null;
 
   return (
     <div className="card-detail-container">
@@ -145,7 +140,9 @@ const CardDetail: React.FC = () => {
                 alt={paquete.nombre}
                 className="hero-image"
               />
-              <span className="hero-badge">{calcularDiasPaquete()} días</span>
+              <span className="hero-badge">
+                {calcularDiasPaquete(paquete)} días
+              </span>
             </div>
 
             <div className="hero-info">
@@ -161,14 +158,13 @@ const CardDetail: React.FC = () => {
                     <div className="date-content">
                       <span className="date-label">Fecha de inicio</span>
                       <span className="date-value">
-                        {new Date(paquete.fecha_ini).toLocaleDateString(
-                          "es-ES",
-                          {
-                            day: "numeric",
-                            month: "short",
-                            year: "numeric",
-                          },
-                        )}
+                        {rangoFechas?.fechaIni
+                          ? rangoFechas.fechaIni.toLocaleDateString("es-ES", {
+                              day: "numeric",
+                              month: "short",
+                              year: "numeric",
+                            })
+                          : "No especificada"}
                       </span>
                     </div>
                   </div>
@@ -180,14 +176,13 @@ const CardDetail: React.FC = () => {
                     <div className="date-content">
                       <span className="date-label">Fecha de fin</span>
                       <span className="date-value">
-                        {new Date(paquete.fecha_fin).toLocaleDateString(
-                          "es-ES",
-                          {
-                            day: "numeric",
-                            month: "short",
-                            year: "numeric",
-                          },
-                        )}
+                        {rangoFechas?.fechaFin
+                          ? rangoFechas.fechaFin.toLocaleDateString("es-ES", {
+                              day: "numeric",
+                              month: "short",
+                              year: "numeric",
+                            })
+                          : "No especificada"}
                       </span>
                     </div>
                   </div>
@@ -272,11 +267,11 @@ const CardDetail: React.FC = () => {
                         <div className="item-card-meta">
                           <span className="meta-tag">
                             <FaCalendarAlt className="meta-tag-icon" />
-                            {paqueteExc.dia}
-                          </span>
-                          <span className="meta-tag">
-                            <FaClock className="meta-tag-icon" />
-                            {paqueteExc.horario}
+                            {paqueteExc.fecha
+                              ? new Date(paqueteExc.fecha).toLocaleString(
+                                  "es-ES",
+                                )
+                              : "Fecha no especificada"}
                           </span>
                         </div>
                       </div>
@@ -369,10 +364,10 @@ const CardDetail: React.FC = () => {
                       <div className="item-card-content">
                         <span
                           className={`transport-type-badge ${
-                            paqueteTrans.es_ida ? "ida" : "vuelta"
+                            paqueteTrans.tipo === "IDA" ? "ida" : "vuelta"
                           }`}
                         >
-                          {paqueteTrans.es_ida ? "Ida" : "Vuelta"}
+                          {paqueteTrans.tipo === "IDA" ? "Ida" : "Vuelta"}
                         </span>
                         <h3 className="item-card-title">
                           {paqueteTrans.transporte?.nombre}
@@ -383,11 +378,11 @@ const CardDetail: React.FC = () => {
                         <div className="item-card-meta">
                           <span className="meta-tag">
                             <FaCalendarAlt className="meta-tag-icon" />
-                            {paqueteTrans.dia}
-                          </span>
-                          <span className="meta-tag">
-                            <FaClock className="meta-tag-icon" />
-                            {paqueteTrans.horario}
+                            {paqueteTrans.fecha
+                              ? new Date(paqueteTrans.fecha).toLocaleString(
+                                  "es-ES",
+                                )
+                              : "Fecha no especificada"}
                           </span>
                         </div>
                         {paqueteTrans.transporte?.ciudadOrigen &&

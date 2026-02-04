@@ -1,12 +1,17 @@
 import { Request, Response } from "express";
-import { ReservaPaquete } from "../models/reservaPaquete.model.js";
+import {
+  ReservaPaquete,
+  ReservaEstado,
+} from "../models/reservaPaquete.model.js";
 import { orm } from "../shared/db/orm.js";
 import { Usuario } from "../models/usuario.model.js";
 import { Paquete } from "../models/paquete.model.js";
 import { Persona } from "../models/persona.model.js";
 import { Pago } from "../models/pago.model.js";
 import { emailService } from "../services/emailService.js";
+import { calcularPrecioPaquete } from "../utils/paqueteUtils.js";
 import { Cancelacion } from "../models/cancelacion.model.js";
+
 
 const em = orm.em;
 
@@ -31,8 +36,8 @@ async function findAll(req: Request, res: Response) {
     }
 
     // Filtrar por estado si se proporciona
-    if (estado && estado !== "todos") {
-      whereClause.estado = estado;
+    if (typeof estado === "string" && estado.toLowerCase() !== "todos") {
+      whereClause.estado = estado.toUpperCase();
     }
 
     const reservasPaquete = await em.find(ReservaPaquete, whereClause, {
@@ -145,13 +150,26 @@ async function create(req: Request, res: Response) {
     reserva.usuario = usuario;
     reserva.paquete = paquete;
     reserva.fecha = new Date(data.fecha ?? Date.now());
-    reserva.estado = data.estado ?? "reservado";
+    reserva.estado =
+      typeof data.estado === "string" ? data.estado.toUpperCase() : "PENDIENTE";
+    if (!Object.values(ReservaEstado).includes(reserva.estado)) {
+      return res.status(400).json({ message: "Estado de reserva inválido" });
+    }
     reserva.fecha_cancelacion = data.fecha_cancelacion ?? null;
     reserva.motivo_cancelacion = data.motivo_cancelacion ?? null;
 
     reserva.pago = em.getReference(Pago, pagoId);
 
-    for (const p of personas) {
+    const cantidadPersonas = (personas?.length ?? 0) + 1;
+    const precioBase = await calcularPrecioPaquete(paqueteId);
+    const precioEsperado = Number(precioBase) * cantidadPersonas;
+    if (Number(pago.monto) !== Number(precioEsperado)) {
+      return res.status(400).json({
+        message: "El monto del pago no coincide con el precio del paquete.",
+      });
+    }
+
+    for (const p of personas || []) {
       const persona = new Persona();
       persona.nombre = p.nombre;
       persona.apellido = p.apellido;
@@ -170,6 +188,19 @@ async function create(req: Request, res: Response) {
 
     // Enviar email de confirmación
     try {
+      const fechasEstadias = paquete.estadias.getItems().length
+        ? {
+            fecha_ini: paquete.estadias
+              .getItems()
+              .map((e) => e.fecha_ini)
+              .sort((a, b) => a.getTime() - b.getTime())[0],
+            fecha_fin: paquete.estadias
+              .getItems()
+              .map((e) => e.fecha_fin)
+              .sort((a, b) => b.getTime() - a.getTime())[0],
+          }
+        : null;
+
       const datosReserva = {
         usuario: {
           nombre: usuario.nombre,
@@ -181,9 +212,13 @@ async function create(req: Request, res: Response) {
           nombre: paquete.nombre,
           descripcion: paquete.descripcion,
           detalle: paquete.detalle,
-          fecha_ini: paquete.fecha_ini.toISOString(),
-          fecha_fin: paquete.fecha_fin.toISOString(),
-          precio: paquete.precio,
+          fecha_ini: fechasEstadias?.fecha_ini
+            ? fechasEstadias.fecha_ini.toISOString()
+            : null,
+          fecha_fin: fechasEstadias?.fecha_fin
+            ? fechasEstadias.fecha_fin.toISOString()
+            : null,
+          precio: pago.monto,
           imagen: paquete.imagen,
           estadias: paquete.estadias.getItems(),
           paqueteExcursiones: paquete.paqueteExcursiones.getItems(),
@@ -191,11 +226,11 @@ async function create(req: Request, res: Response) {
         reserva: {
           id: reserva.id || 0,
           fecha_reserva: reserva.fecha.toISOString(),
-          cantidad_personas: personas.length,
+          cantidad_personas: cantidadPersonas,
           precio_total: pago.monto,
           estado: reserva.estado,
         },
-        acompanantes: personas,
+        acompanantes: personas || [],
       };
 
       await emailService.enviarEmailReserva(datosReserva);
@@ -216,7 +251,34 @@ async function update(req: Request, res: Response) {
   try {
     const id = Number.parseInt(req.params.id);
     const reservaPaquete = em.getReference(ReservaPaquete, id);
-    em.assign(reservaPaquete, req.body);
+    const { paqueteId, usuarioId, pagoId, personas, fecha, ...rest } = req.body;
+    if (typeof req.body.estado === "string") {
+      req.body.estado = req.body.estado.toUpperCase();
+      if (!Object.values(ReservaEstado).includes(req.body.estado)) {
+        return res.status(400).json({ message: "Estado de reserva inválido" });
+      }
+    }
+    const updatedData: any = { ...rest };
+    if (typeof rest.estado === "string") {
+      updatedData.estado = rest.estado.toUpperCase();
+    }
+    if (fecha) {
+      updatedData.fecha = typeof fecha === "string" ? new Date(fecha) : fecha;
+    }
+    if (paqueteId) {
+      updatedData.paquete = em.getReference(Paquete, paqueteId);
+    }
+    if (usuarioId) {
+      updatedData.usuario = em.getReference(Usuario, usuarioId);
+    }
+    if (pagoId) {
+      updatedData.pago = em.getReference(Pago, pagoId);
+    }
+    // Ignorar personas en update directo para evitar inconsistencias
+    if (Array.isArray(personas)) {
+      updatedData.personas = undefined;
+    }
+    em.assign(reservaPaquete, updatedData);
     await em.flush();
     res.status(200).json({ message: "ReservaPaquete actualizada" });
   } catch (error: any) {
@@ -301,3 +363,4 @@ async function cancelar(req: Request, res: Response) {
 }
 
 export { findAll, findOne, findByUsuario, create, update, remove, cancelar };
+}

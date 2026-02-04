@@ -71,17 +71,15 @@ const ReservasPorPeriodo: React.FC = () => {
       });
       let reservasData = response.data.data || [];
 
-      // Filtrar solo estados relevantes (reservado, pendiente, cancelado)
+      // Filtrar solo estados relevantes (PAGADA, PENDIENTE, CANCELADA)
       reservasData = reservasData.filter((r: any) =>
-        ["reservado", "pendiente", "cancelado"].includes(
-          r.estado?.toLowerCase(),
-        ),
+        ["PAGADA", "PENDIENTE", "CANCELADA"].includes(r.estado?.toUpperCase()),
       );
 
       // Filtrar por estado específico si es necesario
       if (estadoFiltro !== "todos") {
         reservasData = reservasData.filter(
-          (r: any) => r.estado?.toLowerCase() === estadoFiltro.toLowerCase(),
+          (r: any) => r.estado?.toUpperCase() === estadoFiltro.toUpperCase(),
         );
       }
 
@@ -100,13 +98,13 @@ const ReservasPorPeriodo: React.FC = () => {
     const totalReservas = reservasData.length;
 
     const reservasReservadas = reservasData.filter(
-      (r) => r.estado?.toLowerCase() === "reservado",
+      (r) => r.estado?.toUpperCase() === "PAGADA",
     ).length;
     const reservasPendientes = reservasData.filter(
-      (r) => r.estado?.toLowerCase() === "pendiente",
+      (r) => r.estado?.toUpperCase() === "PENDIENTE",
     ).length;
     const reservasCanceladas = reservasData.filter(
-      (r) => r.estado?.toLowerCase() === "cancelado",
+      (r) => r.estado?.toUpperCase() === "CANCELADA",
     ).length;
 
     setEstadisticas({
@@ -172,10 +170,10 @@ const ReservasPorPeriodo: React.FC = () => {
   };
 
   const getColorByEstado = (estado: string) => {
-    const estadoLower = estado.toLowerCase();
-    if (estadoLower === "reservado") return "#28a745";
-    if (estadoLower === "pendiente") return "#ffc107";
-    if (estadoLower === "cancelado") return "#dc3545";
+    const estadoUpper = estado.toUpperCase();
+    if (estadoUpper === "PAGADA") return "#28a745";
+    if (estadoUpper === "PENDIENTE") return "#ffc107";
+    if (estadoUpper === "CANCELADA") return "#dc3545";
     return "#6c757d"; // gris para sin estado u otros
   };
 
@@ -207,8 +205,9 @@ const ReservasPorPeriodo: React.FC = () => {
               onChange={(e) => setEstadoFiltro(e.target.value)}
             >
               <option value="todos">Todos</option>
-              <option value="reservado">Reservado</option>
-              <option value="cancelado">Cancelado</option>
+              <option value="PAGADA">Pagada</option>
+              <option value="PENDIENTE">Pendiente</option>
+              <option value="CANCELADA">Cancelada</option>
             </select>
           </div>
         </div>

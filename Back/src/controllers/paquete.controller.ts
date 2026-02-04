@@ -84,6 +84,9 @@ async function findOne(req: Request, res: Response) {
 
 async function create(req: Request, res: Response) {
   try {
+    if (typeof req.body.estado === "string") {
+      req.body.estado = Number.parseInt(req.body.estado, 10);
+    }
     const paquete = em.create(Paquete, req.body);
     await em.flush();
     res.status(201).json({ message: "Paquete creado", data: paquete });
@@ -96,6 +99,9 @@ async function update(req: Request, res: Response) {
   try {
     const id = Number.parseInt(req.params.id);
     const paquete = em.getReference(Paquete, id);
+    if (typeof req.body.estado === "string") {
+      req.body.estado = Number.parseInt(req.body.estado, 10);
+    }
     em.assign(paquete, req.body);
     await em.flush();
     res.status(200).json({ message: "Paquete actualizado", data: paquete });
@@ -117,7 +123,7 @@ async function remove(req: Request, res: Response) {
 
 async function search(req: Request, res: Response) {
   try {
-    const { ciudad, fechaInicio, fechaFin, precioMaximo } = req.query;
+    const { ciudad, fechaInicio, fechaFin } = req.query;
     const paquetes = await em.getConnection().execute<Paquete[]>(
       `
             SELECT DISTINCT p.*, c.latitud, c.longitud
@@ -130,12 +136,11 @@ async function search(req: Request, res: Response) {
                 INNER JOIN 
                     ciudad AS c ON h.ciudad_id = c.id
             WHERE (c.nombre = ? OR ? = '') 
-            AND p.fecha_ini >= ? 
-            AND p.fecha_fin <= ? 
-            AND p.precio <= ?
-            AND p.estado = '1'
+            AND e.fecha_ini >= ? 
+            AND e.fecha_fin <= ? 
+            AND p.estado = 1
         `,
-      [ciudad, ciudad, fechaInicio, fechaFin, precioMaximo],
+      [ciudad, ciudad, fechaInicio, fechaFin],
     );
     res.status(200).json({ message: "Paquetes encontrados", data: paquetes });
   } catch (error: any) {
@@ -146,18 +151,15 @@ async function search(req: Request, res: Response) {
 async function getExcursionesByPaquete(req: Request, res: Response) {
   try {
     const id = Number.parseInt(req.params.id);
-    // Suponiendo que la relación es paquete.excursiones
-    // Asegúrate de que 'excursiones' es una relación válida en el modelo Paquete.
-    // Si la relación se llama diferente, reemplaza 'excursiones' por el nombre correcto.
     const paquete = await em.findOneOrFail(
       Paquete,
       { id },
-      { populate: ["comentarios", "estadias"] },
-    ); // Ajusta aquí si tienes la relación correcta
+      { populate: ["paqueteExcursiones", "paqueteExcursiones.excursion"] },
+    );
     res.status(200).json({
       message: "Excursiones encontradas",
-      data: (paquete as any).excursiones,
-    }); // Ajusta aquí si el nombre es diferente
+      data: paquete.paqueteExcursiones.getItems(),
+    });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
@@ -166,11 +168,10 @@ async function getExcursionesByPaquete(req: Request, res: Response) {
 async function recalcularPrecio(req: Request, res: Response) {
   try {
     const id = Number.parseInt(req.params.id);
-    await actualizarPrecioPaquete(id);
-    const paquete = await em.findOneOrFail(Paquete, { id });
+    const nuevoPrecio = await actualizarPrecioPaquete(id);
     res.status(200).json({
       message: "Precio del paquete recalculado",
-      data: { id: paquete.id, nuevoPrecio: paquete.precio },
+      data: { id, nuevoPrecio },
     });
   } catch (error: any) {
     res.status(500).json({ message: error.message });

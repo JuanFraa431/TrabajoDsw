@@ -82,7 +82,7 @@ const DestinosPopulares: React.FC = () => {
         params: {
           fechaInicio: fechaInicio,
           fechaFin: fechaFin,
-          estado: "reservado",
+          estado: "PAGADA",
         },
       });
       let reservasData = response.data.data || [];

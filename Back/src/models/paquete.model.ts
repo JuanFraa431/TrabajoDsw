@@ -29,15 +29,6 @@ export class Paquete extends BaseModel {
   detalle!: string;
 
   @Property({ nullable: false })
-  precio!: number;
-
-  @Property({ nullable: false })
-  fecha_ini!: Date;
-
-  @Property({ nullable: false })
-  fecha_fin!: Date;
-
-  @Property({ nullable: false })
   imagen!: string;
 
   @ManyToOne(() => Ciudad, { nullable: false })

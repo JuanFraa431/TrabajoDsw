@@ -1,11 +1,16 @@
-import { Entity, Property, OneToMany, Collection, Cascade } from "@mikro-orm/core";
+import {
+  Entity,
+  Property,
+  OneToMany,
+  Collection,
+  Cascade,
+} from "@mikro-orm/core";
 import { BaseModel } from "../shared/db/baseModel.model.js";
 import { Hotel } from "./hotel.model.js";
 import { Excursion } from "./excursion.model.js";
 
 @Entity()
 export class Ciudad extends BaseModel {
-
   @Property({ nullable: false })
   nombre!: string;
 
@@ -16,14 +21,16 @@ export class Ciudad extends BaseModel {
   pais!: string;
 
   @Property({ nullable: false })
-  latitud!: string;
+  latitud!: number;
 
   @Property({ nullable: false })
-  longitud!: string;
+  longitud!: number;
 
-  @OneToMany( () => Hotel, (hotel) => hotel.ciudad, { cascade: [Cascade.ALL] })
+  @OneToMany(() => Hotel, (hotel) => hotel.ciudad, { cascade: [Cascade.ALL] })
   hoteles = new Collection<Hotel>(this);
-  
-  @OneToMany( () => Excursion, (excursion) => excursion.ciudad, { cascade: [Cascade.ALL] })
+
+  @OneToMany(() => Excursion, (excursion) => excursion.ciudad, {
+    cascade: [Cascade.ALL],
+  })
   excursiones = new Collection<Excursion>(this);
 }

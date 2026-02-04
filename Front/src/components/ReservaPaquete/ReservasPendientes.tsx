@@ -8,7 +8,6 @@ interface ReservaPendiente {
   paquete: {
     id: number;
     nombre: string;
-    precio: number;
   };
   usuario: {
     id: number;
@@ -51,7 +50,7 @@ const ReservasPendientes: React.FC = () => {
       const response = await axios.get("/api/reservaPaquete");
       const todasReservas = response.data.data || [];
       const pendientes = todasReservas.filter(
-        (r: ReservaPendiente) => r.estado === "pendiente",
+        (r: ReservaPendiente) => r.estado === "PENDIENTE",
       );
       setReservasPendientes(pendientes);
     } catch (error) {
@@ -77,18 +76,12 @@ const ReservasPendientes: React.FC = () => {
     try {
       // Actualizar el pago a "pagado"
       await axios.put(`/api/pago/${reserva.pago.id}`, {
-        ...reserva.pago,
-        estado: "pagado",
+        estado: "APROBADO",
       });
 
       // Actualizar la reserva a "reservado"
       await axios.put(`/api/reservaPaquete/${reserva.id}`, {
-        fecha: reserva.fecha,
-        paqueteId: reserva.paquete.id,
-        usuarioId: reserva.usuario.id,
-        estado: "reservado",
-        pagoId: reserva.pago.id,
-        personas: reserva.personas,
+        estado: "PAGADA",
       });
 
       // Obtener datos completos del paquete para el email
@@ -96,6 +89,11 @@ const ReservasPendientes: React.FC = () => {
         `/api/paquete/${reserva.paquete.id}`,
       );
       const paqueteCompleto = paqueteResponse.data.data;
+      const estadias = paqueteCompleto?.estadias || [];
+      const fechaIniEstadia = estadias.length ? estadias[0].fecha_ini : null;
+      const fechaFinEstadia = estadias.length
+        ? estadias[estadias.length - 1].fecha_fin
+        : null;
 
       // Enviar email de confirmación
       try {
@@ -110,9 +108,9 @@ const ReservasPendientes: React.FC = () => {
             nombre: paqueteCompleto.nombre,
             descripcion: paqueteCompleto.descripcion,
             detalle: paqueteCompleto.detalle,
-            fecha_ini: paqueteCompleto.fecha_ini,
-            fecha_fin: paqueteCompleto.fecha_fin,
-            precio: paqueteCompleto.precio,
+            fecha_ini: fechaIniEstadia,
+            fecha_fin: fechaFinEstadia,
+            precio: reserva.pago.monto,
             imagen: paqueteCompleto.imagen,
             estadias: paqueteCompleto.estadias,
             paqueteExcursiones: paqueteCompleto.paqueteExcursiones,
@@ -120,9 +118,9 @@ const ReservasPendientes: React.FC = () => {
           reserva: {
             id: reserva.id,
             fecha_reserva: reserva.fecha,
-            cantidad_personas: reserva.personas.length,
+            cantidad_personas: (reserva.personas?.length || 0) + 1,
             precio_total: reserva.pago.monto,
-            estado: "reservado",
+            estado: "PAGADA",
           },
           acompanantes: reserva.personas,
         });
@@ -170,18 +168,12 @@ const ReservasPendientes: React.FC = () => {
     try {
       // Actualizar el pago a "rechazado"
       await axios.put(`/api/pago/${reserva.pago.id}`, {
-        ...reserva.pago,
-        estado: "rechazado",
+        estado: "RECHAZADO",
       });
 
       // Actualizar la reserva a "cancelado"
       await axios.put(`/api/reservaPaquete/${reserva.id}`, {
-        fecha: reserva.fecha,
-        paqueteId: reserva.paquete.id,
-        usuarioId: reserva.usuario.id,
-        estado: "cancelado",
-        pagoId: reserva.pago.id,
-        personas: reserva.personas,
+        estado: "CANCELADA",
         fecha_cancelacion: new Date(),
         motivo_cancelacion: motivo,
       });
@@ -191,6 +183,11 @@ const ReservasPendientes: React.FC = () => {
         `/api/paquete/${reserva.paquete.id}`,
       );
       const paqueteCompleto = paqueteResponse.data.data;
+      const estadias = paqueteCompleto?.estadias || [];
+      const fechaIniEstadia = estadias.length ? estadias[0].fecha_ini : null;
+      const fechaFinEstadia = estadias.length
+        ? estadias[estadias.length - 1].fecha_fin
+        : null;
 
       // Enviar email de rechazo
       try {
@@ -204,14 +201,14 @@ const ReservasPendientes: React.FC = () => {
             id: paqueteCompleto.id,
             nombre: paqueteCompleto.nombre,
             descripcion: paqueteCompleto.descripcion,
-            fecha_ini: paqueteCompleto.fecha_ini,
-            fecha_fin: paqueteCompleto.fecha_fin,
+            fecha_ini: fechaIniEstadia,
+            fecha_fin: fechaFinEstadia,
             imagen: paqueteCompleto.imagen,
           },
           reserva: {
             id: reserva.id,
             fecha_reserva: reserva.fecha,
-            estado: "cancelado",
+            estado: "CANCELADA",
           },
           motivo: motivo,
         });
@@ -301,7 +298,7 @@ const ReservasPendientes: React.FC = () => {
                   <h4>Paquete</h4>
                   <p className="paquete-nombre">{reserva.paquete.nombre}</p>
                   <p className="precio">
-                    {formatearMoneda(reserva.paquete.precio)}
+                    {formatearMoneda(reserva.pago.monto)}
                   </p>
                 </div>
 

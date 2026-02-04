@@ -6,6 +6,10 @@ import "../../styles/ReservarPaquete.css";
 import logo from "../../images/logoFinal2.png";
 import { Acompanante } from "../../interface/acompanante";
 import axios from "axios";
+import {
+  calcularPrecioTotalPaquete,
+  obtenerRangoFechasPaquete,
+} from "../../utils/paqueteUtils";
 
 const STEP_LABELS = [
   "Pago",
@@ -25,13 +29,18 @@ const ReservarPaquete: React.FC = () => {
     const fetchCiudad = async () => {
       try {
         if (paquete?.estadias[0]?.hotel) {
-          const responseReserva = await axios.get(
-            `/api/hotel/${paquete.estadias[0].hotel}`,
-          );
+          const hotelValue = paquete.estadias[0].hotel;
+          const hotelId =
+            typeof hotelValue === "object" ? hotelValue.id : hotelValue;
+          if (!hotelId) return;
+          const responseReserva = await axios.get(`/api/hotel/${hotelId}`);
           if (responseReserva.status === 200) {
             const hotelData = responseReserva.data.data;
-            const Idciudad = hotelData.ciudad;
-            const responseReserva2 = await axios.get(`/api/ciudad/${Idciudad}`);
+            const ciudadValue = hotelData.ciudad;
+            const ciudadId =
+              typeof ciudadValue === "object" ? ciudadValue.id : ciudadValue;
+            if (!ciudadId) return;
+            const responseReserva2 = await axios.get(`/api/ciudad/${ciudadId}`);
             setCiudad(responseReserva2.data.data.nombre);
           }
         }
@@ -186,10 +195,12 @@ const ReservarPaquete: React.FC = () => {
     setError(null);
 
     try {
+      const cantidadPersonas = (form.acompanantes || 0) + 1;
+      const totalPagar = calcularPrecioTotalPaquete(paquete) * cantidadPersonas;
       const responsePago = await axios.post("/api/pago", {
         fecha: new Date(),
-        monto: paquete.precio,
-        estado: "pendiente",
+        monto: totalPagar,
+        estado: "PENDIENTE",
         metodoDePago: pagoSeleccionado,
         tipoFactura: form.tipoFactura,
         nombreFacturacion: form.nombre,
@@ -207,7 +218,7 @@ const ReservarPaquete: React.FC = () => {
         fecha: new Date(),
         paqueteId: paquete.id,
         usuarioId: user.id,
-        estado: "pendiente",
+        estado: "PENDIENTE",
         personas: form.acompanantesData,
       });
 
@@ -230,8 +241,11 @@ const ReservarPaquete: React.FC = () => {
     out: { opacity: 0, x: -20 },
   };
 
-  const formatDate = (date: string) =>
-    new Date(date).toLocaleDateString("es-AR");
+  const formatDate = (date: Date) => new Date(date).toLocaleDateString("es-AR");
+
+  const rangoFechas = obtenerRangoFechasPaquete(paquete);
+  const cantidadPersonas = (form.acompanantes || 0) + 1;
+  const precioTotal = calcularPrecioTotalPaquete(paquete) * cantidadPersonas;
 
   return (
     <div className="reservar-container">
@@ -302,13 +316,16 @@ const ReservarPaquete: React.FC = () => {
               <div className="success-detail-item">
                 <span>Fechas</span>
                 <strong>
-                  {formatDate(paquete.fecha_ini)} -{" "}
-                  {formatDate(paquete.fecha_fin)}
+                  {rangoFechas?.fechaIni && rangoFechas?.fechaFin
+                    ? `${formatDate(rangoFechas.fechaIni)} - ${formatDate(
+                        rangoFechas.fechaFin,
+                      )}`
+                    : "No especificadas"}
                 </strong>
               </div>
               <div className="success-detail-item">
                 <span>Monto a pagar</span>
-                <strong>${paquete.precio}</strong>
+                <strong>${precioTotal}</strong>
               </div>
             </div>
             <Link
@@ -791,8 +808,11 @@ const ReservarPaquete: React.FC = () => {
                       <div className="summary-item">
                         <span className="summary-item-label">Fechas</span>
                         <span className="summary-item-value">
-                          {formatDate(paquete.fecha_ini)} -{" "}
-                          {formatDate(paquete.fecha_fin)}
+                          {rangoFechas?.fechaIni && rangoFechas?.fechaFin
+                            ? `${formatDate(rangoFechas.fechaIni)} - ${formatDate(
+                                rangoFechas.fechaFin,
+                              )}`
+                            : "No especificadas"}
                         </span>
                       </div>
                       <div className="summary-item">
@@ -820,7 +840,7 @@ const ReservarPaquete: React.FC = () => {
                           Total a pagar
                         </span>
                         <span className="summary-total-value">
-                          ${paquete.precio}
+                          ${precioTotal}
                         </span>
                       </div>
                     </div>
