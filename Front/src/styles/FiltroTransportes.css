@@ -221,8 +221,10 @@
 
 @media (max-width: 968px) {
   .filtro-transportes-sidebar {
-    width: 260px;
-    min-width: 260px;
+    width: 100%;
+    min-width: 100%;
+    position: static;
+    margin-bottom: 20px;
     padding: 20px;
   }
 

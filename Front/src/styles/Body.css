@@ -25,6 +25,21 @@
     background-size: cover;
 }
 
+/* ===== Responsive Body ===== */
+@media (max-width: 768px) {
+    .body-contenedor-buscador {
+        padding: 20px 20px;
+        height: 60vh;
+    }
+}
+
+@media (max-width: 480px) {
+    .body-contenedor-buscador {
+        padding: 16px 12px;
+        height: 50vh;
+    }
+}
+
 
 
 

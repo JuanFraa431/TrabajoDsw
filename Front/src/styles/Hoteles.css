@@ -245,3 +245,62 @@
     max-width: 100%;
   }
 }
+
+@media (max-width: 768px) {
+  .hoteles-container {
+    padding: 12px;
+    gap: 16px;
+  }
+
+  .hoteles-header {
+    margin-bottom: 20px;
+  }
+
+  .hoteles-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding: 0;
+  }
+
+  .hotel-card {
+    max-width: 100%;
+  }
+
+  .hotel-image-container {
+    height: 180px;
+  }
+
+  .hotel-content {
+    padding: 16px;
+    gap: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hoteles-container {
+    padding: 8px;
+  }
+
+  .hotel-image-container {
+    height: 150px;
+  }
+
+  .hotel-content {
+    padding: 12px;
+  }
+
+  .hotel-title {
+    font-size: 1.1rem;
+  }
+
+  .hotel-footer {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .hotel-btn {
+    text-align: center;
+    width: 100%;
+  }
+}

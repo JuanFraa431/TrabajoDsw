@@ -189,3 +189,91 @@
   transform: scale(1.05);
   background-color: #218838;
 }
+
+/* ===== Responsive DetalleCliente ===== */
+@media (max-width: 768px) {
+  .profile-container {
+    margin: 16px;
+    padding: 12px;
+  }
+
+  .profile-header {
+    flex-direction: column;
+    text-align: center;
+    border-radius: 10px 10px 0 0;
+    padding: 16px;
+  }
+
+  .profile-pic {
+    padding: 12px;
+  }
+
+  .profile-pic img {
+    width: 90px;
+    height: 90px;
+  }
+
+  .edit-icon {
+    width: 65px;
+    height: 65px;
+    font-size: 18px;
+  }
+
+  .profile-info {
+    align-items: center;
+    padding: 12px;
+  }
+
+  .profile-info h1 {
+    font-size: 20px;
+  }
+
+  .profile-buttons {
+    justify-content: center;
+  }
+
+  .personal-info p {
+    font-size: 15px;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .detalle-cliente-btn {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-container {
+    margin: 8px;
+    padding: 8px;
+  }
+
+  .profile-info h1 {
+    font-size: 18px;
+  }
+
+  .profile-buttons {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .btn-admin,
+  .btn-reservas {
+    width: 100%;
+    text-align: center;
+  }
+
+  .personal-info p {
+    font-size: 14px;
+  }
+
+  .detalle-cliente-btn {
+    font-size: 14px;
+    padding: 10px 16px;
+  }
+}

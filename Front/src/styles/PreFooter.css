@@ -130,3 +130,58 @@
     background-color: #0056b3;
     color: white;
 }
+
+/* ===== Responsive PreFooter ===== */
+@media (max-width: 768px) {
+    .suscripcion {
+        flex-direction: column;
+        text-align: center;
+        gap: 12px;
+    }
+
+    .suscripcion p {
+        margin-right: 0;
+    }
+
+    .suscripcion-input {
+        flex-direction: column;
+        width: 100%;
+        gap: 8px;
+    }
+
+    .suscripcion-input input {
+        width: 100%;
+        margin-right: 0;
+    }
+
+    .enlaces {
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
+    }
+
+    .footer-bottom {
+        flex-direction: column;
+        gap: 12px;
+        text-align: center;
+    }
+
+    .footer1 {
+        padding: 16px 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .columna h4 {
+        font-size: 14px;
+    }
+
+    .columna ul li a {
+        font-size: 13px;
+    }
+
+    .button-suscribe {
+        width: 100%;
+        text-align: center;
+    }
+}

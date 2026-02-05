@@ -205,3 +205,49 @@
         font-size: 1.2rem;
     }
 }
+
+@media screen and (max-width: 480px) {
+    .container-tarjeta {
+        padding: 10px;
+    }
+
+    .tarjeta {
+        max-width: 300px;
+        width: 100%;
+        height: 200px;
+    }
+
+    .numero {
+        font-size: 1rem;
+        letter-spacing: 1px;
+    }
+
+    .nombre {
+        font-size: 0.85rem;
+    }
+
+    .chip-image {
+        top: 50px;
+        width: 32px;
+    }
+
+    .numero {
+        top: 95px;
+    }
+
+    .nombre-container {
+        bottom: 28px;
+    }
+
+    .expiracion-container {
+        bottom: 28px;
+    }
+
+    .logo-marca img {
+        width: 42px;
+    }
+
+    .grupo label {
+        width: 100%;
+    }
+}
