@@ -124,24 +124,47 @@ async function remove(req: Request, res: Response) {
 async function search(req: Request, res: Response) {
   try {
     const { ciudad, fechaInicio, fechaFin } = req.query;
-    const paquetes = await em.getConnection().execute<Paquete[]>(
+    const idsResult = await em.getConnection().execute<{ id: number }[]>(
       `
-            SELECT DISTINCT p.*, c.latitud, c.longitud
-            FROM 
-                    paquete AS p
-                INNER JOIN
-                    estadia AS e ON p.id = e.paquete_id
-                INNER JOIN
-                    hotel AS h ON e.hotel_id = h.id
-                INNER JOIN 
-                    ciudad AS c ON h.ciudad_id = c.id
-            WHERE (c.nombre = ? OR ? = '') 
-            AND e.fecha_ini >= ? 
-            AND e.fecha_fin <= ? 
-            AND p.estado = 1
-        `,
+        SELECT DISTINCT p.id
+        FROM paquete AS p
+        INNER JOIN estadia AS e ON p.id = e.paquete_id
+        INNER JOIN hotel AS h ON e.hotel_id = h.id
+        INNER JOIN ciudad AS c ON h.ciudad_id = c.id
+        WHERE (c.nombre = ? OR ? = '')
+          AND e.fecha_ini >= ?
+          AND e.fecha_fin <= ?
+          AND p.estado = 1
+      `,
       [ciudad, ciudad, fechaInicio, fechaFin],
     );
+
+    const ids = idsResult.map((row) => row.id);
+    if (ids.length === 0) {
+      return res
+        .status(200)
+        .json({ message: "Paquetes encontrados", data: [] });
+    }
+
+    const paquetes = await em.find(
+      Paquete,
+      { id: { $in: ids }, estado: 1 },
+      {
+        populate: [
+          "ciudad",
+          "estadias",
+          "estadias.hotel",
+          "estadias.hotel.ciudad",
+          "paqueteExcursiones",
+          "paqueteExcursiones.excursion",
+          "paqueteTransportes",
+          "paqueteTransportes.transporte",
+          "paqueteTransportes.transporte.ciudadOrigen",
+          "paqueteTransportes.transporte.ciudadDestino",
+        ],
+      },
+    );
+
     res.status(200).json({ message: "Paquetes encontrados", data: paquetes });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
