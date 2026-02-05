@@ -289,36 +289,40 @@ const ReservasPendientes: React.FC = () => {
                 <div className="info-section">
                   <h4>Cliente</h4>
                   <p className="nombre">
-                    {reserva.usuario.nombre} {reserva.usuario.apellido}
+                    {reserva.usuario?.nombre || "N/A"}{" "}
+                    {reserva.usuario?.apellido || ""}
                   </p>
-                  <p className="email">{reserva.usuario.email}</p>
+                  <p className="email">{reserva.usuario?.email || "N/A"}</p>
                 </div>
 
                 <div className="info-section">
                   <h4>Paquete</h4>
-                  <p className="paquete-nombre">{reserva.paquete.nombre}</p>
+                  <p className="paquete-nombre">
+                    {reserva.paquete?.nombre || "N/A"}
+                  </p>
                   <p className="precio">
-                    {formatearMoneda(reserva.pago.monto)}
+                    {formatearMoneda(reserva.pago?.monto || 0)}
                   </p>
                 </div>
 
                 <div className="info-section">
                   <h4>Pago</h4>
                   <p>
-                    <strong>Método:</strong> {reserva.pago.metodoDePago}
+                    <strong>Método:</strong>{" "}
+                    {reserva.pago?.metodoDePago || "N/A"}
                   </p>
                   <p>
                     <strong>Monto:</strong>{" "}
-                    {formatearMoneda(reserva.pago.monto)}
+                    {formatearMoneda(reserva.pago?.monto || 0)}
                   </p>
-                  {reserva.pago.tipoFactura && (
+                  {reserva.pago?.tipoFactura && (
                     <p>
                       <strong>Tipo Factura:</strong> {reserva.pago.tipoFactura}
                     </p>
                   )}
                 </div>
 
-                {reserva.pago.nombreFacturacion && (
+                {reserva.pago?.nombreFacturacion && (
                   <div className="info-section">
                     <h4>Facturación</h4>
                     <p>
@@ -369,11 +373,12 @@ const ReservasPendientes: React.FC = () => {
               <p className="modal-confirm-text">
                 ¿Está seguro que desea rechazar la reserva de{" "}
                 <strong>
-                  {reservaSeleccionada.usuario.nombre}{" "}
-                  {reservaSeleccionada.usuario.apellido}
+                  {reservaSeleccionada.usuario?.nombre || "N/A"}{" "}
+                  {reservaSeleccionada.usuario?.apellido || ""}
                 </strong>{" "}
                 para el paquete "
-                <strong>{reservaSeleccionada.paquete.nombre}</strong>"?
+                <strong>{reservaSeleccionada.paquete?.nombre || "N/A"}</strong>
+                "?
               </p>
               <label htmlFor="motivo-rechazo" className="modal-label">
                 Motivo del rechazo:
