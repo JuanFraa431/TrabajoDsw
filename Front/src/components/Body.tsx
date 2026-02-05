@@ -7,6 +7,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Filtro from '../components/Filtro';
 import "../styles/Filtro.css";
+import { API_BASE_URL } from '../config/api';
 
 const BuscadorPaquetes: React.FC = () => {
     const today = new Date();
@@ -30,7 +31,7 @@ const BuscadorPaquetes: React.FC = () => {
         const formattedEndDate = endDate?.toLocaleDateString('en-CA');
 
         try {
-            const response = await axios.get(`http://localhost:3000/api/paquete/search`, {
+            const response = await axios.get(`${API_BASE_URL}/api/paquete/search`, {
                 params: {
                     ciudad: destination,
                     fechaInicio: formattedStartDate,

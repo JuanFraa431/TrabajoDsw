@@ -4,6 +4,7 @@ import { useLocation, Link, useNavigate } from "react-router-dom";
 import "../styles/CardDetail.css";
 import { Comentario } from "../interface/comentario";
 import userIcon from "../images/user-icon.png";
+import { API_BASE_URL } from "../config/api";
 import {
   FaTrash,
   FaCalendarAlt,
@@ -41,7 +42,7 @@ const CardDetail: React.FC = () => {
     const fetchPaquete = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/api/paquete/${id}`,
+          `${API_BASE_URL}/api/paquete/${id}`,
         );
         setPaquete(response.data.data);
       } catch (error) {
@@ -80,7 +81,7 @@ const CardDetail: React.FC = () => {
       };
 
       const response = await axios.post(
-        "http://localhost:3000/api/comentario",
+        `${API_BASE_URL}/api/comentario`,
         newComentario,
       );
 
@@ -117,7 +118,7 @@ const CardDetail: React.FC = () => {
 
     try {
       await axios.delete(
-        `http://localhost:3000/api/comentario/${comentarioId}`,
+        `${API_BASE_URL}/api/comentario/${comentarioId}`,
       );
       setComentarios((prev) =>
         prev.filter((comentario) => comentario.id !== comentarioId),

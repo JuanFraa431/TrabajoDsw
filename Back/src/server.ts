@@ -1,4 +1,7 @@
 import "reflect-metadata";
+import dotenv from "dotenv";
+dotenv.config();
+
 import { orm } from "./shared/db/orm.js";
 
 import express from "express";
@@ -44,7 +47,7 @@ app.use(
 
 const corsOrigins = parseCorsOrigins(
   process.env.CORS_ORIGINS,
-  "http://localhost:8080",
+  "http://localhost:8080,https://odysseytravels.infinityfreeapp.com",
 );
 
 app.use(

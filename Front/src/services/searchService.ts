@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { API_BASE_URL } from '../config/api';
 
 export const handleLinkClick = async (
   event: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
@@ -9,7 +10,7 @@ export const handleLinkClick = async (
     event.preventDefault();
 
     try {
-        const response = await axios.get(`http://localhost:3000/api/${endpoint}`);
+        const response = await axios.get(`${API_BASE_URL}/api/${endpoint}`);
         navigate(`/${route}`, { state: { [route]: response.data.data } });
         window.scrollTo(0, 0);
     } catch (error) {

@@ -51,9 +51,17 @@ const CardList: React.FC = () => {
     const fetchPaquetes = async () => {
       try {
         const response = await axios.get("/api/paquete/user");
-        setPaquetes(response.data.data);
+        // Verificar que la respuesta tenga datos válidos
+        const data = response.data?.data;
+        if (Array.isArray(data)) {
+          setPaquetes(data);
+        } else {
+          setPaquetes([]);
+        }
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Error desconocido");
+        console.error("Error fetching paquetes:", err);
+        setError(err instanceof Error ? err.message : "Error al cargar paquetes");
+        setPaquetes([]);
       } finally {
         setLoading(false);
       }
@@ -63,11 +71,31 @@ const CardList: React.FC = () => {
   }, []);
 
   if (loading) {
-    return <div>Cargando paquetes...</div>;
+    return <div className="container"><div className="card-list"><p>Cargando paquetes...</p></div></div>;
   }
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return (
+      <div className="container">
+        <div className="offer-container">
+          <div className="offer-text">
+            No se pudieron cargar los paquetes. Intente más tarde.
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!paquetes || paquetes.length === 0) {
+    return (
+      <div className="container">
+        <div className="offer-container">
+          <div className="offer-text">
+            No hay paquetes disponibles en este momento.
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (
