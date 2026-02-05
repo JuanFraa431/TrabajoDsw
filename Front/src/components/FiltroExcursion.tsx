@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../styles/FiltroExcursiones.css';
-import { API_BASE_URL } from '../config/api';
 
 interface FiltroVerticalExcursionesProps {
     onFiltrar: (filtros: { tipos: string[] }) => void;
@@ -19,7 +18,7 @@ const FiltroVerticalExcursiones: React.FC<FiltroVerticalExcursionesProps> = ({ o
     useEffect(() => {
         const obtenerTiposExcursion = async () => {
             try {
-                const response = await axios.get(`${API_BASE_URL}/api/excursion/tipo`);
+                const response = await axios.get('/api/excursion/tipo');
                 setTiposExcursion(response.data.data || []);
             } catch (error) {
                 console.error('Error al obtener tipos de excursión:', error);

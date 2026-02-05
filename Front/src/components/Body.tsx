@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import '../styles/Body.css';
-import video from '../images/esteEs.mp4';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Filtro from '../components/Filtro';
 import "../styles/Filtro.css";
-import { API_BASE_URL } from '../config/api';
+
+// Video alojado en Cloudinary para mejor rendimiento
+const VIDEO_URL = 'https://res.cloudinary.com/dy8lzfj2h/video/upload/v1770263036/esteEs.61bc836c6139e36ff221_gfcnb8.mp4';
 
 const BuscadorPaquetes: React.FC = () => {
     const today = new Date();
@@ -31,7 +32,7 @@ const BuscadorPaquetes: React.FC = () => {
         const formattedEndDate = endDate?.toLocaleDateString('en-CA');
 
         try {
-            const response = await axios.get(`${API_BASE_URL}/api/paquete/search`, {
+            const response = await axios.get(`/api/paquete/search`, {
                 params: {
                     ciudad: destination,
                     fechaInicio: formattedStartDate,
@@ -58,8 +59,16 @@ const BuscadorPaquetes: React.FC = () => {
         }
     };    return (
         <div className="body-contenedor-buscador">
-            <video autoPlay muted loop id="body-bgVideo">
-                <source src={video} type="video/mp4" />
+            <video 
+                autoPlay 
+                muted 
+                loop 
+                playsInline
+                id="body-bgVideo"
+                poster="https://res.cloudinary.com/dy8lzfj2h/image/upload/v1730385201/yn5rswhhqx3exh33iexv.jpg"
+            >
+                <source src={VIDEO_URL} type="video/mp4" />
+                Tu navegador no soporta videos HTML5.
             </video>
             <h2>NUESTROS PAQUETES</h2>
             <h1>Busca tu viaje ideal</h1>

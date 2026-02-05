@@ -4,7 +4,6 @@ import 'react-datepicker/dist/react-datepicker.css';
 import '../styles/Filtro.css';
 import axios from 'axios';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { API_BASE_URL } from '../config/api';
 
 const Filtro: React.FC<{ className?: string }> = ({ className = '' }) => {
     const today = new Date();
@@ -38,7 +37,7 @@ const Filtro: React.FC<{ className?: string }> = ({ className = '' }) => {
         const formattedEndDate = endDate?.toLocaleDateString('en-CA');
 
         try {
-            const response = await axios.get(`${API_BASE_URL}/api/paquete/search`, {
+            const response = await axios.get(`/api/paquete/search`, {
                 params: {
                     ciudad: destination,
                     fechaInicio: formattedStartDate,

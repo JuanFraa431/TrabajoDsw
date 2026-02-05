@@ -2,7 +2,6 @@ import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import '../styles/CardDetail.css';
-import { API_BASE_URL } from '../config/api';
 
 const CardDetailExcursion: React.FC = () => {
     const location = useLocation();
@@ -13,7 +12,7 @@ const CardDetailExcursion: React.FC = () => {
     useEffect(() => {
         const fetchExcursion = async () => {
             try {
-                const response = await axios.get(`${API_BASE_URL}/api/excursion/${id}`);
+                const response = await axios.get(`/api/excursion/${id}`);
                 setExcursion(response.data.data);
             } catch (error) {
                 console.error("Error fetching excursion:", error);
