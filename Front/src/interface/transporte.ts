@@ -16,4 +16,5 @@ export interface Transporte {
   precio?: number;
   asientos_disponibles?: number;
   activo?: boolean;
+  estado?: number;
 }

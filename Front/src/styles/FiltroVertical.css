@@ -87,6 +87,35 @@
   padding-right: 8px;
 }
 
+/* Barra de búsqueda para hoteles */
+.filtro-vertical-search {
+  margin-bottom: 12px;
+}
+
+.filtro-vertical-search-input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-family: 'Inter', sans-serif;
+  color: #1e293b;
+  background: #f8fafc;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.filtro-vertical-search-input:focus {
+  outline: none;
+  border-color: #027BFF;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(2, 123, 255, 0.1);
+}
+
+.filtro-vertical-search-input::placeholder {
+  color: #94a3b8;
+}
+
 .filtro-vertical-list::-webkit-scrollbar {
   width: 4px;
 }

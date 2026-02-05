@@ -124,17 +124,17 @@ async function remove(req: Request, res: Response) {
 async function search(req: Request, res: Response) {
   try {
     const { ciudad, fechaInicio, fechaFin } = req.query;
-    const paquetes = await em.getConnection().execute<Paquete[]>(
+    
+    // Primero obtenemos los IDs de los paquetes que cumplen con los filtros
+    const paqueteIds = await em.getConnection().execute<{ id: number }[]>(
       `
-            SELECT DISTINCT p.*, c.latitud, c.longitud
+            SELECT DISTINCT p.id
             FROM 
                     paquete AS p
+                INNER JOIN 
+                    ciudad AS c ON p.ciudad_id = c.id
                 INNER JOIN
                     estadia AS e ON p.id = e.paquete_id
-                INNER JOIN
-                    hotel AS h ON e.hotel_id = h.id
-                INNER JOIN 
-                    ciudad AS c ON h.ciudad_id = c.id
             WHERE (c.nombre = ? OR ? = '') 
             AND e.fecha_ini >= ? 
             AND e.fecha_fin <= ? 
@@ -142,6 +142,25 @@ async function search(req: Request, res: Response) {
         `,
       [ciudad, ciudad, fechaInicio, fechaFin],
     );
+
+    // Luego cargamos los paquetes completos con todas las relaciones necesarias
+    const ids = paqueteIds.map(p => p.id);
+    const paquetes = await em.find(
+      Paquete,
+      { id: { $in: ids } },
+      {
+        populate: [
+          "ciudad",
+          "estadias",
+          "estadias.hotel",
+          "paqueteExcursiones",
+          "paqueteExcursiones.excursion",
+          "paqueteTransportes",
+          "paqueteTransportes.transporte",
+        ],
+      },
+    );
+
     res.status(200).json({ message: "Paquetes encontrados", data: paquetes });
   } catch (error: any) {
     res.status(500).json({ message: error.message });

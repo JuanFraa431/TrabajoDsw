@@ -1,0 +1,296 @@
+/* Modern Filtro Transportes Sidebar Styles */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* Sidebar principal */
+.filtro-transportes-sidebar {
+  width: 300px;
+  min-width: 300px;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 24px;
+  height: fit-content;
+  position: sticky;
+  top: 24px;
+  box-shadow: 
+    0 1px 3px rgba(0, 0, 0, 0.05),
+    0 4px 6px rgba(0, 0, 0, 0.05),
+    0 10px 15px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  font-family: 'Inter', sans-serif;
+}
+
+/* Header del filtro */
+.filtro-transportes-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.filtro-transportes-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+}
+
+.filtro-transportes-clear {
+  background: none;
+  border: 1px solid #e2e8f0;
+  color: #64748b;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.filtro-transportes-clear:hover {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+  color: #475569;
+}
+
+/* Sección de filtros */
+.filtro-transportes-section {
+  margin-bottom: 24px;
+}
+
+.filtro-transportes-section-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #374151;
+  margin: 0 0 16px 0;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #f3f4f6;
+}
+
+/* Contenedor de opciones */
+.filtro-transportes-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Opciones individuales */
+.filtro-transportes-option {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid transparent;
+  background: #f8fafc;
+  position: relative;
+}
+
+.filtro-transportes-option:hover {
+  background: #e2e8f0;
+  border-color: #cbd5e1;
+}
+
+.filtro-transportes-option:has(.filtro-transportes-checkbox:checked) {
+  background: linear-gradient(135deg, #ede9fe, #ddd6fe);
+  border-color: #8b5cf6;
+}
+
+/* Checkbox personalizado */
+.filtro-transportes-checkbox {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+/* Checkmark personalizado */
+.filtro-transportes-checkmark {
+  position: relative;
+  height: 20px;
+  width: 20px;
+  background: #ffffff;
+  border: 2px solid #d1d5db;
+  border-radius: 6px;
+  margin-right: 12px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  flex-shrink: 0;
+}
+
+.filtro-transportes-checkmark::after {
+  content: "";
+  position: absolute;
+  display: none;
+  left: 6px;
+  top: 2px;
+  width: 6px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.filtro-transportes-checkbox:checked ~ .filtro-transportes-checkmark {
+  background: #8b5cf6;
+  border-color: #8b5cf6;
+}
+
+.filtro-transportes-checkbox:checked ~ .filtro-transportes-checkmark::after {
+  display: block;
+}
+
+/* Labels */
+.filtro-transportes-label {
+  font-size: 0.875rem;
+  color: #374151;
+  font-weight: 500;
+  line-height: 1.4;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.filtro-transportes-count {
+  font-size: 0.75rem;
+  color: #64748b;
+  background: #e2e8f0;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-weight: 600;
+  margin-left: 8px;
+}
+
+.filtro-transportes-checkbox:checked ~ .filtro-transportes-label .filtro-transportes-count {
+  background: rgba(139, 92, 246, 0.2);
+  color: #8b5cf6;
+}
+
+/* Enhanced animations and effects */
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.filtro-transportes-sidebar {
+  animation: slideInLeft 0.5s ease-out;
+}
+
+/* Ripple effect for checkboxes */
+.filtro-transportes-option {
+  position: relative;
+  overflow: hidden;
+}
+
+.filtro-transportes-option::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(139, 92, 246, 0.1);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.filtro-transportes-option:active::before {
+  width: 200px;
+  height: 200px;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .filtro-transportes-sidebar {
+    width: 280px;
+    min-width: 280px;
+  }
+}
+
+@media (max-width: 968px) {
+  .filtro-transportes-sidebar {
+    width: 260px;
+    min-width: 260px;
+    padding: 20px;
+  }
+
+  .filtro-transportes-title {
+    font-size: 1.125rem;
+  }
+
+  .filtro-transportes-section-title {
+    font-size: 0.9375rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .filtro-transportes-sidebar {
+    width: 100%;
+    min-width: 100%;
+    position: static;
+    margin-bottom: 24px;
+  }
+}
+
+/* Scrollbar customization */
+.filtro-transportes-options::-webkit-scrollbar {
+  width: 6px;
+}
+
+.filtro-transportes-options::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 10px;
+}
+
+.filtro-transportes-options::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
+}
+
+.filtro-transportes-options::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Loading state */
+.filtro-transportes-loading {
+  text-align: center;
+  padding: 24px;
+  color: #64748b;
+  font-size: 0.875rem;
+}
+
+/* Empty state */
+.filtro-transportes-empty {
+  text-align: center;
+  padding: 24px;
+  color: #94a3b8;
+  font-size: 0.875rem;
+  font-style: italic;
+}
+
+/* Badge styles for option counts */
+.filtro-transportes-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  height: 24px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0 8px;
+}

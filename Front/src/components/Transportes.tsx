@@ -1,226 +1,206 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Transporte } from '../interface/transporte';
-import { Ciudad } from '../interface/ciudad';
-import { TipoTransporte } from '../interface/tipoTransporte';
-import '../styles/Transportes.css';
+import '../styles/Transportes.css'; 
+import { useLocation, useNavigate } from 'react-router-dom';
+import { Transporte } from '../interface/transporte'; 
+import FiltroVerticalTransportes from './FiltroTransporte'; 
 
 const Transportes: React.FC = () => {
-  const [transportes, setTransportes] = useState<Transporte[]>([]);
-  const [ciudades, setCiudades] = useState<Ciudad[]>([]);
-  const [tiposTransporte, setTiposTransporte] = useState<TipoTransporte[]>([]);
-  const [loading, setLoading] = useState(true);
+    const location = useLocation();
+    const navigate = useNavigate(); 
+    const [transportes, setTransportes] = useState<Transporte[]>(location.state?.transportes || []); 
+    const [loading, setLoading] = useState<boolean>(false);
+    const [error, setError] = useState<string>('');
+    const [filtros, setFiltros] = useState<{ 
+        tipos: string[], 
+        ciudadesOrigen: string[], 
+        ciudadesDestino: string[] 
+    }>({ 
+        tipos: [], 
+        ciudadesOrigen: [], 
+        ciudadesDestino: [] 
+    });
 
-  // Filtros
-  const [tipoTransporte, setTipoTransporte] = useState<string>('');
-  const [ciudadOrigen, setCiudadOrigen] = useState<string>('');
-  const [ciudadDestino, setCiudadDestino] = useState<string>('');
+    useEffect(() => {
+        // Solo cargar desde la API si no hay transportes en el state
+        if (!location.state?.transportes || location.state.transportes.length === 0) {
+            cargarTransportes();
+        }
+    }, []);
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+    const cargarTransportes = async () => {
+        setLoading(true);
+        setError('');
+        try {
+            const response = await axios.get('/api/transporte');
+            if (response.data && response.data.data) {
+                setTransportes(response.data.data);
+            }
+        } catch (error: any) {
+            console.error('Error al cargar transportes:', error);
+            setError('Error al cargar los transportes. Por favor, intenta nuevamente.');
+        } finally {
+            setLoading(false);
+        }
+    };
 
-  const fetchData = async () => {
-    try {
-      const [transportesRes, ciudadesRes, tiposRes] = await Promise.all([
-        axios.get('/api/transporte'),
-        axios.get('/api/ciudad'),
-        axios.get('/api/tipoTransporte')
-      ]);
-      
-      setTransportes(transportesRes.data.data || []);
-      setCiudades(ciudadesRes.data.data || []);
-      setTiposTransporte(tiposRes.data.data || []);
-      setLoading(false);
-    } catch (error) {
-      console.error('Error al cargar datos:', error);
-      setLoading(false);
-    }
-  };
+    const manejarFiltrado = ({ tipos, ciudadesOrigen, ciudadesDestino }: { 
+        tipos: string[], 
+        ciudadesOrigen: string[], 
+        ciudadesDestino: string[] 
+    }) => {
+        setFiltros({ tipos, ciudadesOrigen, ciudadesDestino });
+    };
 
-  const transportesFiltrados = transportes.filter(t => {
-    if (tipoTransporte && t.tipoTransporte?.id !== Number(tipoTransporte)) return false;
-    if (ciudadOrigen && t.ciudadOrigen?.id !== Number(ciudadOrigen)) return false;
-    if (ciudadDestino && t.ciudadDestino?.id !== Number(ciudadDestino)) return false;
-    return true;
-  });
+    const transportesFiltrados = transportes.filter((transporte: Transporte) => {
+        const cumpleTipo = filtros.tipos.length === 0 || 
+            (transporte.tipoTransporte && filtros.tipos.includes(transporte.tipoTransporte.nombre));
+        
+        const cumpleOrigen = filtros.ciudadesOrigen.length === 0 || 
+            (transporte.ciudadOrigen && filtros.ciudadesOrigen.includes(transporte.ciudadOrigen.nombre));
+        
+        const cumpleDestino = filtros.ciudadesDestino.length === 0 || 
+            (transporte.ciudadDestino && filtros.ciudadesDestino.includes(transporte.ciudadDestino.nombre));
+        
+        return cumpleTipo && cumpleOrigen && cumpleDestino;
+    });
 
-  if (loading) {
-    return <div style={{ padding: '50px', textAlign: 'center' }}>Cargando transportes...</div>;
-  }
-
-  return (
-    <div style={{ padding: '40px', maxWidth: '1400px', margin: '0 auto' }}>
-      <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-        <h1>Reservá tu Transporte</h1>
-        <p>Encontrá los mejores vuelos y viajes en colectivo</p>
-      </div>
-
-      {/* Filtros */}
-      <div style={{ 
-        background: 'white', 
-        padding: '30px', 
-        borderRadius: '12px', 
-        marginBottom: '30px',
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-        gap: '20px'
-      }}>
-        <div>
-          <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600' }}>Tipo</label>
-          <select 
-            value={tipoTransporte} 
-            onChange={(e) => setTipoTransporte(e.target.value)}
-            style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '2px solid #e0e0e0' }}
-          >
-            <option value="">Todos</option>
-            {tiposTransporte.map(tipo => (
-              <option key={tipo.id} value={tipo.id}>{tipo.nombre}</option>
-            ))}
-          </select>
-        </div>
-
-        <div>
-          <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600' }}>Origen</label>
-          <select 
-            value={ciudadOrigen} 
-            onChange={(e) => setCiudadOrigen(e.target.value)}
-            style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '2px solid #e0e0e0' }}
-          >
-            <option value="">Todas</option>
-            {ciudades.map(c => (
-              <option key={c.id} value={c.id}>{c.nombre}</option>
-            ))}
-          </select>
-        </div>
-
-        <div>
-          <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600' }}>Destino</label>
-          <select 
-            value={ciudadDestino} 
-            onChange={(e) => setCiudadDestino(e.target.value)}
-            style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '2px solid #e0e0e0' }}
-          >
-            <option value="">Todas</option>
-            {ciudades.map(c => (
-              <option key={c.id} value={c.id}>{c.nombre}</option>
-            ))}
-          </select>
-        </div>
-
-        <button 
-          onClick={() => { setTipoTransporte(''); setCiudadOrigen(''); setCiudadDestino(''); }}
-          style={{ 
-            padding: '10px 20px', 
-            background: '#95a5a6', 
-            color: 'white', 
-            border: 'none', 
-            borderRadius: '8px',
-            cursor: 'pointer',
-            alignSelf: 'end'
-          }}
-        >
-          Limpiar
-        </button>
-      </div>
-
-      {/* Resultados */}
-      <h2 style={{ marginBottom: '20px' }}>
-        {transportesFiltrados.length} resultado{transportesFiltrados.length !== 1 ? 's' : ''}
-      </h2>
-
-      {transportesFiltrados.length === 0 ? (
-        <div style={{ textAlign: 'center', padding: '60px', color: '#7f8c8d' }}>
-          <p>No se encontraron transportes</p>
-        </div>
-      ) : (
-        <div style={{ 
-          display: 'grid', 
-          gridTemplateColumns: 'repeat(auto-fill, minmax(400px, 1fr))', 
-          gap: '30px' 
-        }}>
-          {transportesFiltrados.map(t => (
-            <div key={t.id} style={{ 
-              background: 'white', 
-              borderRadius: '16px', 
-              boxShadow: '0 4px 16px rgba(0,0,0,0.1)',
-              overflow: 'hidden'
-            }}>
-              <div style={{ 
-                padding: '20px', 
-                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                color: 'white',
-                display: 'flex',
-                justifyContent: 'space-between'
-              }}>
-                <span style={{ 
-                  background: 'white', 
-                  color: '#667eea', 
-                  padding: '6px 16px', 
-                  borderRadius: '20px',
-                  fontWeight: 'bold'
-                }}>
-                  {t.tipoTransporte?.nombre || 'N/A'}
-                </span>
-                <span>{t.nombre_empresa}</span>
-              </div>
-
-              <div style={{ padding: '30px 20px', background: '#f8f9fa' }}>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr', gap: '20px', alignItems: 'center' }}>
-                  <div style={{ textAlign: 'center' }}>
-                    <h3 style={{ margin: '0 0 5px 0' }}>{t.ciudadOrigen?.nombre || 'N/A'}</h3>
-                    <small style={{ color: '#7f8c8d' }}>{t.ciudadOrigen?.pais}</small>
-                  </div>
-                  <div style={{ fontSize: '2.5em' }}>
-                    {t.tipoTransporte?.nombre === 'Avión' ? '✈️' : '🚌'}
-                  </div>
-                  <div style={{ textAlign: 'center' }}>
-                    <h3 style={{ margin: '0 0 5px 0' }}>{t.ciudadDestino?.nombre || 'N/A'}</h3>
-                    <small style={{ color: '#7f8c8d' }}>{t.ciudadDestino?.pais}</small>
-                  </div>
+    if (loading) {
+        return (
+            <div className="transportes-container">
+                <div className="transportes-content">
+                    <div className="transportes-loading">
+                        <div className="loading-spinner"></div>
+                        <p>Cargando transportes...</p>
+                    </div>
                 </div>
-              </div>
-
-              <div style={{ padding: '20px' }}>
-                <p style={{ color: '#555', marginBottom: '15px' }}>{t.descripcion}</p>
-                <div style={{ fontSize: '0.9em', color: '#7f8c8d' }}>
-                  <div>📍 {t.nombre}</div>
-                  <div>💺 {t.capacidad} asientos</div>
-                </div>
-              </div>
-
-              <div style={{ 
-                padding: '20px', 
-                background: '#f8f9fa', 
-                display: 'flex', 
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                borderTop: '1px solid #e0e0e0'
-              }}>
-                <div>
-                  <div style={{ fontSize: '0.85em', color: '#7f8c8d' }}>Precio</div>
-                  <div style={{ fontSize: '1.8em', fontWeight: 'bold', color: '#27ae60' }}>
-                    ${t.precio || 0}
-                  </div>
-                </div>
-                <button style={{ 
-                  padding: '12px 32px',
-                  background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '25px',
-                  fontWeight: 'bold',
-                  cursor: 'pointer'
-                }}>
-                  Reservar
-                </button>
-              </div>
             </div>
-          ))}
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="transportes-container">
+                <div className="transportes-content">
+                    <div className="transportes-error">
+                        <div className="error-icon">⚠️</div>
+                        <h3>Error al cargar transportes</h3>
+                        <p>{error}</p>
+                        <button onClick={cargarTransportes} className="retry-btn">
+                            Reintentar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    return (
+        <div className="transportes-container">
+            <FiltroVerticalTransportes 
+                transportes={transportes}
+                onFiltrar={manejarFiltrado} 
+            />
+            <div className="transportes-content">
+                <div className="transportes-header">
+                    <h1 className="transportes-title">Transportes Disponibles</h1>
+                    <p className="transportes-subtitle">
+                        {transportesFiltrados.length === transportes.length 
+                            ? `Encuentra el mejor transporte para tu viaje`
+                            : `Mostrando ${transportesFiltrados.length} de ${transportes.length} transportes`
+                        }
+                    </p>
+                </div>
+                <div className="transportes-grid">
+                    {transportesFiltrados.length > 0 ? (
+                        transportesFiltrados.map((transporte: Transporte) => (
+                            <div className="transporte-card" key={transporte.id}>
+                                <div className="transporte-header">
+                                    <div className="transporte-type-badge">
+                                        <span className="transporte-icon">
+                                            {transporte.tipoTransporte?.nombre === 'Avión' ? '✈️' : 
+                                             transporte.tipoTransporte?.nombre === 'Colectivo' ? '🚌' :
+                                             transporte.tipoTransporte?.nombre === 'Tren' ? '🚂' :
+                                             transporte.tipoTransporte?.nombre === 'Barco' ? '⛴️' : '🚗'}
+                                        </span>
+                                        <span className="transporte-type">{transporte.tipoTransporte?.nombre || 'N/A'}</span>
+                                    </div>
+                                    <div className="transporte-empresa">{transporte.nombre_empresa}</div>
+                                </div>
+
+                                <div className="transporte-route">
+                                    <div className="route-location">
+                                        <div className="location-name">{transporte.ciudadOrigen?.nombre || 'N/A'}</div>
+                                        <div className="location-country">{transporte.ciudadOrigen?.pais || ''}</div>
+                                    </div>
+                                    <div className="route-arrow">
+                                        <div className="arrow-line"></div>
+                                        <span className="arrow-icon">→</span>
+                                    </div>
+                                    <div className="route-location">
+                                        <div className="location-name">{transporte.ciudadDestino?.nombre || 'N/A'}</div>
+                                        <div className="location-country">{transporte.ciudadDestino?.pais || ''}</div>
+                                    </div>
+                                </div>
+
+                                <div className="transporte-content">
+                                    <div className="transporte-name">
+                                        <span className="name-icon">📍</span>
+                                        {transporte.nombre}
+                                    </div>
+                                    
+                                    {transporte.descripcion && (
+                                        <p className="transporte-description">{transporte.descripcion}</p>
+                                    )}
+
+                                    <div className="transporte-info">
+                                        <div className="info-item">
+                                            <span className="info-icon">💺</span>
+                                            <span className="info-text">{transporte.capacidad} asientos</span>
+                                        </div>
+                                        {transporte.estado === 1 && (
+                                            <div className="info-item available">
+                                                <span className="info-icon">✅</span>
+                                                <span className="info-text">Disponible</span>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+
+                                <div className="transporte-footer">
+                                    <div className="transporte-price">
+                                        <span className="price-label">Precio</span>
+                                        <span className="price-amount">${transporte.precio || 0}</span>
+                                        <span className="price-person">por persona</span>
+                                    </div>
+                                    <button 
+                                        className="transporte-btn"
+                                        onClick={() => {
+                                            // Aquí puedes agregar la funcionalidad de reserva/detalle
+                                            console.log('Reservar transporte:', transporte.id);
+                                        }}
+                                    >
+                                        Reservar
+                                    </button>
+                                </div>
+                            </div>
+                        ))
+                    ) : (
+                        <div className="transportes-empty">
+                            <div className="empty-icon">🔍</div>
+                            <h3>No se encontraron transportes</h3>
+                            <p>
+                                {transportes.length > 0 
+                                    ? 'Intenta ajustar los filtros para encontrar más opciones'
+                                    : 'No hay transportes disponibles en este momento'
+                                }
+                            </p>
+                        </div>
+                    )}
+                </div>
+            </div>
         </div>
-      )}
-    </div>
-  );
+    );
 };
 
 export default Transportes;

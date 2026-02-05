@@ -268,21 +268,20 @@ async function googleLogin(req: Request, res: Response) {
     let usuario = await em.findOne(Usuario, { email: payload.email });
 
     if (!usuario) {
-      console.log("User not found, creating new user");
-      usuario = em.create(Usuario, {
-        username: payload.email.split("@")[0], // Usar parte antes del @ como username
-        email: payload.email,
-        password: "", // Usuario de Google no necesita contraseña
-        estado: 1,
-        tipo_usuario: "CLIENTE",
-        imagen: payload.picture || "",
-        nombre: payload.given_name || "",
-        apellido: payload.family_name || "",
-        dni: "",
-        fecha_nacimiento: new Date(),
+      console.log("User not found, needs to complete registration");
+      // No crear el usuario automáticamente, retornar información para completar registro
+      return res.status(202).json({
+        message: "Usuario nuevo, necesita completar información",
+        needsCompletion: true,
+        data: {
+          email: payload.email,
+          googleId: payload.sub,
+          imagen: payload.picture || "",
+          nombre: payload.given_name || "",
+          apellido: payload.family_name || "",
+          token: googleToken,
+        },
       });
-      await em.persistAndFlush(usuario);
-      console.log("New user created with ID:", usuario.id);
     } else {
       console.log("Existing user found with ID:", usuario.id);
       // Actualizar información del usuario si es necesario
@@ -318,4 +317,94 @@ async function googleLogin(req: Request, res: Response) {
   }
 }
 
-export { findAll, findOne, create, update, remove, login, googleLogin };
+async function completeGoogleRegistration(req: Request, res: Response) {
+  try {
+    const { token: googleToken, username, nombre, apellido, dni, fecha_nacimiento } = req.body;
+
+    console.log("Complete Google registration request");
+
+    // Validar datos requeridos
+    if (!googleToken || !username || !nombre || !apellido || !dni || !fecha_nacimiento) {
+      return res.status(400).json({ message: "Todos los campos son requeridos" });
+    }
+
+    // Verificar el token de Google
+    let payload;
+    try {
+      const ticket = await googleClient.verifyIdToken({
+        idToken: googleToken,
+        audience: "1013873914332-sf1up07lqjoch6tork8cpfohi32st8pi.apps.googleusercontent.com",
+      });
+      payload = ticket.getPayload();
+    } catch (error) {
+      console.error("Error verificando el token de Google:", error);
+      return res.status(401).json({ message: "Token de Google inválido o expirado" });
+    }
+
+    if (!payload || !payload.email) {
+      return res.status(401).json({ message: "Token de Google inválido - falta email" });
+    }
+
+    // Verificar que el usuario no exista ya
+    const existingUser = await em.findOne(Usuario, { email: payload.email });
+    if (existingUser) {
+      return res.status(409).json({ message: "El usuario ya existe" });
+    }
+
+    // Verificar que el username no esté en uso
+    const existingUsername = await em.findOne(Usuario, { username });
+    if (existingUsername) {
+      return res.status(409).json({ message: "El nombre de usuario ya está en uso" });
+    }
+
+    // Verificar que el DNI no esté en uso
+    const existingDni = await em.findOne(Usuario, { dni });
+    if (existingDni) {
+      return res.status(409).json({ message: "El DNI ya está en uso" });
+    }
+
+    // Procesar fecha de nacimiento
+    const fechaUTC = new Date(fecha_nacimiento);
+    if (Number.isNaN(fechaUTC.getTime())) {
+      return res.status(400).json({ message: "Fecha de nacimiento inválida" });
+    }
+    fechaUTC.setUTCHours(10, 0, 0, 0);
+
+    // Crear el nuevo usuario
+    const usuario = em.create(Usuario, {
+      username,
+      email: payload.email,
+      password: "", // Usuario de Google no necesita contraseña
+      estado: 1,
+      tipo_usuario: "CLIENTE",
+      imagen: payload.picture || "",
+      nombre,
+      apellido,
+      dni,
+      fecha_nacimiento: fechaUTC,
+    });
+
+    await em.persistAndFlush(usuario);
+    console.log("Google user completed registration with ID:", usuario.id);
+
+    // Generar JWT token
+    const jwtToken = jwt.sign(
+      { id: usuario.id, username: usuario.username },
+      process.env.JWT_SECRET || "secreto_del_token",
+      { expiresIn: "1h" },
+    );
+
+    return res.status(201).json({
+      message: "Registro completado exitosamente",
+      data: { usuario, token: jwtToken },
+    });
+  } catch (error: any) {
+    console.error("Complete Google registration error:", error);
+    return res.status(500).json({
+      message: "Error en el servidor",
+      error: error.message,
+    });
+  }
+}
+
+export { findAll, findOne, create, update, remove, login, googleLogin, completeGoogleRegistration };

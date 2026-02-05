@@ -14,6 +14,8 @@ const FiltroVertical: React.FC<FiltroVerticalProps> = ({ paquetes, onFilterChang
         hoteles: [] as string[],
         ciudades: [] as string[],
     });
+    
+    const [busquedaHotel, setBusquedaHotel] = useState('');
 
     // Extraer datos únicos de los paquetes
     const hotelesUnicos = useMemo(() => {
@@ -97,22 +99,39 @@ const FiltroVertical: React.FC<FiltroVerticalProps> = ({ paquetes, onFilterChang
             hoteles: [],
             ciudades: [],
         });
+        setBusquedaHotel('');
     };
 
     useEffect(() => {
         onFilterChange(selectedFilters);
     }, [selectedFilters]);
 
-    if (!isLoaded) return <div>Cargando mapa...</div>;    return (
+    return (
         <div className="filtro-vertical">
             <div className="filtro-vertical-map-section">
-                <GoogleMap
-                    mapContainerStyle={{ width: '100%', height: '300px', borderRadius: '12px' }}
-                    center={{ lat, lng }}
-                    zoom={10}
-                >
-                    <Marker position={{ lat, lng }} />
-                </GoogleMap>
+                {!isLoaded ? (
+                    <div style={{ 
+                        width: '100%', 
+                        height: '300px', 
+                        borderRadius: '12px', 
+                        background: '#f1f5f9',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        color: '#64748b',
+                        fontSize: '0.875rem'
+                    }}>
+                        Cargando mapa...
+                    </div>
+                ) : (
+                    <GoogleMap
+                        mapContainerStyle={{ width: '100%', height: '300px', borderRadius: '12px' }}
+                        center={{ lat, lng }}
+                        zoom={10}
+                    >
+                        <Marker position={{ lat, lng }} />
+                    </GoogleMap>
+                )}
             </div>
 
             <div className="filtro-vertical-scroll-container">
@@ -171,21 +190,34 @@ const FiltroVertical: React.FC<FiltroVerticalProps> = ({ paquetes, onFilterChang
                 {hotelesUnicos.length > 0 && (
                     <div className="filtro-vertical-section">
                         <h3 className="filtro-vertical-title">Hotel</h3>
+                        <div className="filtro-vertical-search">
+                            <input
+                                type="text"
+                                placeholder="Buscar hotel..."
+                                value={busquedaHotel}
+                                onChange={(e) => setBusquedaHotel(e.target.value)}
+                                className="filtro-vertical-search-input"
+                            />
+                        </div>
                         <div className="filtro-vertical-list">
-                            {hotelesUnicos.map(hotel => (
-                                <div key={hotel} className="filtro-vertical-item">
-                                    <input
-                                        type="checkbox"
-                                        id={`hotel-${hotel}`}
-                                        checked={selectedFilters.hoteles.includes(hotel)}
-                                        onChange={() => handleHotelChange(hotel)}
-                                        className="filtro-vertical-checkbox"
-                                    />
-                                    <label htmlFor={`hotel-${hotel}`} className="filtro-vertical-label">
-                                        {hotel}
-                                    </label>
-                                </div>
-                            ))}
+                            {hotelesUnicos
+                                .filter(hotel => 
+                                    hotel.toLowerCase().includes(busquedaHotel.toLowerCase())
+                                )
+                                .map(hotel => (
+                                    <div key={hotel} className="filtro-vertical-item">
+                                        <input
+                                            type="checkbox"
+                                            id={`hotel-${hotel}`}
+                                            checked={selectedFilters.hoteles.includes(hotel)}
+                                            onChange={() => handleHotelChange(hotel)}
+                                            className="filtro-vertical-checkbox"
+                                        />
+                                        <label htmlFor={`hotel-${hotel}`} className="filtro-vertical-label">
+                                            {hotel}
+                                        </label>
+                                    </div>
+                                ))}
                         </div>
                     </div>
                 )}
