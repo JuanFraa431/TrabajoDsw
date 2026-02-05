@@ -9,6 +9,7 @@ export interface Hotel {
   email: string;
   estrellas: number;
   precio_x_dia: number;
+  imagen?: string;
   id_ciudad?: number; // For form data
   ciudad?: Ciudad; // For populated data from backend
 }

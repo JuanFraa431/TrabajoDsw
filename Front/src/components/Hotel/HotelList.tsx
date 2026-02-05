@@ -5,6 +5,10 @@ import "../../styles/List.css";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import axios from "axios";
+import {
+  setupCloudinaryUpload,
+  getCloudinaryImageFieldHTML,
+} from "../../utils/cloudinaryUtils";
 
 interface HotelListProps {
   hoteles: Hotel[];
@@ -94,6 +98,7 @@ const HotelList: React.FC<HotelListProps> = ({
             <label>Precio por día ($)</label>
             <input id="swal-input-precio" type="number" min="0" step="0.01" value="${hotel.precio_x_dia}" />
           </div>
+          ${getCloudinaryImageFieldHTML(hotel.imagen || "", "swal")}
         </div>
       `,
       customClass: {
@@ -111,6 +116,7 @@ const HotelList: React.FC<HotelListProps> = ({
         if (ciudadSelect && ciudadId) {
           ciudadSelect.value = ciudadId.toString();
         }
+        setupCloudinaryUpload("swal-input-file", "swal-input-imagen", "swal-upload-status");
       },
       preConfirm: () => {
         const nombre = (
@@ -144,6 +150,9 @@ const HotelList: React.FC<HotelListProps> = ({
             ?.value,
           10,
         );
+        const imagen = (
+          document.getElementById("swal-input-imagen") as HTMLInputElement
+        )?.value;
 
         // Validación mejorada
         if (!nombre?.trim()) {
@@ -191,6 +200,7 @@ const HotelList: React.FC<HotelListProps> = ({
           estrellas,
           precio_x_dia,
           id_ciudad,
+          imagen,
         };
       },
     }).then(async (result) => {
@@ -299,10 +309,14 @@ const HotelList: React.FC<HotelListProps> = ({
             <label>Precio por día ($)</label>
             <input id="swal-input-precio" type="number" min="0" step="0.01" placeholder="150.00" />
           </div>
+          ${getCloudinaryImageFieldHTML("", "swal")}
         </div>
       `,
       customClass: {
         popup: "swal-wide",
+      },
+      didOpen: () => {
+        setupCloudinaryUpload("swal-input-file", "swal-input-imagen", "swal-upload-status");
       },
       showCancelButton: true,
       confirmButtonText: "Crear",
@@ -341,6 +355,9 @@ const HotelList: React.FC<HotelListProps> = ({
             ?.value,
           10,
         );
+        const imagen = (
+          document.getElementById("swal-input-imagen") as HTMLInputElement
+        )?.value?.trim();
 
         // Validación mejorada para crear
         if (!nombre?.trim()) {
@@ -389,6 +406,7 @@ const HotelList: React.FC<HotelListProps> = ({
           estrellas,
           precio_x_dia,
           id_ciudad,
+          imagen,
         };
       },
     }).then(async (result) => {

@@ -10,6 +10,10 @@ import {
   calcularPrecioTotalPaquete,
   obtenerRangoFechasPaquete,
 } from "../../utils/paqueteUtils";
+import {
+  setupCloudinaryUpload,
+  getCloudinaryImageFieldHTMLFullWidth,
+} from "../../utils/cloudinaryUtils";
 
 import "../../styles/List.css";
 import "../../styles/Cliente/ClienteList.css";
@@ -64,14 +68,14 @@ const handleEditPaquete = (
           <textarea id="swal-input-detalle" placeholder="Detalle">${detalle}</textarea>
         </div>
 
-        <div class="sweet-form-row">
-          <label for="swal-input-imagen">URL de Imagen</label>
-          <input id="swal-input-imagen" placeholder="https://..." value="${imagen}" />
-        </div>
+        ${getCloudinaryImageFieldHTMLFullWidth(imagen, "swal")}
       </div>
     `,
     customClass: {
       popup: "swal-wide",
+    },
+    didOpen: () => {
+      setupCloudinaryUpload("swal-input-file", "swal-input-imagen", "swal-upload-status");
     },
     showCancelButton: true,
     confirmButtonText: "Guardar",
@@ -186,14 +190,14 @@ const handleCreatePaquete = (
           <textarea id="swal-input-detalle" placeholder="Detalle completo"></textarea>
         </div>
 
-        <div class="sweet-form-row">
-          <label for="swal-input-imagen">URL de Imagen</label>
-          <input id="swal-input-imagen" placeholder="https://..." />
-        </div>
+        ${getCloudinaryImageFieldHTMLFullWidth("", "swal")}
       </div>
     `,
     customClass: {
       popup: "swal-wide",
+    },
+    didOpen: () => {
+      setupCloudinaryUpload("swal-input-file", "swal-input-imagen", "swal-upload-status");
     },
     showCancelButton: true,
     confirmButtonText: "Crear",

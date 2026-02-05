@@ -16,7 +16,6 @@ const Card: React.FC<Paquete> = ({
   const navigate = useNavigate();
 
   const handleViewPackage = () => {
-    // Navega a /cardDetail pasando el id en el state
     navigate(`/cardDetail`, { state: { id } });
   };
 
@@ -30,13 +29,13 @@ const Card: React.FC<Paquete> = ({
         <h2>{nombre}</h2>
         <p className="p-body">{detalle}</p>
         <div className="card-footer">
-          <p className="p-footer">Precio por persona</p>
-          <h4>${precioCalculado}</h4>
+          <p>Precio por persona</p>
+          <h4>${precioCalculado.toLocaleString()}</h4>
           <p>Incluye impuestos, tasas y cargos</p>
+          <button className="boton-ver" onClick={handleViewPackage}>
+            Ver Alojamiento
+          </button>
         </div>
-        <button className="boton-ver" onClick={handleViewPackage}>
-          Ver Alojamiento
-        </button>
       </div>
     </div>
   );
@@ -46,14 +45,22 @@ const CardList: React.FC = () => {
   const [paquetes, setPaquetes] = useState<Paquete[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchPaquetes = async () => {
       try {
         const response = await axios.get("/api/paquete/user");
-        setPaquetes(response.data.data);
+        const data = response.data?.data;
+        if (Array.isArray(data)) {
+          setPaquetes(data);
+        } else {
+          setPaquetes([]);
+        }
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Error desconocido");
+        console.error("Error fetching paquetes:", err);
+        setError(err instanceof Error ? err.message : "Error al cargar paquetes");
+        setPaquetes([]);
       } finally {
         setLoading(false);
       }
@@ -62,12 +69,49 @@ const CardList: React.FC = () => {
     fetchPaquetes();
   }, []);
 
+  const handleVerMas = () => {
+    if (paquetes.length > 0) {
+      navigate('/paquetes', { state: { paquetes } });
+    }
+  };
+
   if (loading) {
-    return <div>Cargando paquetes...</div>;
+    return (
+      <div className="container">
+        <div style={{
+          textAlign: 'center',
+          padding: '60px 20px',
+          color: '#64748b',
+          fontSize: '16px'
+        }}>
+          Cargando paquetes...
+        </div>
+      </div>
+    );
   }
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return (
+      <div className="container">
+        <div className="offer-container">
+          <div className="offer-text">
+            No se pudieron cargar los paquetes. Intente más tarde.
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!paquetes || paquetes.length === 0) {
+    return (
+      <div className="container">
+        <div className="offer-container">
+          <div className="offer-text">
+            No hay paquetes disponibles en este momento.
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -76,9 +120,9 @@ const CardList: React.FC = () => {
         <div className="offer-text">
           Descubrí nuestras ofertas en los mejores destinos.
         </div>
-        <a href="#" className="view-more-button">
+        <button className="view-more-button" onClick={handleVerMas}>
           VER MÁS
-        </a>
+        </button>
       </div>
       <div className="card-list">
         {paquetes.map((paquete) => (

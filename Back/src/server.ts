@@ -1,5 +1,8 @@
 import "reflect-metadata";
-import { orm } from "./shared/db/orm.js";
+import dotenv from "dotenv";
+dotenv.config();
+
+import { orm, syncSchema } from "./shared/db/orm.js";
 
 import express from "express";
 import path from "path";
@@ -27,6 +30,7 @@ import { routerPaqueteTransporte } from "./routes/paqueteTransporte.routes.js";
 import { emailRouter } from "./routes/email.routes.js";
 import { routerTipoTransporte } from "./routes/tipoTransporte.routes.js";
 import { routerCancelacion } from "./routes/cancelacion.routes.js";
+import { parseCorsOrigins, isAllowedCorsOrigin } from "./utils/configUtils.js";
 
 import { RequestContext } from "@mikro-orm/core";
 
@@ -41,13 +45,19 @@ app.use(
   }),
 );
 
+const corsOrigins = parseCorsOrigins(
+  process.env.CORS_ORIGINS,
+  "http://localhost:8080,https://odysseytravels.infinityfreeapp.com",
+);
+
 app.use(
   cors({
-    origin: [
-      "http://localhost:8080",
-      "https://accounts.google.com",
-      "https://accounts.google.com/gsi/",
-    ],
+    origin: (origin, callback) => {
+      if (isAllowedCorsOrigin(origin, corsOrigins)) {
+        return callback(null, true);
+      }
+      return callback(new Error("Not allowed by CORS"));
+    },
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
@@ -56,9 +66,11 @@ app.use(
 
 app.use(express.json());
 
-app.use((req, res, next) => {
-  RequestContext.create(orm.em, next);
-});
+if (process.env.NODE_ENV !== "test") {
+  app.use((req, res, next) => {
+    RequestContext.create(orm.em, next);
+  });
+}
 
 app.use("/api/cliente", routerUsuario);
 app.use("/api/ciudad", routerCiudad);
@@ -77,6 +89,10 @@ app.use("/api/paqueteTransporte", routerPaqueteTransporte);
 app.use("/api/email", emailRouter);
 app.use("/api/cancelacion", routerCancelacion);
 
+app.get("/api/health", (_req, res) => {
+  res.status(200).json({ status: "ok" });
+});
+
 app.use(express.static(path.join(__dirname, "dist")));
 
 app.get("/home", (req, res) => {
@@ -85,9 +101,23 @@ app.get("/home", (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 
-console.log(`Iniciando el servidor en el puerto ${PORT}`);
+if (process.env.NODE_ENV !== "test") {
+  console.log(`Iniciando el servidor en el puerto ${PORT}`);
 
-app.listen(PORT, () => {
-  const url = `http://localhost:${PORT}`;
-  console.log(`Puedes abrir el servidor en: ${url}`);
-});
+  // Sincronizar esquema de base de datos antes de iniciar
+  syncSchema().then(() => {
+    console.log("Esquema de base de datos sincronizado");
+    app.listen(PORT, () => {
+      const url = `http://localhost:${PORT}`;
+      console.log(`Puedes abrir el servidor en: ${url}`);
+    });
+  }).catch((err) => {
+    console.error("Error al sincronizar esquema:", err);
+    app.listen(PORT, () => {
+      const url = `http://localhost:${PORT}`;
+      console.log(`Puedes abrir el servidor en: ${url}`);
+    });
+  });
+}
+
+export { app };

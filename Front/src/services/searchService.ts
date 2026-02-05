@@ -9,7 +9,7 @@ export const handleLinkClick = async (
     event.preventDefault();
 
     try {
-        const response = await axios.get(`http://localhost:3000/api/${endpoint}`);
+        const response = await axios.get(`/api/${endpoint}`);
         navigate(`/${route}`, { state: { [route]: response.data.data } });
         window.scrollTo(0, 0);
     } catch (error) {

@@ -37,7 +37,7 @@ const Filtro: React.FC<{ className?: string }> = ({ className = '' }) => {
         const formattedEndDate = endDate?.toLocaleDateString('en-CA');
 
         try {
-            const response = await axios.get(`http://localhost:3000/api/paquete/search`, {
+            const response = await axios.get(`/api/paquete/search`, {
                 params: {
                     ciudad: destination,
                     fechaInicio: formattedStartDate,

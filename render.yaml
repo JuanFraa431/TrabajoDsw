@@ -1,0 +1,16 @@
+# Render Build Configuration
+# Este archivo indica a Render cómo construir y ejecutar el backend
+
+services:
+  - type: web
+    name: trabajodsw-backend
+    env: node
+    region: oregon
+    rootDir: Back
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: CORS_ORIGINS
+        value: https://odysseytravels.infinityfreeapp.com,http://localhost:8080

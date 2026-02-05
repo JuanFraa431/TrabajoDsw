@@ -5,6 +5,10 @@ import "../../styles/List.css";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import axios from "axios";
+import {
+  setupCloudinaryUpload,
+  getCloudinaryImageFieldHTML,
+} from "../../utils/cloudinaryUtils";
 
 interface ExcursionListProps {
   excursiones: Excursion[];
@@ -111,16 +115,14 @@ const ExcursionList: React.FC<ExcursionListProps> = ({
               ${ciudadOptions}
             </select>
           </div>
-          <div class="swal-form-group">
-            <label>URL Imagen</label>
-            <input id="swal-input-imagen" type="text" value="${
-              excursion.imagen || ""
-            }" />
-          </div>
+          ${getCloudinaryImageFieldHTML(excursion.imagen || "", "swal")}
         </div>
       `,
       customClass: {
         popup: "swal-wide",
+      },
+      didOpen: () => {
+        setupCloudinaryUpload("swal-input-file", "swal-input-imagen", "swal-upload-status");
       },
       showCancelButton: true,
       confirmButtonText: "Guardar",
@@ -341,14 +343,14 @@ const ExcursionList: React.FC<ExcursionListProps> = ({
               ${ciudadOptions}
             </select>
           </div>
-          <div class="swal-form-group">
-            <label>URL Imagen</label>
-            <input id="swal-input-imagen" type="text" placeholder="https://..." />
-          </div>
+          ${getCloudinaryImageFieldHTML("", "swal")}
         </div>
       `,
       customClass: {
         popup: "swal-wide",
+      },
+      didOpen: () => {
+        setupCloudinaryUpload("swal-input-file", "swal-input-imagen", "swal-upload-status");
       },
       showCancelButton: true,
       confirmButtonText: "Crear",

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useLocation, Link } from "react-router-dom";
+import { useLocation, Link, useNavigate } from "react-router-dom";
 import Tarjeta from "../Tarjeta";
 import "../../styles/ReservarPaquete.css";
 import logo from "../../images/logoFinal2.png";
@@ -22,6 +22,7 @@ const STEP_LABELS = [
 const ReservarPaquete: React.FC = () => {
   const [step, setStep] = useState<number>(1);
   const location = useLocation();
+  const navigate = useNavigate();
   const paquete = location.state?.paquete;
   const [ciudad, setCiudad] = useState<string>("");
 
@@ -52,6 +53,7 @@ const ReservarPaquete: React.FC = () => {
   }, [paquete]);
 
   const user = JSON.parse(localStorage.getItem("user") || "{}");
+  const isLoggedIn = Boolean(user?.id);
   const [form, setForm] = useState<{
     tipoFactura: string;
     documento: string;
@@ -85,6 +87,7 @@ const ReservarPaquete: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [reservaConfirmada, setReservaConfirmada] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [precioBase, setPrecioBase] = useState<number>(0);
 
   if (!paquete) {
     return (
@@ -105,6 +108,46 @@ const ReservarPaquete: React.FC = () => {
       </div>
     );
   }
+
+  if (!isLoggedIn) {
+    return (
+      <div className="reservar-container">
+        <div className="reservar-header">
+          <Link to="/">
+            <img src={logo} alt="Logo" className="logo" />
+          </Link>
+        </div>
+        <div className="no-package-error">
+          <div className="icon">🔒</div>
+          <h2>Iniciá sesión para reservar</h2>
+          <p>Necesitás estar logueado para continuar con la reserva.</p>
+          <Link to="/login" className="btn btn-primary btn-home">
+            → Ir a login
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  useEffect(() => {
+    const fetchPrecioBase = async () => {
+      try {
+        const response = await axios.put(
+          `/api/paquete/${paquete.id}/recalcular-precio`,
+        );
+        const nuevoPrecio = response?.data?.data?.nuevoPrecio;
+        if (typeof nuevoPrecio === "number") {
+          setPrecioBase(nuevoPrecio);
+        }
+      } catch (error) {
+        console.error("Error al recalcular precio del paquete:", error);
+      }
+    };
+
+    if (paquete?.id) {
+      fetchPrecioBase();
+    }
+  }, [paquete]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
@@ -190,13 +233,20 @@ const ReservarPaquete: React.FC = () => {
   };
 
   const handleReservar = async () => {
+    if (!isLoggedIn) {
+      setError("Debes iniciar sesión para reservar.");
+      navigate("/login");
+      return;
+    }
     if (isProcessing) return;
     setIsProcessing(true);
     setError(null);
 
     try {
       const cantidadPersonas = (form.acompanantes || 0) + 1;
-      const totalPagar = calcularPrecioTotalPaquete(paquete) * cantidadPersonas;
+      const basePrecio =
+        precioBase > 0 ? precioBase : calcularPrecioTotalPaquete(paquete);
+      const totalPagar = basePrecio * cantidadPersonas;
       const responsePago = await axios.post("/api/pago", {
         fecha: new Date(),
         monto: totalPagar,
@@ -245,7 +295,9 @@ const ReservarPaquete: React.FC = () => {
 
   const rangoFechas = obtenerRangoFechasPaquete(paquete);
   const cantidadPersonas = (form.acompanantes || 0) + 1;
-  const precioTotal = calcularPrecioTotalPaquete(paquete) * cantidadPersonas;
+  const basePrecio =
+    precioBase > 0 ? precioBase : calcularPrecioTotalPaquete(paquete);
+  const precioTotal = basePrecio * cantidadPersonas;
 
   return (
     <div className="reservar-container">

@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
-import { useLocation, Link } from "react-router-dom";
+import { useLocation, Link, useNavigate } from "react-router-dom";
 import "../styles/CardDetail.css";
 import { Comentario } from "../interface/comentario";
 import userIcon from "../images/user-icon.png";
@@ -24,8 +24,10 @@ import {
 
 const CardDetail: React.FC = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const clienteLogueado = localStorage.getItem("user");
   const userData = clienteLogueado ? JSON.parse(clienteLogueado) : null;
+  const isLoggedIn = Boolean(userData?.id);
   const isAdmin = userData && userData.tipo_usuario === "ADMIN";
   const { id } = location.state || { id: null };
   const [paquete, setPaquete] = useState<any>(null);
@@ -39,7 +41,7 @@ const CardDetail: React.FC = () => {
     const fetchPaquete = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/api/paquete/${id}`,
+          `/api/paquete/${id}`,
         );
         setPaquete(response.data.data);
       } catch (error) {
@@ -78,7 +80,7 @@ const CardDetail: React.FC = () => {
       };
 
       const response = await axios.post(
-        "http://localhost:3000/api/comentario",
+        `/api/comentario`,
         newComentario,
       );
 
@@ -98,6 +100,13 @@ const CardDetail: React.FC = () => {
     }
   };
 
+  const handleReservarClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    if (!isLoggedIn) {
+      event.preventDefault();
+      navigate("/login");
+    }
+  };
+
   const handleDeleteComentario = async (comentarioId: number) => {
     const confirmacion = window.confirm(
       "¿Estás seguro que deseas borrar este comentario?",
@@ -108,7 +117,7 @@ const CardDetail: React.FC = () => {
 
     try {
       await axios.delete(
-        `http://localhost:3000/api/comentario/${comentarioId}`,
+        `/api/comentario/${comentarioId}`,
       );
       setComentarios((prev) =>
         prev.filter((comentario) => comentario.id !== comentarioId),
@@ -202,6 +211,7 @@ const CardDetail: React.FC = () => {
                       },
                     }}
                     className="reserve-button"
+                    onClick={handleReservarClick}
                   >
                     Reservar Ahora
                   </Link>

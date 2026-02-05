@@ -7,13 +7,14 @@
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "jsx": "react" ,
+    "jsx": "react",
     "forceConsistentCasingInFileNames": true,
-    "moduleResolution": "node"
-  }, 
-  "paths": {
-    "mysql2/*": ["node_modules/mysql2/*"]
+    "moduleResolution": "node",
+    "baseUrl": ".",
+    "paths": {
+      "mysql2/*": ["./node_modules/mysql2/*"]
+    }
   },
-  "include": ["src/**/*", "**/*.ts", "src/database.tsx", "src/types/**/*.ts"],
+  "include": ["src/**/*"],
   "exclude": ["node_modules"]
 }

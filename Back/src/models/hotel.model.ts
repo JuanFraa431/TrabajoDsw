@@ -25,6 +25,9 @@ export class Hotel extends BaseModel {
   @Property({ nullable: false })
   precio_x_dia!: number;
 
+  @Property({ nullable: true })
+  imagen?: string;
+
   @ManyToOne(() => Ciudad, { nullable: false })
   ciudad!: Rel<Ciudad>;
 }

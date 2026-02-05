@@ -450,3 +450,85 @@
     padding: 8px 10px;
   }
 }
+
+/* ===== Estilos para subida de imágenes Cloudinary ===== */
+.cloudinary-upload-group {
+  width: 100%;
+}
+
+.cloudinary-upload-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.cloudinary-url-input {
+  flex: 1;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+  transition: border-color 0.3s ease;
+}
+
+.cloudinary-url-input:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+.cloudinary-url-input:disabled {
+  background-color: #f5f5f5;
+  cursor: not-allowed;
+}
+
+.cloudinary-upload-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 16px;
+  background-color: #6c5ce7;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: all 0.3s ease;
+}
+
+.cloudinary-upload-btn:hover {
+  background-color: #5b4cdb;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(108, 92, 231, 0.4);
+}
+
+.cloudinary-upload-status {
+  margin-top: 6px;
+  font-size: 13px;
+  min-height: 18px;
+  font-weight: 500;
+}
+
+/* Ajustes para SweetAlert con Cloudinary */
+.swal2-popup .cloudinary-upload-container {
+  margin-top: 5px;
+}
+
+.swal2-popup .cloudinary-url-input {
+  min-width: 0;
+}
+
+/* Responsive para campos de imagen */
+@media (max-width: 480px) {
+  .cloudinary-upload-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .cloudinary-upload-btn {
+    width: 100%;
+    margin-top: 8px;
+  }
+}
