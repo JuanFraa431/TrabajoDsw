@@ -2,7 +2,7 @@ import "reflect-metadata";
 import dotenv from "dotenv";
 dotenv.config();
 
-import { orm } from "./shared/db/orm.js";
+import { orm, syncSchema } from "./shared/db/orm.js";
 
 import express from "express";
 import path from "path";
@@ -104,9 +104,19 @@ const PORT = process.env.PORT || 3000;
 if (process.env.NODE_ENV !== "test") {
   console.log(`Iniciando el servidor en el puerto ${PORT}`);
 
-  app.listen(PORT, () => {
-    const url = `http://localhost:${PORT}`;
-    console.log(`Puedes abrir el servidor en: ${url}`);
+  // Sincronizar esquema de base de datos antes de iniciar
+  syncSchema().then(() => {
+    console.log("Esquema de base de datos sincronizado");
+    app.listen(PORT, () => {
+      const url = `http://localhost:${PORT}`;
+      console.log(`Puedes abrir el servidor en: ${url}`);
+    });
+  }).catch((err) => {
+    console.error("Error al sincronizar esquema:", err);
+    app.listen(PORT, () => {
+      const url = `http://localhost:${PORT}`;
+      console.log(`Puedes abrir el servidor en: ${url}`);
+    });
   });
 }
 
