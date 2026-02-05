@@ -18,11 +18,29 @@ const ClienteList: React.FC<ClienteListProps> = ({
   onDelete,
 }) => {
   const [clientes, setClientes] = useState<Cliente[]>(initialClientes);
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [tipoFiltro, setTipoFiltro] = useState<string>("TODOS");
   const MySwal = withReactContent(Swal);
 
   useEffect(() => {
     setClientes(initialClientes);
   }, [initialClientes]);
+
+  const filteredClientes = clientes.filter((cliente) => {
+    const term = searchTerm.trim().toLowerCase();
+    const matchesTerm =
+      term.length === 0 ||
+      `${cliente.nombre || ""} ${cliente.apellido || ""}`
+        .toLowerCase()
+        .includes(term) ||
+      (cliente.email || "").toLowerCase().includes(term) ||
+      (cliente.username || "").toLowerCase().includes(term);
+
+    const matchesTipo =
+      tipoFiltro === "TODOS" || cliente.tipo_usuario === tipoFiltro;
+
+    return matchesTerm && matchesTipo;
+  });
 
   // Helper function to format date without timezone issues
   const formatDate = (dateString: string | Date) => {
@@ -409,6 +427,32 @@ const ClienteList: React.FC<ClienteListProps> = ({
           + Crear Cliente
         </button>
       </div>
+      <div
+        className="list-filters"
+        style={{
+          display: "flex",
+          gap: "12px",
+          alignItems: "center",
+          marginBottom: "12px",
+        }}
+      >
+        <input
+          type="text"
+          placeholder="Buscar por nombre, email o usuario"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          style={{ flex: 1, padding: "8px 10px", borderRadius: "6px" }}
+        />
+        <select
+          value={tipoFiltro}
+          onChange={(e) => setTipoFiltro(e.target.value)}
+          style={{ padding: "8px 10px", borderRadius: "6px" }}
+        >
+          <option value="TODOS">Todos</option>
+          <option value="CLIENTE">Cliente</option>
+          <option value="ADMIN">Admin</option>
+        </select>
+      </div>
       <table className="list-table">
         <thead>
           <tr>
@@ -422,17 +466,17 @@ const ClienteList: React.FC<ClienteListProps> = ({
           </tr>
         </thead>
         <tbody>
-          {clientes.length === 0 ? (
+          {filteredClientes.length === 0 ? (
             <tr>
               <td
                 colSpan={7}
                 style={{ textAlign: "center", padding: "20px", color: "#666" }}
               >
-                No hay clientes registrados
+                No hay clientes que coincidan con el filtro
               </td>
             </tr>
           ) : (
-            clientes.map((cliente) => (
+            filteredClientes.map((cliente) => (
               <tr key={cliente.id}>
                 <td>
                   <strong>

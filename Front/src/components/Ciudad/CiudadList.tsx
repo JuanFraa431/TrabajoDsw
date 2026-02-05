@@ -19,10 +19,20 @@ const CiudadList: React.FC<CiudadListProps> = ({
   onDelete,
 }) => {
   const [ciudades, setCiudades] = useState<Ciudad[]>(initialCiudades);
+  const [searchTerm, setSearchTerm] = useState<string>("");
 
   useEffect(() => {
     setCiudades(initialCiudades);
   }, [initialCiudades]);
+
+  const filteredCiudades = ciudades.filter((ciudad) => {
+    const term = searchTerm.trim().toLowerCase();
+    if (term.length === 0) return true;
+    return (
+      (ciudad.nombre || "").toLowerCase().includes(term) ||
+      (ciudad.pais || "").toLowerCase().includes(term)
+    );
+  });
 
   const handleEditCiudad = (ciudad: Ciudad) => {
     MySwal.fire({
@@ -273,6 +283,23 @@ const CiudadList: React.FC<CiudadListProps> = ({
           + Crear Ciudad
         </button>
       </div>
+      <div
+        className="list-filters"
+        style={{
+          display: "flex",
+          gap: "12px",
+          alignItems: "center",
+          marginBottom: "12px",
+        }}
+      >
+        <input
+          type="text"
+          placeholder="Buscar por nombre o país"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          style={{ flex: 1, padding: "8px 10px", borderRadius: "6px" }}
+        />
+      </div>
       <table className="list-table">
         <thead>
           <tr>
@@ -284,17 +311,17 @@ const CiudadList: React.FC<CiudadListProps> = ({
           </tr>
         </thead>
         <tbody>
-          {ciudades.length === 0 ? (
+          {filteredCiudades.length === 0 ? (
             <tr>
               <td
                 colSpan={5}
                 style={{ textAlign: "center", padding: "20px", color: "#666" }}
               >
-                No hay ciudades registradas
+                No hay ciudades que coincidan con el filtro
               </td>
             </tr>
           ) : (
-            ciudades.map((ciudad) => (
+            filteredCiudades.map((ciudad) => (
               <tr key={ciudad.id}>
                 <td>
                   <strong>{ciudad.nombre}</strong>
