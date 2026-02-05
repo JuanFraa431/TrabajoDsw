@@ -40,21 +40,28 @@ const Paquetes: React.FC = () => {
 
     let filtered = [...paquetes];
 
-    const estrellasSeleccionadas: number[] = [];
-    if (filters?.cuatroEstrellas) estrellasSeleccionadas.push(4);
-    if (filters?.tresEstrellas) estrellasSeleccionadas.push(3);
-
-    if (estrellasSeleccionadas.length > 0) {
-    filtered = filtered.filter((paquete: Paquete) =>
-      paquete.estadias?.some((estadia) =>
-        estrellasSeleccionadas.includes(estadia.hotel?.estrellas ?? 0),
-      ),
-    );
+    // Filtrar por estrellas
+    if (filters?.estrellas && filters.estrellas.length > 0) {
+      filtered = filtered.filter((paquete: Paquete) =>
+        paquete.estadias?.some((estadia) =>
+          filters.estrellas.includes(estadia.hotel?.estrellas ?? 0),
+        ),
+      );
     }
 
-    if (filters?.hotel) {
-      filtered = filtered.filter(
-        (paquete) => (paquete.estadias?.length || 0) > 0,
+    // Filtrar por hoteles
+    if (filters?.hoteles && filters.hoteles.length > 0) {
+      filtered = filtered.filter((paquete: Paquete) =>
+        paquete.estadias?.some((estadia) =>
+          filters.hoteles.includes(estadia.hotel?.nombre ?? ''),
+        ),
+      );
+    }
+
+    // Filtrar por ciudades
+    if (filters?.ciudades && filters.ciudades.length > 0) {
+      filtered = filtered.filter((paquete: Paquete) =>
+        filters.ciudades.includes(paquete.ciudad?.nombre ?? ''),
       );
     }
 

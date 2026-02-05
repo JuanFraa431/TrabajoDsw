@@ -107,17 +107,30 @@ const Login: React.FC = () => {
       );
 
       if (res.status === 200) {
+        // Usuario existente, login exitoso
         const { usuario, token } = res.data.data;
         localStorage.setItem("token", token);
         localStorage.setItem("user", JSON.stringify(usuario));
         setError("");
         navigate(usuario.tipo_usuario === "ADMIN" ? "/vistaAdmin" : "/");
+      } else if (res.status === 202) {
+        // Usuario nuevo, necesita completar información
+        console.log("New user needs to complete profile");
+        const googleData = res.data.data;
+        navigate("/complete-google-profile", { state: { googleData } });
       }
     } catch (error: any) {
       console.error("Google login failed:", error);
-      const errorMsg =
-        error.response?.data?.message || "Error al iniciar sesión con Google.";
-      setError(errorMsg);
+      
+      // Verificar si es un usuario nuevo que necesita completar información
+      if (error.response?.status === 202) {
+        const googleData = error.response.data.data;
+        navigate("/complete-google-profile", { state: { googleData } });
+      } else {
+        const errorMsg =
+          error.response?.data?.message || "Error al iniciar sesión con Google.";
+        setError(errorMsg);
+      }
     }
   };
 

@@ -23,6 +23,7 @@ import Tarjeta from "./components/Tarjeta";
 import Transportes from "./components/Transportes";
 import Nosotros from "./components/Nosotros";
 import Hoteles from "./components/Hoteles";
+import CompleteGoogleProfile from "./components/CompleteGoogleProfile";
 
 const pageTransition = {
   initial: { opacity: 0 },
@@ -160,6 +161,14 @@ const App: React.FC = () => {
                   <Register />
                 </motion.div>
               </div>
+            }
+          />
+          <Route
+            path="/complete-google-profile"
+            element={
+              <motion.div {...pageTransition}>
+                <CompleteGoogleProfile />
+              </motion.div>
             }
           />
           <Route
