@@ -32,6 +32,11 @@ import { RequestContext } from "@mikro-orm/core";
 
 const app = express();
 
+const corsOrigins = (process.env.CORS_ORIGINS || "http://localhost:8080")
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
 app.use(
   session({
     secret: "juamaqbrujan",
@@ -43,11 +48,14 @@ app.use(
 
 app.use(
   cors({
-    origin: [
-      "http://localhost:8080",
-      "https://accounts.google.com",
-      "https://accounts.google.com/gsi/",
-    ],
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true);
+      if (corsOrigins.includes(origin)) return callback(null, true);
+      if (origin.startsWith("https://accounts.google.com")) {
+        return callback(null, true);
+      }
+      return callback(new Error("Not allowed by CORS"));
+    },
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],

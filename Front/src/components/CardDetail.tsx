@@ -38,9 +38,7 @@ const CardDetail: React.FC = () => {
   useEffect(() => {
     const fetchPaquete = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:3000/api/paquete/${id}`,
-        );
+        const response = await axios.get(`/api/paquete/${id}`);
         setPaquete(response.data.data);
       } catch (error) {
         console.error("Error fetching paquete:", error);
@@ -77,10 +75,7 @@ const CardDetail: React.FC = () => {
         estrellas,
       };
 
-      const response = await axios.post(
-        "http://localhost:3000/api/comentario",
-        newComentario,
-      );
+      const response = await axios.post("/api/comentario", newComentario);
 
       const comentarioCreado: Comentario = {
         id: response.data.id,
@@ -107,9 +102,7 @@ const CardDetail: React.FC = () => {
     }
 
     try {
-      await axios.delete(
-        `http://localhost:3000/api/comentario/${comentarioId}`,
-      );
+      await axios.delete(`/api/comentario/${comentarioId}`);
       setComentarios((prev) =>
         prev.filter((comentario) => comentario.id !== comentarioId),
       );

@@ -1,18 +1,18 @@
-import axios from 'axios';
+import axios from "axios";
 
 export const handleLinkClick = async (
   event: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
   endpoint: string,
   route: string,
-  navigate: (path: string, state?: object) => void
+  navigate: (path: string, state?: object) => void,
 ) => {
-    event.preventDefault();
+  event.preventDefault();
 
-    try {
-        const response = await axios.get(`http://localhost:3000/api/${endpoint}`);
-        navigate(`/${route}`, { state: { [route]: response.data.data } });
-        window.scrollTo(0, 0);
-    } catch (error) {
-        console.error(`Error al obtener ${endpoint}:`, error);
-    }
+  try {
+    const response = await axios.get(`/api/${endpoint}`);
+    navigate(`/${route}`, { state: { [route]: response.data.data } });
+    window.scrollTo(0, 0);
+  } catch (error) {
+    console.error(`Error al obtener ${endpoint}:`, error);
+  }
 };

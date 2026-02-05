@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: tpdesarrollo-back
+    env: node
+    rootDir: Back
+    buildCommand: npm ci && npm run build
+    startCommand: npm start
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+      - key: DATABASE_URL
+        sync: false
+      - key: DB_NAME
+        sync: false
+      - key: CORS_ORIGINS
+        sync: false
