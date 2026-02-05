@@ -2,7 +2,6 @@ import React from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 
-//components
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Body from "./components/Body";
