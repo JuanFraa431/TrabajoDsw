@@ -1,9 +1,11 @@
 {
   "name": "tpdesarrollo",
   "version": "1.0.0",
-  "main": "CRUD1-Cliente.js",
+  "main": "dist/main.js",
   "scripts": {
-    "startFront": "webpack serve --mode development"
+    "start": "webpack serve --mode development",
+    "startFront": "webpack serve --mode development",
+    "build": "webpack --mode production"
   },
   "proxy": "http://localhost:3000/",
   "dependencies": {
