@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { Hotel } from '../models/hotel.model.js';
 import { Ciudad } from '../models/ciudad.model.js';
+import { Paquete } from '../models/paquete.model.js';
 import { orm } from '../shared/db/orm.js';
 
 const em = orm.em;
@@ -79,4 +80,47 @@ async function remove(req: Request, res: Response) {
   }
 }
 
-export { findAll, findOne, create, update, remove };
+async function getPaquetesByHotel(req: Request, res: Response) {
+  try {
+    const id = Number.parseInt(req.params.id);
+    
+    // Obtener IDs de paquetes que incluyen este hotel
+    const paqueteIds = await em.getConnection().execute<{ paquete_id: number }[]>(
+      `SELECT DISTINCT e.paquete_id 
+       FROM estadia e 
+       WHERE e.hotel_id = ?`,
+      [id]
+    );
+
+    const ids = paqueteIds.map(p => p.paquete_id);
+    
+    // Si no hay paquetes, devolver array vacío
+    if (ids.length === 0) {
+      return res.status(200).json({ message: 'No se encontraron paquetes', data: [] });
+    }
+    
+    // Cargar los paquetes completos con todas las relaciones necesarias
+    const paquetes = await em.find(
+      Paquete,
+      { id: { $in: ids }, estado: 1 },
+      {
+        populate: [
+          'ciudad',
+          'estadias',
+          'estadias.hotel',
+          'paqueteExcursiones',
+          'paqueteExcursiones.excursion',
+          'paqueteTransportes',
+          'paqueteTransportes.transporte',
+        ],
+      }
+    );
+
+    res.status(200).json({ message: 'Paquetes encontrados', data: paquetes });
+  } catch (error: any) {
+    console.error('Error en getPaquetesByHotel:', error);
+    res.status(500).json({ message: error.message });
+  }
+}
+
+export { findAll, findOne, create, update, remove, getPaquetesByHotel };

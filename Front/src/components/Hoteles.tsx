@@ -1,14 +1,10 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import '../styles/Hoteles.css';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import Swal from 'sweetalert2';
-import withReactContent from 'sweetalert2-react-content';
 
 import { Hotel } from '../interface/hotel';
 import FiltroHoteles, { HotelesFiltros } from './FiltroHotel';
-
-const MySwal = withReactContent(Swal);
 
 const normalize = (value: string) =>
   value
@@ -18,6 +14,7 @@ const normalize = (value: string) =>
 
 const Hoteles: React.FC = () => {
   const location = useLocation();
+  const navigate = useNavigate();
 
   const [hoteles, setHoteles] = useState<Hotel[]>(
     (location.state as any)?.hoteles ?? []
@@ -93,24 +90,7 @@ const Hoteles: React.FC = () => {
   }, [hoteles, filtros]);
 
   const openDetalle = (hotel: Hotel) => {
-    const ciudad = hotel.ciudad?.nombre ?? '—';
-
-    MySwal.fire({
-      title: hotel.nombre,
-      html: `
-        <div style="text-align:left; display:flex; flex-direction:column; gap:10px;">
-          <div><b>Ciudad:</b> ${ciudad}</div>
-          <div><b>Dirección:</b> ${hotel.direccion}</div>
-          <div><b>Estrellas:</b> ${hotel.estrellas}★</div>
-          <div><b>Precio por noche:</b> $${hotel.precio_x_dia}</div>
-          <div><b>Teléfono:</b> ${hotel.telefono}</div>
-          <div><b>Email:</b> ${hotel.email}</div>
-          <div><b>Descripción:</b><br/>${hotel.descripcion}</div>
-        </div>
-      `,
-      confirmButtonText: 'Cerrar',
-      confirmButtonColor: '#0ea5e9',
-    });
+    navigate('/cardDetailHotel', { state: { id: hotel.id } });
   };
 
   return (

@@ -15,12 +15,12 @@ import VistaAdmin from "./components/VistaAdmin";
 import Login from "./components/Login";
 import DetalleCliente from "./components/Cliente/DetalleCliente";
 import CardDetailExcursion from "./components/CardDetailExcursion";
+import CardDetailHotel from "./components/CardDetailHotel";
 import Register from "./components/Register";
 import EditarPerfil from "./components/Cliente/EditarPerfil";
 import MisReservas from "./components/Cliente/MisReservas";
 import ReservarPaquete from "./components/Paquete/ReservarPaquete";
 import Tarjeta from "./components/Tarjeta";
-import Transportes from "./components/Transportes";
 import Nosotros from "./components/Nosotros";
 import Hoteles from "./components/Hoteles";
 import CompleteGoogleProfile from "./components/CompleteGoogleProfile";
@@ -69,6 +69,17 @@ const App: React.FC = () => {
                 <Header />
                 <motion.div {...pageTransition}>
                   <CardDetailExcursion />
+                </motion.div>
+              </div>
+            }
+          />
+          <Route
+            path="/cardDetailHotel"
+            element={
+              <div>
+                <Header />
+                <motion.div {...pageTransition}>
+                  <CardDetailHotel />
                 </motion.div>
               </div>
             }
@@ -198,18 +209,6 @@ const App: React.FC = () => {
                 <motion.div {...pageTransition}>
                   <ReservarPaquete />
                 </motion.div>
-              </div>
-            }
-          />
-          <Route
-            path="/transportes"
-            element={
-              <div>
-                <Header />
-                <motion.div {...pageTransition}>
-                  <Transportes />
-                </motion.div>
-                <Footer />
               </div>
             }
           />

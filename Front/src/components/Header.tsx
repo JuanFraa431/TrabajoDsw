@@ -38,7 +38,6 @@ const Header = () => {
                     <li>
                         <Link to="/excursiones" onClick={(event) => handleLinkClick(event, 'excursion', 'excursiones', navigate)}>Excursiones</Link>
                     </li>
-                    <li><Link to="/transportes">Transportes</Link></li>
                     <li><Link to="/nosotros">Nosotros</Link></li>
                 </ul>
             </nav>
@@ -87,7 +86,6 @@ const Header = () => {
                             </li>
                             <li className="nav-item"><Link className="nav-link" to="/paquetes" onClick={(event) => handleLinkClick(event, 'paquete/user', 'paquetes', navigate)}>Paquetes</Link></li>
                             <li className="nav-item"><Link className="nav-link" to="/excursiones" onClick={(event) => handleLinkClick(event, 'excursion', 'excursiones', navigate)}>Excursiones</Link></li>
-                            <li className="nav-item"><Link className="nav-link" to="/transportes">Transportes</Link></li>
                             <li className="nav-item"><Link className="nav-link" to="/nosotros">Nosotros</Link></li>
                         </ul>                        <div className="header-user-offcanvas mt-3">
                             <img src={cliente ? cliente.imagen : userIcon} alt="User Icon" className="header-user-icon" />

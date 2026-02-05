@@ -4,27 +4,27 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import '../styles/CardDetail.css';
 import { calcularPrecioTotalPaquete, formatearDuracionPaquete } from '../utils/paqueteUtils';
 
-const CardDetailExcursion: React.FC = () => {
+const CardDetailHotel: React.FC = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const { id } = location.state || { id: null };
-    const [excursion, setExcursion] = useState<any>(null);
+    const [hotel, setHotel] = useState<any>(null);
     const [paquetes, setPaquetes] = useState<any[]>([]);
     const [mostrarDescripcionCompleta, setMostrarDescripcionCompleta] = useState<boolean>(false);
 
     useEffect(() => {
-        const fetchExcursion = async () => {
+        const fetchHotel = async () => {
             try {
-                const response = await axios.get(`/api/excursion/${id}`);
-                setExcursion(response.data.data);
+                const response = await axios.get(`/api/hotel/${id}`);
+                setHotel(response.data.data);
             } catch (error) {
-                console.error("Error fetching excursion:", error);
+                console.error("Error fetching hotel:", error);
             }
         };
 
         const fetchPaquetes = async () => {
             try {
-                const response = await axios.get(`/api/excursion/${id}/paquetes`);
+                const response = await axios.get(`/api/hotel/${id}/paquetes`);
                 setPaquetes(response.data.data);
             } catch (error) {
                 console.error("Error fetching paquetes:", error);
@@ -32,7 +32,7 @@ const CardDetailExcursion: React.FC = () => {
         };
 
         if (id) {
-            fetchExcursion();
+            fetchHotel();
             fetchPaquetes();
         }
     }, [id]);
@@ -48,29 +48,30 @@ const CardDetailExcursion: React.FC = () => {
         return descripcion;
     };
 
-    const formatHorario = (horario: string) => {
-        if (!horario) return "No especificado";
-        const [hours, minutes] = horario.split(":");
-        return `${hours}:${minutes} hs`;
+    const renderEstrellas = (estrellas: number) => {
+        return "★".repeat(estrellas) + "☆".repeat(5 - estrellas);
     };
 
     return (
         <div className="card-detail-container">
-            <h2 className="title">Detalles de la Excursión</h2>
-            {excursion && (
+            <h2 className="title">Detalles del Hotel</h2>
+            {hotel && (
                 <div className="detail-layout">
                     <div className="image-container">
-                        <img src={excursion.imagen} alt={excursion.nombre} className="package-image" />
+                        <img src={hotel.imagen || 'https://via.placeholder.com/600x400?text=Hotel'} alt={hotel.nombre} className="package-image" />
                     </div>
                     <div className="info-container">
                         <div className="details">
-                            <p><strong>Nombre:</strong> {excursion.nombre}</p>
-                            <p><strong>Detalle:</strong> {excursion.detalle} </p>
-                            <p><strong>Horario de inicio:</strong> {formatHorario(excursion.horario)}</p>
+                            <p><strong>Nombre:</strong> {hotel.nombre}</p>
+                            <p><strong>Ciudad:</strong> {hotel.ciudad?.nombre || 'No especificada'}</p>
+                            <p><strong>Dirección:</strong> {hotel.direccion}</p>
+                            <p><strong>Estrellas:</strong> <span style={{ color: '#fbbf24' }}>{renderEstrellas(hotel.estrellas)}</span></p>
+                            <p><strong>Teléfono:</strong> {hotel.telefono}</p>
+                            <p><strong>Email:</strong> {hotel.email}</p>
                         </div>
                         <div className="price-box">
-                            <p className="price-per-night">Precio</p>
-                            <p className="price-total">${excursion.precio}</p>
+                            <p className="price-per-night">Precio por noche</p>
+                            <p className="price-total">${hotel.precio_x_dia}</p>
                         </div>
                     </div>
                 </div>
@@ -80,17 +81,19 @@ const CardDetailExcursion: React.FC = () => {
                 <h3>Descripción</h3>
                 <p>
                     {mostrarDescripcionCompleta
-                        ? excursion?.descripcion
-                        : descripcionTruncada(excursion?.descripcion || "", 100)}
+                        ? hotel?.descripcion
+                        : descripcionTruncada(hotel?.descripcion || "", 200)}
                 </p>
-                <button onClick={toggleDescripcion} className="verMas-button">
-                    {mostrarDescripcionCompleta ? "Ver menos" : "Ver más"}
-                </button>
+                {hotel?.descripcion?.length > 200 && (
+                    <button onClick={toggleDescripcion} className="verMas-button">
+                        {mostrarDescripcionCompleta ? "Ver menos" : "Ver más"}
+                    </button>
+                )}
             </div>
 
-            {/* PAQUETES QUE INCLUYEN ESTA EXCURSIÓN */}
+            {/* PAQUETES QUE INCLUYEN ESTE HOTEL */}
             <div className="content-section" style={{ marginTop: '20px' }}>
-                <h3 className="section-title">Paquetes que incluyen esta excursión</h3>
+                <h3 className="section-title">Paquetes que incluyen este hotel</h3>
                 {paquetes.length > 0 ? (
                     <div style={{ 
                         display: 'grid', 
@@ -217,7 +220,7 @@ const CardDetailExcursion: React.FC = () => {
                         borderRadius: '8px',
                         marginTop: '20px'
                     }}>
-                        <p style={{ margin: 0 }}>No hay paquetes disponibles que incluyan esta excursión</p>
+                        <p style={{ margin: 0 }}>No hay paquetes disponibles que incluyan este hotel</p>
                     </div>
                 )}
             </div>
@@ -225,4 +228,4 @@ const CardDetailExcursion: React.FC = () => {
     );
 };
 
-export default CardDetailExcursion;
+export default CardDetailHotel;
