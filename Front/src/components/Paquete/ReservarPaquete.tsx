@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useLocation, Link } from "react-router-dom";
+import { useLocation, Link, useNavigate } from "react-router-dom";
 import Tarjeta from "../Tarjeta";
 import "../../styles/ReservarPaquete.css";
 import logo from "../../images/logoFinal2.png";
@@ -22,6 +22,7 @@ const STEP_LABELS = [
 const ReservarPaquete: React.FC = () => {
   const [step, setStep] = useState<number>(1);
   const location = useLocation();
+  const navigate = useNavigate();
   const paquete = location.state?.paquete;
   const [ciudad, setCiudad] = useState<string>("");
 
@@ -52,6 +53,7 @@ const ReservarPaquete: React.FC = () => {
   }, [paquete]);
 
   const user = JSON.parse(localStorage.getItem("user") || "{}");
+  const isLoggedIn = Boolean(user?.id);
   const [form, setForm] = useState<{
     tipoFactura: string;
     documento: string;
@@ -190,6 +192,11 @@ const ReservarPaquete: React.FC = () => {
   };
 
   const handleReservar = async () => {
+    if (!isLoggedIn) {
+      setError("Debes iniciar sesión para reservar.");
+      navigate("/login");
+      return;
+    }
     if (isProcessing) return;
     setIsProcessing(true);
     setError(null);
