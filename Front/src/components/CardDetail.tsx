@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
-import { useLocation, Link } from "react-router-dom";
+import { useLocation, Link, useNavigate } from "react-router-dom";
 import "../styles/CardDetail.css";
 import { Comentario } from "../interface/comentario";
 import userIcon from "../images/user-icon.png";
@@ -24,8 +24,10 @@ import {
 
 const CardDetail: React.FC = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const clienteLogueado = localStorage.getItem("user");
   const userData = clienteLogueado ? JSON.parse(clienteLogueado) : null;
+  const isLoggedIn = Boolean(userData?.id);
   const isAdmin = userData && userData.tipo_usuario === "ADMIN";
   const { id } = location.state || { id: null };
   const [paquete, setPaquete] = useState<any>(null);
@@ -95,6 +97,13 @@ const CardDetail: React.FC = () => {
       setEstrellas(0);
     } catch (error) {
       console.error("Error adding comentario:", error);
+    }
+  };
+
+  const handleReservarClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    if (!isLoggedIn) {
+      event.preventDefault();
+      navigate("/login");
     }
   };
 
@@ -202,6 +211,7 @@ const CardDetail: React.FC = () => {
                       },
                     }}
                     className="reserve-button"
+                    onClick={handleReservarClick}
                   >
                     Reservar Ahora
                   </Link>
