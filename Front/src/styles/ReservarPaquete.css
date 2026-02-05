@@ -893,3 +893,45 @@
 .no-companions-message p {
   margin: 0;
 }
+
+@media (max-width: 480px) {
+  .reservar-container {
+    padding: 10px;
+  }
+
+  .form-container {
+    padding: 16px 12px;
+  }
+
+  .form-title {
+    font-size: 1.2rem;
+  }
+
+  .step-circle {
+    width: 34px;
+    height: 34px;
+    font-size: 0.8rem;
+  }
+
+  .step-label {
+    font-size: 0.6rem;
+  }
+
+  .card-section .tarjeta {
+    width: 100%;
+    max-width: 280px;
+    height: 170px;
+  }
+
+  .summary-card {
+    padding: 16px;
+  }
+
+  .success-icon {
+    font-size: 3.5rem;
+  }
+
+  .summary-total-value {
+    font-size: 1.2rem;
+  }
+}

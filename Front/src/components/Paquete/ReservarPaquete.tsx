@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocation, Link, useNavigate } from "react-router-dom";
 import Tarjeta from "../Tarjeta";
@@ -25,6 +25,7 @@ const ReservarPaquete: React.FC = () => {
   const navigate = useNavigate();
   const paquete = location.state?.paquete;
   const [ciudad, setCiudad] = useState<string>("");
+  const isNavigatingRef = useRef<boolean>(false);
 
   useEffect(() => {
     const fetchCiudad = async () => {
@@ -87,6 +88,7 @@ const ReservarPaquete: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [reservaConfirmada, setReservaConfirmada] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isNavigating, setIsNavigating] = useState(false);
   const [precioBase, setPrecioBase] = useState<number>(0);
 
   if (!paquete) {
@@ -223,13 +225,58 @@ const ReservarPaquete: React.FC = () => {
   };
 
   const nextStep = () => {
-    if (!validateStep()) return;
-    if (step < 5) setStep((prev) => prev + 1);
+    // Prevenir múltiples clicks de forma síncrona
+    if (isNavigatingRef.current || isNavigating) return;
+    
+    // Bloquear inmediatamente con la ref (síncrono)
+    isNavigatingRef.current = true;
+    setIsNavigating(true);
+    
+    // Validar
+    if (!validateStep()) {
+      // Si falla la validación, desbloquear
+      isNavigatingRef.current = false;
+      setIsNavigating(false);
+      return;
+    }
+    
+    // Cambiar de paso
+    if (step < 5) {
+      setStep((prev) => prev + 1);
+      // Desbloquear después de que React complete el cambio de paso
+      setTimeout(() => {
+        isNavigatingRef.current = false;
+        setIsNavigating(false);
+      }, 300);
+    } else {
+      // Si ya estamos en el último paso, desbloquear inmediatamente
+      isNavigatingRef.current = false;
+      setIsNavigating(false);
+    }
   };
 
   const prevStep = () => {
+    // Prevenir múltiples clicks de forma síncrona
+    if (isNavigatingRef.current || isNavigating) return;
+    
+    // Bloquear inmediatamente
+    isNavigatingRef.current = true;
+    setIsNavigating(true);
+    
     setError(null);
-    if (step > 1) setStep((prev) => prev - 1);
+    
+    if (step > 1) {
+      setStep((prev) => prev - 1);
+      // Desbloquear después de que React complete el cambio de paso
+      setTimeout(() => {
+        isNavigatingRef.current = false;
+        setIsNavigating(false);
+      }, 300);
+    } else {
+      // Si ya estamos en el primer paso, desbloquear inmediatamente
+      isNavigatingRef.current = false;
+      setIsNavigating(false);
+    }
   };
 
   const handleReservar = async () => {
@@ -446,6 +493,7 @@ const ReservarPaquete: React.FC = () => {
                   <button
                     className="reservar-btn reservar-btn-primary"
                     onClick={nextStep}
+                    disabled={isNavigating}
                   >
                     Continuar →
                   </button>
@@ -548,12 +596,14 @@ const ReservarPaquete: React.FC = () => {
                   <button
                     className="reservar-btn reservar-btn-secondary"
                     onClick={prevStep}
+                    disabled={isNavigating}
                   >
                     ← Atrás
                   </button>
                   <button
                     className="reservar-btn reservar-btn-primary"
                     onClick={nextStep}
+                    disabled={isNavigating}
                   >
                     Continuar →
                   </button>
@@ -730,12 +780,14 @@ const ReservarPaquete: React.FC = () => {
                   <button
                     className="reservar-btn reservar-btn-secondary"
                     onClick={prevStep}
+                    disabled={isNavigating}
                   >
                     ← Atrás
                   </button>
                   <button
                     className="reservar-btn reservar-btn-primary"
                     onClick={nextStep}
+                    disabled={isNavigating}
                   >
                     Continuar →
                   </button>
@@ -775,12 +827,14 @@ const ReservarPaquete: React.FC = () => {
                   <button
                     className="reservar-btn reservar-btn-secondary"
                     onClick={prevStep}
+                    disabled={isNavigating}
                   >
                     ← Atrás
                   </button>
                   <button
                     className="reservar-btn reservar-btn-primary"
                     onClick={nextStep}
+                    disabled={isNavigating}
                   >
                     Continuar →
                   </button>
@@ -905,7 +959,7 @@ const ReservarPaquete: React.FC = () => {
                   <button
                     className="reservar-btn reservar-btn-secondary"
                     onClick={prevStep}
-                    disabled={isProcessing}
+                    disabled={isProcessing || isNavigating}
                   >
                     ← Atrás
                   </button>

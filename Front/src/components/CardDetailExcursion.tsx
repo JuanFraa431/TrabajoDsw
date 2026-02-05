@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import '../styles/CardDetail.css';
+import '../styles/CardDetailExcursion.css';
 import { calcularPrecioTotalPaquete, formatearDuracionPaquete } from '../utils/paqueteUtils';
 
 const CardDetailExcursion: React.FC = () => {
@@ -55,152 +55,104 @@ const CardDetailExcursion: React.FC = () => {
     };
 
     return (
-        <div className="card-detail-container">
-            <h2 className="title">Detalles de la Excursión</h2>
+        <div className="excursion-detail-container">
+            <h2 className="excursion-detail-title">Detalles de la Excursión</h2>
+            
             {excursion && (
-                <div className="detail-layout">
-                    <div className="image-container">
-                        <img src={excursion.imagen} alt={excursion.nombre} className="package-image" />
-                    </div>
-                    <div className="info-container">
-                        <div className="details">
-                            <p><strong>Nombre:</strong> {excursion.nombre}</p>
-                            <p><strong>Detalle:</strong> {excursion.detalle} </p>
-                            <p><strong>Horario de inicio:</strong> {formatHorario(excursion.horario)}</p>
+                <div className="excursion-hero">
+                    <div className="excursion-image-wrapper">
+                        <img 
+                            src={excursion.imagen} 
+                            alt={excursion.nombre} 
+                            className="excursion-hero-image" 
+                        />
+                        <div className="excursion-badge">
+                            🎯 Excursión
                         </div>
-                        <div className="price-box">
-                            <p className="price-per-night">Precio</p>
-                            <p className="price-total">${excursion.precio}</p>
+                    </div>
+                    
+                    <div className="excursion-info-panel">
+                        <div className="excursion-header">
+                            <h3 className="excursion-name">{excursion.nombre}</h3>
+                            <p className="excursion-detail-text">{excursion.detalle}</p>
+                        </div>
+
+                        <div className="excursion-details-grid">
+                            <div className="excursion-detail-item">
+                                <div className="excursion-detail-icon">🕐</div>
+                                <div className="excursion-detail-content">
+                                    <div className="excursion-detail-label">Horario de inicio</div>
+                                    <div className="excursion-detail-value">{formatHorario(excursion.horario)}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="excursion-price-box">
+                            <div className="excursion-price-label">Precio por persona</div>
+                            <div className="excursion-price-amount">${excursion.precio?.toLocaleString()}</div>
                         </div>
                     </div>
                 </div>
             )}
 
-            <div className="description-section">
-                <h3>Descripción</h3>
-                <p>
+            {/* DESCRIPCIÓN */}
+            <div className="excursion-description-section">
+                <h3 className="excursion-description-title">
+                    <span className="excursion-description-title-icon">📋</span>
+                    Descripción
+                </h3>
+                <p className="excursion-description-text">
                     {mostrarDescripcionCompleta
                         ? excursion?.descripcion
-                        : descripcionTruncada(excursion?.descripcion || "", 100)}
+                        : descripcionTruncada(excursion?.descripcion || "", 200)}
                 </p>
-                <button onClick={toggleDescripcion} className="verMas-button">
-                    {mostrarDescripcionCompleta ? "Ver menos" : "Ver más"}
+                <button onClick={toggleDescripcion} className="excursion-description-toggle">
+                    {mostrarDescripcionCompleta ? "Ver menos ▲" : "Ver más ▼"}
                 </button>
             </div>
 
             {/* PAQUETES QUE INCLUYEN ESTA EXCURSIÓN */}
-            <div className="content-section" style={{ marginTop: '20px' }}>
-                <h3 className="section-title">Paquetes que incluyen esta excursión</h3>
+            <div className="excursion-packages-section">
+                <h3 className="excursion-packages-title">
+                    <span className="excursion-packages-title-icon">📦</span>
+                    Paquetes que incluyen esta excursión
+                </h3>
+                
                 {paquetes.length > 0 ? (
-                    <div style={{ 
-                        display: 'grid', 
-                        gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', 
-                        gap: '20px', 
-                        marginTop: '20px' 
-                    }}>
+                    <div className="excursion-packages-grid">
                         {paquetes.map((paquete: any) => (
                             <div 
                                 key={paquete.id}
-                                style={{ 
-                                    border: '1px solid #e0e0e0', 
-                                    borderRadius: '10px', 
-                                    overflow: 'hidden',
-                                    backgroundColor: '#fff',
-                                    boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-                                    transition: 'transform 0.2s, box-shadow 0.2s',
-                                    cursor: 'pointer',
-                                    position: 'relative',
-                                    zIndex: 1
-                                }}
+                                className="excursion-package-card"
                                 onClick={() => navigate('/cardDetail', { state: { id: paquete.id } })}
-                                onMouseEnter={(e) => {
-                                    e.currentTarget.style.transform = 'translateY(-4px)';
-                                    e.currentTarget.style.boxShadow = '0 6px 16px rgba(0,0,0,0.15)';
-                                }}
-                                onMouseLeave={(e) => {
-                                    e.currentTarget.style.transform = 'translateY(0)';
-                                    e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
-                                }}
                             >
-                                <div style={{ position: 'relative', width: '100%', height: '200px' }}>
+                                <div className="excursion-package-image-wrapper">
                                     <img 
                                         src={paquete.imagen} 
                                         alt={paquete.nombre} 
-                                        style={{ 
-                                            width: '100%', 
-                                            height: '100%', 
-                                            objectFit: 'cover',
-                                            display: 'block'
-                                        }}
+                                        className="excursion-package-image"
                                     />
-                                    <span style={{
-                                        position: 'absolute',
-                                        top: '10px',
-                                        right: '10px',
-                                        backgroundColor: 'rgba(0, 123, 255, 0.9)',
-                                        color: 'white',
-                                        padding: '5px 10px',
-                                        borderRadius: '5px',
-                                        fontSize: '0.85rem',
-                                        fontWeight: 'bold',
-                                        zIndex: 2
-                                    }}>
+                                    <span className="excursion-package-duration-badge">
                                         {formatearDuracionPaquete(paquete)}
                                     </span>
                                 </div>
-                                <div style={{ padding: '16px', backgroundColor: '#fff' }}>
-                                    <h4 style={{ 
-                                        margin: '0 0 8px 0', 
-                                        fontSize: '1.1rem', 
-                                        color: '#1e293b',
-                                        fontWeight: '600'
-                                    }}>
+                                
+                                <div className="excursion-package-content">
+                                    <h4 className="excursion-package-name">
                                         {paquete.nombre}
                                     </h4>
-                                    <p style={{ 
-                                        margin: '0 0 12px 0', 
-                                        color: '#64748b', 
-                                        fontSize: '0.9rem', 
-                                        lineHeight: '1.4',
-                                        minHeight: '40px'
-                                    }}>
+                                    <p className="excursion-package-detail">
                                         {paquete.detalle}
                                     </p>
-                                    <div style={{ 
-                                        display: 'flex', 
-                                        justifyContent: 'space-between', 
-                                        alignItems: 'center',
-                                        paddingTop: '12px',
-                                        borderTop: '1px solid #f1f5f9'
-                                    }}>
-                                        <div>
-                                            <p style={{ 
-                                                margin: '0', 
-                                                fontSize: '0.75rem', 
-                                                color: '#64748b' 
-                                            }}>Precio total</p>
-                                            <p style={{ 
-                                                margin: '4px 0 0 0', 
-                                                fontSize: '1.25rem', 
-                                                fontWeight: 'bold', 
-                                                color: '#007bff' 
-                                            }}>
+                                    
+                                    <div className="excursion-package-footer">
+                                        <div className="excursion-package-price-section">
+                                            <p className="excursion-package-price-label">Precio total</p>
+                                            <p className="excursion-package-price">
                                                 ${calcularPrecioTotalPaquete(paquete).toLocaleString()}
                                             </p>
                                         </div>
-                                        <button 
-                                            style={{
-                                                backgroundColor: '#007bff',
-                                                color: 'white',
-                                                border: 'none',
-                                                padding: '10px 20px',
-                                                borderRadius: '6px',
-                                                fontSize: '0.9rem',
-                                                fontWeight: '600',
-                                                cursor: 'pointer',
-                                                whiteSpace: 'nowrap'
-                                            }}
-                                        >
+                                        <button className="excursion-package-button">
                                             Ver detalles
                                         </button>
                                     </div>
@@ -209,15 +161,11 @@ const CardDetailExcursion: React.FC = () => {
                         ))}
                     </div>
                 ) : (
-                    <div style={{ 
-                        textAlign: 'center', 
-                        padding: '40px', 
-                        color: '#64748b',
-                        backgroundColor: '#f8fafc',
-                        borderRadius: '8px',
-                        marginTop: '20px'
-                    }}>
-                        <p style={{ margin: 0 }}>No hay paquetes disponibles que incluyan esta excursión</p>
+                    <div className="excursion-packages-empty">
+                        <div className="excursion-packages-empty-icon">📭</div>
+                        <p className="excursion-packages-empty-text">
+                            No hay paquetes disponibles que incluyan esta excursión
+                        </p>
                     </div>
                 )}
             </div>

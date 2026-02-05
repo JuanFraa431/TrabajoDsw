@@ -44,3 +44,26 @@
     font-size: 12px;
     text-align: center;
 }
+
+/* ===== Responsive Footer ===== */
+@media (max-width: 768px) {
+    .footer-container {
+        padding: 20px;
+    }
+
+    .footer-content {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .footer-consumer-protection {
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .footer-container {
+        padding: 16px 12px;
+        font-size: 13px;
+    }
+}

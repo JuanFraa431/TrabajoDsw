@@ -2,13 +2,23 @@
 @import "~react-datepicker/dist/react-datepicker.css";
 @import "~leaflet/dist/leaflet.css";
 
+html {
+    overflow-x: hidden;
+}
+
 body {
     margin: 0;
     padding: 0;
     font-family: 'Poppins', sans-serif;
     background-color: #f8f9fa;
     color: #333;
-    text-shadow: 1px 1px 2px rgba(118, 118, 118, 0.5)
+    text-shadow: 1px 1px 2px rgba(118, 118, 118, 0.5);
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
 }
 
 a {

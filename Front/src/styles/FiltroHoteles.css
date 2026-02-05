@@ -206,3 +206,22 @@
     top: unset;
   }
 }
+
+@media (max-width: 480px) {
+  .filtro-hoteles-sidebar {
+    padding: 16px;
+    border-radius: 10px;
+  }
+
+  .filtro-hoteles-title {
+    font-size: 1.1rem;
+  }
+
+  .filtro-hoteles-option {
+    padding: 10px;
+  }
+
+  .filtro-hoteles-section-title {
+    font-size: 0.9rem;
+  }
+}

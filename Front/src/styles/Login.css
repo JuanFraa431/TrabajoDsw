@@ -189,3 +189,56 @@
 .register-button a:hover {
     text-decoration: underline;
 }
+
+/* ===== Responsive Login ===== */
+@media (max-width: 768px) {
+    .container-image img {
+        width: 280px;
+    }
+
+    .form-session {
+        width: 90%;
+        max-width: 500px;
+        flex-direction: column;
+        padding: 24px;
+    }
+
+    .left-side {
+        width: 100%;
+    }
+
+    .divider {
+        width: 100%;
+        height: 2px;
+        margin: 20px 0;
+    }
+
+    .right-side {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .container-image img {
+        width: 200px;
+    }
+
+    .form-session {
+        width: 95%;
+        padding: 20px 16px;
+    }
+
+    .left-side h2 {
+        font-size: 18px;
+    }
+
+    .input-group input {
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    .btn-login {
+        padding: 10px;
+        font-size: 14px;
+    }
+}
