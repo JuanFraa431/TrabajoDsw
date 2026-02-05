@@ -19,9 +19,9 @@ async function findAll(req: Request, res: Response) {
           "paqueteExcursiones",
           "paqueteExcursiones.excursion",
           "paqueteTransportes",
-          "paqueteTransportes.transporte",
-          "paqueteTransportes.transporte.ciudadOrigen",
-          "paqueteTransportes.transporte.ciudadDestino",
+          "paqueteTransportes.tipoTransporte",
+          "paqueteTransportes.ciudadOrigen",
+          "paqueteTransportes.ciudadDestino",
         ],
       },
     );
@@ -41,9 +41,9 @@ async function findAllUser(req: Request, res: Response) {
           "ciudad",
           "estadias.hotel.ciudad",
           "paqueteExcursiones.excursion",
-          "paqueteTransportes.transporte",
-          "paqueteTransportes.transporte.ciudadOrigen",
-          "paqueteTransportes.transporte.ciudadDestino",
+          "paqueteTransportes.tipoTransporte",
+          "paqueteTransportes.ciudadOrigen",
+          "paqueteTransportes.ciudadDestino",
         ] as any,
       },
     );
@@ -70,9 +70,9 @@ async function findOne(req: Request, res: Response) {
           "paqueteExcursiones",
           "paqueteExcursiones.excursion",
           "paqueteTransportes",
-          "paqueteTransportes.transporte",
-          "paqueteTransportes.transporte.ciudadOrigen",
-          "paqueteTransportes.transporte.ciudadDestino",
+          "paqueteTransportes.tipoTransporte",
+          "paqueteTransportes.ciudadOrigen",
+          "paqueteTransportes.ciudadDestino",
         ],
       },
     );
@@ -124,7 +124,7 @@ async function remove(req: Request, res: Response) {
 async function search(req: Request, res: Response) {
   try {
     const { ciudad, fechaInicio, fechaFin } = req.query;
-    
+
     // Primero obtenemos los IDs de los paquetes que cumplen con los filtros
     const paqueteIds = await em.getConnection().execute<{ id: number }[]>(
       `
@@ -144,7 +144,7 @@ async function search(req: Request, res: Response) {
     );
 
     // Luego cargamos los paquetes completos con todas las relaciones necesarias
-    const ids = paqueteIds.map(p => p.id);
+    const ids = paqueteIds.map((p) => p.id);
     const paquetes = await em.find(
       Paquete,
       { id: { $in: ids } },
@@ -156,7 +156,9 @@ async function search(req: Request, res: Response) {
           "paqueteExcursiones",
           "paqueteExcursiones.excursion",
           "paqueteTransportes",
-          "paqueteTransportes.transporte",
+          "paqueteTransportes.tipoTransporte",
+          "paqueteTransportes.ciudadOrigen",
+          "paqueteTransportes.ciudadDestino",
         ],
       },
     );

@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
 import { PaqueteTransporte } from "../models/paqueteTransporte.model.js";
 import { Paquete } from "../models/paquete.model.js";
-import { Transporte } from "../models/transporte.model.js";
+import { TipoTransporte } from "../models/tipoTransporte.model.js";
+import { Ciudad } from "../models/ciudad.model.js";
 import { orm } from "../shared/db/orm.js";
 import { actualizarPrecioPaquete } from "../utils/paqueteUtils.js";
 
@@ -12,7 +13,14 @@ async function findAll(req: Request, res: Response) {
     const paqueteTransportes = await em.find(
       PaqueteTransporte,
       {},
-      { populate: ["transporte", "paquete"] },
+      {
+        populate: [
+          "paquete",
+          "tipoTransporte",
+          "ciudadOrigen",
+          "ciudadDestino",
+        ],
+      },
     );
     res.status(200).json({
       message: "PaqueteTransportes encontrados",
@@ -29,7 +37,14 @@ async function findOne(req: Request, res: Response) {
     const paqueteTransporte = await em.findOneOrFail(
       PaqueteTransporte,
       { id },
-      { populate: ["transporte", "paquete"] },
+      {
+        populate: [
+          "paquete",
+          "tipoTransporte",
+          "ciudadOrigen",
+          "ciudadDestino",
+        ],
+      },
     );
     res.status(200).json({
       message: "PaqueteTransporte encontrado",
@@ -47,12 +62,7 @@ async function findByPaquete(req: Request, res: Response) {
       PaqueteTransporte,
       { paquete: paqueteId },
       {
-        populate: [
-          "transporte",
-          "transporte.tipoTransporte",
-          "transporte.ciudadOrigen",
-          "transporte.ciudadDestino",
-        ],
+        populate: ["tipoTransporte", "ciudadOrigen", "ciudadDestino"],
       },
     );
     res.status(200).json({
@@ -66,46 +76,78 @@ async function findByPaquete(req: Request, res: Response) {
 
 async function create(req: Request, res: Response) {
   try {
-    const { id_transporte, id_paquete, dia, horario, precio, es_ida, ...rest } =
-      req.body;
-    if (typeof rest.fecha === "string") {
-      rest.fecha = new Date(rest.fecha);
-    }
-    if (rest.fecha && Number.isNaN(new Date(rest.fecha).getTime())) {
-      return res.status(400).json({ message: "Fecha inválida." });
-    }
-    if (!rest.tipo && typeof es_ida === "boolean") {
-      rest.tipo = es_ida ? "IDA" : "VUELTA";
-    }
-    if (!rest.fecha) {
+    const {
+      paquete_id,
+      tipo_transporte_id,
+      ciudad_origen_id,
+      ciudad_destino_id,
+      fecha_salida,
+      fecha_llegada,
+      nombre_empresa,
+      mail_empresa,
+      capacidad,
+      asientos_disponibles,
+      precio,
+      tipo,
+      activo,
+    } = req.body;
+
+    if (!paquete_id) {
       return res
         .status(400)
-        .json({ message: "La fecha del transporte es obligatoria." });
+        .json({ message: "El ID del paquete es obligatorio." });
     }
-    if (rest.tipo !== "IDA" && rest.tipo !== "VUELTA") {
+    if (!tipo_transporte_id || !ciudad_origen_id || !ciudad_destino_id) {
+      return res.status(400).json({
+        message:
+          "Los IDs de tipo de transporte y ciudades de origen/destino son obligatorios.",
+      });
+    }
+    if (!fecha_salida || !fecha_llegada) {
+      return res
+        .status(400)
+        .json({ message: "Las fechas de salida y llegada son obligatorias." });
+    }
+    if (tipo !== "IDA" && tipo !== "VUELTA") {
       return res.status(400).json({
         message: "El tipo de transporte debe ser IDA o VUELTA.",
       });
     }
-    if (!id_paquete || !id_transporte) {
-      return res.status(400).json({
-        message: "Los IDs de paquete y transporte son obligatorios.",
-      });
+
+    const fechaSalidaDate = new Date(fecha_salida);
+    const fechaLlegadaDate = new Date(fecha_llegada);
+    if (Number.isNaN(fechaSalidaDate.getTime())) {
+      return res.status(400).json({ message: "Fecha de salida inválida." });
+    }
+    if (Number.isNaN(fechaLlegadaDate.getTime())) {
+      return res.status(400).json({ message: "Fecha de llegada inválida." });
     }
 
-    const transporte = await em.getReference(Transporte, id_transporte);
-    const paquete = await em.getReference(Paquete, id_paquete);
+    const paquete = em.getReference(Paquete, paquete_id);
+    const tipoTransporte = em.getReference(TipoTransporte, tipo_transporte_id);
+    const ciudadOrigen = em.getReference(Ciudad, ciudad_origen_id);
+    const ciudadDestino = em.getReference(Ciudad, ciudad_destino_id);
 
     const paqueteTransporte = em.create(PaqueteTransporte, {
-      ...rest,
-      transporte,
       paquete,
+      tipoTransporte,
+      ciudadOrigen,
+      ciudadDestino,
+      fecha_salida: fechaSalidaDate,
+      fecha_llegada: fechaLlegadaDate,
+      nombre_empresa,
+      mail_empresa,
+      capacidad,
+      asientos_disponibles,
+      precio,
+      tipo,
+      activo: activo ?? true,
     });
 
     await em.flush();
 
     // Actualizar el precio del paquete automáticamente
-    await actualizarPrecioPaquete(id_paquete);
+    await actualizarPrecioPaquete(paquete_id);
 
     res
       .status(201)
@@ -120,54 +162,84 @@ async function update(req: Request, res: Response) {
   try {
     const id = Number.parseInt(req.params.id);
     const paqueteTransporte = await em.findOneOrFail(PaqueteTransporte, { id });
+    const {
+      paquete_id,
+      tipo_transporte_id,
+      ciudad_origen_id,
+      ciudad_destino_id,
+      fecha_salida,
+      fecha_llegada,
+      nombre_empresa,
+      mail_empresa,
+      capacidad,
+      asientos_disponibles,
+      precio,
+      tipo,
+      activo,
+    } = req.body;
 
-    const { id_transporte, id_paquete, dia, horario, precio, es_ida, ...rest } =
-      req.body;
-    if (typeof rest.fecha === "string") {
-      rest.fecha = new Date(rest.fecha);
-    }
-    if (rest.fecha && Number.isNaN(new Date(rest.fecha).getTime())) {
-      return res.status(400).json({ message: "Fecha inválida." });
-    }
-    if (!rest.tipo && typeof es_ida === "boolean") {
-      rest.tipo = es_ida ? "IDA" : "VUELTA";
-    }
-
-    const tipoFinal = rest.tipo ?? paqueteTransporte.tipo;
+    const tipoFinal = tipo ?? paqueteTransporte.tipo;
     if (tipoFinal !== "IDA" && tipoFinal !== "VUELTA") {
       return res.status(400).json({
         message: "El tipo de transporte debe ser IDA o VUELTA.",
       });
     }
-    const fechaFinal = rest.fecha ?? paqueteTransporte.fecha;
-    if (!fechaFinal) {
-      return res
-        .status(400)
-        .json({ message: "La fecha del transporte es obligatoria." });
-    }
 
-    if (!id_paquete) {
-      return res
-        .status(400)
-        .json({ message: "El ID del paquete es obligatorio." });
+    let fechaSalidaFinal = paqueteTransporte.fecha_salida;
+    let fechaLlegadaFinal = paqueteTransporte.fecha_llegada;
+    if (fecha_salida) {
+      const parsed = new Date(fecha_salida);
+      if (Number.isNaN(parsed.getTime())) {
+        return res.status(400).json({ message: "Fecha de salida inválida." });
+      }
+      fechaSalidaFinal = parsed;
+    }
+    if (fecha_llegada) {
+      const parsed = new Date(fecha_llegada);
+      if (Number.isNaN(parsed.getTime())) {
+        return res.status(400).json({ message: "Fecha de llegada inválida." });
+      }
+      fechaLlegadaFinal = parsed;
     }
 
     const updatedData: any = {
-      ...rest,
       tipo: tipoFinal,
-      fecha: fechaFinal,
-      transporte: id_transporte
-        ? em.getReference(Transporte, id_transporte)
-        : paqueteTransporte.transporte,
-      paquete: em.getReference(Paquete, id_paquete),
+      fecha_salida: fechaSalidaFinal,
+      fecha_llegada: fechaLlegadaFinal,
     };
+
+    if (paquete_id) {
+      updatedData.paquete = em.getReference(Paquete, paquete_id);
+    }
+    if (tipo_transporte_id) {
+      updatedData.tipoTransporte = em.getReference(
+        TipoTransporte,
+        tipo_transporte_id,
+      );
+    }
+    if (ciudad_origen_id) {
+      updatedData.ciudadOrigen = em.getReference(Ciudad, ciudad_origen_id);
+    }
+    if (ciudad_destino_id) {
+      updatedData.ciudadDestino = em.getReference(Ciudad, ciudad_destino_id);
+    }
+    if (nombre_empresa !== undefined)
+      updatedData.nombre_empresa = nombre_empresa;
+    if (mail_empresa !== undefined) updatedData.mail_empresa = mail_empresa;
+    if (capacidad !== undefined) updatedData.capacidad = capacidad;
+    if (asientos_disponibles !== undefined)
+      updatedData.asientos_disponibles = asientos_disponibles;
+    if (precio !== undefined) updatedData.precio = precio;
+    if (activo !== undefined) updatedData.activo = activo;
 
     em.assign(paqueteTransporte, updatedData);
 
     await em.flush();
 
     // Actualizar el precio del paquete automáticamente
-    await actualizarPrecioPaquete(id_paquete);
+    if (paquete_id) {
+      await actualizarPrecioPaquete(paquete_id);
+    }
 
     res.status(200).json({
       message: "PaqueteTransporte actualizado",

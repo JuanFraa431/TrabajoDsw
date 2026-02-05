@@ -25,10 +25,27 @@ const HotelList: React.FC<HotelListProps> = ({
 }) => {
   const [hoteles, setHoteles] = useState<Hotel[]>(initialHoteles);
   const [ciudades, setCiudades] = useState<Ciudad[]>([]);
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [estrellasFiltro, setEstrellasFiltro] = useState<string>("TODOS");
 
   useEffect(() => {
     setHoteles(initialHoteles);
   }, [initialHoteles]);
+
+  const filteredHoteles = hoteles.filter((hotel) => {
+    const term = searchTerm.trim().toLowerCase();
+    const nombreCiudad = hotel.ciudad?.nombre || "";
+    const matchesTerm =
+      term.length === 0 ||
+      (hotel.nombre || "").toLowerCase().includes(term) ||
+      nombreCiudad.toLowerCase().includes(term);
+
+    const matchesEstrellas =
+      estrellasFiltro === "TODOS" ||
+      hotel.estrellas === Number(estrellasFiltro);
+
+    return matchesTerm && matchesEstrellas;
+  });
 
   useEffect(() => {
     const fetchCiudades = async () => {
@@ -116,7 +133,11 @@ const HotelList: React.FC<HotelListProps> = ({
         if (ciudadSelect && ciudadId) {
           ciudadSelect.value = ciudadId.toString();
         }
-        setupCloudinaryUpload("swal-input-file", "swal-input-imagen", "swal-upload-status");
+        setupCloudinaryUpload(
+          "swal-input-file",
+          "swal-input-imagen",
+          "swal-upload-status",
+        );
       },
       preConfirm: () => {
         const nombre = (
@@ -316,7 +337,11 @@ const HotelList: React.FC<HotelListProps> = ({
         popup: "swal-wide",
       },
       didOpen: () => {
-        setupCloudinaryUpload("swal-input-file", "swal-input-imagen", "swal-upload-status");
+        setupCloudinaryUpload(
+          "swal-input-file",
+          "swal-input-imagen",
+          "swal-upload-status",
+        );
       },
       showCancelButton: true,
       confirmButtonText: "Crear",
@@ -436,6 +461,35 @@ const HotelList: React.FC<HotelListProps> = ({
           + Crear Hotel
         </button>
       </div>
+      <div
+        className="list-filters"
+        style={{
+          display: "flex",
+          gap: "12px",
+          alignItems: "center",
+          marginBottom: "12px",
+        }}
+      >
+        <input
+          type="text"
+          placeholder="Buscar por nombre o ciudad"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          style={{ flex: 1, padding: "8px 10px", borderRadius: "6px" }}
+        />
+        <select
+          value={estrellasFiltro}
+          onChange={(e) => setEstrellasFiltro(e.target.value)}
+          style={{ padding: "8px 10px", borderRadius: "6px" }}
+        >
+          <option value="TODOS">Todas</option>
+          <option value="1">1 estrella</option>
+          <option value="2">2 estrellas</option>
+          <option value="3">3 estrellas</option>
+          <option value="4">4 estrellas</option>
+          <option value="5">5 estrellas</option>
+        </select>
+      </div>
       <table className="list-table">
         <thead>
           <tr>
@@ -449,17 +503,17 @@ const HotelList: React.FC<HotelListProps> = ({
           </tr>
         </thead>
         <tbody>
-          {hoteles.length === 0 ? (
+          {filteredHoteles.length === 0 ? (
             <tr>
               <td
                 colSpan={7}
                 style={{ textAlign: "center", padding: "20px", color: "#666" }}
               >
-                No hay hoteles registrados
+                No hay hoteles que coincidan con el filtro
               </td>
             </tr>
           ) : (
-            hoteles.map((hotel) => (
+            filteredHoteles.map((hotel) => (
               <tr key={hotel.id}>
                 <td>
                   <strong>{hotel.nombre}</strong>

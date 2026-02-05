@@ -40,9 +40,7 @@ const CardDetail: React.FC = () => {
   useEffect(() => {
     const fetchPaquete = async () => {
       try {
-        const response = await axios.get(
-          `/api/paquete/${id}`,
-        );
+        const response = await axios.get(`/api/paquete/${id}`);
         setPaquete(response.data.data);
       } catch (error) {
         console.error("Error fetching paquete:", error);
@@ -79,10 +77,7 @@ const CardDetail: React.FC = () => {
         estrellas,
       };
 
-      const response = await axios.post(
-        `/api/comentario`,
-        newComentario,
-      );
+      const response = await axios.post(`/api/comentario`, newComentario);
 
       const comentarioCreado: Comentario = {
         id: response.data.id,
@@ -116,9 +111,7 @@ const CardDetail: React.FC = () => {
     }
 
     try {
-      await axios.delete(
-        `/api/comentario/${comentarioId}`,
-      );
+      await axios.delete(`/api/comentario/${comentarioId}`);
       setComentarios((prev) =>
         prev.filter((comentario) => comentario.id !== comentarioId),
       );
@@ -380,30 +373,39 @@ const CardDetail: React.FC = () => {
                           {paqueteTrans.tipo === "IDA" ? "Ida" : "Vuelta"}
                         </span>
                         <h3 className="item-card-title">
-                          {paqueteTrans.transporte?.nombre}
+                          {paqueteTrans.nombre_empresa || "Transporte"}
                         </h3>
                         <p className="item-card-description">
-                          {paqueteTrans.transporte?.descripcion}
+                          {paqueteTrans.tipoTransporte?.nombre ||
+                            "Tipo no especificado"}
                         </p>
                         <div className="item-card-meta">
                           <span className="meta-tag">
                             <FaCalendarAlt className="meta-tag-icon" />
-                            {paqueteTrans.fecha
-                              ? new Date(paqueteTrans.fecha).toLocaleString(
-                                  "es-ES",
-                                )
-                              : "Fecha no especificada"}
+                            {paqueteTrans.fecha_salida
+                              ? new Date(
+                                  paqueteTrans.fecha_salida,
+                                ).toLocaleString("es-ES")
+                              : "Salida no especificada"}
+                          </span>
+                          <span className="meta-tag">
+                            <FaArrowRight className="meta-tag-icon" />
+                            {paqueteTrans.fecha_llegada
+                              ? new Date(
+                                  paqueteTrans.fecha_llegada,
+                                ).toLocaleString("es-ES")
+                              : "Llegada no especificada"}
                           </span>
                         </div>
-                        {paqueteTrans.transporte?.ciudadOrigen &&
-                          paqueteTrans.transporte?.ciudadDestino && (
+                        {paqueteTrans.ciudadOrigen &&
+                          paqueteTrans.ciudadDestino && (
                             <div className="route-display">
                               <span className="route-city">
-                                {paqueteTrans.transporte.ciudadOrigen.nombre}
+                                {paqueteTrans.ciudadOrigen.nombre}
                               </span>
                               <FaArrowRight className="route-arrow" />
                               <span className="route-city">
-                                {paqueteTrans.transporte.ciudadDestino.nombre}
+                                {paqueteTrans.ciudadDestino.nombre}
                               </span>
                             </div>
                           )}

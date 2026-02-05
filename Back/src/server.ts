@@ -18,7 +18,6 @@ import { routerUsuario } from "./routes/usuario.routes.js";
 import { routerCiudad } from "./routes/ciudad.routes.js";
 import { routerHotel } from "./routes/hotel.routes.js";
 import { routerExcursion } from "./routes/excursion.routes.js";
-import { routerTransporte } from "./routes/transporte.routes.js";
 import { routerPaquete } from "./routes/paquete.routes.js";
 import { routerEstadia } from "./routes/estadia.routes.js";
 import { routerComentario } from "./routes/comentario.routes.js";
@@ -76,7 +75,6 @@ app.use("/api/cliente", routerUsuario);
 app.use("/api/ciudad", routerCiudad);
 app.use("/api/hotel", routerHotel);
 app.use("/api/excursion", routerExcursion);
-app.use("/api/transporte", routerTransporte);
 app.use("/api/tipoTransporte", routerTipoTransporte);
 app.use("/api/paquete", routerPaquete);
 app.use("/api/estadia", routerEstadia);
@@ -105,19 +103,21 @@ if (process.env.NODE_ENV !== "test") {
   console.log(`Iniciando el servidor en el puerto ${PORT}`);
 
   // Sincronizar esquema de base de datos antes de iniciar
-  syncSchema().then(() => {
-    console.log("Esquema de base de datos sincronizado");
-    app.listen(PORT, () => {
-      const url = `http://localhost:${PORT}`;
-      console.log(`Puedes abrir el servidor en: ${url}`);
+  syncSchema()
+    .then(() => {
+      console.log("Esquema de base de datos sincronizado");
+      app.listen(PORT, () => {
+        const url = `http://localhost:${PORT}`;
+        console.log(`Puedes abrir el servidor en: ${url}`);
+      });
+    })
+    .catch((err) => {
+      console.error("Error al sincronizar esquema:", err);
+      app.listen(PORT, () => {
+        const url = `http://localhost:${PORT}`;
+        console.log(`Puedes abrir el servidor en: ${url}`);
+      });
     });
-  }).catch((err) => {
-    console.error("Error al sincronizar esquema:", err);
-    app.listen(PORT, () => {
-      const url = `http://localhost:${PORT}`;
-      console.log(`Puedes abrir el servidor en: ${url}`);
-    });
-  });
 }
 
 export { app };

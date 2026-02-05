@@ -26,11 +26,30 @@ const ExcursionList: React.FC<ExcursionListProps> = ({
   const [excursiones, setExcursiones] =
     useState<Excursion[]>(initialExcursiones);
   const [ciudades, setCiudades] = useState<Ciudad[]>([]);
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [tipoFiltro, setTipoFiltro] = useState<string>("TODOS");
   const MySwal = withReactContent(Swal);
 
   useEffect(() => {
     setExcursiones(initialExcursiones);
   }, [initialExcursiones]);
+
+  const tiposUnicos = Array.from(
+    new Set(excursiones.map((exc) => exc.tipo).filter(Boolean)),
+  ) as string[];
+
+  const filteredExcursiones = excursiones.filter((excursion) => {
+    const term = searchTerm.trim().toLowerCase();
+    const ciudadNombre = excursion.ciudad?.nombre || "";
+    const matchesTerm =
+      term.length === 0 ||
+      (excursion.nombre || "").toLowerCase().includes(term) ||
+      ciudadNombre.toLowerCase().includes(term);
+
+    const matchesTipo = tipoFiltro === "TODOS" || excursion.tipo === tipoFiltro;
+
+    return matchesTerm && matchesTipo;
+  });
 
   useEffect(() => {
     const fetchCiudades = async () => {
@@ -122,7 +141,11 @@ const ExcursionList: React.FC<ExcursionListProps> = ({
         popup: "swal-wide",
       },
       didOpen: () => {
-        setupCloudinaryUpload("swal-input-file", "swal-input-imagen", "swal-upload-status");
+        setupCloudinaryUpload(
+          "swal-input-file",
+          "swal-input-imagen",
+          "swal-upload-status",
+        );
       },
       showCancelButton: true,
       confirmButtonText: "Guardar",
@@ -350,7 +373,11 @@ const ExcursionList: React.FC<ExcursionListProps> = ({
         popup: "swal-wide",
       },
       didOpen: () => {
-        setupCloudinaryUpload("swal-input-file", "swal-input-imagen", "swal-upload-status");
+        setupCloudinaryUpload(
+          "swal-input-file",
+          "swal-input-imagen",
+          "swal-upload-status",
+        );
       },
       showCancelButton: true,
       confirmButtonText: "Crear",
@@ -497,6 +524,35 @@ const ExcursionList: React.FC<ExcursionListProps> = ({
           + Crear Excursión
         </button>
       </div>
+      <div
+        className="list-filters"
+        style={{
+          display: "flex",
+          gap: "12px",
+          alignItems: "center",
+          marginBottom: "12px",
+        }}
+      >
+        <input
+          type="text"
+          placeholder="Buscar por nombre o ciudad"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          style={{ flex: 1, padding: "8px 10px", borderRadius: "6px" }}
+        />
+        <select
+          value={tipoFiltro}
+          onChange={(e) => setTipoFiltro(e.target.value)}
+          style={{ padding: "8px 10px", borderRadius: "6px" }}
+        >
+          <option value="TODOS">Todos</option>
+          {tiposUnicos.map((tipo) => (
+            <option key={tipo} value={tipo}>
+              {tipo}
+            </option>
+          ))}
+        </select>
+      </div>
       <table className="list-table">
         <thead>
           <tr>
@@ -510,17 +566,17 @@ const ExcursionList: React.FC<ExcursionListProps> = ({
           </tr>
         </thead>
         <tbody>
-          {excursiones.length === 0 ? (
+          {filteredExcursiones.length === 0 ? (
             <tr>
               <td
                 colSpan={7}
                 style={{ textAlign: "center", padding: "20px", color: "#666" }}
               >
-                No hay excursiones registradas
+                No hay excursiones que coincidan con el filtro
               </td>
             </tr>
           ) : (
-            excursiones.map((excursion) => (
+            filteredExcursiones.map((excursion) => (
               <tr key={excursion.id}>
                 <td>
                   <strong>{excursion.nombre}</strong>
