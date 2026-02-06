@@ -151,13 +151,12 @@ const CompleteGoogleProfile: React.FC = () => {
               className="profile-image"
             />
           )}
-          <h2>Completa tu Perfil</h2>
-          <p className="subtitle">
-            Bienvenido! Para continuar, por favor completa tu información.
-          </p>
-          <p className="email-info">
-            <strong>Email:</strong> {googleData.email}
-          </p>
+          <div className="profile-info">
+            <h2>Completa tu Perfil</h2>
+            <p className="email-info">
+              <strong>Email:</strong> {googleData.email}
+            </p>
+          </div>
         </div>
 
         <form onSubmit={handleSubmit} className="complete-profile-form">
