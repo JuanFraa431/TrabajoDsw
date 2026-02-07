@@ -9,7 +9,7 @@ import { API_BASE_URL } from './config/api';
 
 // Configurar axios globalmente para todas las llamadas
 axios.defaults.baseURL = API_BASE_URL;
-axios.defaults.timeout = 30000;
+axios.defaults.timeout = 90000;
 
 const container = document.getElementById('root') as HTMLElement;
 const root = createRoot(container);

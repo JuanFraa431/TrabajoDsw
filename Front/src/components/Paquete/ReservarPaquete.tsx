@@ -227,11 +227,11 @@ const ReservarPaquete: React.FC = () => {
   const nextStep = () => {
     // Prevenir múltiples clicks de forma síncrona
     if (isNavigatingRef.current || isNavigating) return;
-    
+
     // Bloquear inmediatamente con la ref (síncrono)
     isNavigatingRef.current = true;
     setIsNavigating(true);
-    
+
     // Validar
     if (!validateStep()) {
       // Si falla la validación, desbloquear
@@ -239,7 +239,7 @@ const ReservarPaquete: React.FC = () => {
       setIsNavigating(false);
       return;
     }
-    
+
     // Cambiar de paso
     if (step < 5) {
       setStep((prev) => prev + 1);
@@ -258,13 +258,13 @@ const ReservarPaquete: React.FC = () => {
   const prevStep = () => {
     // Prevenir múltiples clicks de forma síncrona
     if (isNavigatingRef.current || isNavigating) return;
-    
+
     // Bloquear inmediatamente
     isNavigatingRef.current = true;
     setIsNavigating(true);
-    
+
     setError(null);
-    
+
     if (step > 1) {
       setStep((prev) => prev - 1);
       // Desbloquear después de que React complete el cambio de paso
@@ -294,30 +294,38 @@ const ReservarPaquete: React.FC = () => {
       const basePrecio =
         precioBase > 0 ? precioBase : calcularPrecioTotalPaquete(paquete);
       const totalPagar = basePrecio * cantidadPersonas;
-      const responsePago = await axios.post("/api/pago", {
-        fecha: new Date(),
-        monto: totalPagar,
-        estado: "PENDIENTE",
-        metodoDePago: pagoSeleccionado,
-        tipoFactura: form.tipoFactura,
-        nombreFacturacion: form.nombre,
-        apellidoFacturacion: form.apellido,
-        dniFacturacion: form.documento,
-        telefonoFacturacion: form.telefono,
-        emailFacturacion: form.email,
-        nombreTitular: form.tarjetaNombre || "",
-        ultimos4: form.tarjetaUltimos4 || "",
-        proveedor: "Stripe",
-      });
+      const responsePago = await axios.post(
+        "/api/pago",
+        {
+          fecha: new Date(),
+          monto: totalPagar,
+          estado: "PENDIENTE",
+          metodoDePago: pagoSeleccionado,
+          tipoFactura: form.tipoFactura,
+          nombreFacturacion: form.nombre,
+          apellidoFacturacion: form.apellido,
+          dniFacturacion: form.documento,
+          telefonoFacturacion: form.telefono,
+          emailFacturacion: form.email,
+          nombreTitular: form.tarjetaNombre || "",
+          ultimos4: form.tarjetaUltimos4 || "",
+          proveedor: "Stripe",
+        },
+        { timeout: 90000 },
+      );
 
-      const responseReserva = await axios.post("/api/reservaPaquete", {
-        pagoId: responsePago.data.data.id,
-        fecha: new Date(),
-        paqueteId: paquete.id,
-        usuarioId: user.id,
-        estado: "PENDIENTE",
-        personas: form.acompanantesData,
-      });
+      const responseReserva = await axios.post(
+        "/api/reservaPaquete",
+        {
+          pagoId: responsePago.data.data.id,
+          fecha: new Date(),
+          paqueteId: paquete.id,
+          usuarioId: user.id,
+          estado: "PENDIENTE",
+          personas: form.acompanantesData,
+        },
+        { timeout: 90000 },
+      );
 
       if (responseReserva.status === 201) {
         setReservaConfirmada(true);
