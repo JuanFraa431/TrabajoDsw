@@ -3,24 +3,15 @@ import axios from "axios";
 import "../styles/Card.css";
 import { Paquete } from "../interface/paquete";
 import { useNavigate } from "react-router-dom";
-import { calcularPrecioTotalPaquete } from "../utils/paqueteUtils";
 
-const Card: React.FC<Paquete> = ({
-  id,
-  nombre,
-  detalle,
-  imagen,
-  estadias,
-  paqueteExcursiones,
-}) => {
+const Card: React.FC<Paquete> = ({ id, nombre, detalle, imagen, precio }) => {
   const navigate = useNavigate();
 
   const handleViewPackage = () => {
     navigate(`/cardDetail`, { state: { id } });
   };
 
-  const paqueteData = { estadias, paqueteExcursiones };
-  const precioCalculado = calcularPrecioTotalPaquete(paqueteData);
+  const precioCalculado = typeof precio === "number" ? precio : null;
 
   return (
     <div className="card">
@@ -30,7 +21,11 @@ const Card: React.FC<Paquete> = ({
         <p className="p-body">{detalle}</p>
         <div className="card-footer">
           <p>Precio por persona</p>
-          <h4>${precioCalculado.toLocaleString()}</h4>
+          <h4>
+            {typeof precioCalculado === "number"
+              ? `$${precioCalculado.toLocaleString()}`
+              : "Consultar"}
+          </h4>
           <p>Incluye impuestos, tasas y cargos</p>
           <button className="boton-ver" onClick={handleViewPackage}>
             Ver Alojamiento
@@ -59,7 +54,9 @@ const CardList: React.FC = () => {
         }
       } catch (err) {
         console.error("Error fetching paquetes:", err);
-        setError(err instanceof Error ? err.message : "Error al cargar paquetes");
+        setError(
+          err instanceof Error ? err.message : "Error al cargar paquetes",
+        );
         setPaquetes([]);
       } finally {
         setLoading(false);
@@ -71,19 +68,21 @@ const CardList: React.FC = () => {
 
   const handleVerMas = () => {
     if (paquetes.length > 0) {
-      navigate('/paquetes', { state: { paquetes } });
+      navigate("/paquetes", { state: { paquetes } });
     }
   };
 
   if (loading) {
     return (
       <div className="container">
-        <div style={{
-          textAlign: 'center',
-          padding: '60px 20px',
-          color: '#64748b',
-          fontSize: '16px'
-        }}>
+        <div
+          style={{
+            textAlign: "center",
+            padding: "60px 20px",
+            color: "#64748b",
+            fontSize: "16px",
+          }}
+        >
           Cargando paquetes...
         </div>
       </div>

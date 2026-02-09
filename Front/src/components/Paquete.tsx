@@ -4,7 +4,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { Paquete } from "../interface/paquete";
 import Filtros from "./FiltroVertical";
 import {
-  calcularPrecioTotalPaquete,
   obtenerActividadesIncluidas,
   obtenerCiudadesVisitadas,
   formatearDuracionPaquete,
@@ -53,7 +52,7 @@ const Paquetes: React.FC = () => {
     if (filters?.hoteles && filters.hoteles.length > 0) {
       filtered = filtered.filter((paquete: Paquete) =>
         paquete.estadias?.some((estadia) =>
-          filters.hoteles.includes(estadia.hotel?.nombre ?? ''),
+          filters.hoteles.includes(estadia.hotel?.nombre ?? ""),
         ),
       );
     }
@@ -61,7 +60,7 @@ const Paquetes: React.FC = () => {
     // Filtrar por ciudades
     if (filters?.ciudades && filters.ciudades.length > 0) {
       filtered = filtered.filter((paquete: Paquete) =>
-        filters.ciudades.includes(paquete.ciudad?.nombre ?? ''),
+        filters.ciudades.includes(paquete.ciudad?.nombre ?? ""),
       );
     }
 
@@ -130,8 +129,9 @@ const Paquetes: React.FC = () => {
                     <div className="paquete-price">
                       <span className="price-label">Precio por persona</span>
                       <span className="price-amount">
-                        {calcularPrecioTotalPaquete(paquete) > 0
-                          ? `$${calcularPrecioTotalPaquete(paquete)}`
+                        {typeof paquete?.precio === "number" &&
+                        paquete.precio > 0
+                          ? `$${paquete.precio}`
                           : "Consultar"}
                       </span>
                     </div>
