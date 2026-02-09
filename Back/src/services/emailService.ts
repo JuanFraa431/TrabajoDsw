@@ -34,31 +34,90 @@ interface ReservaEmailData {
 class EmailService {
   private transporter;
   private enabled;
+  private provider: "resend" | "smtp";
+  private resendApiKey?: string;
+  private resendFrom?: string;
 
   constructor() {
-    const user = process.env.EMAIL_USER;
-    const pass = process.env.EMAIL_PASS;
-    const service = process.env.EMAIL_SERVICE;
-    const host = process.env.EMAIL_HOST;
-    const port = process.env.EMAIL_PORT
-      ? Number(process.env.EMAIL_PORT)
-      : undefined;
+    const resendApiKey = process.env.RESEND_API_KEY;
+    const resendFrom = process.env.RESEND_FROM;
 
-    this.enabled = Boolean(user && pass && (service || host));
+    if (resendApiKey && resendFrom) {
+      this.provider = "resend";
+      this.resendApiKey = resendApiKey;
+      this.resendFrom = resendFrom;
+      this.enabled = true;
+      this.transporter = null as any;
+    } else {
+      const user = process.env.EMAIL_USER;
+      const pass = process.env.EMAIL_PASS;
+      const service = process.env.EMAIL_SERVICE;
+      const host = process.env.EMAIL_HOST;
+      const port = process.env.EMAIL_PORT
+        ? Number(process.env.EMAIL_PORT)
+        : undefined;
 
-    this.transporter = nodemailer.createTransport({
-      service: service,
-      host: host,
-      port: port,
-      secure: port === 465,
-      auth: user && pass ? { user, pass } : undefined,
-      connectionTimeout: 10000,
-      greetingTimeout: 10000,
-      socketTimeout: 15000,
-      tls: {
-        rejectUnauthorized: false,
-      },
-    });
+      this.provider = "smtp";
+      this.enabled = Boolean(user && pass && (service || host));
+
+      this.transporter = nodemailer.createTransport({
+        service: service,
+        host: host,
+        port: port,
+        secure: port === 465,
+        auth: user && pass ? { user, pass } : undefined,
+        connectionTimeout: 10000,
+        greetingTimeout: 10000,
+        socketTimeout: 15000,
+        tls: {
+          rejectUnauthorized: false,
+        },
+      });
+    }
+  }
+
+  private async sendEmail(options: {
+    to: string;
+    subject: string;
+    html: string;
+  }): Promise<void> {
+    if (!this.enabled) {
+      console.warn(
+        "EmailService deshabilitado: faltan credenciales o configuración de proveedor.",
+      );
+      return;
+    }
+
+    if (this.provider === "resend") {
+      const response = await fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${this.resendApiKey}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          from: this.resendFrom,
+          to: [options.to],
+          subject: options.subject,
+          html: options.html,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Resend error: ${response.status} ${errorText}`);
+      }
+      return;
+    }
+
+    const mailOptions = {
+      from: process.env.FROM_EMAIL || process.env.EMAIL_USER,
+      to: options.to,
+      subject: options.subject,
+      html: options.html,
+    };
+
+    await this.transporter.sendMail(mailOptions);
   }
 
   private calcularDiasPaquete(
@@ -1383,21 +1442,12 @@ class EmailService {
   }
 
   async enviarEmailReserva(data: ReservaEmailData): Promise<void> {
-    if (!this.enabled) {
-      console.warn(
-        "EmailService deshabilitado: faltan credenciales o configuración SMTP.",
-      );
-      return;
-    }
     try {
-      const mailOptions = {
-        from: process.env.FROM_EMAIL || "juanfraa032@gmail.com",
+      await this.sendEmail({
         to: data.usuario.email,
         subject: `⏳ Solicitud de Reserva Recibida - ${data.paquete.nombre}`,
         html: this.generarHtmlReserva(data),
-      };
-
-      await this.transporter.sendMail(mailOptions);
+      });
       console.log(`Email de confirmación enviado a: ${data.usuario.email}`);
     } catch (error) {
       console.error("Error al enviar email de confirmación:", error);
@@ -1406,14 +1456,11 @@ class EmailService {
   }
   async enviarConfirmacionPago(data: ReservaEmailData): Promise<void> {
     try {
-      const mailOptions = {
-        from: process.env.FROM_EMAIL || "juanfraa032@gmail.com",
+      await this.sendEmail({
         to: data.usuario.email,
         subject: `🎉 ¡Reserva Confirmada! - ${data.paquete.nombre}`,
         html: this.generarHtmlConfirmacionPago(data),
-      };
-
-      await this.transporter.sendMail(mailOptions);
+      });
       console.log(
         `Email de confirmación de pago enviado a: ${data.usuario.email}`,
       );
@@ -1427,14 +1474,11 @@ class EmailService {
     data: ReservaEmailData & { motivo: string },
   ): Promise<void> {
     try {
-      const mailOptions = {
-        from: process.env.FROM_EMAIL || "juanfraa032@gmail.com",
+      await this.sendEmail({
         to: data.usuario.email,
         subject: `❌ Reserva Rechazada - ${data.paquete.nombre}`,
         html: this.generarHtmlRechazoReserva(data),
-      };
-
-      await this.transporter.sendMail(mailOptions);
+      });
       console.log(`Email de rechazo enviado a: ${data.usuario.email}`);
     } catch (error) {
       console.error("Error al enviar email de rechazo:", error);
@@ -1443,6 +1487,10 @@ class EmailService {
   }
 
   async verificarConexion(): Promise<boolean> {
+    if (this.provider === "resend") {
+      console.log("✅ Proveedor Resend configurado");
+      return this.enabled;
+    }
     try {
       await this.transporter.verify();
       console.log("✅ Conexión SMTP verificada exitosamente");
@@ -1455,8 +1503,7 @@ class EmailService {
 
   async enviarEmailPrueba(destinatario: string): Promise<boolean> {
     try {
-      const mailOptions = {
-        from: process.env.FROM_EMAIL || "juanfraa032@gmail.com",
+      await this.sendEmail({
         to: destinatario,
         subject: "🧪 Email de Prueba - Sistema de Reservas",
         html: `
@@ -1469,10 +1516,8 @@ class EmailService {
                             Este es un email de prueba del Sistema de Reservas de Paquetes Turísticos.
                         </p>
                     </div>
-                `,
-      };
-
-      await this.transporter.sendMail(mailOptions);
+                                `,
+      });
       console.log(`✅ Email de prueba enviado exitosamente a: ${destinatario}`);
       return true;
     } catch (error) {
