@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { Excursion } from "../models/excursion.model.js";
 import { Paquete } from "../models/paquete.model.js";
 import { orm } from "../shared/db/orm.js";
+import { calcularPrecioPaquete } from "../utils/paqueteUtils.js";
 
 const em = orm.em;
 
@@ -153,7 +154,16 @@ async function getPaquetesByExcursion(req: Request, res: Response) {
       },
     );
 
-    res.status(200).json({ message: "Paquetes encontrados", data: paquetes });
+    const paquetesConPrecio = await Promise.all(
+      paquetes.map(async (paquete) => ({
+        ...(paquete as any),
+        precio: await calcularPrecioPaquete(paquete.id as number),
+      })),
+    );
+
+    res
+      .status(200)
+      .json({ message: "Paquetes encontrados", data: paquetesConPrecio });
   } catch (error: any) {
     console.error("Error en getPaquetesByExcursion:", error);
     res.status(500).json({ message: error.message });

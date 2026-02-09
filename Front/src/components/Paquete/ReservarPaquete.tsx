@@ -6,10 +6,7 @@ import "../../styles/ReservarPaquete.css";
 import logo from "../../images/logoFinal2.png";
 import { Acompanante } from "../../interface/acompanante";
 import axios from "axios";
-import {
-  calcularPrecioTotalPaquete,
-  obtenerRangoFechasPaquete,
-} from "../../utils/paqueteUtils";
+import { obtenerRangoFechasPaquete } from "../../utils/paqueteUtils";
 
 const STEP_LABELS = [
   "Pago",
@@ -89,7 +86,7 @@ const ReservarPaquete: React.FC = () => {
   const [reservaConfirmada, setReservaConfirmada] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isNavigating, setIsNavigating] = useState(false);
-  const [precioBase, setPrecioBase] = useState<number>(0);
+  const [precioBase, setPrecioBase] = useState<number>(paquete?.precio ?? 0);
 
   if (!paquete) {
     return (
@@ -148,6 +145,12 @@ const ReservarPaquete: React.FC = () => {
 
     if (paquete?.id) {
       fetchPrecioBase();
+    }
+  }, [paquete]);
+
+  useEffect(() => {
+    if (typeof paquete?.precio === "number") {
+      setPrecioBase(paquete.precio);
     }
   }, [paquete]);
 
@@ -291,8 +294,7 @@ const ReservarPaquete: React.FC = () => {
 
     try {
       const cantidadPersonas = (form.acompanantes || 0) + 1;
-      const basePrecio =
-        precioBase > 0 ? precioBase : calcularPrecioTotalPaquete(paquete);
+      const basePrecio = precioBase > 0 ? precioBase : (paquete?.precio ?? 0);
       const totalPagar = basePrecio * cantidadPersonas;
       const responsePago = await axios.post(
         "/api/pago",
@@ -350,8 +352,7 @@ const ReservarPaquete: React.FC = () => {
 
   const rangoFechas = obtenerRangoFechasPaquete(paquete);
   const cantidadPersonas = (form.acompanantes || 0) + 1;
-  const basePrecio =
-    precioBase > 0 ? precioBase : calcularPrecioTotalPaquete(paquete);
+  const basePrecio = precioBase > 0 ? precioBase : (paquete?.precio ?? 0);
   const precioTotal = basePrecio * cantidadPersonas;
 
   return (

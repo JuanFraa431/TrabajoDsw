@@ -16,7 +16,6 @@ import {
 } from "react-icons/fa";
 import { MdOutlineDescription, MdTour } from "react-icons/md";
 import {
-  calcularPrecioTotalPaquete,
   calcularDiasPaquete,
   descripcionTruncada,
   obtenerRangoFechasPaquete,
@@ -193,14 +192,16 @@ const CardDetail: React.FC = () => {
                 <div className="price-section">
                   <p className="price-label">Precio total del paquete</p>
                   <p className="price-amount">
-                    ${calcularPrecioTotalPaquete(paquete)}
+                    {typeof paquete?.precio === "number"
+                      ? `$${paquete.precio}`
+                      : "Consultar"}
                   </p>
                   <Link
                     to="/reservar"
                     state={{
                       paquete: {
                         ...paquete,
-                        precio: calcularPrecioTotalPaquete(paquete),
+                        precio: paquete?.precio,
                       },
                     }}
                     className="reserve-button"

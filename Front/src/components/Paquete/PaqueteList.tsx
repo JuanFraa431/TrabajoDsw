@@ -6,10 +6,7 @@ import withReactContent from "sweetalert2-react-content";
 import { Paquete } from "../../interface/paquete";
 import { Estadia } from "../../interface/estadia";
 import EstadiaForm from "../Estadia/EstadiaForm";
-import {
-  calcularPrecioTotalPaquete,
-  obtenerRangoFechasPaquete,
-} from "../../utils/paqueteUtils";
+import { obtenerRangoFechasPaquete } from "../../utils/paqueteUtils";
 import {
   setupCloudinaryUpload,
   getCloudinaryImageFieldHTMLFullWidth,
@@ -1908,7 +1905,11 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
                     </small>
                   </div>
                 </td>
-                <td>${calcularPrecioTotalPaquete(paquete)}</td>
+                <td>
+                  {typeof paquete?.precio === "number"
+                    ? `$${paquete.precio}`
+                    : "Consultar"}
+                </td>
                 <td>
                   <span
                     className={`badge ${

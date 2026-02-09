@@ -1,7 +1,10 @@
 import { Request, Response } from "express";
 import { Paquete } from "../models/paquete.model.js";
 import { orm } from "../shared/db/orm.js";
-import { actualizarPrecioPaquete } from "../utils/paqueteUtils.js";
+import {
+  actualizarPrecioPaquete,
+  calcularPrecioPaquete,
+} from "../utils/paqueteUtils.js";
 
 const em = orm.em;
 
@@ -25,7 +28,15 @@ async function findAll(req: Request, res: Response) {
         ],
       },
     );
-    res.status(200).json({ message: "Paquetes encontrados", data: paquetes });
+    const paquetesConPrecio = await Promise.all(
+      paquetes.map(async (paquete) => ({
+        ...(paquete as any),
+        precio: await calcularPrecioPaquete(paquete.id as number),
+      })),
+    );
+    res
+      .status(200)
+      .json({ message: "Paquetes encontrados", data: paquetesConPrecio });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
@@ -47,7 +58,15 @@ async function findAllUser(req: Request, res: Response) {
         ] as any,
       },
     );
-    res.status(200).json({ message: "Paquetes encontrados", data: paquetes });
+    const paquetesConPrecio = await Promise.all(
+      paquetes.map(async (paquete) => ({
+        ...(paquete as any),
+        precio: await calcularPrecioPaquete(paquete.id as number),
+      })),
+    );
+    res
+      .status(200)
+      .json({ message: "Paquetes encontrados", data: paquetesConPrecio });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
@@ -76,7 +95,11 @@ async function findOne(req: Request, res: Response) {
         ],
       },
     );
-    res.status(200).json({ message: "Paquete encontrado", data: paquete });
+    const precio = await calcularPrecioPaquete(paquete.id as number);
+    res.status(200).json({
+      message: "Paquete encontrado",
+      data: { ...(paquete as any), precio },
+    });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
@@ -162,8 +185,16 @@ async function search(req: Request, res: Response) {
         ],
       },
     );
+    const paquetesConPrecio = await Promise.all(
+      paquetes.map(async (paquete) => ({
+        ...(paquete as any),
+        precio: await calcularPrecioPaquete(paquete.id as number),
+      })),
+    );
 
-    res.status(200).json({ message: "Paquetes encontrados", data: paquetes });
+    res
+      .status(200)
+      .json({ message: "Paquetes encontrados", data: paquetesConPrecio });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
