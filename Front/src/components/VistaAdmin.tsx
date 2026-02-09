@@ -345,7 +345,7 @@ const VistaAdmin: React.FC = () => {
                   }
                   onClick={() => setSelectedCategory("clientes")}
                 >
-                  Clientes
+                  Usuarios
                 </button>
                 <button
                   className={

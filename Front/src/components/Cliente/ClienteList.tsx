@@ -22,6 +22,33 @@ const ClienteList: React.FC<ClienteListProps> = ({
   const [tipoFiltro, setTipoFiltro] = useState<string>("TODOS");
   const MySwal = withReactContent(Swal);
 
+  const isOnlyLetters = (value: string) =>
+    /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s]+$/.test(value);
+
+  const isOnlyNumbers = (value: string) => /^\d+$/.test(value);
+
+  const isValidEmail = (value: string) => /\S+@\S+\.\S+/.test(value);
+
+  const isAdult = (value: string) => {
+    const birthDate = new Date(value);
+    if (Number.isNaN(birthDate.getTime())) return false;
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    if (
+      monthDiff < 0 ||
+      (monthDiff === 0 && today.getDate() < birthDate.getDate())
+    ) {
+      age -= 1;
+    }
+    return age >= 18;
+  };
+
+  const isValidUsername = (value: string) => /^[A-Za-z0-9]+$/.test(value);
+
+  const isValidPassword = (value: string) =>
+    /^(?=.*[A-Z])(?=.*\d).{8,}$/.test(value);
+
   useEffect(() => {
     setClientes(initialClientes);
   }, [initialClientes]);
@@ -53,13 +80,13 @@ const ClienteList: React.FC<ClienteListProps> = ({
     return localDate.toLocaleDateString();
   };
 
-  const handleEditCliente = (cliente: Cliente) => {
+  const handleEditUsuario = (cliente: Cliente) => {
     const fechaNacimiento = cliente.fecha_nacimiento
       ? new Date(cliente.fecha_nacimiento).toISOString().split("T")[0]
       : "";
 
     MySwal.fire({
-      title: "Editar Cliente",
+      title: "Editar Usuario",
       html: `
         <div class="swal-form-grid">
           <div class="swal-form-group">
@@ -141,16 +168,16 @@ const ClienteList: React.FC<ClienteListProps> = ({
       preConfirm: () => {
         const nombre = (
           document.getElementById("swal-input-nombre") as HTMLInputElement
-        )?.value;
+        )?.value?.trim();
         const apellido = (
           document.getElementById("swal-input-apellido") as HTMLInputElement
-        )?.value;
+        )?.value?.trim();
         const dni = (
           document.getElementById("swal-input-dni") as HTMLInputElement
-        )?.value;
+        )?.value?.trim();
         const email = (
           document.getElementById("swal-input-email") as HTMLInputElement
-        )?.value;
+        )?.value?.trim();
         const fecha_nacimiento = (
           document.getElementById(
             "swal-input-fecha-nacimiento",
@@ -158,7 +185,7 @@ const ClienteList: React.FC<ClienteListProps> = ({
         )?.value;
         const username = (
           document.getElementById("swal-input-username") as HTMLInputElement
-        )?.value;
+        )?.value?.trim();
         const password = (
           document.getElementById("swal-input-password") as HTMLInputElement
         )?.value;
@@ -173,7 +200,7 @@ const ClienteList: React.FC<ClienteListProps> = ({
         )?.value;
         const imagen = (
           document.getElementById("swal-input-imagen") as HTMLInputElement
-        )?.value;
+        )?.value?.trim();
 
         if (!nombre || !apellido || !dni || !email || !username) {
           Swal.showValidationMessage(
@@ -182,14 +209,50 @@ const ClienteList: React.FC<ClienteListProps> = ({
           return;
         }
 
-        if (email && !/\S+@\S+\.\S+/.test(email)) {
+        if (!isOnlyLetters(nombre)) {
+          Swal.showValidationMessage("El nombre solo puede contener letras");
+          return;
+        }
+
+        if (!isOnlyLetters(apellido)) {
+          Swal.showValidationMessage("El apellido solo puede contener letras");
+          return;
+        }
+
+        if (!isOnlyNumbers(dni)) {
+          Swal.showValidationMessage("El DNI debe contener solo números");
+          return;
+        }
+
+        if (!isValidEmail(email)) {
           Swal.showValidationMessage("Por favor ingrese un email válido");
           return;
         }
 
-        if (username && username.includes("@")) {
+        if (!isValidUsername(username)) {
           Swal.showValidationMessage(
-            "El nombre de usuario no puede contener un @",
+            "El nombre de usuario no puede contener espacios ni caracteres especiales",
+          );
+          return;
+        }
+
+        if (fecha_nacimiento && !isAdult(fecha_nacimiento)) {
+          Swal.showValidationMessage(
+            "La fecha de nacimiento debe corresponder a un mayor de 18 años",
+          );
+          return;
+        }
+
+        if (password && password.trim() !== "" && !isValidPassword(password)) {
+          Swal.showValidationMessage(
+            "La contraseña debe tener al menos 8 caracteres, una mayúscula y un número",
+          );
+          return;
+        }
+
+        if (imagen && /\s/.test(imagen)) {
+          Swal.showValidationMessage(
+            "La URL de imagen no puede contener espacios",
           );
           return;
         }
@@ -223,13 +286,13 @@ const ClienteList: React.FC<ClienteListProps> = ({
           onEdit(result.value);
           Swal.fire(
             "Guardado",
-            "El cliente fue actualizado correctamente.",
+            "El usuario fue actualizado correctamente.",
             "success",
           );
         } catch (error: any) {
           Swal.fire(
             "Error",
-            error.response?.data?.message || "No se pudo actualizar el cliente",
+            error.response?.data?.message || "No se pudo actualizar el usuario",
             "error",
           );
         }
@@ -237,9 +300,9 @@ const ClienteList: React.FC<ClienteListProps> = ({
     });
   };
 
-  const handleDeleteCliente = (cliente: Cliente) => {
+  const handleDeleteUsuario = (cliente: Cliente) => {
     Swal.fire({
-      title: "¿Estás seguro que deseas eliminar el cliente?",
+      title: "¿Estás seguro que deseas eliminar el usuario?",
       text: "Esta acción no se puede deshacer.",
       icon: "warning",
       showCancelButton: true,
@@ -255,13 +318,13 @@ const ClienteList: React.FC<ClienteListProps> = ({
           onDelete(cliente);
           Swal.fire(
             "Eliminado",
-            "El cliente fue eliminado correctamente.",
+            "El usuario fue eliminado correctamente.",
             "success",
           );
         } catch (error: any) {
           Swal.fire(
             "Error",
-            error.response?.data?.message || "No se pudo eliminar el cliente",
+            error.response?.data?.message || "No se pudo eliminar el usuario",
             "error",
           );
         }
@@ -269,9 +332,9 @@ const ClienteList: React.FC<ClienteListProps> = ({
     });
   };
 
-  const handleCreateCliente = () => {
+  const handleCreateUsuario = () => {
     MySwal.fire({
-      title: "Crear Cliente",
+      title: "Crear Usuario",
       html: `
         <div class="swal-form-grid">
           <div class="swal-form-group">
@@ -333,16 +396,16 @@ const ClienteList: React.FC<ClienteListProps> = ({
       preConfirm: () => {
         const nombre = (
           document.getElementById("swal-input-nombre") as HTMLInputElement
-        )?.value;
+        )?.value?.trim();
         const apellido = (
           document.getElementById("swal-input-apellido") as HTMLInputElement
-        )?.value;
+        )?.value?.trim();
         const dni = (
           document.getElementById("swal-input-dni") as HTMLInputElement
-        )?.value;
+        )?.value?.trim();
         const email = (
           document.getElementById("swal-input-email") as HTMLInputElement
-        )?.value;
+        )?.value?.trim();
         const fecha_nacimiento = (
           document.getElementById(
             "swal-input-fecha-nacimiento",
@@ -350,7 +413,7 @@ const ClienteList: React.FC<ClienteListProps> = ({
         )?.value;
         const username = (
           document.getElementById("swal-input-username") as HTMLInputElement
-        )?.value;
+        )?.value?.trim();
         const password = (
           document.getElementById("swal-input-password") as HTMLInputElement
         )?.value;
@@ -365,7 +428,7 @@ const ClienteList: React.FC<ClienteListProps> = ({
         )?.value;
         const imagen = (
           document.getElementById("swal-input-imagen") as HTMLInputElement
-        )?.value;
+        )?.value?.trim();
 
         if (!nombre || !apellido || !dni || !email || !username || !password) {
           Swal.showValidationMessage(
@@ -374,14 +437,50 @@ const ClienteList: React.FC<ClienteListProps> = ({
           return;
         }
 
-        if (email && !/\S+@\S+\.\S+/.test(email)) {
+        if (!isOnlyLetters(nombre)) {
+          Swal.showValidationMessage("El nombre solo puede contener letras");
+          return;
+        }
+
+        if (!isOnlyLetters(apellido)) {
+          Swal.showValidationMessage("El apellido solo puede contener letras");
+          return;
+        }
+
+        if (!isOnlyNumbers(dni)) {
+          Swal.showValidationMessage("El DNI debe contener solo números");
+          return;
+        }
+
+        if (!isValidEmail(email)) {
           Swal.showValidationMessage("Por favor ingrese un email válido");
           return;
         }
 
-        if (username && username.includes("@")) {
+        if (!isValidUsername(username)) {
           Swal.showValidationMessage(
-            "El nombre de usuario no puede contener un @",
+            "El nombre de usuario no puede contener espacios ni caracteres especiales",
+          );
+          return;
+        }
+
+        if (fecha_nacimiento && !isAdult(fecha_nacimiento)) {
+          Swal.showValidationMessage(
+            "La fecha de nacimiento debe corresponder a un mayor de 18 años",
+          );
+          return;
+        }
+
+        if (!isValidPassword(password)) {
+          Swal.showValidationMessage(
+            "La contraseña debe tener al menos 8 caracteres, una mayúscula y un número",
+          );
+          return;
+        }
+
+        if (imagen && /\s/.test(imagen)) {
+          Swal.showValidationMessage(
+            "La URL de imagen no puede contener espacios",
           );
           return;
         }
@@ -406,13 +505,13 @@ const ClienteList: React.FC<ClienteListProps> = ({
           setClientes((prev) => [...prev, response.data.data || response.data]);
           Swal.fire(
             "Creado",
-            "El cliente fue creado correctamente.",
+            "El usuario fue creado correctamente.",
             "success",
           );
         } catch (error: any) {
           Swal.fire(
             "Error",
-            error.response?.data?.message || "No se pudo crear el cliente",
+            error.response?.data?.message || "No se pudo crear el usuario",
             "error",
           );
         }
@@ -423,8 +522,8 @@ const ClienteList: React.FC<ClienteListProps> = ({
   return (
     <div className="list-container">
       <div className="list-header">
-        <button className="btn-create" onClick={handleCreateCliente}>
-          + Crear Cliente
+        <button className="btn-create" onClick={handleCreateUsuario}>
+          + Crear Usuario
         </button>
       </div>
       <div
@@ -472,7 +571,7 @@ const ClienteList: React.FC<ClienteListProps> = ({
                 colSpan={7}
                 style={{ textAlign: "center", padding: "20px", color: "#666" }}
               >
-                No hay clientes que coincidan con el filtro
+                No hay usuarios que coincidan con el filtro
               </td>
             </tr>
           ) : (
@@ -509,13 +608,13 @@ const ClienteList: React.FC<ClienteListProps> = ({
                         borderRadius: "4px",
                         cursor: "pointer",
                       }}
-                      onClick={() => handleEditCliente(cliente)}
+                      onClick={() => handleEditUsuario(cliente)}
                     >
                       Editar
                     </button>
                     <button
                       className="btn-delete"
-                      onClick={() => handleDeleteCliente(cliente)}
+                      onClick={() => handleDeleteUsuario(cliente)}
                     >
                       Eliminar
                     </button>

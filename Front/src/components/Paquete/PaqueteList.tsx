@@ -29,7 +29,16 @@ const handleEditPaquete = (
   paquete: Paquete,
   onEdit: (paquete: Paquete) => void,
   setPaquetes: React.Dispatch<React.SetStateAction<Paquete[]>>,
+  ciudades: any[],
 ) => {
+  const ciudadOptions = ciudades
+    .map(
+      (ciudad) =>
+        `<option value="${ciudad.id}" ${
+          ciudad.id === (paquete.ciudad as any)?.id ? "selected" : ""
+        }>${ciudad.nombre}</option>`,
+    )
+    .join("");
   MySwal.fire({
     title: "Editar Paquete",
     html: `
@@ -37,6 +46,14 @@ const handleEditPaquete = (
         <div class="sweet-form-row">
           <label for="swal-input-nombre">Nombre</label>
           <input id="swal-input-nombre" value="${paquete.nombre}" />
+        </div>
+
+        <div class="sweet-form-row">
+          <label for="swal-input-ciudad">Ciudad</label>
+          <select id="swal-input-ciudad">
+            <option value="">Seleccionar ciudad...</option>
+            ${ciudadOptions}
+          </select>
         </div>
 
         <div class="sweet-form-row">
@@ -78,7 +95,7 @@ const handleEditPaquete = (
     preConfirm: () => {
       const newNombre = (
         document.getElementById("swal-input-nombre") as HTMLInputElement
-      )?.value;
+      )?.value?.trim();
       const newEstado = parseInt(
         (document.getElementById("swal-input-estado") as HTMLSelectElement)
           ?.value,
@@ -86,24 +103,35 @@ const handleEditPaquete = (
       );
       const newDescripcion = (
         document.getElementById("swal-input-descripcion") as HTMLTextAreaElement
-      )?.value;
+      )?.value?.trim();
       const newDetalle = (
         document.getElementById("swal-input-detalle") as HTMLTextAreaElement
-      )?.value;
+      )?.value?.trim();
+      const newCiudadId = parseInt(
+        (document.getElementById("swal-input-ciudad") as HTMLSelectElement)
+          ?.value,
+        10,
+      );
       const newImagen = (
         document.getElementById("swal-input-imagen") as HTMLInputElement
-      )?.value;
+      )?.value?.trim();
 
-      if (
-        !newNombre ||
-        Number.isNaN(newEstado) ||
-        !newDescripcion ||
-        !newDetalle ||
-        !newImagen
-      ) {
+      if (!newNombre || !newDescripcion || !newDetalle || !newImagen) {
         Swal.showValidationMessage(
-          "Todos los campos son obligatorios y deben ser válidos",
+          "Nombre, descripción, detalle e imagen son obligatorios",
         );
+        return;
+      }
+      if (!newCiudadId || Number.isNaN(newCiudadId)) {
+        Swal.showValidationMessage("Debe seleccionar una ciudad válida");
+        return;
+      }
+      if (Number.isNaN(newEstado) || (newEstado !== 0 && newEstado !== 1)) {
+        Swal.showValidationMessage("El estado debe ser válido");
+        return;
+      }
+      if (/\s/.test(newImagen)) {
+        Swal.showValidationMessage("La URL de imagen no puede tener espacios");
         return;
       }
 
@@ -113,6 +141,7 @@ const handleEditPaquete = (
         estado: newEstado,
         descripcion: newDescripcion,
         detalle: newDetalle,
+        ciudad: newCiudadId,
         imagen: newImagen,
       };
     },
@@ -155,7 +184,11 @@ const handleEditPaquete = (
 const handleCreatePaquete = (
   onCreate: (paquete: Paquete) => void,
   setPaquetes: React.Dispatch<React.SetStateAction<Paquete[]>>,
+  ciudades: any[],
 ) => {
+  const ciudadOptions = ciudades
+    .map((ciudad) => `<option value="${ciudad.id}">${ciudad.nombre}</option>`)
+    .join("");
   MySwal.fire({
     title: "Crear Paquete",
     html: `
@@ -163,6 +196,14 @@ const handleCreatePaquete = (
         <div class="sweet-form-row">
           <label for="swal-input-nombre">Nombre</label>
           <input id="swal-input-nombre" placeholder="Nombre del paquete" />
+        </div>
+
+        <div class="sweet-form-row">
+          <label for="swal-input-ciudad">Ciudad</label>
+          <select id="swal-input-ciudad">
+            <option value="">Seleccionar ciudad...</option>
+            ${ciudadOptions}
+          </select>
         </div>
 
         <div class="sweet-form-row">
@@ -204,7 +245,7 @@ const handleCreatePaquete = (
     preConfirm: () => {
       const nombre = (
         document.getElementById("swal-input-nombre") as HTMLInputElement
-      )?.value;
+      )?.value?.trim();
       const estado = parseInt(
         (document.getElementById("swal-input-estado") as HTMLSelectElement)
           ?.value,
@@ -212,18 +253,35 @@ const handleCreatePaquete = (
       );
       const descripcion = (
         document.getElementById("swal-input-descripcion") as HTMLTextAreaElement
-      )?.value;
+      )?.value?.trim();
       const detalle = (
         document.getElementById("swal-input-detalle") as HTMLTextAreaElement
-      )?.value;
+      )?.value?.trim();
+      const ciudadId = parseInt(
+        (document.getElementById("swal-input-ciudad") as HTMLSelectElement)
+          ?.value,
+        10,
+      );
       const imagen = (
         document.getElementById("swal-input-imagen") as HTMLInputElement
-      )?.value;
+      )?.value?.trim();
 
-      if (!nombre || isNaN(estado) || !descripcion || !detalle || !imagen) {
+      if (!nombre || !descripcion || !detalle || !imagen) {
         Swal.showValidationMessage(
-          "Todos los campos son obligatorios y deben ser válidos",
+          "Nombre, descripción, detalle e imagen son obligatorios",
         );
+        return;
+      }
+      if (!ciudadId || Number.isNaN(ciudadId)) {
+        Swal.showValidationMessage("Debe seleccionar una ciudad válida");
+        return;
+      }
+      if (Number.isNaN(estado) || (estado !== 0 && estado !== 1)) {
+        Swal.showValidationMessage("El estado debe ser válido");
+        return;
+      }
+      if (/\s/.test(imagen)) {
+        Swal.showValidationMessage("La URL de imagen no puede tener espacios");
         return;
       }
 
@@ -232,6 +290,7 @@ const handleCreatePaquete = (
         estado,
         descripcion,
         detalle,
+        ciudad: ciudadId,
         imagen,
       };
     },
@@ -288,6 +347,38 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
   const [fechaInicioFiltro, setFechaInicioFiltro] = useState<string>("");
   const [fechaFinFiltro, setFechaFinFiltro] = useState<string>("");
   const [estadoFiltro, setEstadoFiltro] = useState<string>("TODOS");
+
+  const toDateOnly = (value: string) => {
+    const date = new Date(value);
+    return new Date(
+      Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()),
+    );
+  };
+
+  const diffDays = (start: Date, end: Date) =>
+    Math.round((end.getTime() - start.getTime()) / 86400000);
+
+  const validarEstadiasContinuas = (
+    estadias: Array<{ fecha_ini: string; fecha_fin: string }>,
+  ) => {
+    if (estadias.length <= 1) return null;
+    const ordered = [...estadias].sort(
+      (a, b) =>
+        toDateOnly(a.fecha_ini).getTime() - toDateOnly(b.fecha_ini).getTime(),
+    );
+    for (let i = 1; i < ordered.length; i += 1) {
+      const prevEnd = toDateOnly(ordered[i - 1].fecha_fin);
+      const nextStart = toDateOnly(ordered[i].fecha_ini);
+      const gap = diffDays(prevEnd, nextStart);
+      if (gap > 1) {
+        return "Las estadías deben ser consecutivas y no tener huecos entre fechas.";
+      }
+      if (gap <= 0) {
+        return "Las estadías no pueden superponerse.";
+      }
+    }
+    return null;
+  };
 
   const fetchTiposTransporte = async () => {
     try {
@@ -521,6 +612,19 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
           }
         }
 
+        const estadiasConNueva = [
+          ...otrasEstadias.map((e) => ({
+            fecha_ini: new Date(e.fecha_ini).toISOString().split("T")[0],
+            fecha_fin: new Date(e.fecha_fin).toISOString().split("T")[0],
+          })),
+          { fecha_ini: newFechaInicio, fecha_fin: newFechaFin },
+        ];
+        const errorContinuidad = validarEstadiasContinuas(estadiasConNueva);
+        if (errorContinuidad) {
+          Swal.showValidationMessage(errorContinuidad);
+          return;
+        }
+
         return {
           id: estadiaId,
           id_paquete: paqueteId,
@@ -626,11 +730,18 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
   };
 
   const handleAddEstadia = (id_paquete: number) => {
+    const paquete = paquetes.find((p) => p.id === id_paquete);
+    const ciudadId = (paquete?.ciudad as any)?.id;
+    const hotelesDisponibles = Object.values(hoteles).filter((hotel: any) =>
+      ciudadId
+        ? hotel.ciudad?.id === ciudadId || hotel.id_ciudad === ciudadId
+        : true,
+    );
     MySwal.fire({
       title: "Agregar Nueva Estadía",
       html: `
       <select id="swal-input-hotel" class="swal2-input">
-        ${Object.values(hoteles)
+        ${hotelesDisponibles
           .map(
             (hotel: any) =>
               `<option value="${hotel.id}" data-precio="${hotel.precio_x_dia}">${hotel.nombre}</option>`,
@@ -690,6 +801,20 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
           return;
         }
 
+        if (ciudadId) {
+          const hotelSeleccionado = hotelesDisponibles.find(
+            (hotel: any) => hotel.id === newHotelId,
+          );
+          const hotelCiudadId =
+            hotelSeleccionado?.ciudad?.id ?? hotelSeleccionado?.id_ciudad;
+          if (hotelCiudadId !== ciudadId) {
+            Swal.showValidationMessage(
+              "El hotel seleccionado debe pertenecer a la ciudad del paquete",
+            );
+            return;
+          }
+        }
+
         // Validación: fecha inicio debe ser menor o igual a fecha fin
         if (newFechaInicio > newFechaFin) {
           Swal.showValidationMessage(
@@ -722,6 +847,19 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
             );
             return;
           }
+        }
+
+        const estadiasConNueva = [
+          ...otrasEstadias.map((e) => ({
+            fecha_ini: new Date(e.fecha_ini).toISOString().split("T")[0],
+            fecha_fin: new Date(e.fecha_fin).toISOString().split("T")[0],
+          })),
+          { fecha_ini: newFechaInicio, fecha_fin: newFechaFin },
+        ];
+        const errorContinuidad = validarEstadiasContinuas(estadiasConNueva);
+        if (errorContinuidad) {
+          Swal.showValidationMessage(errorContinuidad);
+          return;
         }
 
         return {
@@ -1777,7 +1915,7 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
         {onCreate && (
           <button
             className="btn-create"
-            onClick={() => handleCreatePaquete(onCreate, setPaquetes)}
+            onClick={() => handleCreatePaquete(onCreate, setPaquetes, ciudades)}
           >
             + Crear Paquete
           </button>
@@ -1978,7 +2116,12 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
                         cursor: "pointer",
                       }}
                       onClick={() =>
-                        handleEditPaquete(paquete, onEdit, setPaquetes)
+                        handleEditPaquete(
+                          paquete,
+                          onEdit,
+                          setPaquetes,
+                          ciudades,
+                        )
                       }
                     >
                       Editar

@@ -155,18 +155,18 @@ const ExcursionList: React.FC<ExcursionListProps> = ({
       preConfirm: () => {
         const nombre = (
           document.getElementById("swal-input-nombre") as HTMLInputElement
-        )?.value;
+        )?.value?.trim();
         const descripcion = (
           document.getElementById(
             "swal-input-descripcion",
           ) as HTMLTextAreaElement
-        )?.value;
+        )?.value?.trim();
         const detalle = (
           document.getElementById("swal-input-detalle") as HTMLTextAreaElement
-        )?.value;
+        )?.value?.trim();
         const tipo = (
           document.getElementById("swal-input-tipo") as HTMLInputElement
-        )?.value;
+        )?.value?.trim();
         const nro_personas_max = parseInt(
           (
             document.getElementById(
@@ -179,17 +179,17 @@ const ExcursionList: React.FC<ExcursionListProps> = ({
           document.getElementById(
             "swal-input-nombre-empresa",
           ) as HTMLInputElement
-        )?.value;
+        )?.value?.trim();
         const mail_empresa = (
           document.getElementById("swal-input-mail-empresa") as HTMLInputElement
-        )?.value;
+        )?.value?.trim();
         const precio = parseFloat(
           (document.getElementById("swal-input-precio") as HTMLInputElement)
             ?.value,
         );
         const imagen = (
           document.getElementById("swal-input-imagen") as HTMLInputElement
-        )?.value;
+        )?.value?.trim();
         const id_ciudad = parseInt(
           (document.getElementById("swal-input-ciudad") as HTMLSelectElement)
             ?.value,
@@ -197,19 +197,19 @@ const ExcursionList: React.FC<ExcursionListProps> = ({
         );
 
         // Validación
-        if (!nombre?.trim()) {
+        if (!nombre) {
           Swal.showValidationMessage("El nombre es obligatorio");
           return;
         }
-        if (!descripcion?.trim()) {
+        if (!descripcion) {
           Swal.showValidationMessage("La descripción es obligatoria");
           return;
         }
-        if (!detalle?.trim()) {
+        if (!detalle) {
           Swal.showValidationMessage("El detalle es obligatorio");
           return;
         }
-        if (!tipo?.trim()) {
+        if (!tipo) {
           Swal.showValidationMessage("El tipo es obligatorio");
           return;
         }
@@ -219,11 +219,11 @@ const ExcursionList: React.FC<ExcursionListProps> = ({
           );
           return;
         }
-        if (!nombre_empresa?.trim()) {
+        if (!nombre_empresa) {
           Swal.showValidationMessage("El nombre de la empresa es obligatorio");
           return;
         }
-        if (!mail_empresa?.trim()) {
+        if (!mail_empresa) {
           Swal.showValidationMessage("El email de la empresa es obligatorio");
           return;
         }
@@ -238,8 +238,14 @@ const ExcursionList: React.FC<ExcursionListProps> = ({
           Swal.showValidationMessage("El precio debe ser un número mayor a 0");
           return;
         }
-        if (!imagen?.trim()) {
+        if (!imagen) {
           Swal.showValidationMessage("La URL de la imagen es obligatoria");
+          return;
+        }
+        if (/\s/.test(imagen)) {
+          Swal.showValidationMessage(
+            "La URL de la imagen no puede contener espacios",
+          );
           return;
         }
         if (!id_ciudad || isNaN(id_ciudad)) {
@@ -387,18 +393,18 @@ const ExcursionList: React.FC<ExcursionListProps> = ({
       preConfirm: () => {
         const nombre = (
           document.getElementById("swal-input-nombre") as HTMLInputElement
-        )?.value;
+        )?.value?.trim();
         const descripcion = (
           document.getElementById(
             "swal-input-descripcion",
           ) as HTMLTextAreaElement
-        )?.value;
+        )?.value?.trim();
         const detalle = (
           document.getElementById("swal-input-detalle") as HTMLTextAreaElement
-        )?.value;
+        )?.value?.trim();
         const tipo = (
           document.getElementById("swal-input-tipo") as HTMLInputElement
-        )?.value;
+        )?.value?.trim();
         const nro_personas_max = parseInt(
           (
             document.getElementById(
@@ -411,17 +417,17 @@ const ExcursionList: React.FC<ExcursionListProps> = ({
           document.getElementById(
             "swal-input-nombre-empresa",
           ) as HTMLInputElement
-        )?.value;
+        )?.value?.trim();
         const mail_empresa = (
           document.getElementById("swal-input-mail-empresa") as HTMLInputElement
-        )?.value;
+        )?.value?.trim();
         const precio = parseFloat(
           (document.getElementById("swal-input-precio") as HTMLInputElement)
             ?.value,
         );
         const imagen = (
           document.getElementById("swal-input-imagen") as HTMLInputElement
-        )?.value;
+        )?.value?.trim();
         const id_ciudad = parseInt(
           (document.getElementById("swal-input-ciudad") as HTMLSelectElement)
             ?.value,
@@ -429,19 +435,19 @@ const ExcursionList: React.FC<ExcursionListProps> = ({
         );
 
         // Validación
-        if (!nombre?.trim()) {
+        if (!nombre) {
           Swal.showValidationMessage("El nombre es obligatorio");
           return;
         }
-        if (!descripcion?.trim()) {
+        if (!descripcion) {
           Swal.showValidationMessage("La descripción es obligatoria");
           return;
         }
-        if (!detalle?.trim()) {
+        if (!detalle) {
           Swal.showValidationMessage("El detalle es obligatorio");
           return;
         }
-        if (!tipo?.trim()) {
+        if (!tipo) {
           Swal.showValidationMessage("El tipo es obligatorio");
           return;
         }
@@ -451,11 +457,11 @@ const ExcursionList: React.FC<ExcursionListProps> = ({
           );
           return;
         }
-        if (!nombre_empresa?.trim()) {
+        if (!nombre_empresa) {
           Swal.showValidationMessage("El nombre de la empresa es obligatorio");
           return;
         }
-        if (!mail_empresa?.trim()) {
+        if (!mail_empresa) {
           Swal.showValidationMessage("El email de la empresa es obligatorio");
           return;
         }
@@ -470,8 +476,14 @@ const ExcursionList: React.FC<ExcursionListProps> = ({
           Swal.showValidationMessage("El precio debe ser un número mayor a 0");
           return;
         }
-        if (!imagen?.trim()) {
+        if (!imagen) {
           Swal.showValidationMessage("La URL de la imagen es obligatoria");
+          return;
+        }
+        if (/\s/.test(imagen)) {
+          Swal.showValidationMessage(
+            "La URL de la imagen no puede contener espacios",
+          );
           return;
         }
         if (!id_ciudad || isNaN(id_ciudad)) {

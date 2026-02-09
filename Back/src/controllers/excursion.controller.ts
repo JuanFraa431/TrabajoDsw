@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { wrap } from "@mikro-orm/core";
 import { Excursion } from "../models/excursion.model.js";
 import { Paquete } from "../models/paquete.model.js";
 import { orm } from "../shared/db/orm.js";
@@ -156,7 +157,7 @@ async function getPaquetesByExcursion(req: Request, res: Response) {
 
     const paquetesConPrecio = await Promise.all(
       paquetes.map(async (paquete) => ({
-        ...(paquete as any),
+        ...wrap(paquete).toObject(),
         precio: await calcularPrecioPaquete(paquete.id as number),
       })),
     );

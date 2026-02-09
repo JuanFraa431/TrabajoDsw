@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { wrap } from "@mikro-orm/core";
 import { Hotel } from "../models/hotel.model.js";
 import { Ciudad } from "../models/ciudad.model.js";
 import { Paquete } from "../models/paquete.model.js";
@@ -129,7 +130,7 @@ async function getPaquetesByHotel(req: Request, res: Response) {
 
     const paquetesConPrecio = await Promise.all(
       paquetes.map(async (paquete) => ({
-        ...(paquete as any),
+        ...wrap(paquete).toObject(),
         precio: await calcularPrecioPaquete(paquete.id as number),
       })),
     );

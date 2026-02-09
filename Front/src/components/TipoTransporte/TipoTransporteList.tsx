@@ -22,7 +22,12 @@ const TipoTransporteList: React.FC<TipoTransporteListProps> = ({
   onEdit,
   onDelete,
 }) => {
-  const [tiposTransporte, setTiposTransporte] = useState<TipoTransporte[]>(initialTiposTransporte);
+  const [tiposTransporte, setTiposTransporte] = useState<TipoTransporte[]>(
+    initialTiposTransporte,
+  );
+
+  const isValidNombre = (value: string) =>
+    /^[A-Za-z0-9ÁÉÍÓÚÜÑáéíóúüñ\s]+$/.test(value);
 
   useEffect(() => {
     setTiposTransporte(initialTiposTransporte);
@@ -57,30 +62,41 @@ const TipoTransporteList: React.FC<TipoTransporteListProps> = ({
           return;
         }
 
+        if (!isValidNombre(nombre)) {
+          Swal.showValidationMessage(
+            "El nombre solo puede contener letras, números y espacios",
+          );
+          return;
+        }
+
         return { ...tipoTransporte, nombre };
       },
     }).then(async (result) => {
       if (result.isConfirmed && result.value) {
         try {
-          await axios.put(`/api/tipoTransporte/${tipoTransporte.id}`, result.value);
+          await axios.put(
+            `/api/tipoTransporte/${tipoTransporte.id}`,
+            result.value,
+          );
           setTiposTransporte((prev) =>
-            prev.map((t) => (t.id === tipoTransporte.id ? result.value : t))
+            prev.map((t) => (t.id === tipoTransporte.id ? result.value : t)),
           );
           onEdit(result.value);
           Swal.fire(
             "Guardado",
             "El tipo de transporte fue actualizado correctamente.",
-            "success"
+            "success",
           );
         } catch (error: any) {
           console.error(
             "Error al editar tipo de transporte:",
-            error.response?.data || error
+            error.response?.data || error,
           );
           Swal.fire(
             "Error",
-            error.response?.data?.message || "No se pudo actualizar el tipo de transporte",
-            "error"
+            error.response?.data?.message ||
+              "No se pudo actualizar el tipo de transporte",
+            "error",
           );
         }
       }
@@ -101,18 +117,21 @@ const TipoTransporteList: React.FC<TipoTransporteListProps> = ({
       if (result.isConfirmed) {
         try {
           await axios.delete(`/api/tipoTransporte/${tipoTransporte.id}`);
-          setTiposTransporte((prev) => prev.filter((t) => t.id !== tipoTransporte.id));
+          setTiposTransporte((prev) =>
+            prev.filter((t) => t.id !== tipoTransporte.id),
+          );
           onDelete(tipoTransporte);
           Swal.fire(
             "Eliminado",
             "El tipo de transporte fue eliminado correctamente.",
-            "success"
+            "success",
           );
         } catch (error: any) {
           Swal.fire(
             "Error",
-            error.response?.data?.message || "No se pudo eliminar el tipo de transporte. Puede estar siendo usado por transportes existentes.",
-            "error"
+            error.response?.data?.message ||
+              "No se pudo eliminar el tipo de transporte. Puede estar siendo usado por transportes existentes.",
+            "error",
           );
         }
       }
@@ -151,28 +170,39 @@ const TipoTransporteList: React.FC<TipoTransporteListProps> = ({
           return;
         }
 
+        if (!isValidNombre(nombre)) {
+          Swal.showValidationMessage(
+            "El nombre solo puede contener letras, números y espacios",
+          );
+          return;
+        }
+
         return { nombre };
       },
     }).then(async (result) => {
       if (result.isConfirmed && result.value) {
         try {
-          const response = await axios.post("/api/tipoTransporte", result.value);
+          const response = await axios.post(
+            "/api/tipoTransporte",
+            result.value,
+          );
           const newTipoTransporte = response.data.data || response.data;
           setTiposTransporte((prev) => [...prev, newTipoTransporte]);
           Swal.fire(
             "Creado",
             "El tipo de transporte fue creado correctamente.",
-            "success"
+            "success",
           );
         } catch (error: any) {
           console.error(
             "Error al crear tipo de transporte:",
-            error.response?.data || error
+            error.response?.data || error,
           );
           Swal.fire(
             "Error",
-            error.response?.data?.message || "No se pudo crear el tipo de transporte",
-            "error"
+            error.response?.data?.message ||
+              "No se pudo crear el tipo de transporte",
+            "error",
           );
         }
       }
@@ -197,7 +227,10 @@ const TipoTransporteList: React.FC<TipoTransporteListProps> = ({
         <tbody>
           {tiposTransporte.length === 0 ? (
             <tr>
-              <td colSpan={3} style={{ textAlign: "center", padding: "20px", color: "#666" }}>
+              <td
+                colSpan={3}
+                style={{ textAlign: "center", padding: "20px", color: "#666" }}
+              >
                 No hay tipos de transporte registrados
               </td>
             </tr>
