@@ -33,17 +33,28 @@ interface ReservaEmailData {
 
 class EmailService {
   private transporter;
+  private enabled;
 
   constructor() {
+    const user = process.env.EMAIL_USER;
+    const pass = process.env.EMAIL_PASS;
+    const service = process.env.EMAIL_SERVICE;
+    const host = process.env.EMAIL_HOST;
+    const port = process.env.EMAIL_PORT
+      ? Number(process.env.EMAIL_PORT)
+      : undefined;
+
+    this.enabled = Boolean(user && pass && (service || host));
+
     this.transporter = nodemailer.createTransport({
-      service: process.env.EMAIL_SERVICE || "gmail",
-      host: "smtp.gmail.com",
-      port: 587,
-      secure: false,
-      auth: {
-        user: process.env.EMAIL_USER || "juanfraa032@gmail.com",
-        pass: process.env.EMAIL_PASS || "zuls ezqr bgtf jaqj",
-      },
+      service: service,
+      host: host,
+      port: port,
+      secure: port === 465,
+      auth: user && pass ? { user, pass } : undefined,
+      connectionTimeout: 10000,
+      greetingTimeout: 10000,
+      socketTimeout: 15000,
       tls: {
         rejectUnauthorized: false,
       },
@@ -1372,6 +1383,12 @@ class EmailService {
   }
 
   async enviarEmailReserva(data: ReservaEmailData): Promise<void> {
+    if (!this.enabled) {
+      console.warn(
+        "EmailService deshabilitado: faltan credenciales o configuración SMTP.",
+      );
+      return;
+    }
     try {
       const mailOptions = {
         from: process.env.FROM_EMAIL || "juanfraa032@gmail.com",

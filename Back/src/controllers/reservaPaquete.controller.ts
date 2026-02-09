@@ -12,7 +12,6 @@ import { emailService } from "../services/emailService.js";
 import { calcularPrecioPaquete } from "../utils/paqueteUtils.js";
 import { Cancelacion } from "../models/cancelacion.model.js";
 
-
 const em = orm.em;
 
 async function findAll(req: Request, res: Response) {
@@ -186,61 +185,67 @@ async function create(req: Request, res: Response) {
     em.persist(reserva);
     await em.flush();
 
-    // Enviar email de confirmación
-    try {
-      const fechasEstadias = paquete.estadias.getItems().length
-        ? {
-            fecha_ini: paquete.estadias
-              .getItems()
-              .map((e) => e.fecha_ini)
-              .sort((a, b) => a.getTime() - b.getTime())[0],
-            fecha_fin: paquete.estadias
-              .getItems()
-              .map((e) => e.fecha_fin)
-              .sort((a, b) => b.getTime() - a.getTime())[0],
-          }
-        : null;
+    const fechasEstadias = paquete.estadias.getItems().length
+      ? {
+          fecha_ini: paquete.estadias
+            .getItems()
+            .map((e) => e.fecha_ini)
+            .sort((a, b) => a.getTime() - b.getTime())[0],
+          fecha_fin: paquete.estadias
+            .getItems()
+            .map((e) => e.fecha_fin)
+            .sort((a, b) => b.getTime() - a.getTime())[0],
+        }
+      : null;
 
-      const datosReserva = {
-        usuario: {
-          nombre: usuario.nombre,
-          apellido: usuario.apellido,
-          email: usuario.email,
-        },
-        paquete: {
-          id: paquete.id!,
-          nombre: paquete.nombre,
-          descripcion: paquete.descripcion,
-          detalle: paquete.detalle,
-          fecha_ini: fechasEstadias?.fecha_ini
-            ? fechasEstadias.fecha_ini.toISOString()
-            : null,
-          fecha_fin: fechasEstadias?.fecha_fin
-            ? fechasEstadias.fecha_fin.toISOString()
-            : null,
-          precio: pago.monto,
-          imagen: paquete.imagen,
-          estadias: paquete.estadias.getItems(),
-          paqueteExcursiones: paquete.paqueteExcursiones.getItems(),
-        },
-        reserva: {
-          id: reserva.id || 0,
-          fecha_reserva: reserva.fecha.toISOString(),
-          cantidad_personas: cantidadPersonas,
-          precio_total: pago.monto,
-          estado: reserva.estado,
-        },
-        acompanantes: personas || [],
-      };
-
-      await emailService.enviarEmailReserva(datosReserva);
-      console.log("Email de confirmación enviado exitosamente");
-    } catch (emailError) {
-      console.error("Error al enviar email de confirmación:", emailError);
-      // No fallar la reserva por error de email
-    }
+    const datosReserva = {
+      usuario: {
+        nombre: usuario.nombre,
+        apellido: usuario.apellido,
+        email: usuario.email,
+      },
+      paquete: {
+        id: paquete.id!,
+        nombre: paquete.nombre,
+        descripcion: paquete.descripcion,
+        detalle: paquete.detalle,
+        fecha_ini: fechasEstadias?.fecha_ini
+          ? fechasEstadias.fecha_ini.toISOString()
+          : null,
+        fecha_fin: fechasEstadias?.fecha_fin
+          ? fechasEstadias.fecha_fin.toISOString()
+          : null,
+        precio: pago.monto,
+        imagen: paquete.imagen,
+        estadias: paquete.estadias.getItems(),
+        paqueteExcursiones: paquete.paqueteExcursiones.getItems(),
+      },
+      reserva: {
+        id: reserva.id || 0,
+        fecha_reserva: reserva.fecha.toISOString(),
+        cantidad_personas: cantidadPersonas,
+        precio_total: pago.monto,
+        estado: reserva.estado,
+      },
+      acompanantes: personas || [],
+    };
 
     res.status(201).json({ message: "ReservaPaquete creada", data: reserva });
+
+    // Enviar email de confirmación sin bloquear la respuesta
+    const emailTimeoutMs = 15000;
+    void Promise.race([
+      emailService.enviarEmailReserva(datosReserva),
+      new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("Email timeout")), emailTimeoutMs),
+      ),
+    ])
+      .then(() => {
+        console.log("Email de confirmación enviado exitosamente");
+      })
+      .catch((emailError) => {
+        console.error("Error al enviar email de confirmación:", emailError);
+      });
   } catch (error: any) {
     console.error("Error al crear la reserva:", error);
     res.status(500).json({ message: error.message });
@@ -302,27 +307,35 @@ async function cancelar(req: Request, res: Response) {
     const id = Number.parseInt(req.params.id);
     const { motivo } = req.body;
 
-    if (!motivo || motivo.trim() === '') {
-      return res.status(400).json({ message: 'El motivo de cancelación es obligatorio' });
+    if (!motivo || motivo.trim() === "") {
+      return res
+        .status(400)
+        .json({ message: "El motivo de cancelación es obligatorio" });
     }
 
     // Cargar la reserva con todas sus relaciones
-    const reserva = await em.findOneOrFail(ReservaPaquete, { id }, {
-      populate: ['usuario', 'paquete', 'personas']
-    });
+    const reserva = await em.findOneOrFail(
+      ReservaPaquete,
+      { id },
+      {
+        populate: ["usuario", "paquete", "personas"],
+      },
+    );
 
     // Verificar que la reserva esté en estado "reservado"
-    if (reserva.estado.toLowerCase() !== 'reservado') {
-      return res.status(400).json({ 
+    if (reserva.estado.toLowerCase() !== "reservado") {
+      return res.status(400).json({
         message: 'Solo se pueden cancelar reservas con estado "reservado"',
-        estadoActual: reserva.estado 
+        estadoActual: reserva.estado,
       });
     }
 
     // Verificar que no exista ya una cancelación
     const cancelacionExistente = await em.findOne(Cancelacion, { reserva: id });
     if (cancelacionExistente) {
-      return res.status(400).json({ message: 'Esta reserva ya ha sido cancelada' });
+      return res
+        .status(400)
+        .json({ message: "Esta reserva ya ha sido cancelada" });
     }
 
     // Crear la cancelación
@@ -340,24 +353,24 @@ async function cancelar(req: Request, res: Response) {
     em.persist(reserva);
     await em.flush();
 
-    res.status(200).json({ 
-      message: 'Reserva cancelada exitosamente', 
+    res.status(200).json({
+      message: "Reserva cancelada exitosamente",
       data: {
         reserva: {
           id: reserva.id,
           estado: reserva.estado,
           fecha_cancelacion: reserva.fecha_cancelacion,
-          motivo_cancelacion: reserva.motivo_cancelacion
+          motivo_cancelacion: reserva.motivo_cancelacion,
         },
         cancelacion: {
           id: cancelacion.id,
           fecha_cancelacion: cancelacion.fecha_cancelacion,
-          motivo: cancelacion.motivo
-        }
-      }
+          motivo: cancelacion.motivo,
+        },
+      },
     });
   } catch (error: any) {
-    console.error('Error al cancelar la reserva:', error);
+    console.error("Error al cancelar la reserva:", error);
     res.status(500).json({ message: error.message });
   }
 }
