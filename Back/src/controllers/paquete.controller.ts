@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { wrap } from "@mikro-orm/core";
 import { Paquete } from "../models/paquete.model.js";
 import { orm } from "../shared/db/orm.js";
 import {
@@ -7,6 +8,19 @@ import {
 } from "../utils/paqueteUtils.js";
 
 const em = orm.em;
+
+const getPreciosPorPaquete = async (ids: number[]) => {
+  if (!ids.length) return new Map<number, number>();
+  const placeholders = ids.map(() => "?").join(", ");
+  const rows = await em
+    .getConnection()
+    .execute<
+      { paquete_id: number; precio_total: number }[]
+    >(`SELECT paquete_id, precio_total FROM vw_precio_paquete WHERE paquete_id IN (${placeholders})`, ids);
+  return new Map(
+    rows.map((row) => [row.paquete_id, Number(row.precio_total) || 0]),
+  );
+};
 
 async function findAll(req: Request, res: Response) {
   try {
@@ -28,12 +42,13 @@ async function findAll(req: Request, res: Response) {
         ],
       },
     );
-    const paquetesConPrecio = await Promise.all(
-      paquetes.map(async (paquete) => ({
-        ...(paquete as any),
-        precio: await calcularPrecioPaquete(paquete.id as number),
-      })),
+    const precioMap = await getPreciosPorPaquete(
+      paquetes.map((p) => p.id as number),
     );
+    const paquetesConPrecio = paquetes.map((paquete) => ({
+      ...wrap(paquete).toObject(),
+      precio: precioMap.get(paquete.id as number) ?? 0,
+    }));
     res
       .status(200)
       .json({ message: "Paquetes encontrados", data: paquetesConPrecio });
@@ -58,12 +73,13 @@ async function findAllUser(req: Request, res: Response) {
         ] as any,
       },
     );
-    const paquetesConPrecio = await Promise.all(
-      paquetes.map(async (paquete) => ({
-        ...(paquete as any),
-        precio: await calcularPrecioPaquete(paquete.id as number),
-      })),
+    const precioMap = await getPreciosPorPaquete(
+      paquetes.map((p) => p.id as number),
     );
+    const paquetesConPrecio = paquetes.map((paquete) => ({
+      ...wrap(paquete).toObject(),
+      precio: precioMap.get(paquete.id as number) ?? 0,
+    }));
     res
       .status(200)
       .json({ message: "Paquetes encontrados", data: paquetesConPrecio });
@@ -95,10 +111,11 @@ async function findOne(req: Request, res: Response) {
         ],
       },
     );
-    const precio = await calcularPrecioPaquete(paquete.id as number);
+    const precioMap = await getPreciosPorPaquete([paquete.id as number]);
+    const precio = precioMap.get(paquete.id as number) ?? 0;
     res.status(200).json({
       message: "Paquete encontrado",
-      data: { ...(paquete as any), precio },
+      data: { ...wrap(paquete).toObject(), precio },
     });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
@@ -185,12 +202,13 @@ async function search(req: Request, res: Response) {
         ],
       },
     );
-    const paquetesConPrecio = await Promise.all(
-      paquetes.map(async (paquete) => ({
-        ...(paquete as any),
-        precio: await calcularPrecioPaquete(paquete.id as number),
-      })),
+    const precioMap = await getPreciosPorPaquete(
+      paquetes.map((p) => p.id as number),
     );
+    const paquetesConPrecio = paquetes.map((paquete) => ({
+      ...wrap(paquete).toObject(),
+      precio: precioMap.get(paquete.id as number) ?? 0,
+    }));
 
     res
       .status(200)

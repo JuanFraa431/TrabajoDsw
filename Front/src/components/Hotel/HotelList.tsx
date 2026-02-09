@@ -28,6 +28,19 @@ const HotelList: React.FC<HotelListProps> = ({
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [estrellasFiltro, setEstrellasFiltro] = useState<string>("TODOS");
 
+  const applyEstrellasMask = () => {
+    const input = document.getElementById(
+      "swal-input-estrellas",
+    ) as HTMLInputElement | null;
+    if (!input) return;
+    input.setAttribute("inputmode", "numeric");
+    input.setAttribute("pattern", "[1-5]");
+    input.addEventListener("input", () => {
+      const sanitized = (input.value || "").replace(/[^1-5]/g, "").slice(0, 1);
+      input.value = sanitized;
+    });
+  };
+
   useEffect(() => {
     setHoteles(initialHoteles);
   }, [initialHoteles]);
@@ -133,6 +146,7 @@ const HotelList: React.FC<HotelListProps> = ({
         if (ciudadSelect && ciudadId) {
           ciudadSelect.value = ciudadId.toString();
         }
+        applyEstrellasMask();
         setupCloudinaryUpload(
           "swal-input-file",
           "swal-input-imagen",
@@ -180,10 +194,6 @@ const HotelList: React.FC<HotelListProps> = ({
           Swal.showValidationMessage("El nombre es obligatorio");
           return;
         }
-        if (!descripcion?.trim()) {
-          Swal.showValidationMessage("La descripción es obligatoria");
-          return;
-        }
         if (!direccion?.trim()) {
           Swal.showValidationMessage("La dirección es obligatoria");
           return;
@@ -194,6 +204,10 @@ const HotelList: React.FC<HotelListProps> = ({
         }
         if (!email?.trim()) {
           Swal.showValidationMessage("El email es obligatorio");
+          return;
+        }
+        if (email && !/\S+@\S+\.\S+/.test(email)) {
+          Swal.showValidationMessage("Por favor ingrese un email válido");
           return;
         }
         if (isNaN(estrellas) || estrellas < 1 || estrellas > 5) {
@@ -342,6 +356,7 @@ const HotelList: React.FC<HotelListProps> = ({
           "swal-input-imagen",
           "swal-upload-status",
         );
+        applyEstrellasMask();
       },
       showCancelButton: true,
       confirmButtonText: "Crear",
@@ -389,10 +404,6 @@ const HotelList: React.FC<HotelListProps> = ({
           Swal.showValidationMessage("El nombre es obligatorio");
           return;
         }
-        if (!descripcion?.trim()) {
-          Swal.showValidationMessage("La descripción es obligatoria");
-          return;
-        }
         if (!direccion?.trim()) {
           Swal.showValidationMessage("La dirección es obligatoria");
           return;
@@ -403,6 +414,10 @@ const HotelList: React.FC<HotelListProps> = ({
         }
         if (!email?.trim()) {
           Swal.showValidationMessage("El email es obligatorio");
+          return;
+        }
+        if (email && !/\S+@\S+\.\S+/.test(email)) {
+          Swal.showValidationMessage("Por favor ingrese un email válido");
           return;
         }
         if (isNaN(estrellas) || estrellas < 1 || estrellas > 5) {

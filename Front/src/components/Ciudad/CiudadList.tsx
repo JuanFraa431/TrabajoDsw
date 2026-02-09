@@ -72,13 +72,13 @@ const CiudadList: React.FC<CiudadListProps> = ({
       preConfirm: () => {
         const nombre = (
           document.getElementById("swal-input-nombre") as HTMLInputElement
-        )?.value;
+        )?.value?.trim();
         const descripcion = (
           document.getElementById("swal-input-descripcion") as HTMLInputElement
-        )?.value;
+        )?.value?.trim();
         const pais = (
           document.getElementById("swal-input-pais") as HTMLInputElement
-        )?.value;
+        )?.value?.trim();
         const latitudRaw = (
           document.getElementById("swal-input-latitud") as HTMLInputElement
         )?.value;
@@ -89,13 +89,13 @@ const CiudadList: React.FC<CiudadListProps> = ({
         const longitud = Number.parseFloat(longitudRaw);
         if (!nombre || !descripcion || !pais) {
           Swal.showValidationMessage(
-            "Todos los campos son obligatorios y deben ser válidos",
+            "Nombre, país y descripción son obligatorios",
           );
           return;
         }
         if (Number.isNaN(latitud) || Number.isNaN(longitud)) {
           Swal.showValidationMessage(
-            "Todos los campos son obligatorios y deben ser válidos",
+            "Latitud y longitud deben ser números válidos",
           );
           return;
         }
@@ -214,13 +214,13 @@ const CiudadList: React.FC<CiudadListProps> = ({
       preConfirm: () => {
         const nombre = (
           document.getElementById("swal-input-nombre") as HTMLInputElement
-        )?.value;
+        )?.value?.trim();
         const descripcion = (
           document.getElementById("swal-input-descripcion") as HTMLInputElement
-        )?.value;
+        )?.value?.trim();
         const pais = (
           document.getElementById("swal-input-pais") as HTMLInputElement
-        )?.value;
+        )?.value?.trim();
         const latitudRaw = (
           document.getElementById("swal-input-latitud") as HTMLInputElement
         )?.value;
@@ -231,13 +231,13 @@ const CiudadList: React.FC<CiudadListProps> = ({
         const longitud = Number.parseFloat(longitudRaw);
         if (!nombre || !descripcion || !pais) {
           Swal.showValidationMessage(
-            "Todos los campos son obligatorios y deben ser válidos",
+            "Nombre, país y descripción son obligatorios",
           );
           return;
         }
         if (Number.isNaN(latitud) || Number.isNaN(longitud)) {
           Swal.showValidationMessage(
-            "Todos los campos son obligatorios y deben ser válidos",
+            "Latitud y longitud deben ser números válidos",
           );
           return;
         }
