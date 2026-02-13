@@ -1,0 +1,7 @@
+{
+  "name": "trabajodsw-root",
+  "private": true,
+  "scripts": {
+    "startAll": "cmd /c .\\start-all.bat"
+  }
+}
