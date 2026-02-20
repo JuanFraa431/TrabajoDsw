@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
-import { emailService } from "../services/emailService.js";
+import { EmailService } from "../services/emailService.js";
 
 // Endpoint para verificar la configuración SMTP
 async function verificarEmail(req: Request, res: Response) {
   try {
-    const conexionExitosa = await emailService.verificarConexion();
+    const conexionExitosa = await EmailService.verificarConexion();
 
     if (conexionExitosa) {
       res.status(200).json({
@@ -38,7 +38,7 @@ async function enviarEmailPrueba(req: Request, res: Response) {
       });
     }
 
-    const emailEnviado = await emailService.enviarEmailPrueba(email);
+    const emailEnviado = await EmailService.enviarEmailPrueba(email);
 
     if (emailEnviado) {
       res.status(200).json({
@@ -77,7 +77,7 @@ async function enviarConfirmacionPago(req: Request, res: Response) {
       });
     }
 
-    await emailService.enviarConfirmacionPago(reservaData);
+    await EmailService.enviarConfirmacionPago(reservaData);
 
     res.status(200).json({
       message: `✅ Email de confirmación enviado exitosamente a ${reservaData.usuario.email}`,
@@ -111,7 +111,7 @@ async function enviarRechazoReserva(req: Request, res: Response) {
       });
     }
 
-    await emailService.enviarRechazoReserva(reservaData);
+    await EmailService.enviarRechazoReserva(reservaData);
 
     res.status(200).json({
       message: `✅ Email de rechazo enviado exitosamente a ${reservaData.usuario.email}`,
