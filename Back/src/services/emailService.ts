@@ -4,24 +4,20 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 587,
-  secure: false, 
+  service: 'gmail',
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
   },
-
-  debug: true, 
+  debug: true,
   logger: true,
+  pool: true,
   connectionTimeout: 20000,
-  greetingTimeout: 20000,   
-  socketTimeout: 30000,     
-  tls: {
-    rejectUnauthorized: false, 
-    ciphers: 'SSLv3'
-  }
-});
+  greetingTimeout: 20000,
+  socketTimeout: 30000,
+  // Forzamos IPv4 para saltar el bloqueo de Render
+  dnsV6: false 
+} as any);
 
 interface ReservaEmailData {
   usuario: {
