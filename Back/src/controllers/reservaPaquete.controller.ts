@@ -8,7 +8,7 @@ import { Usuario } from "../models/usuario.model.js";
 import { Paquete } from "../models/paquete.model.js";
 import { Persona } from "../models/persona.model.js";
 import { Pago } from "../models/pago.model.js";
-import { emailService } from "../services/emailService.js";
+import { EmailService } from "../services/emailService.js";
 import { calcularPrecioPaquete } from "../utils/paqueteUtils.js";
 import { Cancelacion } from "../models/cancelacion.model.js";
 
@@ -235,7 +235,7 @@ async function create(req: Request, res: Response) {
     // Enviar email de confirmación sin bloquear la respuesta
     const emailTimeoutMs = 15000;
     void Promise.race([
-      emailService.enviarEmailReserva(datosReserva),
+      EmailService.enviarEmailReserva(datosReserva),
       new Promise((_, reject) =>
         setTimeout(() => reject(new Error("Email timeout")), emailTimeoutMs),
       ),

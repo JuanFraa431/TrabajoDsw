@@ -3,6 +3,14 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS 
+  }
+});
+
 interface ReservaEmailData {
   usuario: {
     nombre: string;
@@ -31,96 +39,25 @@ interface ReservaEmailData {
   acompanantes?: any[];
 }
 
-class EmailService {
-  private transporter;
-  private enabled;
-  private provider: "resend" | "smtp";
+export class EmailService {
   private resendApiKey?: string;
   private resendFrom?: string;
 
-  constructor() {
-    const resendApiKey = process.env.RESEND_API_KEY;
-    const resendFrom = process.env.RESEND_FROM;
-
-    if (resendApiKey && resendFrom) {
-      this.provider = "resend";
-      this.resendApiKey = resendApiKey;
-      this.resendFrom = resendFrom;
-      this.enabled = true;
-      this.transporter = null as any;
-    } else {
-      const user = process.env.EMAIL_USER;
-      const pass = process.env.EMAIL_PASS;
-      const service = process.env.EMAIL_SERVICE;
-      const host = process.env.EMAIL_HOST;
-      const port = process.env.EMAIL_PORT
-        ? Number(process.env.EMAIL_PORT)
-        : undefined;
-
-      this.provider = "smtp";
-      this.enabled = Boolean(user && pass && (service || host));
-
-      this.transporter = nodemailer.createTransport({
-        service: service,
-        host: host,
-        port: port,
-        secure: port === 465,
-        auth: user && pass ? { user, pass } : undefined,
-        connectionTimeout: 10000,
-        greetingTimeout: 10000,
-        socketTimeout: 15000,
-        tls: {
-          rejectUnauthorized: false,
-        },
-      });
-    }
-  }
-
-  private async sendEmail(options: {
+  private static async sendEmail(options: {
     to: string;
     subject: string;
     html: string;
-  }): Promise<void> {
-    if (!this.enabled) {
-      console.warn(
-        "EmailService deshabilitado: faltan credenciales o configuración de proveedor.",
-      );
-      return;
-    }
-
-    if (this.provider === "resend") {
-      const response = await fetch("https://api.resend.com/emails", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${this.resendApiKey}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          from: this.resendFrom,
-          to: [options.to],
-          subject: options.subject,
-          html: options.html,
-        }),
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Resend error: ${response.status} ${errorText}`);
-      }
-      return;
-    }
-
+    }): Promise<void> {
     const mailOptions = {
-      from: process.env.FROM_EMAIL || process.env.EMAIL_USER,
-      to: options.to,
-      subject: options.subject,
-      html: options.html,
+        from: `"Tu Paquete Turismo" <${process.env.EMAIL_USER}>`,
+        to: options.to,
+        subject: options.subject,
+        html: options.html,
     };
+        await transporter.sendMail(mailOptions);
+    }
 
-    await this.transporter.sendMail(mailOptions);
-  }
-
-  private calcularDiasPaquete(
+  private static calcularDiasPaquete(
     fechaIni?: string | null,
     fechaFin?: string | null,
   ): number {
@@ -133,7 +70,7 @@ class EmailService {
     return dias;
   }
 
-  private formatearDuracion(
+  private static formatearDuracion(
     fechaIni?: string | null,
     fechaFin?: string | null,
   ): string {
@@ -149,7 +86,7 @@ class EmailService {
     }`;
   }
 
-  private formatearFecha(fecha?: string | null): string {
+    private static formatearFecha(fecha?: string | null): string {
     if (!fecha) return "No especificada";
     return new Date(fecha).toLocaleDateString("es-ES", {
       weekday: "long",
@@ -159,7 +96,7 @@ class EmailService {
     });
   }
 
-  private calcularEdad(fechaNacimiento?: string | Date | null): number | null {
+  private static calcularEdad(fechaNacimiento?: string | Date | null): number | null {
     if (!fechaNacimiento) return null;
     const nacimiento = new Date(fechaNacimiento);
     if (Number.isNaN(nacimiento.getTime())) return null;
@@ -187,7 +124,7 @@ class EmailService {
     return edad;
   }
 
-  private generarHtmlRechazoReserva(
+  private static generarHtmlRechazoReserva(
     data: ReservaEmailData & { motivo: string },
   ): string {
     const { usuario, paquete, reserva, motivo } = data;
@@ -462,7 +399,7 @@ class EmailService {
     `;
   }
 
-  private generarHtmlConfirmacionPago(data: ReservaEmailData): string {
+    private static generarHtmlConfirmacionPago(data: ReservaEmailData): string {
     const { usuario, paquete, reserva, acompanantes } = data;
     const duracion = this.formatearDuracion(
       paquete.fecha_ini,
@@ -870,7 +807,7 @@ class EmailService {
     `;
   }
 
-  private generarHtmlReserva(data: ReservaEmailData): string {
+    private static generarHtmlReserva(data: ReservaEmailData): string {
     const { usuario, paquete, reserva, acompanantes } = data;
     const duracion = this.formatearDuracion(
       paquete.fecha_ini,
@@ -1441,7 +1378,7 @@ class EmailService {
     `;
   }
 
-  async enviarEmailReserva(data: ReservaEmailData): Promise<void> {
+  static async enviarEmailReserva(data: ReservaEmailData): Promise<void> {
     try {
       await this.sendEmail({
         to: data.usuario.email,
@@ -1454,7 +1391,7 @@ class EmailService {
       throw error;
     }
   }
-  async enviarConfirmacionPago(data: ReservaEmailData): Promise<void> {
+  static async enviarConfirmacionPago(data: ReservaEmailData): Promise<void> {
     try {
       await this.sendEmail({
         to: data.usuario.email,
@@ -1470,7 +1407,7 @@ class EmailService {
     }
   }
 
-  async enviarRechazoReserva(
+  static async enviarRechazoReserva(
     data: ReservaEmailData & { motivo: string },
   ): Promise<void> {
     try {
@@ -1486,22 +1423,18 @@ class EmailService {
     }
   }
 
-  async verificarConexion(): Promise<boolean> {
-    if (this.provider === "resend") {
-      console.log("✅ Proveedor Resend configurado");
-      return this.enabled;
-    }
-    try {
-      await this.transporter.verify();
-      console.log("✅ Conexión SMTP verificada exitosamente");
-      return true;
-    } catch (error) {
-      console.error("❌ Error en la conexión SMTP:", error);
-      return false;
-    }
+  static async verificarConexion(): Promise<boolean> {
+  try {
+    await transporter.verify();
+    console.log("✅ Conexión SMTP verificada exitosamente");
+    return true;
+  } catch (error) {
+    console.error("❌ Error en la conexión SMTP:", error);
+    return false;
   }
+}
 
-  async enviarEmailPrueba(destinatario: string): Promise<boolean> {
+  static async enviarEmailPrueba(destinatario: string): Promise<boolean> {
     try {
       await this.sendEmail({
         to: destinatario,
@@ -1526,5 +1459,3 @@ class EmailService {
     }
   }
 }
-
-export const emailService = new EmailService();
