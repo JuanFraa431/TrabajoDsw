@@ -82,6 +82,8 @@ const ReservarPaquete: React.FC = () => {
 
   const [pagoSeleccionado, setPagoSeleccionado] = useState<string | null>(null);
   const [numeroTarjeta, setNumeroTarjeta] = useState<string>("");
+  const [fechaExpiracion, setFechaExpiracion] = useState<string>("");
+  const [cvv, setCvv] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
   const [reservaConfirmada, setReservaConfirmada] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -181,6 +183,15 @@ const ReservarPaquete: React.FC = () => {
     );
   };
 
+  const isFechaNacimientoPasada = (value?: string) => {
+    if (!value) return false;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const selected = new Date(value);
+    selected.setHours(0, 0, 0, 0);
+    return selected < today;
+  };
+
   const validateStep = (): boolean => {
     setError(null);
 
@@ -205,11 +216,23 @@ const ReservarPaquete: React.FC = () => {
         setError("Ingresa tu teléfono.");
         return false;
       }
+      if (!/^[+\d\s()-]+$/.test(form.telefono)) {
+        setError("El teléfono solo puede contener números y símbolos válidos.");
+        return false;
+      }
     }
     if (step === 3 && form.acompanantes > 0) {
       for (let i = 0; i < form.acompanantes; i++) {
         if (!isCompanionComplete(i)) {
           setError(`Completa todos los datos del acompañante ${i + 1}.`);
+          return false;
+        }
+        if (
+          !isFechaNacimientoPasada(form.acompanantesData[i]?.fechaNacimiento)
+        ) {
+          setError(
+            `La fecha de nacimiento del acompañante ${i + 1} debe ser menor a hoy.`,
+          );
           return false;
         }
       }
@@ -221,6 +244,27 @@ const ReservarPaquete: React.FC = () => {
         numeroTarjeta.replace(/\s/g, "").length < 16
       ) {
         setError("Completa los datos de la tarjeta correctamente.");
+        return false;
+      }
+      if (!/^\d{3}$/.test(cvv)) {
+        setError("El CVV debe tener 3 dígitos.");
+        return false;
+      }
+      if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(fechaExpiracion)) {
+        setError("La fecha de expiración debe tener formato MM/YY válido.");
+        return false;
+      }
+      const [mm, yy] = fechaExpiracion.split("/");
+      const expMonth = Number(mm);
+      const expYear = 2000 + Number(yy);
+      const now = new Date();
+      const currentMonth = now.getMonth() + 1;
+      const currentYear = now.getFullYear();
+      if (
+        expYear < currentYear ||
+        (expYear === currentYear && expMonth <= currentMonth)
+      ) {
+        setError("La fecha de expiración debe ser posterior al mes actual.");
         return false;
       }
     }
@@ -581,6 +625,8 @@ const ReservarPaquete: React.FC = () => {
                         name="telefono"
                         value={form.telefono}
                         onChange={handleChange}
+                        pattern="[+\d\s()-]+"
+                        inputMode="tel"
                         placeholder="+54 9 11 1234-5678"
                       />
                     </div>
@@ -741,6 +787,7 @@ const ReservarPaquete: React.FC = () => {
                                 form.acompanantesData[form.currentAcompanante]
                                   ?.fechaNacimiento || ""
                               }
+                              max={new Date().toISOString().split("T")[0]}
                               onChange={(e) =>
                                 handleAcompananteChange(
                                   form.currentAcompanante,
@@ -827,6 +874,10 @@ const ReservarPaquete: React.FC = () => {
                         tarjetaUltimos4: clean.slice(-4),
                       }));
                     }}
+                    fechaExpiracion={fechaExpiracion}
+                    setFechaExpiracion={setFechaExpiracion}
+                    cvv={cvv}
+                    setCvv={setCvv}
                   />
                 </div>
 
