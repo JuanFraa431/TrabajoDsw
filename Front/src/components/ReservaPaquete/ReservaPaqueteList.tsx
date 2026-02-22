@@ -255,13 +255,7 @@ const ReservaPaqueteList: React.FC<ReservaPaqueteListProps> = ({
                     </span>
                   </td>
                   <td>{reserva.pago?.metodoDePago || "N/A"}</td>
-                  <td>
-                    $
-                    {formatAmount(
-                      (reserva.pago?.monto || 0) *
-                        ((reserva.personas?.length || 0) + 1),
-                    )}
-                  </td>
+                  <td>${formatAmount(reserva.pago?.monto || 0)}</td>
                   <td>
                     <div
                       style={{

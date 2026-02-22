@@ -161,7 +161,17 @@ async function create(req: Request, res: Response) {
 
     const cantidadPersonas = (personas?.length ?? 0) + 1;
     const precioBase = await calcularPrecioPaquete(paqueteId);
-    const precioEsperado = Number(precioBase) * cantidadPersonas;
+    const descuentoValue =
+      paquete.descuento === null || paquete.descuento === undefined
+        ? null
+        : Number(paquete.descuento);
+    const precioUnitario =
+      typeof descuentoValue === "number" &&
+      descuentoValue > 0 &&
+      descuentoValue < 1
+        ? Math.round(Number(precioBase) * (1 - descuentoValue))
+        : Number(precioBase);
+    const precioEsperado = precioUnitario * cantidadPersonas;
     if (Number(pago.monto) !== Number(precioEsperado)) {
       return res.status(400).json({
         message: "El monto del pago no coincide con el precio del paquete.",

@@ -129,6 +129,12 @@ const CardDetail: React.FC = () => {
 
   const rangoFechas = paquete ? obtenerRangoFechasPaquete(paquete) : null;
 
+  const formatPrice = (value: number) =>
+    new Intl.NumberFormat("es-AR").format(value);
+
+  const getDiscountedPrice = (precio: number, descuento: number) =>
+    Math.round(precio * (1 - descuento));
+
   return (
     <div className="card-detail-container">
       {paquete && (
@@ -191,11 +197,32 @@ const CardDetail: React.FC = () => {
 
                 <div className="price-section">
                   <p className="price-label">Precio total del paquete</p>
-                  <p className="price-amount">
-                    {typeof paquete?.precio === "number"
-                      ? `$${paquete.precio}`
-                      : "Consultar"}
-                  </p>
+                  {typeof paquete?.precio === "number" ? (
+                    typeof paquete.descuento === "number" &&
+                    paquete.descuento > 0 &&
+                    paquete.descuento < 1 ? (
+                      <>
+                        <p className="price-original">
+                          ${formatPrice(paquete.precio)}
+                        </p>
+                        <p className="price-discounted">
+                          $
+                          {formatPrice(
+                            getDiscountedPrice(
+                              paquete.precio,
+                              paquete.descuento,
+                            ),
+                          )}
+                        </p>
+                      </>
+                    ) : (
+                      <p className="price-amount">
+                        ${formatPrice(paquete.precio)}
+                      </p>
+                    )
+                  ) : (
+                    <p className="price-amount">Consultar</p>
+                  )}
                   <Link
                     to="/reservar"
                     state={{

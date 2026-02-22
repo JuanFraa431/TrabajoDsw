@@ -4,7 +4,14 @@ import "../styles/Card.css";
 import { Paquete } from "../interface/paquete";
 import { useNavigate } from "react-router-dom";
 
-const Card: React.FC<Paquete> = ({ id, nombre, detalle, imagen, precio }) => {
+const Card: React.FC<Paquete> = ({
+  id,
+  nombre,
+  detalle,
+  imagen,
+  precio,
+  descuento,
+}) => {
   const navigate = useNavigate();
 
   const handleViewPackage = () => {
@@ -12,20 +19,48 @@ const Card: React.FC<Paquete> = ({ id, nombre, detalle, imagen, precio }) => {
   };
 
   const precioCalculado = typeof precio === "number" ? precio : null;
+  const descuentoVal =
+    typeof descuento === "number" && descuento > 0 && descuento < 1
+      ? descuento
+      : null;
+  const precioConDescuento =
+    precioCalculado != null && descuentoVal
+      ? Math.round(precioCalculado * (1 - descuentoVal))
+      : null;
+  const formatPrice = (value: number) =>
+    new Intl.NumberFormat("es-AR").format(value);
 
   return (
-    <div className="card">
-      <img src={imagen} alt={nombre} className="card-img" />
+    <div className={`card ${descuentoVal ? "card-offer" : ""}`}>
+      <div className="card-image-wrapper">
+        <img src={imagen} alt={nombre} className="card-img" />
+        {descuentoVal && (
+          <span className="card-discount-badge">
+            -{Math.round(descuentoVal * 100)}%
+          </span>
+        )}
+      </div>
       <div className="card-body">
         <h2>{nombre}</h2>
         <p className="p-body">{detalle}</p>
         <div className="card-footer">
           <p>Precio por persona</p>
-          <h4>
-            {typeof precioCalculado === "number"
-              ? `$${precioCalculado.toLocaleString()}`
-              : "Consultar"}
-          </h4>
+          {precioCalculado != null ? (
+            descuentoVal && precioConDescuento != null ? (
+              <>
+                <div className="card-price-original">
+                  ${formatPrice(precioCalculado)}
+                </div>
+                <h4 className="card-price-discounted">
+                  ${formatPrice(precioConDescuento)}
+                </h4>
+              </>
+            ) : (
+              <h4>${formatPrice(precioCalculado)}</h4>
+            )
+          ) : (
+            <h4>Consultar</h4>
+          )}
           <p>Incluye impuestos, tasas y cargos</p>
           <button className="boton-ver" onClick={handleViewPackage}>
             Ver Alojamiento
@@ -38,6 +73,7 @@ const Card: React.FC<Paquete> = ({ id, nombre, detalle, imagen, precio }) => {
 
 const CardList: React.FC = () => {
   const [paquetes, setPaquetes] = useState<Paquete[]>([]);
+  const [paquetesOferta, setPaquetesOferta] = useState<Paquete[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
@@ -48,9 +84,17 @@ const CardList: React.FC = () => {
         const response = await axios.get("/api/paquete/user");
         const data = response.data?.data;
         if (Array.isArray(data)) {
+          const ofertas = data.filter(
+            (p: Paquete) =>
+              typeof p.descuento === "number" &&
+              p.descuento > 0 &&
+              p.descuento < 1,
+          );
           setPaquetes(data);
+          setPaquetesOferta(ofertas);
         } else {
           setPaquetes([]);
+          setPaquetesOferta([]);
         }
       } catch (err) {
         console.error("Error fetching paquetes:", err);
@@ -101,12 +145,12 @@ const CardList: React.FC = () => {
     );
   }
 
-  if (!paquetes || paquetes.length === 0) {
+  if (!paquetesOferta || paquetesOferta.length === 0) {
     return (
       <div className="container">
         <div className="offer-container">
           <div className="offer-text">
-            No hay paquetes disponibles en este momento.
+            No hay ofertas disponibles en este momento.
           </div>
         </div>
       </div>
@@ -123,8 +167,14 @@ const CardList: React.FC = () => {
           VER MÁS
         </button>
       </div>
+      <div className="offer-highlight">
+        <span className="offer-highlight-title">Promos imperdibles</span>
+        <span className="offer-highlight-subtitle">
+          Ofertas exclusivas por tiempo limitado
+        </span>
+      </div>
       <div className="card-list">
-        {paquetes.map((paquete) => (
+        {paquetesOferta.map((paquete) => (
           <Card key={paquete.id} {...paquete} />
         ))}
       </div>

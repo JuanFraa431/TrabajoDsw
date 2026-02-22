@@ -45,10 +45,17 @@ async function findAll(req: Request, res: Response) {
     const precioMap = await getPreciosPorPaquete(
       paquetes.map((p) => p.id as number),
     );
-    const paquetesConPrecio = paquetes.map((paquete) => ({
-      ...wrap(paquete).toObject(),
-      precio: precioMap.get(paquete.id as number) ?? 0,
-    }));
+    const paquetesConPrecio = paquetes.map((paquete) => {
+      const descuentoValue =
+        paquete.descuento === null || paquete.descuento === undefined
+          ? null
+          : Number(paquete.descuento);
+      return {
+        ...wrap(paquete).toObject(),
+        precio: precioMap.get(paquete.id as number) ?? 0,
+        descuento: descuentoValue,
+      };
+    });
     res
       .status(200)
       .json({ message: "Paquetes encontrados", data: paquetesConPrecio });
@@ -76,10 +83,17 @@ async function findAllUser(req: Request, res: Response) {
     const precioMap = await getPreciosPorPaquete(
       paquetes.map((p) => p.id as number),
     );
-    const paquetesConPrecio = paquetes.map((paquete) => ({
-      ...wrap(paquete).toObject(),
-      precio: precioMap.get(paquete.id as number) ?? 0,
-    }));
+    const paquetesConPrecio = paquetes.map((paquete) => {
+      const descuentoValue =
+        paquete.descuento === null || paquete.descuento === undefined
+          ? null
+          : Number(paquete.descuento);
+      return {
+        ...wrap(paquete).toObject(),
+        precio: precioMap.get(paquete.id as number) ?? 0,
+        descuento: descuentoValue,
+      };
+    });
     res
       .status(200)
       .json({ message: "Paquetes encontrados", data: paquetesConPrecio });
@@ -113,9 +127,13 @@ async function findOne(req: Request, res: Response) {
     );
     const precioMap = await getPreciosPorPaquete([paquete.id as number]);
     const precio = precioMap.get(paquete.id as number) ?? 0;
+    const descuentoValue =
+      paquete.descuento === null || paquete.descuento === undefined
+        ? null
+        : Number(paquete.descuento);
     res.status(200).json({
       message: "Paquete encontrado",
-      data: { ...wrap(paquete).toObject(), precio },
+      data: { ...wrap(paquete).toObject(), precio, descuento: descuentoValue },
     });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
@@ -142,6 +160,19 @@ async function update(req: Request, res: Response) {
     if (typeof req.body.estado === "string") {
       req.body.estado = Number.parseInt(req.body.estado, 10);
     }
+    if ("descuento" in req.body) {
+      const descuentoRaw = req.body.descuento;
+      if (
+        descuentoRaw === null ||
+        descuentoRaw === undefined ||
+        descuentoRaw === ""
+      ) {
+        req.body.descuento = null;
+      } else {
+        const parsed = Number.parseFloat(String(descuentoRaw));
+        req.body.descuento = Number.isNaN(parsed) ? null : parsed.toFixed(2);
+      }
+    }
     em.assign(paquete, req.body);
     await em.flush();
     res.status(200).json({ message: "Paquete actualizado", data: paquete });
@@ -163,7 +194,8 @@ async function remove(req: Request, res: Response) {
 
 async function search(req: Request, res: Response) {
   try {
-    const { ciudad, fechaInicio, fechaFin } = req.query;
+    const { ciudad, fechaInicio, fechaFin, precioMaximo } = req.query;
+    const precioMaximoNumber = Number(precioMaximo) || 0;
 
     // Primero obtenemos los IDs de los paquetes que cumplen con los filtros
     const paqueteIds = await em.getConnection().execute<{ id: number }[]>(
@@ -175,12 +207,31 @@ async function search(req: Request, res: Response) {
                     ciudad AS c ON p.ciudad_id = c.id
                 INNER JOIN
                     estadia AS e ON p.id = e.paquete_id
+                LEFT JOIN
+                    vw_precio_paquete AS v ON v.paquete_id = p.id
             WHERE (c.nombre = ? OR ? = '') 
             AND e.fecha_ini >= ? 
             AND e.fecha_fin <= ? 
+            AND (
+              ? = 0 OR
+              (
+                CASE
+                  WHEN p.descuento IS NOT NULL AND p.descuento > 0 AND p.descuento < 1
+                    THEN COALESCE(v.precio_total, 0) * (1 - p.descuento)
+                  ELSE COALESCE(v.precio_total, 0)
+                END
+              ) <= ?
+            )
             AND p.estado = 1
         `,
-      [ciudad, ciudad, fechaInicio, fechaFin],
+      [
+        ciudad,
+        ciudad,
+        fechaInicio,
+        fechaFin,
+        precioMaximoNumber,
+        precioMaximoNumber,
+      ],
     );
 
     // Luego cargamos los paquetes completos con todas las relaciones necesarias
@@ -193,8 +244,10 @@ async function search(req: Request, res: Response) {
           "ciudad",
           "estadias",
           "estadias.hotel",
+          "estadias.hotel.ciudad",
           "paqueteExcursiones",
           "paqueteExcursiones.excursion",
+          "paqueteExcursiones.excursion.ciudad",
           "paqueteTransportes",
           "paqueteTransportes.tipoTransporte",
           "paqueteTransportes.ciudadOrigen",
@@ -205,10 +258,17 @@ async function search(req: Request, res: Response) {
     const precioMap = await getPreciosPorPaquete(
       paquetes.map((p) => p.id as number),
     );
-    const paquetesConPrecio = paquetes.map((paquete) => ({
-      ...wrap(paquete).toObject(),
-      precio: precioMap.get(paquete.id as number) ?? 0,
-    }));
+    const paquetesConPrecio = paquetes.map((paquete) => {
+      const descuentoValue =
+        paquete.descuento === null || paquete.descuento === undefined
+          ? null
+          : Number(paquete.descuento);
+      return {
+        ...wrap(paquete).toObject(),
+        precio: precioMap.get(paquete.id as number) ?? 0,
+        descuento: descuentoValue,
+      };
+    });
 
     res
       .status(200)

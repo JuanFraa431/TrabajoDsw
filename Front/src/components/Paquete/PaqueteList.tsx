@@ -348,6 +348,117 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
   const [fechaFinFiltro, setFechaFinFiltro] = useState<string>("");
   const [estadoFiltro, setEstadoFiltro] = useState<string>("TODOS");
 
+  const formatAmount = (value: number) =>
+    new Intl.NumberFormat("es-AR").format(value);
+
+  const handleDescuentoPaquete = (paquete: Paquete) => {
+    const currentPercent =
+      typeof paquete.descuento === "number"
+        ? Math.round(paquete.descuento * 100)
+        : 0;
+
+    MySwal.fire({
+      title: "Aplicar descuento",
+      html: `
+        <div style="text-align:left;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+            <strong>Descuento</strong>
+            <span id="swal-discount-value" style="font-weight:700;">${currentPercent}%</span>
+          </div>
+          <input
+            id="swal-discount-range"
+            type="range"
+            min="0"
+            max="99"
+            step="1"
+            value="${Math.min(currentPercent, 99)}"
+            style="width:100%;"
+          />
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;">
+            ${[0, 25, 50, 75]
+              .map(
+                (value) =>
+                  `<button type="button" class="swal-discount-btn" data-value="${value}" style="padding:6px 10px;border:1px solid #cbd5e1;border-radius:6px;background:#f8fafc;cursor:pointer;">${value}%</button>`,
+              )
+              .join("")}
+          </div>
+          <p style="margin-top:10px;color:#64748b;font-size:0.85rem;">0% elimina el descuento.</p>
+        </div>
+      `,
+      showCancelButton: true,
+      confirmButtonText: "Guardar",
+      cancelButtonText: "Cancelar",
+      confirmButtonColor: "#007bff",
+      cancelButtonColor: "#6c757d",
+      didOpen: () => {
+        const range = document.getElementById(
+          "swal-discount-range",
+        ) as HTMLInputElement | null;
+        const label = document.getElementById("swal-discount-value");
+        const buttons = Array.from(
+          document.querySelectorAll<HTMLButtonElement>(".swal-discount-btn"),
+        );
+
+        const updateLabel = (value: number) => {
+          if (label) label.textContent = `${value}%`;
+        };
+
+        range?.addEventListener("input", () => {
+          updateLabel(Number(range.value));
+        });
+
+        buttons.forEach((btn) => {
+          btn.addEventListener("click", () => {
+            const value = Number(btn.dataset.value || 0);
+            if (range) range.value = String(value);
+            updateLabel(value);
+          });
+        });
+      },
+      preConfirm: () => {
+        const range = document.getElementById(
+          "swal-discount-range",
+        ) as HTMLInputElement | null;
+        const percent = range ? Number(range.value) : 0;
+        const descuento =
+          percent === 0 ? null : Number((percent / 100).toFixed(2));
+        return { descuento, percent };
+      },
+    }).then((result) => {
+      if (!result.isConfirmed || !result.value) return;
+
+      const descuentoValue = result.value.descuento;
+
+      axios
+        .put(`/api/paquete/${paquete.id}`, { descuento: descuentoValue })
+        .then(() => {
+          setPaquetes((prevPaquetes) =>
+            prevPaquetes.map((p) =>
+              p.id === paquete.id ? { ...p, descuento: descuentoValue } : p,
+            ),
+          );
+          Swal.fire(
+            "Guardado",
+            "El descuento se actualizó correctamente.",
+            "success",
+          );
+        })
+        .catch((error) => {
+          console.error(
+            "Error al actualizar el descuento:",
+            error.response?.data || error.message,
+          );
+          Swal.fire(
+            "Error",
+            `No se pudo actualizar el descuento: ${
+              error.response?.data?.message || error.message
+            }`,
+            "error",
+          );
+        });
+    });
+  };
+
   const toDateOnly = (value: string) => {
     const date = new Date(value);
     return new Date(
@@ -2044,9 +2155,51 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
                   </div>
                 </td>
                 <td>
-                  {typeof paquete?.precio === "number"
-                    ? `$${paquete.precio}`
-                    : "Consultar"}
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "6px",
+                    }}
+                  >
+                    <div style={{ display: "flex", gap: "8px" }}>
+                      <span>
+                        {typeof paquete?.precio === "number"
+                          ? `$${formatAmount(paquete.precio)}`
+                          : "Consultar"}
+                      </span>
+                      {typeof paquete.descuento === "number" &&
+                        paquete.descuento > 0 &&
+                        paquete.descuento < 1 && (
+                          <span
+                            style={{
+                              background: "#e0f2fe",
+                              color: "#0369a1",
+                              borderRadius: "999px",
+                              padding: "2px 8px",
+                              fontSize: "0.75rem",
+                              fontWeight: 600,
+                            }}
+                          >
+                            -{Math.round(paquete.descuento * 100)}%
+                          </span>
+                        )}
+                    </div>
+                    <button
+                      style={{
+                        backgroundColor: "#0ea5e9",
+                        color: "white",
+                        border: "none",
+                        padding: "6px 10px",
+                        borderRadius: "6px",
+                        cursor: "pointer",
+                        width: "fit-content",
+                      }}
+                      onClick={() => handleDescuentoPaquete(paquete)}
+                    >
+                      Descuento
+                    </button>
+                  </div>
                 </td>
                 <td>
                   <span

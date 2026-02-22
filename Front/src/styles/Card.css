@@ -1,12 +1,17 @@
 /* ===== Estilos Profesionales para Cards de Paquetes ===== */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
 
 /* Contenedor principal */
 .container {
   max-width: 1400px;
   margin: 0 auto;
   padding: 20px;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family:
+    "Inter",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
 }
 
 /* Header con oferta */
@@ -25,6 +30,29 @@
   font-weight: 600;
   color: #1e293b;
   letter-spacing: -0.01em;
+}
+
+.offer-highlight {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0 8px 20px 8px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #f8fafc, #eef2ff);
+  border: 1px solid #e2e8f0;
+}
+
+.offer-highlight-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #0f172a;
+  letter-spacing: -0.01em;
+}
+
+.offer-highlight-subtitle {
+  font-size: 0.9rem;
+  color: #64748b;
 }
 
 .view-more-button {
@@ -74,6 +102,11 @@
   position: relative;
 }
 
+.card-offer {
+  border-color: #86efac;
+  box-shadow: 0 4px 14px rgba(22, 163, 74, 0.15);
+}
+
 .card:hover {
   transform: translateY(-4px);
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
@@ -81,11 +114,29 @@
 }
 
 /* Imagen de la card */
+.card-image-wrapper {
+  position: relative;
+  overflow: hidden;
+}
+
 .card-img {
   width: 100%;
   height: 200px;
   object-fit: cover;
   transition: transform 0.3s ease;
+}
+
+.card-discount-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: #16a34a;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding: 6px 10px;
+  border-radius: 999px;
+  letter-spacing: 0.3px;
 }
 
 .card:hover .card-img {
@@ -150,6 +201,27 @@
   line-height: 1;
 }
 
+.card-offer .card-footer h4,
+.card-offer .card-footer p {
+  color: #15803d;
+}
+
+.card-price-original {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #94a3b8;
+  text-decoration: line-through;
+  margin: 0 0 4px 0;
+}
+
+.card-price-discounted {
+  color: #16a34a;
+}
+
+.card-offer .boton-ver {
+  background: linear-gradient(135deg, #16a34a, #0f7a34);
+}
+
 .card-footer p:last-of-type {
   font-size: 0.75rem;
   color: #94a3b8;
@@ -178,13 +250,18 @@
 }
 
 .boton-ver::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
   transition: left 0.5s;
 }
 
@@ -216,12 +293,12 @@
   .container {
     padding: 16px;
   }
-  
+
   .card-list {
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
     gap: 16px;
   }
-  
+
   .offer-text {
     font-size: 16px;
   }
@@ -232,28 +309,28 @@
   .container {
     padding: 12px;
   }
-  
+
   .offer-container {
     margin: 20px 0 16px 0;
   }
-  
+
   .card-list {
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 14px;
   }
-  
+
   .card-img {
     height: 160px;
   }
-  
+
   .card-body {
     padding: 16px;
   }
-  
+
   .card-body h2 {
     font-size: 1.125rem;
   }
-  
+
   .p-body {
     font-size: 0.8125rem;
   }
@@ -264,22 +341,22 @@
   .container {
     padding: 10px;
   }
-  
+
   .offer-container {
     flex-direction: column;
     align-items: flex-start;
     gap: 12px;
   }
-  
+
   .card-list {
     grid-template-columns: 1fr;
     gap: 12px;
   }
-  
+
   .card-img {
     height: 180px;
   }
-  
+
   .view-more-button {
     width: 100%;
     justify-content: center;
@@ -291,11 +368,11 @@
   .card-body h2 {
     font-size: 1rem;
   }
-  
+
   .card-footer h4 {
     font-size: 1.5rem;
   }
-  
+
   .boton-ver {
     padding: 10px 16px;
     font-size: 0.8125rem;

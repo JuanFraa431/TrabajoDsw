@@ -339,7 +339,11 @@ const ReservarPaquete: React.FC = () => {
     try {
       const cantidadPersonas = (form.acompanantes || 0) + 1;
       const basePrecio = precioBase > 0 ? precioBase : (paquete?.precio ?? 0);
-      const totalPagar = basePrecio * cantidadPersonas;
+      const descuentoVal = getValidDiscount(paquete?.descuento);
+      const precioUnitario = descuentoVal
+        ? getDiscountedPrice(basePrecio, descuentoVal)
+        : basePrecio;
+      const totalPagar = precioUnitario * cantidadPersonas;
       const responsePago = await axios.post(
         "/api/pago",
         {
@@ -394,10 +398,23 @@ const ReservarPaquete: React.FC = () => {
 
   const formatDate = (date: Date) => new Date(date).toLocaleDateString("es-AR");
 
+  const formatPrice = (value: number) =>
+    new Intl.NumberFormat("es-AR").format(value);
+
+  const getValidDiscount = (value: unknown) =>
+    typeof value === "number" && value > 0 && value < 1 ? value : null;
+
+  const getDiscountedPrice = (precio: number, descuento: number) =>
+    Math.round(precio * (1 - descuento));
+
   const rangoFechas = obtenerRangoFechasPaquete(paquete);
   const cantidadPersonas = (form.acompanantes || 0) + 1;
   const basePrecio = precioBase > 0 ? precioBase : (paquete?.precio ?? 0);
-  const precioTotal = basePrecio * cantidadPersonas;
+  const descuentoVal = getValidDiscount(paquete?.descuento);
+  const precioUnitario = descuentoVal
+    ? getDiscountedPrice(basePrecio, descuentoVal)
+    : basePrecio;
+  const precioTotal = precioUnitario * cantidadPersonas;
 
   return (
     <div className="reservar-container">
@@ -477,7 +494,7 @@ const ReservarPaquete: React.FC = () => {
               </div>
               <div className="success-detail-item">
                 <span>Monto a pagar</span>
-                <strong>${precioTotal}</strong>
+                <strong>${formatPrice(precioTotal)}</strong>
               </div>
             </div>
             <Link
@@ -1006,7 +1023,7 @@ const ReservarPaquete: React.FC = () => {
                           Total a pagar
                         </span>
                         <span className="summary-total-value">
-                          ${precioTotal}
+                          ${formatPrice(precioTotal)}
                         </span>
                       </div>
                     </div>
