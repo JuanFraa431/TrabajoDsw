@@ -1,52 +1,56 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import '../styles/Hoteles.css';
-import { useLocation, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import React, { useEffect, useMemo, useState } from "react";
+import "../styles/Hoteles.css";
+import { useLocation, useNavigate } from "react-router-dom";
+import axios from "axios";
 
-import { Hotel } from '../interface/hotel';
-import FiltroHoteles, { HotelesFiltros } from './FiltroHotel';
+import { Hotel } from "../interface/hotel";
+import FiltroHoteles, { HotelesFiltros } from "./FiltroHotel";
 
 const normalize = (value: string) =>
   value
     .toLowerCase()
-    .normalize('NFD')
-    .replace(/\p{Diacritic}/gu, '');
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu, "");
 
 const Hoteles: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
   const [hoteles, setHoteles] = useState<Hotel[]>(
-    (location.state as any)?.hoteles ?? []
+    (location.state as any)?.hoteles ?? [],
   );
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [filtros, setFiltros] = useState<HotelesFiltros>({
-    search: '',
+    search: "",
     ciudades: [],
     estrellas: [],
     precioMax: null,
   });
 
   useEffect(() => {
-    const stateHoteles = (location.state as any)?.hoteles as Hotel[] | undefined;
+    const stateHoteles = (location.state as any)?.hoteles as
+      | Hotel[]
+      | undefined;
     if (Array.isArray(stateHoteles)) {
       setHoteles(stateHoteles);
     }
   }, [location.state]);
 
   useEffect(() => {
-    const stateHoteles = (location.state as any)?.hoteles as Hotel[] | undefined;
+    const stateHoteles = (location.state as any)?.hoteles as
+      | Hotel[]
+      | undefined;
     if (Array.isArray(stateHoteles) && stateHoteles.length > 0) return;
 
     const fetchHoteles = async () => {
       setLoading(true);
       setError(null);
       try {
-        const response = await axios.get('/api/hotel');
+        const response = await axios.get("/api/hotel");
         setHoteles(response.data.data || response.data);
       } catch (e: any) {
-        setError(e?.message ?? 'No se pudieron cargar los hoteles');
+        setError(e?.message ?? "No se pudieron cargar los hoteles");
       } finally {
         setLoading(false);
       }
@@ -62,7 +66,7 @@ const Hoteles: React.FC = () => {
 
     return hoteles.filter((h) => {
       const ciudadId = h.ciudad?.id ?? h.id_ciudad;
-      const ciudadNombre = h.ciudad?.nombre ?? '';
+      const ciudadNombre = h.ciudad?.nombre ?? "";
 
       if (filtros.ciudades.length > 0 && ciudadId) {
         if (!filtros.ciudades.includes(ciudadId)) return false;
@@ -74,13 +78,13 @@ const Hoteles: React.FC = () => {
         if (!filtros.estrellas.includes(Number(h.estrellas))) return false;
       }
 
-      if (typeof filtros.precioMax === 'number' && filtros.precioMax > 0) {
+      if (typeof filtros.precioMax === "number" && filtros.precioMax > 0) {
         if ((Number(h.precio_x_dia) || 0) > filtros.precioMax) return false;
       }
 
       if (hasSearch) {
         const haystack = normalize(
-          `${h.nombre ?? ''} ${h.descripcion ?? ''} ${h.direccion ?? ''} ${ciudadNombre}`
+          `${h.nombre ?? ""} ${h.descripcion ?? ""} ${h.direccion ?? ""} ${ciudadNombre}`,
         );
         if (!haystack.includes(search)) return false;
       }
@@ -90,7 +94,7 @@ const Hoteles: React.FC = () => {
   }, [hoteles, filtros]);
 
   const openDetalle = (hotel: Hotel) => {
-    navigate('/cardDetailHotel', { state: { id: hotel.id } });
+    navigate("/cardDetailHotel", { state: { id: hotel.id } });
   };
 
   return (
@@ -101,7 +105,8 @@ const Hoteles: React.FC = () => {
         <div className="hoteles-header">
           <h1 className="hoteles-title">Hoteles Disponibles</h1>
           <p className="hoteles-subtitle">
-            Encuentra el alojamiento ideal filtrando por ciudad, estrellas y precio
+            Encuentra el alojamiento ideal filtrando por ciudad, estrellas y
+            precio
           </p>
         </div>
 
@@ -123,13 +128,20 @@ const Hoteles: React.FC = () => {
               hotelesFiltrados.map((hotel) => (
                 <div className="hotel-card" key={hotel.id}>
                   <div className="hotel-image-container">
-                    <div className="hotel-image-placeholder">
-                      <div className="hotel-badges">
-                        <span className="hotel-badge">{hotel.estrellas}★</span>
-                        <span className="hotel-badge secondary">
-                          {hotel.ciudad?.nombre ?? 'Ciudad'}
-                        </span>
-                      </div>
+                    <img
+                      className="hotel-image"
+                      src={
+                        hotel.imagen ||
+                        "https://via.placeholder.com/600x400?text=Hotel"
+                      }
+                      alt={hotel.nombre}
+                      loading="lazy"
+                    />
+                    <div className="hotel-badges">
+                      <span className="hotel-badge">{hotel.estrellas}★</span>
+                      <span className="hotel-badge secondary">
+                        {hotel.ciudad?.nombre ?? "Ciudad"}
+                      </span>
                     </div>
                   </div>
 
@@ -140,10 +152,15 @@ const Hoteles: React.FC = () => {
                     <div className="hotel-footer">
                       <div className="hotel-price">
                         <span className="price-label">Desde</span>
-                        <span className="price-amount">${hotel.precio_x_dia}</span>
+                        <span className="price-amount">
+                          ${hotel.precio_x_dia}
+                        </span>
                         <span className="price-person">por noche</span>
                       </div>
-                      <button className="hotel-btn" onClick={() => openDetalle(hotel)}>
+                      <button
+                        className="hotel-btn"
+                        onClick={() => openDetalle(hotel)}
+                      >
                         Ver Detalles
                       </button>
                     </div>
