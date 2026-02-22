@@ -12,6 +12,7 @@ export interface Paquete {
   detalle: string;
   imagen: string;
   precio?: number;
+  descuento?: number | null;
   ciudad: Ciudad;
   comentarios?: Comentario[];
   estadias?: Estadia[];

@@ -31,6 +31,9 @@ export class Paquete extends BaseModel {
   @Property({ nullable: false })
   imagen!: string;
 
+  @Property({ nullable: true, type: "decimal", precision: 3, scale: 2 })
+  descuento?: number | null;
+
   @ManyToOne(() => Ciudad, { nullable: false })
   ciudad!: Rel<Ciudad>;
 

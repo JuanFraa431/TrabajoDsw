@@ -137,7 +137,7 @@ const App: React.FC = () => {
           <Route
             path="/vistaAdmin"
             element={
-              <div>
+              <div className="admin-layout">
                 <Header />
                 <motion.div {...pageTransition}>
                   <VistaAdmin />
@@ -234,6 +234,10 @@ const App: React.FC = () => {
                     setNombre={() => {}}
                     numeroTarjeta={""}
                     setNumeroTarjeta={() => {}}
+                    fechaExpiracion={""}
+                    setFechaExpiracion={() => {}}
+                    cvv={""}
+                    setCvv={() => {}}
                   />
                 </motion.div>
               </div>

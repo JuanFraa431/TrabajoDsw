@@ -71,6 +71,12 @@ const Paquetes: React.FC = () => {
     navigate(`/cardDetail`, { state: { id } });
   };
 
+  const formatPrice = (value: number) =>
+    new Intl.NumberFormat("es-AR").format(value);
+
+  const getDiscountedPrice = (precio: number, descuento: number) =>
+    Math.round(precio * (1 - descuento));
+
   return (
     <div className="paquetes-container">
       <Filtros paquetes={paquetes} onFilterChange={handleFilterChange} />
@@ -96,9 +102,15 @@ const Paquetes: React.FC = () => {
                     alt={paquete.nombre}
                     className="paquete-image"
                   />
-                  <div className="paquete-overlay">
-                    <span className="paquete-badge">Todo Incluido</span>
-                  </div>
+                  {typeof paquete?.descuento === "number" &&
+                  paquete.descuento > 0 &&
+                  paquete.descuento < 1 ? (
+                    <div className="paquete-overlay">
+                      <span className="paquete-badge paquete-badge-discount">
+                        -{Math.round(paquete.descuento * 100)}%
+                      </span>
+                    </div>
+                  ) : null}
                 </div>
                 <div className="paquete-content">
                   <h3 className="paquete-title">{paquete.nombre}</h3>
@@ -128,12 +140,33 @@ const Paquetes: React.FC = () => {
                   <div className="paquete-footer">
                     <div className="paquete-price">
                       <span className="price-label">Precio por persona</span>
-                      <span className="price-amount">
-                        {typeof paquete?.precio === "number" &&
-                        paquete.precio > 0
-                          ? `$${paquete.precio}`
-                          : "Consultar"}
-                      </span>
+                      {typeof paquete?.precio === "number" &&
+                      paquete.precio > 0 ? (
+                        typeof paquete.descuento === "number" &&
+                        paquete.descuento > 0 &&
+                        paquete.descuento < 1 ? (
+                          <>
+                            <span className="price-original">
+                              ${formatPrice(paquete.precio)}
+                            </span>
+                            <span className="price-discounted">
+                              $
+                              {formatPrice(
+                                getDiscountedPrice(
+                                  paquete.precio,
+                                  paquete.descuento,
+                                ),
+                              )}
+                            </span>
+                          </>
+                        ) : (
+                          <span className="price-amount">
+                            ${formatPrice(paquete.precio)}
+                          </span>
+                        )
+                      ) : (
+                        <span className="price-amount">Consultar</span>
+                      )}
                     </div>
                     <button
                       className="paquete-btn"
