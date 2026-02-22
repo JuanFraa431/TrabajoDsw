@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import "../styles/CardDetail.css";
+import "../styles/CardDetailHotel.css";
 import { formatearDuracionPaquete } from "../utils/paqueteUtils";
 
 const CardDetailHotel: React.FC = () => {
@@ -54,206 +54,144 @@ const CardDetailHotel: React.FC = () => {
   };
 
   return (
-    <div className="card-detail-container">
-      <h2 className="title">Detalles del Hotel</h2>
+    <div className="hotel-detail-container">
+      <h2 className="hotel-detail-title">Detalles del Hotel</h2>
+
       {hotel && (
-        <div className="detail-layout">
-          <div className="image-container">
+        <div className="hotel-hero">
+          <div className="hotel-image-wrapper">
             <img
               src={
                 hotel.imagen || "https://via.placeholder.com/600x400?text=Hotel"
               }
               alt={hotel.nombre}
-              className="package-image"
+              className="hotel-hero-image"
             />
+            <div className="hotel-badge">Hotel</div>
           </div>
-          <div className="info-container">
-            <div className="details">
-              <p>
-                <strong>Nombre:</strong> {hotel.nombre}
+
+          <div className="hotel-info-panel">
+            <div className="hotel-header">
+              <h3 className="hotel-name">{hotel.nombre}</h3>
+              <p className="hotel-subtitle">
+                {hotel.ciudad?.nombre || "Ciudad no especificada"}
               </p>
-              <p>
-                <strong>Ciudad:</strong>{" "}
-                {hotel.ciudad?.nombre || "No especificada"}
-              </p>
-              <p>
-                <strong>Dirección:</strong> {hotel.direccion}
-              </p>
-              <p>
-                <strong>Estrellas:</strong>{" "}
-                <span style={{ color: "#fbbf24" }}>
-                  {renderEstrellas(hotel.estrellas)}
-                </span>
-              </p>
-              <p>
-                <strong>Teléfono:</strong> {hotel.telefono}
-              </p>
-              <p>
-                <strong>Email:</strong> {hotel.email}
-              </p>
+              <p className="hotel-detail-text">{hotel.direccion}</p>
             </div>
-            <div className="price-box">
-              <p className="price-per-night">Precio por noche</p>
-              <p className="price-total">${hotel.precio_x_dia}</p>
+
+            <div className="hotel-details-grid">
+              <div className="hotel-detail-item">
+                <div className="hotel-detail-icon">CIU</div>
+                <div className="hotel-detail-content">
+                  <div className="hotel-detail-label">Ciudad</div>
+                  <div className="hotel-detail-value">
+                    {hotel.ciudad?.nombre || "No especificada"}
+                  </div>
+                </div>
+              </div>
+              <div className="hotel-detail-item">
+                <div className="hotel-detail-icon">DIR</div>
+                <div className="hotel-detail-content">
+                  <div className="hotel-detail-label">Dirección</div>
+                  <div className="hotel-detail-value">{hotel.direccion}</div>
+                </div>
+              </div>
+              <div className="hotel-detail-item">
+                <div className="hotel-detail-icon">EST</div>
+                <div className="hotel-detail-content">
+                  <div className="hotel-detail-label">Estrellas</div>
+                  <div className="hotel-detail-value">
+                    <span className="hotel-stars">
+                      {renderEstrellas(hotel.estrellas)}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div className="hotel-detail-item">
+                <div className="hotel-detail-icon">TEL</div>
+                <div className="hotel-detail-content">
+                  <div className="hotel-detail-label">Teléfono</div>
+                  <div className="hotel-detail-value">{hotel.telefono}</div>
+                </div>
+              </div>
+              <div className="hotel-detail-item">
+                <div className="hotel-detail-icon">MAIL</div>
+                <div className="hotel-detail-content">
+                  <div className="hotel-detail-label">Email</div>
+                  <div className="hotel-detail-value">{hotel.email}</div>
+                </div>
+              </div>
+            </div>
+
+            <div className="hotel-price-box">
+              <div className="hotel-price-label">Precio por noche</div>
+              <div className="hotel-price-amount">
+                {typeof hotel.precio_x_dia === "number"
+                  ? `$${hotel.precio_x_dia.toLocaleString()}`
+                  : "Consultar"}
+              </div>
             </div>
           </div>
         </div>
       )}
 
-      <div className="description-section">
-        <h3>Descripción</h3>
-        <p>
+      <div className="hotel-description-section">
+        <h3 className="hotel-description-title">Descripción</h3>
+        <p className="hotel-description-text">
           {mostrarDescripcionCompleta
             ? hotel?.descripcion
             : descripcionTruncada(hotel?.descripcion || "", 200)}
         </p>
         {hotel?.descripcion?.length > 200 && (
-          <button onClick={toggleDescripcion} className="verMas-button">
+          <button
+            onClick={toggleDescripcion}
+            className="hotel-description-toggle"
+          >
             {mostrarDescripcionCompleta ? "Ver menos" : "Ver más"}
           </button>
         )}
       </div>
 
-      {/* PAQUETES QUE INCLUYEN ESTE HOTEL */}
-      <div className="content-section" style={{ marginTop: "20px" }}>
-        <h3 className="section-title">Paquetes que incluyen este hotel</h3>
+      <div className="hotel-packages-section">
+        <h3 className="hotel-packages-title">
+          Paquetes que incluyen este hotel
+        </h3>
+
         {paquetes.length > 0 ? (
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
-              gap: "20px",
-              marginTop: "20px",
-            }}
-          >
+          <div className="hotel-packages-grid">
             {paquetes.map((paquete: any) => (
               <div
                 key={paquete.id}
-                style={{
-                  border: "1px solid #e0e0e0",
-                  borderRadius: "10px",
-                  overflow: "hidden",
-                  backgroundColor: "#fff",
-                  boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-                  transition: "transform 0.2s, box-shadow 0.2s",
-                  cursor: "pointer",
-                  position: "relative",
-                  zIndex: 1,
-                }}
+                className="hotel-package-card"
                 onClick={() =>
                   navigate("/cardDetail", { state: { id: paquete.id } })
                 }
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = "translateY(-4px)";
-                  e.currentTarget.style.boxShadow =
-                    "0 6px 16px rgba(0,0,0,0.15)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = "translateY(0)";
-                  e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,0.1)";
-                }}
               >
-                <div
-                  style={{
-                    position: "relative",
-                    width: "100%",
-                    height: "200px",
-                  }}
-                >
+                <div className="hotel-package-image-wrapper">
                   <img
                     src={paquete.imagen}
                     alt={paquete.nombre}
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "cover",
-                      display: "block",
-                    }}
+                    className="hotel-package-image"
                   />
-                  <span
-                    style={{
-                      position: "absolute",
-                      top: "10px",
-                      right: "10px",
-                      backgroundColor: "rgba(0, 123, 255, 0.9)",
-                      color: "white",
-                      padding: "5px 10px",
-                      borderRadius: "5px",
-                      fontSize: "0.85rem",
-                      fontWeight: "bold",
-                      zIndex: 2,
-                    }}
-                  >
+                  <span className="hotel-package-duration-badge">
                     {formatearDuracionPaquete(paquete)}
                   </span>
                 </div>
-                <div style={{ padding: "16px", backgroundColor: "#fff" }}>
-                  <h4
-                    style={{
-                      margin: "0 0 8px 0",
-                      fontSize: "1.1rem",
-                      color: "#1e293b",
-                      fontWeight: "600",
-                    }}
-                  >
-                    {paquete.nombre}
-                  </h4>
-                  <p
-                    style={{
-                      margin: "0 0 12px 0",
-                      color: "#64748b",
-                      fontSize: "0.9rem",
-                      lineHeight: "1.4",
-                      minHeight: "40px",
-                    }}
-                  >
-                    {paquete.detalle}
-                  </p>
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                      paddingTop: "12px",
-                      borderTop: "1px solid #f1f5f9",
-                    }}
-                  >
-                    <div>
-                      <p
-                        style={{
-                          margin: "0",
-                          fontSize: "0.75rem",
-                          color: "#64748b",
-                        }}
-                      >
-                        Precio total
-                      </p>
-                      <p
-                        style={{
-                          margin: "4px 0 0 0",
-                          fontSize: "1.25rem",
-                          fontWeight: "bold",
-                          color: "#007bff",
-                        }}
-                      >
+
+                <div className="hotel-package-content">
+                  <h4 className="hotel-package-name">{paquete.nombre}</h4>
+                  <p className="hotel-package-detail">{paquete.detalle}</p>
+
+                  <div className="hotel-package-footer">
+                    <div className="hotel-package-price-section">
+                      <p className="hotel-package-price-label">Precio total</p>
+                      <p className="hotel-package-price">
                         {typeof paquete?.precio === "number"
                           ? `$${paquete.precio.toLocaleString()}`
                           : "Consultar"}
                       </p>
                     </div>
-                    <button
-                      style={{
-                        backgroundColor: "#007bff",
-                        color: "white",
-                        border: "none",
-                        padding: "10px 20px",
-                        borderRadius: "6px",
-                        fontSize: "0.9rem",
-                        fontWeight: "600",
-                        cursor: "pointer",
-                        whiteSpace: "nowrap",
-                      }}
-                    >
+                    <button className="hotel-package-button">
                       Ver detalles
                     </button>
                   </div>
@@ -262,17 +200,9 @@ const CardDetailHotel: React.FC = () => {
             ))}
           </div>
         ) : (
-          <div
-            style={{
-              textAlign: "center",
-              padding: "40px",
-              color: "#64748b",
-              backgroundColor: "#f8fafc",
-              borderRadius: "8px",
-              marginTop: "20px",
-            }}
-          >
-            <p style={{ margin: 0 }}>
+          <div className="hotel-packages-empty">
+            <div className="hotel-packages-empty-icon">SIN</div>
+            <p className="hotel-packages-empty-text">
               No hay paquetes disponibles que incluyan este hotel
             </p>
           </div>
