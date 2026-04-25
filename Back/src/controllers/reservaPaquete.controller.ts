@@ -10,7 +10,7 @@ import { Persona } from "../models/persona.model.js";
 import { Pago } from "../models/pago.model.js";
 import { EmailService } from "../services/emailService.js";
 import { calcularPrecioPaquete } from "../utils/paqueteUtils.js";
-import { Cancelacion } from "../models/cancelacion.model.js";
+
 
 const em = orm.em;
 
@@ -167,8 +167,8 @@ async function create(req: Request, res: Response) {
         : Number(paquete.descuento);
     const precioUnitario =
       typeof descuentoValue === "number" &&
-      descuentoValue > 0 &&
-      descuentoValue < 1
+        descuentoValue > 0 &&
+        descuentoValue < 1
         ? Math.round(Number(precioBase) * (1 - descuentoValue))
         : Number(precioBase);
     const precioEsperado = precioUnitario * cantidadPersonas;
@@ -197,15 +197,15 @@ async function create(req: Request, res: Response) {
 
     const fechasEstadias = paquete.estadias.getItems().length
       ? {
-          fecha_ini: paquete.estadias
-            .getItems()
-            .map((e) => e.fecha_ini)
-            .sort((a, b) => a.getTime() - b.getTime())[0],
-          fecha_fin: paquete.estadias
-            .getItems()
-            .map((e) => e.fecha_fin)
-            .sort((a, b) => b.getTime() - a.getTime())[0],
-        }
+        fecha_ini: paquete.estadias
+          .getItems()
+          .map((e) => e.fecha_ini)
+          .sort((a, b) => a.getTime() - b.getTime())[0],
+        fecha_fin: paquete.estadias
+          .getItems()
+          .map((e) => e.fecha_fin)
+          .sort((a, b) => b.getTime() - a.getTime())[0],
+      }
       : null;
 
     const datosReserva = {
@@ -341,25 +341,13 @@ async function cancelar(req: Request, res: Response) {
     }
 
     // Verificar que no exista ya una cancelación
-    const cancelacionExistente = await em.findOne(Cancelacion, { reserva: id });
-    if (cancelacionExistente) {
-      return res
-        .status(400)
-        .json({ message: "Esta reserva ya ha sido cancelada" });
-    }
 
     // Crear la cancelación
-    const cancelacion = new Cancelacion();
-    cancelacion.reserva = em.getReference(ReservaPaquete, id);
-    cancelacion.motivo = motivo.trim();
-    cancelacion.fecha_cancelacion = new Date();
-
     // Actualizar la reserva
     reserva.estado = ReservaEstado.CANCELADA;
-    reserva.fecha_cancelacion = cancelacion.fecha_cancelacion;
-    reserva.motivo_cancelacion = cancelacion.motivo;
+    reserva.fecha_cancelacion = new Date();
+    reserva.motivo_cancelacion = motivo.trim();
 
-    em.persist(cancelacion);
     em.persist(reserva);
     await em.flush();
 
@@ -371,11 +359,6 @@ async function cancelar(req: Request, res: Response) {
           estado: reserva.estado,
           fecha_cancelacion: reserva.fecha_cancelacion,
           motivo_cancelacion: reserva.motivo_cancelacion,
-        },
-        cancelacion: {
-          id: cancelacion.id,
-          fecha_cancelacion: cancelacion.fecha_cancelacion,
-          motivo: cancelacion.motivo,
         },
       },
     });
