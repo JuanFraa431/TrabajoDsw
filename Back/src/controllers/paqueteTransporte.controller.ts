@@ -4,7 +4,6 @@ import { Paquete } from "../models/paquete.model.js";
 import { TipoTransporte } from "../models/tipoTransporte.model.js";
 import { Ciudad } from "../models/ciudad.model.js";
 import { orm } from "../shared/db/orm.js";
-import { actualizarPrecioPaquete } from "../utils/paqueteUtils.js";
 
 const em = orm.em;
 
@@ -146,8 +145,6 @@ async function create(req: Request, res: Response) {
 
     await em.flush();
 
-    // Actualizar el precio del paquete automáticamente
-    await actualizarPrecioPaquete(paquete_id);
 
     res
       .status(201)
@@ -236,11 +233,6 @@ async function update(req: Request, res: Response) {
 
     await em.flush();
 
-    // Actualizar el precio del paquete automáticamente
-    if (paquete_id) {
-      await actualizarPrecioPaquete(paquete_id);
-    }
-
     res.status(200).json({
       message: "PaqueteTransporte actualizado",
       data: paqueteTransporte,
@@ -268,9 +260,6 @@ async function remove(req: Request, res: Response) {
     }
 
     await em.removeAndFlush(paqueteTransporte);
-
-    // Actualizar el precio del paquete después de eliminar el transporte
-    await actualizarPrecioPaquete(paqueteId);
 
     res.status(200).json({ message: "PaqueteTransporte eliminado" });
   } catch (error: any) {

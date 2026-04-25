@@ -3,7 +3,6 @@ import { wrap } from "@mikro-orm/core";
 import { Paquete } from "../models/paquete.model.js";
 import { orm } from "../shared/db/orm.js";
 import {
-  actualizarPrecioPaquete,
   calcularPrecioPaquete,
 } from "../utils/paqueteUtils.js";
 
@@ -295,18 +294,6 @@ async function getExcursionesByPaquete(req: Request, res: Response) {
   }
 }
 
-async function recalcularPrecio(req: Request, res: Response) {
-  try {
-    const id = Number.parseInt(req.params.id);
-    const nuevoPrecio = await actualizarPrecioPaquete(id);
-    res.status(200).json({
-      message: "Precio del paquete recalculado",
-      data: { id, nuevoPrecio },
-    });
-  } catch (error: any) {
-    res.status(500).json({ message: error.message });
-  }
-}
 
 export {
   findAll,
@@ -316,6 +303,5 @@ export {
   remove,
   search,
   findAllUser,
-  getExcursionesByPaquete,
-  recalcularPrecio,
+  getExcursionesByPaquete
 };

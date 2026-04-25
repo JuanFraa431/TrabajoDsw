@@ -105,6 +105,8 @@ async function findOne(req: Request, res: Response) {
 
 async function create(req: Request, res: Response) {
   try {
+    console.log("=== DEBUG INIT RESERVA PAQUETE ===");
+    console.log("Cuerpo de la petición recibido:", req.body);
     const { usuarioId, paqueteId, personas, pagoId, ...data } = req.body;
 
     if (!usuarioId) {

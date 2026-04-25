@@ -131,26 +131,6 @@ const ReservarPaquete: React.FC = () => {
   }
 
   useEffect(() => {
-    const fetchPrecioBase = async () => {
-      try {
-        const response = await axios.put(
-          `/api/paquete/${paquete.id}/recalcular-precio`,
-        );
-        const nuevoPrecio = response?.data?.data?.nuevoPrecio;
-        if (typeof nuevoPrecio === "number") {
-          setPrecioBase(nuevoPrecio);
-        }
-      } catch (error) {
-        console.error("Error al recalcular precio del paquete:", error);
-      }
-    };
-
-    if (paquete?.id) {
-      fetchPrecioBase();
-    }
-  }, [paquete]);
-
-  useEffect(() => {
     if (typeof paquete?.precio === "number") {
       setPrecioBase(paquete.precio);
     }
@@ -344,6 +324,19 @@ const ReservarPaquete: React.FC = () => {
         ? getDiscountedPrice(basePrecio, descuentoVal)
         : basePrecio;
       const totalPagar = precioUnitario * cantidadPersonas;
+      
+      console.log("=== DEBUG FRONTEND RESERVAR ===");
+      console.log("Datos que se enviarán al pago y reserva:", {
+        paqueteId: paquete.id,
+        cantidadPersonas,
+        precioBase: basePrecio,
+        descuentoAplicado: descuentoVal,
+        precioUnitarioCalculado: precioUnitario,
+        totalAPagar: totalPagar,
+        metodoPago: pagoSeleccionado,
+        personasAcompañantes: form.acompanantesData
+      });
+
       const responsePago = await axios.post(
         "/api/pago",
         {

@@ -21,19 +21,3 @@ export const orm = await MikroORM.init({
   },
 });
 
-export const syncSchema = async () => {
-  // Agregar columna imagen a hotel si no existe
-  const connection = orm.em.getConnection();
-  try {
-    // Verificar si la columna existe
-    const columns = await connection.execute(`SHOW COLUMNS FROM hotel LIKE 'imagen'`);
-    if (columns.length === 0) {
-      await connection.execute(`ALTER TABLE hotel ADD COLUMN imagen VARCHAR(255) NULL`);
-      console.log('Columna imagen agregada a hotel');
-    } else {
-      console.log('Columna imagen ya existe en hotel');
-    }
-  } catch (error: any) {
-    console.log('Nota sobre sincronización:', error.message);
-  }
-};

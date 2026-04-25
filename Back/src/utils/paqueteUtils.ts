@@ -19,12 +19,3 @@ export async function calcularPrecioPaquete(
   return Number(precio) || 0;
 }
 
-/**
- * Actualiza el precio de un paquete basado en sus estadías, excursiones y transportes
- */
-export async function actualizarPrecioPaquete(
-  paqueteId: number,
-): Promise<number> {
-  const nuevoPrecio = await calcularPrecioPaquete(paqueteId);
-  return nuevoPrecio;
-}

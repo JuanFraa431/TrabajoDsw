@@ -3,7 +3,6 @@ import { Estadia } from "../models/estadia.model.js";
 import { Hotel } from "../models/hotel.model.js";
 import { orm } from "../shared/db/orm.js";
 import { Paquete } from "../models/paquete.model.js";
-import { actualizarPrecioPaquete } from "../utils/paqueteUtils.js";
 
 const em = orm.em;
 
@@ -73,9 +72,6 @@ async function create(req: Request, res: Response) {
 
     await em.flush();
 
-    // Actualizar el precio del paquete automáticamente
-    await actualizarPrecioPaquete(id_paquete);
-
     res.status(201).json({ message: "Estadia creada", data: estadia });
   } catch (error: any) {
     console.error("Error al crear estadía:", error);
@@ -134,9 +130,6 @@ async function update(req: Request, res: Response) {
 
     await em.flush();
 
-    // Actualizar el precio del paquete automáticamente
-    await actualizarPrecioPaquete(id_paquete);
-
     res.status(200).json({ message: "Estadia actualizada", data: estadia });
   } catch (error: any) {
     console.error("Error al actualizar la estadía:", error);
@@ -161,9 +154,6 @@ async function remove(req: Request, res: Response) {
     }
 
     em.removeAndFlush(estadia);
-
-    // Actualizar el precio del paquete después de eliminar la estadía
-    await actualizarPrecioPaquete(paqueteId);
 
     res.status(200).json({ message: "Estadia eliminada" });
   } catch (error: any) {

@@ -3,7 +3,6 @@ import { PaqueteExcursion } from "../models/paqueteExcursion.model.js";
 import { Paquete } from "../models/paquete.model.js";
 import { Excursion } from "../models/excursion.model.js";
 import { orm } from "../shared/db/orm.js";
-import { actualizarPrecioPaquete } from "../utils/paqueteUtils.js";
 
 const em = orm.em;
 
@@ -58,12 +57,6 @@ async function create(req: Request, res: Response) {
     } as any);
     await em.flush();
 
-    // Actualizar el precio del paquete automáticamente
-    const paqueteId = paqueteExcursion.paquete?.id;
-    if (paqueteId) {
-      await actualizarPrecioPaquete(paqueteId);
-    }
-
     res
       .status(201)
       .json({ message: "PaqueteExcursion creada", data: paqueteExcursion });
@@ -105,12 +98,6 @@ async function update(req: Request, res: Response) {
     em.assign(paqueteExcursion, updatedData);
     await em.flush();
 
-    // Actualizar el precio del paquete automáticamente
-    const paqueteId = paqueteExcursion.paquete?.id;
-    if (paqueteId) {
-      await actualizarPrecioPaquete(paqueteId);
-    }
-
     res.status(200).json({ message: "PaqueteExcursion actualizada" });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
@@ -128,11 +115,6 @@ async function remove(req: Request, res: Response) {
     const paqueteId = paqueteExcursion.paquete?.id;
 
     await em.removeAndFlush(paqueteExcursion);
-
-    // Actualizar el precio del paquete después de eliminar la excursión
-    if (paqueteId) {
-      await actualizarPrecioPaquete(paqueteId);
-    }
 
     res.status(200).json({ message: "PaqueteExcursion eliminada" });
   } catch (error: any) {
