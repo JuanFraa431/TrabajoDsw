@@ -7,10 +7,11 @@ import { Cliente } from "../../interface/cliente";
 import { ReservaPaquete } from "../../interface/reserva";
 import { obtenerRangoFechasPaquete } from "../../utils/paqueteUtils";
 import "../../styles/Cliente/MisReservas.css";
+import { useAuth } from "../../hooks/useAuth";
 
 const MisReservas: React.FC = () => {
   const [reservas, setReservas] = useState<ReservaPaquete[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loadingReservas, setLoadingReservas] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
   const [showCancelModal, setShowCancelModal] = useState<boolean>(false);
   const [selectedReserva, setSelectedReserva] = useState<ReservaPaquete | null>(
@@ -19,24 +20,21 @@ const MisReservas: React.FC = () => {
   const [motivoCancelacion, setMotivoCancelacion] = useState<string>("");
   const [cancelando, setCancelando] = useState<boolean>(false);
   const navigate = useNavigate();
-  const storedUser = localStorage.getItem("user");
-  const cliente = storedUser ? (JSON.parse(storedUser) as Cliente) : null;
+  const { user: cliente, loading: authLoading } = useAuth();
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    const cliente = storedUser ? (JSON.parse(storedUser) as Cliente) : null;
-
+    if (authLoading) return;
     if (!cliente) {
       navigate("/login");
       return;
     }
-
     cargarReservas(cliente.id);
-  }, []); // Solo ejecutar una vez al montar el componente
+  }, [cliente, authLoading]);
+
   const cargarReservas = async (clienteId: number) => {
     try {
       console.log("Cargando reservas para usuario:", clienteId);
-      setLoading(true);
+      setLoadingReservas(true);
       setError("");
 
       const response = await axios.get(
@@ -49,7 +47,7 @@ const MisReservas: React.FC = () => {
       console.error("Error al cargar las reservas:", error);
       setError("Error al cargar las reservas");
     } finally {
-      setLoading(false);
+      setLoadingReservas(false);
     }
   };
 
@@ -134,7 +132,7 @@ const MisReservas: React.FC = () => {
     return null;
   }
 
-  if (loading) {
+  if (authLoading || loadingReservas) {
     return (
       <div>
         <Header />

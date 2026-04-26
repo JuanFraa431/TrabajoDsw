@@ -1,36 +1,40 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
 import "../../styles/Cliente/EditarPerfil.css";
+import { useAuth } from "../../hooks/useAuth";
 
 const EditarPerfil: React.FC = () => {
   const navigate = useNavigate();
-  const cliente = JSON.parse(localStorage.getItem("user") || "{}");
+  const { user: cliente, loading } = useAuth();
 
   const formatoFecha = (fecha: string): string => {
     return fecha ? fecha.split("T")[0] : "";
   };
 
-  const [formData, setFormData] = useState(
-    cliente
-      ? {
-          nombre: cliente.nombre,
-          apellido: cliente.apellido,
-          dni: cliente.dni,
-          email: cliente.email,
-          fecha_nacimiento: formatoFecha(cliente.fecha_nacimiento),
-          username: cliente.username,
-        }
-      : {
-          nombre: "",
-          apellido: "",
-          dni: "",
-          email: "",
-          fecha_nacimiento: "",
-          username: "",
-        },
-  );
+  const [formData, setFormData] = useState({
+    nombre: "",
+    apellido: "",
+    dni: "",
+    email: "",
+    fecha_nacimiento: "",
+    username: "",
+  });
+
+  // Sincronizar formData cuando el usuario carga desde el backend
+  useEffect(() => {
+    if (cliente) {
+      setFormData({
+        nombre: cliente.nombre || "",
+        apellido: cliente.apellido || "",
+        dni: (cliente as any).dni || "",
+        email: cliente.email || "",
+        fecha_nacimiento: formatoFecha((cliente as any).fecha_nacimiento || ""),
+        username: cliente.username || "",
+      });
+    }
+  }, [cliente]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -42,10 +46,9 @@ const EditarPerfil: React.FC = () => {
 
   const handleGuardarCambios = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!cliente) return;
     try {
       await axios.put(`/api/cliente/${cliente.id}`, formData);
-      const updatedUser = { ...cliente, ...formData };
-      localStorage.setItem("user", JSON.stringify(updatedUser));
 
       Swal.fire({
         title: "Perfil actualizado",
@@ -56,7 +59,7 @@ const EditarPerfil: React.FC = () => {
       });
 
       setTimeout(() => {
-        navigate(`/detalleCliente`, { state: { cliente: updatedUser } });
+        navigate(`/detalleCliente`);
       }, 1250);
     } catch (error) {
       Swal.fire({
@@ -68,6 +71,8 @@ const EditarPerfil: React.FC = () => {
       console.error(error);
     }
   };
+
+  if (loading || !cliente) return null;
 
   return (
     <div className="edit-profile-container">

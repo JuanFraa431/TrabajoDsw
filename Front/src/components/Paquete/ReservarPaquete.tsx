@@ -7,6 +7,7 @@ import logo from "../../images/logoFinal2.png";
 import { Acompanante } from "../../interface/acompanante";
 import axios from "axios";
 import { obtenerRangoFechasPaquete } from "../../utils/paqueteUtils";
+import { useAuth } from "../../hooks/useAuth";
 
 const STEP_LABELS = [
   "Pago",
@@ -50,8 +51,8 @@ const ReservarPaquete: React.FC = () => {
     if (paquete) fetchCiudad();
   }, [paquete]);
 
-  const user = JSON.parse(localStorage.getItem("user") || "{}");
-  const isLoggedIn = Boolean(user?.id);
+  const { user, loading: authLoading, isAuthenticated } = useAuth();
+  const isLoggedIn = isAuthenticated;
   const [form, setForm] = useState<{
     tipoFactura: string;
     documento: string;
@@ -65,12 +66,12 @@ const ReservarPaquete: React.FC = () => {
     currentAcompanante: number;
     tarjetaNombre: string;
     tarjetaUltimos4: string;
-  }>({
+  }>(() => ({
     tipoFactura: "",
-    documento: user.dni || "",
-    nombre: user.nombre || "",
-    apellido: user.apellido || "",
-    email: user.email || "",
+    documento: "",
+    nombre: "",
+    apellido: "",
+    email: "",
     direccion: "",
     telefono: "",
     acompanantesData: [],
@@ -78,7 +79,20 @@ const ReservarPaquete: React.FC = () => {
     currentAcompanante: 0,
     tarjetaNombre: "",
     tarjetaUltimos4: "",
-  });
+  }));
+
+  // Sincronizar datos del formulario cuando el usuario carga desde el backend
+  useEffect(() => {
+    if (user) {
+      setForm(prev => ({
+        ...prev,
+        documento: (user as any).dni || "",
+        nombre: user.nombre || "",
+        apellido: user.apellido || "",
+        email: user.email || "",
+      }));
+    }
+  }, [user]);
 
   const [pagoSeleccionado, setPagoSeleccionado] = useState<string | null>(null);
   const [numeroTarjeta, setNumeroTarjeta] = useState<string>("");
@@ -89,6 +103,12 @@ const ReservarPaquete: React.FC = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [isNavigating, setIsNavigating] = useState(false);
   const [precioBase, setPrecioBase] = useState<number>(paquete?.precio ?? 0);
+
+  useEffect(() => {
+    if (typeof paquete?.precio === "number") {
+      setPrecioBase(paquete.precio);
+    }
+  }, [paquete]);
 
   if (!paquete) {
     return (
@@ -129,12 +149,6 @@ const ReservarPaquete: React.FC = () => {
       </div>
     );
   }
-
-  useEffect(() => {
-    if (typeof paquete?.precio === "number") {
-      setPrecioBase(paquete.precio);
-    }
-  }, [paquete]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
@@ -363,7 +377,7 @@ const ReservarPaquete: React.FC = () => {
           pagoId: responsePago.data.data.id,
           fecha: new Date(),
           paqueteId: paquete.id,
-          usuarioId: user.id,
+          usuarioId: user!.id,
           estado: "PENDIENTE",
           personas: form.acompanantesData,
         },

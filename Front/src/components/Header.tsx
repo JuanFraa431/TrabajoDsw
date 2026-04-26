@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../styles/Header.css";
 import userIcon from "../images/user-icon.png";
@@ -8,17 +8,12 @@ import { Cliente } from "../interface/cliente.js";
 // Importa Bootstrap JS y CSS si no lo tienes en index.html
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import { useAuth } from "../hooks/useAuth";
 
 const Header = () => {
-    const [cliente, setCliente] = useState<Cliente | null>(null);
+    const { user: cliente, loading } = useAuth();
     const navigate = useNavigate();
-
-    useEffect(() => {
-        const storedCliente = localStorage.getItem('user');
-        if (storedCliente) {
-            setCliente(JSON.parse(storedCliente));
-        }
-    }, []);    return (
+    return (
         <header className="header-container">
             <div className="header-logo">
                 <Link to="/"><img src={logo} alt="Logo" /></Link>

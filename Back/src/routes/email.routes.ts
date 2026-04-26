@@ -5,8 +5,11 @@ import {
   enviarConfirmacionPago,
   enviarRechazoReserva,
 } from "../controllers/email.controller.js";
+import { requireAuth } from '../middleware/auth.js';
 
 export const emailRouter = Router();
+
+emailRouter.use(requireAuth);
 
 emailRouter.get("/verificar", verificarEmail);
 

@@ -114,10 +114,9 @@ const CompleteGoogleProfile: React.FC = () => {
       });
 
       if (response.status === 201) {
-        const { usuario, token } = response.data.data;
+        const { token } = response.data.data;
         localStorage.setItem("token", token);
-        localStorage.setItem("user", JSON.stringify(usuario));
-        navigate("/");
+        navigate("/detalleCliente");
       }
     } catch (error: any) {
       console.error("Complete registration failed:", error);

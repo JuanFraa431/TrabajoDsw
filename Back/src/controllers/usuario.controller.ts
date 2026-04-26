@@ -209,13 +209,13 @@ async function login(req: Request, res: Response) {
 
       if (isMatch) {
         const token = jwt.sign(
-          { id: usuario.id, username: usuario.username },
-          "secreto_del_token",
+          { id: usuario.id, username: usuario.username, tipo_usuario: usuario.tipo_usuario },
+          process.env.JWT_SECRET || "secreto_del_token",
           { expiresIn: "1h" },
         );
         res
           .status(200)
-          .json({ message: "Usuario logueado", data: { usuario, token } });
+          .json({ message: "Usuario logueado", data: { token } });
       } else {
         res.status(401).json({ message: "Contraseña incorrecta" });
       }
@@ -244,8 +244,7 @@ async function googleLogin(req: Request, res: Response) {
     try {
       const ticket = await googleClient.verifyIdToken({
         idToken: googleToken,
-        audience:
-          "1013873914332-sf1up07lqjoch6tork8cpfohi32st8pi.apps.googleusercontent.com",
+        audience: process.env.GOOGLE_CLIENT_ID || "1013873914332-sf1up07lqjoch6tork8cpfohi32st8pi.apps.googleusercontent.com",
       });
       payload = ticket.getPayload();
       console.log("Google token verified successfully");
@@ -298,7 +297,7 @@ async function googleLogin(req: Request, res: Response) {
     }
 
     const jwtToken = jwt.sign(
-      { id: usuario.id, username: usuario.username },
+      { id: usuario.id, username: usuario.username, tipo_usuario: usuario.tipo_usuario },
       process.env.JWT_SECRET || "secreto_del_token",
       { expiresIn: "1h" },
     );
@@ -306,7 +305,7 @@ async function googleLogin(req: Request, res: Response) {
     console.log("Google login successful for user:", usuario.id);
     return res.status(200).json({
       message: "Usuario logueado con Google",
-      data: { usuario, token: jwtToken },
+      data: { token: jwtToken },
     });
   } catch (error: any) {
     console.error("Google login error:", error);
@@ -389,14 +388,14 @@ async function completeGoogleRegistration(req: Request, res: Response) {
 
     // Generar JWT token
     const jwtToken = jwt.sign(
-      { id: usuario.id, username: usuario.username },
+      { id: usuario.id, username: usuario.username, tipo_usuario: usuario.tipo_usuario },
       process.env.JWT_SECRET || "secreto_del_token",
       { expiresIn: "1h" },
     );
 
     return res.status(201).json({
       message: "Registro completado exitosamente",
-      data: { usuario, token: jwtToken },
+      data: { token: jwtToken },
     });
   } catch (error: any) {
     console.error("Complete Google registration error:", error);
@@ -407,4 +406,21 @@ async function completeGoogleRegistration(req: Request, res: Response) {
   }
 }
 
-export { findAll, findOne, create, update, remove, login, googleLogin, completeGoogleRegistration };
+async function getCurrentUser(req: Request, res: Response) {
+  try {
+    const currentUser = req.currentUser as any;
+    if (!currentUser || !currentUser.id) {
+      return res.status(401).json({ message: "No autenticado" });
+    }
+
+    const usuario = await em.findOneOrFail(Usuario, { id: currentUser.id });
+    return res.status(200).json({
+      message: "Usuario actual",
+      data: usuario,
+    });
+  } catch (error: any) {
+    return res.status(404).json({ message: "Usuario no encontrado" });
+  }
+}
+
+export { findAll, findOne, create, update, remove, login, googleLogin, completeGoogleRegistration, getCurrentUser };

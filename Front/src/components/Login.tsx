@@ -108,11 +108,11 @@ const Login: React.FC = () => {
 
       if (res.status === 200) {
         // Usuario existente, login exitoso
-        const { usuario, token } = res.data.data;
+        const { token } = res.data.data;
         localStorage.setItem("token", token);
-        localStorage.setItem("user", JSON.stringify(usuario));
         setError("");
-        navigate(usuario.tipo_usuario === "ADMIN" ? "/vistaAdmin" : "/");
+        // Navegar y dejar que useAuth determine el rol
+        navigate("/detalleCliente");
       } else if (res.status === 202) {
         // Usuario nuevo, necesita completar información
         console.log("New user needs to complete profile");
@@ -143,15 +143,11 @@ const Login: React.FC = () => {
       });
 
       if (response.status === 200) {
-        const { usuario, token } = response.data.data;
-        if (parseInt(usuario.estado, 10) === 1) {
-          setError("");
-          localStorage.setItem("token", token);
-          localStorage.setItem("user", JSON.stringify(usuario));
-          navigate(usuario.tipo_usuario === "ADMIN" ? "/vistaAdmin" : "/");
-        } else {
-          setError("La cuenta ha sido deshabilitada.");
-        }
+        const { token } = response.data.data;
+        localStorage.setItem("token", token);
+        setError("");
+        // Navegar y dejar que useAuth determine el rol
+        navigate("/detalleCliente");
       } else {
         setError("Usuario o contraseña incorrectos.");
       }

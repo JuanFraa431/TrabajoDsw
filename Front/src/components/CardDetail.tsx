@@ -20,14 +20,13 @@ import {
   descripcionTruncada,
   obtenerRangoFechasPaquete,
 } from "../utils/paqueteUtils";
+import { useAuth } from "../hooks/useAuth";
 
 const CardDetail: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const clienteLogueado = localStorage.getItem("user");
-  const userData = clienteLogueado ? JSON.parse(clienteLogueado) : null;
-  const isLoggedIn = Boolean(userData?.id);
-  const isAdmin = userData && userData.tipo_usuario === "ADMIN";
+  const { user: userData, isAdmin, isAuthenticated } = useAuth();
+  const isLoggedIn = isAuthenticated;
   const { id } = location.state || { id: null };
   const [paquete, setPaquete] = useState<any>(null);
   const [comentarios, setComentarios] = useState<Comentario[]>([]);
@@ -69,7 +68,7 @@ const CardDetail: React.FC = () => {
 
     try {
       const newComentario = {
-        cliente: clienteLogueado ? JSON.parse(clienteLogueado).id : null,
+        cliente: userData ? userData.id : null,
         paquete: id,
         fecha: new Date().toISOString().split("T")[0],
         descripcion: nuevoComentario,
@@ -80,7 +79,7 @@ const CardDetail: React.FC = () => {
 
       const comentarioCreado: Comentario = {
         id: response.data.id,
-        cliente: userData,
+        cliente: userData!,
         paquete: id,
         fecha: newComentario.fecha,
         descripcion: newComentario.descripcion,
@@ -167,10 +166,10 @@ const CardDetail: React.FC = () => {
                       <span className="date-value">
                         {rangoFechas?.fechaIni
                           ? rangoFechas.fechaIni.toLocaleDateString("es-ES", {
-                              day: "numeric",
-                              month: "short",
-                              year: "numeric",
-                            })
+                            day: "numeric",
+                            month: "short",
+                            year: "numeric",
+                          })
                           : "No especificada"}
                       </span>
                     </div>
@@ -185,10 +184,10 @@ const CardDetail: React.FC = () => {
                       <span className="date-value">
                         {rangoFechas?.fechaFin
                           ? rangoFechas.fechaFin.toLocaleDateString("es-ES", {
-                              day: "numeric",
-                              month: "short",
-                              year: "numeric",
-                            })
+                            day: "numeric",
+                            month: "short",
+                            year: "numeric",
+                          })
                           : "No especificada"}
                       </span>
                     </div>
@@ -199,8 +198,8 @@ const CardDetail: React.FC = () => {
                   <p className="price-label">Precio total del paquete</p>
                   {typeof paquete?.precio === "number" ? (
                     typeof paquete.descuento === "number" &&
-                    paquete.descuento > 0 &&
-                    paquete.descuento < 1 ? (
+                      paquete.descuento > 0 &&
+                      paquete.descuento < 1 ? (
                       <>
                         <p className="price-original">
                           ${formatPrice(paquete.precio)}
@@ -300,8 +299,8 @@ const CardDetail: React.FC = () => {
                             <FaCalendarAlt className="meta-tag-icon" />
                             {paqueteExc.fecha
                               ? new Date(paqueteExc.fecha).toLocaleString(
-                                  "es-ES",
-                                )
+                                "es-ES",
+                              )
                               : "Fecha no especificada"}
                           </span>
                         </div>
@@ -394,9 +393,8 @@ const CardDetail: React.FC = () => {
                     <div key={paqueteTrans.id} className="item-card">
                       <div className="item-card-content">
                         <span
-                          className={`transport-type-badge ${
-                            paqueteTrans.tipo === "IDA" ? "ida" : "vuelta"
-                          }`}
+                          className={`transport-type-badge ${paqueteTrans.tipo === "IDA" ? "ida" : "vuelta"
+                            }`}
                         >
                           {paqueteTrans.tipo === "IDA" ? "Ida" : "Vuelta"}
                         </span>
@@ -412,16 +410,16 @@ const CardDetail: React.FC = () => {
                             <FaCalendarAlt className="meta-tag-icon" />
                             {paqueteTrans.fecha_salida
                               ? new Date(
-                                  paqueteTrans.fecha_salida,
-                                ).toLocaleString("es-ES")
+                                paqueteTrans.fecha_salida,
+                              ).toLocaleString("es-ES")
                               : "Salida no especificada"}
                           </span>
                           <span className="meta-tag">
                             <FaArrowRight className="meta-tag-icon" />
                             {paqueteTrans.fecha_llegada
                               ? new Date(
-                                  paqueteTrans.fecha_llegada,
-                                ).toLocaleString("es-ES")
+                                paqueteTrans.fecha_llegada,
+                              ).toLocaleString("es-ES")
                               : "Llegada no especificada"}
                           </span>
                         </div>
@@ -501,7 +499,7 @@ const CardDetail: React.FC = () => {
             <p>No hay comentarios aún. ¡Sé el primero en comentar!</p>
           )}
         </div>
-        {clienteLogueado ? (
+        {isLoggedIn ? (
           <div className="add-comment">
             <textarea
               value={nuevoComentario}

@@ -8,8 +8,11 @@ import {
   cancelar,
 } from '../controllers/reservaPaquete.controller.js';
 import { Router } from 'express';
+import { requireAuth } from '../middleware/auth.js';
 
-export const routerReservaPaquete = Router();
+export const routerReservaPaquete = Router(); 
+
+routerReservaPaquete.use(requireAuth);
 
 routerReservaPaquete.get('/', findAll);
 

@@ -6,23 +6,22 @@ import "../../styles/Cliente/DetalleCliente.css";
 import userIcon from "../../images/user-icon.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencilAlt } from "@fortawesome/free-solid-svg-icons";
+import { useAuth } from "../../hooks/useAuth";
 
 const DetalleCliente: React.FC = () => {
   const navigate = useNavigate();
-  const storedUser = localStorage.getItem("user");
-  const cliente = storedUser ? (JSON.parse(storedUser) as Cliente) : null;
-  const roleValue = cliente
-    ? ((cliente as any).tipo_usuario ??
-      (cliente as any).tipoUsuario ??
-      (cliente as any).rol)
-    : null;
-  const normalizedRole =
-    typeof roleValue === "string" ? roleValue.toUpperCase() : "";
-  const isAdmin = normalizedRole === "ADMIN";
-  const isCliente = normalizedRole === "CLIENTE";
-  const [imgUrl, setImgUrl] = useState<string>(cliente?.imagen || "");
+  const { user: cliente, isAdmin, loading, logout } = useAuth();
+  const isCliente = !isAdmin && !!cliente;
+  const [imgUrl, setImgUrl] = useState<string>("");
   const [uploading, setUploading] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Sincronizar imgUrl cuando el usuario carga
+  React.useEffect(() => {
+    if (cliente?.imagen) {
+      setImgUrl(cliente.imagen);
+    }
+  }, [cliente]);
 
   const cloudName = "dy8lzfj2h";
   const uploadPreset = "ml_default";
@@ -35,8 +34,7 @@ const DetalleCliente: React.FC = () => {
       try {
         await axios.delete(`/api/cliente/${cliente.id}`);
         alert("Cliente eliminado con éxito.");
-        localStorage.removeItem("user");
-        localStorage.removeItem("token");
+        logout();
         navigate("/");
       } catch (error) {
         alert("Hubo un error al intentar eliminar el cliente.");
@@ -46,8 +44,7 @@ const DetalleCliente: React.FC = () => {
   };
 
   const handleCerrarSesion = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
+    logout();
     navigate("/");
   };
 
@@ -84,10 +81,6 @@ const DetalleCliente: React.FC = () => {
 
       await axios.put(`/api/cliente/${cliente?.id}`, { imagen: newImageUrl });
 
-      if (cliente) {
-        const updatedCliente = { ...cliente, imagen: newImageUrl };
-        localStorage.setItem("user", JSON.stringify(updatedCliente));
-      }
       alert("Imagen de perfil actualizada correctamente.");
     } catch (error) {
       console.error("Error subiendo la imagen:", error);

@@ -40,24 +40,22 @@ import {
 } from "../services/crudService";
 
 import "../styles/VistaAdmin.css";
+import { useAuth } from "../hooks/useAuth";
 
 const VistaAdmin: React.FC = () => {
   const navigate = useNavigate();
+  const { user, loading, isAdmin, isAuthenticated } = useAuth();
+
   useEffect(() => {
-    const userStr = localStorage.getItem("user");
-    if (!userStr) {
+    if (loading) return;
+    if (!isAuthenticated) {
       navigate("/login");
       return;
     }
-    const user = JSON.parse(userStr);
-    const roleValue =
-      user?.tipo_usuario ?? user?.tipoUsuario ?? user?.rol ?? user?.role;
-    const normalizedRole =
-      typeof roleValue === "string" ? roleValue.toUpperCase() : "";
-    if (normalizedRole !== "ADMIN") {
+    if (!isAdmin) {
       navigate("/");
     }
-  }, [navigate]);
+  }, [loading, isAuthenticated, isAdmin, navigate]);
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 

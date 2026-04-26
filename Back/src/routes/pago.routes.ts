@@ -6,8 +6,11 @@ import {
   remove,
 } from '../controllers/pago.controller.js';
 import { Router } from 'express';
+import { requireAuth } from '../middleware/auth.js';
 
 export const routerPago = Router();
+
+routerPago.use(requireAuth);
 
 routerPago.get('/', findAll);
 
