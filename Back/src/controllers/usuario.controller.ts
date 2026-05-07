@@ -4,6 +4,7 @@ import bcrypt from "bcrypt";
 import { orm } from "../shared/db/orm.js";
 import jwt from "jsonwebtoken";
 import { OAuth2Client } from "google-auth-library";
+import { handleDatabaseError } from "../utils/errorHandler.js";
 
 const googleClient = new OAuth2Client(
   "1013873914332-sf1up07lqjoch6tork8cpfohi32st8pi.apps.googleusercontent.com",
@@ -188,7 +189,7 @@ async function remove(req: Request, res: Response) {
 
     res.status(200).json({ message: "Usuario deshabilitado", data: usuario });
   } catch (error: any) {
-    res.status(500).json({ message: error.message });
+    return handleDatabaseError(error, res, "Usuario");
   }
 }
 
@@ -209,13 +210,15 @@ async function login(req: Request, res: Response) {
 
       if (isMatch) {
         const token = jwt.sign(
-          { id: usuario.id, username: usuario.username, tipo_usuario: usuario.tipo_usuario },
+          {
+            id: usuario.id,
+            username: usuario.username,
+            tipo_usuario: usuario.tipo_usuario,
+          },
           process.env.JWT_SECRET || "secreto_del_token",
           { expiresIn: "1h" },
         );
-        res
-          .status(200)
-          .json({ message: "Usuario logueado", data: { token } });
+        res.status(200).json({ message: "Usuario logueado", data: { token } });
       } else {
         res.status(401).json({ message: "Contraseña incorrecta" });
       }
@@ -244,7 +247,9 @@ async function googleLogin(req: Request, res: Response) {
     try {
       const ticket = await googleClient.verifyIdToken({
         idToken: googleToken,
-        audience: process.env.GOOGLE_CLIENT_ID || "1013873914332-sf1up07lqjoch6tork8cpfohi32st8pi.apps.googleusercontent.com",
+        audience:
+          process.env.GOOGLE_CLIENT_ID ||
+          "1013873914332-sf1up07lqjoch6tork8cpfohi32st8pi.apps.googleusercontent.com",
       });
       payload = ticket.getPayload();
       console.log("Google token verified successfully");
@@ -297,7 +302,11 @@ async function googleLogin(req: Request, res: Response) {
     }
 
     const jwtToken = jwt.sign(
-      { id: usuario.id, username: usuario.username, tipo_usuario: usuario.tipo_usuario },
+      {
+        id: usuario.id,
+        username: usuario.username,
+        tipo_usuario: usuario.tipo_usuario,
+      },
       process.env.JWT_SECRET || "secreto_del_token",
       { expiresIn: "1h" },
     );
@@ -318,13 +327,29 @@ async function googleLogin(req: Request, res: Response) {
 
 async function completeGoogleRegistration(req: Request, res: Response) {
   try {
-    const { token: googleToken, username, nombre, apellido, dni, fecha_nacimiento } = req.body;
+    const {
+      token: googleToken,
+      username,
+      nombre,
+      apellido,
+      dni,
+      fecha_nacimiento,
+    } = req.body;
 
     console.log("Complete Google registration request");
 
     // Validar datos requeridos
-    if (!googleToken || !username || !nombre || !apellido || !dni || !fecha_nacimiento) {
-      return res.status(400).json({ message: "Todos los campos son requeridos" });
+    if (
+      !googleToken ||
+      !username ||
+      !nombre ||
+      !apellido ||
+      !dni ||
+      !fecha_nacimiento
+    ) {
+      return res
+        .status(400)
+        .json({ message: "Todos los campos son requeridos" });
     }
 
     // Verificar el token de Google
@@ -332,16 +357,21 @@ async function completeGoogleRegistration(req: Request, res: Response) {
     try {
       const ticket = await googleClient.verifyIdToken({
         idToken: googleToken,
-        audience: "1013873914332-sf1up07lqjoch6tork8cpfohi32st8pi.apps.googleusercontent.com",
+        audience:
+          "1013873914332-sf1up07lqjoch6tork8cpfohi32st8pi.apps.googleusercontent.com",
       });
       payload = ticket.getPayload();
     } catch (error) {
       console.error("Error verificando el token de Google:", error);
-      return res.status(401).json({ message: "Token de Google inválido o expirado" });
+      return res
+        .status(401)
+        .json({ message: "Token de Google inválido o expirado" });
     }
 
     if (!payload || !payload.email) {
-      return res.status(401).json({ message: "Token de Google inválido - falta email" });
+      return res
+        .status(401)
+        .json({ message: "Token de Google inválido - falta email" });
     }
 
     // Verificar que el usuario no exista ya
@@ -353,7 +383,9 @@ async function completeGoogleRegistration(req: Request, res: Response) {
     // Verificar que el username no esté en uso
     const existingUsername = await em.findOne(Usuario, { username });
     if (existingUsername) {
-      return res.status(409).json({ message: "El nombre de usuario ya está en uso" });
+      return res
+        .status(409)
+        .json({ message: "El nombre de usuario ya está en uso" });
     }
 
     // Verificar que el DNI no esté en uso
@@ -388,7 +420,11 @@ async function completeGoogleRegistration(req: Request, res: Response) {
 
     // Generar JWT token
     const jwtToken = jwt.sign(
-      { id: usuario.id, username: usuario.username, tipo_usuario: usuario.tipo_usuario },
+      {
+        id: usuario.id,
+        username: usuario.username,
+        tipo_usuario: usuario.tipo_usuario,
+      },
       process.env.JWT_SECRET || "secreto_del_token",
       { expiresIn: "1h" },
     );
@@ -423,4 +459,14 @@ async function getCurrentUser(req: Request, res: Response) {
   }
 }
 
-export { findAll, findOne, create, update, remove, login, googleLogin, completeGoogleRegistration, getCurrentUser };
+export {
+  findAll,
+  findOne,
+  create,
+  update,
+  remove,
+  login,
+  googleLogin,
+  completeGoogleRegistration,
+  getCurrentUser,
+};

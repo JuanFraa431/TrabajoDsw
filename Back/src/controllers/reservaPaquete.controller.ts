@@ -10,7 +10,7 @@ import { Persona } from "../models/persona.model.js";
 import { Pago } from "../models/pago.model.js";
 import { EmailService } from "../services/emailService.js";
 import { calcularPrecioPaquete } from "../utils/paqueteUtils.js";
-
+import { handleDatabaseError } from "../utils/errorHandler.js";
 
 const em = orm.em;
 
@@ -169,8 +169,8 @@ async function create(req: Request, res: Response) {
         : Number(paquete.descuento);
     const precioUnitario =
       typeof descuentoValue === "number" &&
-        descuentoValue > 0 &&
-        descuentoValue < 1
+      descuentoValue > 0 &&
+      descuentoValue < 1
         ? Math.round(Number(precioBase) * (1 - descuentoValue))
         : Number(precioBase);
     const precioEsperado = precioUnitario * cantidadPersonas;
@@ -199,15 +199,15 @@ async function create(req: Request, res: Response) {
 
     const fechasEstadias = paquete.estadias.getItems().length
       ? {
-        fecha_ini: paquete.estadias
-          .getItems()
-          .map((e) => e.fecha_ini)
-          .sort((a, b) => a.getTime() - b.getTime())[0],
-        fecha_fin: paquete.estadias
-          .getItems()
-          .map((e) => e.fecha_fin)
-          .sort((a, b) => b.getTime() - a.getTime())[0],
-      }
+          fecha_ini: paquete.estadias
+            .getItems()
+            .map((e) => e.fecha_ini)
+            .sort((a, b) => a.getTime() - b.getTime())[0],
+          fecha_fin: paquete.estadias
+            .getItems()
+            .map((e) => e.fecha_fin)
+            .sort((a, b) => b.getTime() - a.getTime())[0],
+        }
       : null;
 
     const datosReserva = {
@@ -307,10 +307,10 @@ async function remove(req: Request, res: Response) {
   try {
     const id = Number.parseInt(req.params.id);
     const reservaPaquete = em.getReference(ReservaPaquete, id);
-    em.removeAndFlush(reservaPaquete);
+    await em.removeAndFlush(reservaPaquete);
     res.status(200).json({ message: "ReservaPaquete eliminada" });
   } catch (error: any) {
-    res.status(500).json({ message: error.message });
+    return handleDatabaseError(error, res, "ReservaPaquete");
   }
 }
 

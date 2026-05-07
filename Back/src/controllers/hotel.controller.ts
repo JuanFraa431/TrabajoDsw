@@ -5,6 +5,7 @@ import { Ciudad } from "../models/ciudad.model.js";
 import { Paquete } from "../models/paquete.model.js";
 import { orm } from "../shared/db/orm.js";
 import { calcularPrecioPaquete } from "../utils/paqueteUtils.js";
+import { handleDatabaseError } from "../utils/errorHandler.js";
 
 const em = orm.em;
 
@@ -79,10 +80,10 @@ async function remove(req: Request, res: Response) {
   try {
     const id = Number.parseInt(req.params.id);
     const hotel = em.getReference(Hotel, id);
-    em.removeAndFlush(hotel);
+    await em.removeAndFlush(hotel);
     res.status(200).json({ message: "Hotel eliminado" });
   } catch (error: any) {
-    res.status(500).json({ message: error.message });
+    return handleDatabaseError(error, res, "Hotel");
   }
 }
 

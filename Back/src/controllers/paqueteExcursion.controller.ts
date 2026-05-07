@@ -3,6 +3,7 @@ import { PaqueteExcursion } from "../models/paqueteExcursion.model.js";
 import { Paquete } from "../models/paquete.model.js";
 import { Excursion } from "../models/excursion.model.js";
 import { orm } from "../shared/db/orm.js";
+import { handleDatabaseError } from "../utils/errorHandler.js";
 
 const em = orm.em;
 
@@ -118,7 +119,7 @@ async function remove(req: Request, res: Response) {
 
     res.status(200).json({ message: "PaqueteExcursion eliminada" });
   } catch (error: any) {
-    res.status(500).json({ message: error.message });
+    return handleDatabaseError(error, res, "PaqueteExcursion");
   }
 }
 

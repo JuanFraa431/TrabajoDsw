@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { Pago, PagoEstado } from "../models/pago.model.js";
 import { orm } from "../shared/db/orm.js";
 import { ReservaPaquete } from "../models/reservaPaquete.model.js";
+import { handleDatabaseError } from "../utils/errorHandler.js";
 
 const em = orm.em;
 
@@ -67,10 +68,10 @@ async function remove(req: Request, res: Response) {
   try {
     const id = Number.parseInt(req.params.id);
     const pago = em.getReference(Pago, id);
-    em.removeAndFlush(pago);
+    await em.removeAndFlush(pago);
     res.status(200).json({ message: "Pago eliminado" });
   } catch (error: any) {
-    res.status(500).json({ message: error.message });
+    return handleDatabaseError(error, res, "Pago");
   }
 }
 

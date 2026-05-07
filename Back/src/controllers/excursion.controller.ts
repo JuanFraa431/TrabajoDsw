@@ -4,6 +4,7 @@ import { Excursion } from "../models/excursion.model.js";
 import { Paquete } from "../models/paquete.model.js";
 import { orm } from "../shared/db/orm.js";
 import { calcularPrecioPaquete } from "../utils/paqueteUtils.js";
+import { handleDatabaseError } from "../utils/errorHandler.js";
 
 const em = orm.em;
 
@@ -78,10 +79,10 @@ async function remove(req: Request, res: Response) {
   try {
     const id = Number.parseInt(req.params.id);
     const excursion = em.getReference(Excursion, id);
-    em.removeAndFlush(excursion);
+    await em.removeAndFlush(excursion);
     res.status(200).json({ message: "Excursion eliminada" });
   } catch (error: any) {
-    res.status(500).json({ message: error.message });
+    return handleDatabaseError(error, res, "Excursion");
   }
 }
 

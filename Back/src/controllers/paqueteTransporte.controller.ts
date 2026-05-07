@@ -4,6 +4,7 @@ import { Paquete } from "../models/paquete.model.js";
 import { TipoTransporte } from "../models/tipoTransporte.model.js";
 import { Ciudad } from "../models/ciudad.model.js";
 import { orm } from "../shared/db/orm.js";
+import { handleDatabaseError } from "../utils/errorHandler.js";
 
 const em = orm.em;
 
@@ -145,7 +146,6 @@ async function create(req: Request, res: Response) {
 
     await em.flush();
 
-
     res
       .status(201)
       .json({ message: "PaqueteTransporte creado", data: paqueteTransporte });
@@ -263,7 +263,7 @@ async function remove(req: Request, res: Response) {
 
     res.status(200).json({ message: "PaqueteTransporte eliminado" });
   } catch (error: any) {
-    res.status(500).json({ message: error.message });
+    return handleDatabaseError(error, res, "PaqueteTransporte");
   }
 }
 

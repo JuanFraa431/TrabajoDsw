@@ -3,6 +3,7 @@ import { Estadia } from "../models/estadia.model.js";
 import { Hotel } from "../models/hotel.model.js";
 import { orm } from "../shared/db/orm.js";
 import { Paquete } from "../models/paquete.model.js";
+import { handleDatabaseError } from "../utils/errorHandler.js";
 
 const em = orm.em;
 
@@ -54,11 +55,9 @@ async function create(req: Request, res: Response) {
         .json({ message: "Las fechas de estadía son obligatorias." });
     }
     if (new Date(rest.fecha_fin) <= new Date(rest.fecha_ini)) {
-      return res
-        .status(400)
-        .json({
-          message: "La fecha de fin debe ser posterior a la de inicio.",
-        });
+      return res.status(400).json({
+        message: "La fecha de fin debe ser posterior a la de inicio.",
+      });
     }
 
     const hotel = await em.getReference(Hotel, id_hotel);
@@ -107,11 +106,9 @@ async function update(req: Request, res: Response) {
         .json({ message: "Las fechas de estadía son obligatorias." });
     }
     if (new Date(fechaFin) <= new Date(fechaIni)) {
-      return res
-        .status(400)
-        .json({
-          message: "La fecha de fin debe ser posterior a la de inicio.",
-        });
+      return res.status(400).json({
+        message: "La fecha de fin debe ser posterior a la de inicio.",
+      });
     }
 
     if (!id_paquete) {
@@ -153,11 +150,11 @@ async function remove(req: Request, res: Response) {
         .json({ message: "No se encontró el paquete asociado" });
     }
 
-    em.removeAndFlush(estadia);
+    await em.removeAndFlush(estadia);
 
     res.status(200).json({ message: "Estadia eliminada" });
   } catch (error: any) {
-    res.status(500).json({ message: error.message });
+    return handleDatabaseError(error, res, "Estadia");
   }
 }
 
