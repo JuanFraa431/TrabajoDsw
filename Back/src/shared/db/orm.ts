@@ -53,4 +53,34 @@ if (process.env.NODE_ENV !== 'production') {
     FROM paquete p
   `);
   console.log('✅ Vista vw_precio_paquete creada/actualizada');
+
+  // Cargar datos por primera vez si la base de datos está vacía
+  try {
+    const [row] = await connection.execute('SELECT COUNT(*) as count FROM ciudad');
+    if (row && (row as any).count === 0) {
+      console.log('Base de datos vacía. Cargando datos iniciales...');
+      const fs = await import('fs');
+      const path = await import('path');
+      
+      let sqlFilePath = path.join(process.cwd(), 'seed_data.sql');
+      if (!fs.existsSync(sqlFilePath)) {
+        sqlFilePath = path.join(process.cwd(), 'Back/seed_data.sql');
+      }
+      const sqlFile = fs.readFileSync(sqlFilePath, 'utf-8');
+
+      const statements = sqlFile
+        .split(/;\r?\n/)
+        .map(stmt => stmt.trim())
+        .filter(stmt => stmt.length > 0);
+
+      for (const statement of statements) {
+        await connection.execute(statement);
+      }
+      console.log('Datos iniciales cargados con éxito');
+    } else {
+      console.log('La base de datos ya contiene datos, omitiendo carga inicial.');
+    }
+  } catch (err: any) {
+    console.error('Error al verificar/cargar datos iniciales:', err.message);
+  }
 }

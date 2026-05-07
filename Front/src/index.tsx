@@ -1,6 +1,6 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import { HashRouter } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 import axios from 'axios';
 import './public/global.css';
 import App from './App';
@@ -33,9 +33,9 @@ const root = createRoot(container);
 root.render(
     <React.StrictMode>
         <ErrorBoundary>
-            <HashRouter>
+            <BrowserRouter>
                 <App />
-            </HashRouter>
+            </BrowserRouter>
         </ErrorBoundary>
     </React.StrictMode>
 );
