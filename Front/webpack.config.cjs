@@ -105,7 +105,7 @@ module.exports = (env, argv) => {
             proxy: [
                 {
                     context: ['/api'],
-                    target: 'http://localhost:3000',
+                    target: process.env.BACKEND_URL || 'http://localhost:3000',
                     changeOrigin: true,
                     pathRewrite: { '^/api': '/api' },
                 },

@@ -51,4 +51,38 @@ https://odysseytravels.infinityfreeapp.com/
 
 ## Ejecutar el proyecto localmente
 
-`npm run startAll`
+### Opción 1: Con Docker (recomendado) 🐳
+
+Solo necesitás tener [Docker Desktop](https://www.docker.com/products/docker-desktop/) instalado.
+
+```bash
+# 1. Cloná el repositorio
+git clone https://github.com/JuanFraa431/TrabajoDsw.git
+cd TrabajoDsw
+
+# 2. Copiá el archivo de variables de entorno y completá los valores
+cp .env.docker.example .env
+
+# 3. Levantá todos los servicios (backend + frontend + base de datos)
+docker compose up --build
+
+# 4. Abrí el navegador en http://localhost:8080
+```
+
+Para detener los servicios: `Ctrl + C` o `docker compose down`
+
+Para borrar los datos de la base de datos: `docker compose down -v`
+
+| Servicio | URL |
+|----------|-----|
+| Frontend | http://localhost:8080 |
+| Backend API | http://localhost:3000 |
+| MySQL | localhost:3307 (usuario/contraseña en `.env`) |
+
+### Opción 2: Sin Docker
+
+Requiere Node.js ≥18 y MySQL instalados localmente.
+
+```bash
+npm run startAll
+```
