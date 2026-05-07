@@ -1,0 +1,65 @@
+services:
+  # ── Base de Datos MySQL ──────────────────────────────────────────────
+  db:
+    image: mysql:8.0
+    container_name: dsw-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpassword}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-odyssey_db}
+      MYSQL_USER: ${MYSQL_USER:-dsw_user}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-dsw_password}
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD:-rootpassword}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  # ── Backend (Express + TypeScript) ───────────────────────────────────
+  backend:
+    build:
+      context: ./Back
+      dockerfile: Dockerfile
+    container_name: dsw-backend
+    restart: unless-stopped
+    environment:
+      PORT: 3000
+      NODE_ENV: development
+      DATABASE_URL: mysql://${MYSQL_USER:-dsw_user}:${MYSQL_PASSWORD:-dsw_password}@db:3306/${MYSQL_DATABASE:-odyssey_db}
+      DB_NAME: ${MYSQL_DATABASE:-odyssey_db}
+      JWT_SECRET: ${JWT_SECRET:-dev_jwt_secret_change_me}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      CORS_ORIGINS: http://localhost:8080,http://localhost:3000
+    ports:
+      - "3000:3000"
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./Back/src:/app/src
+    # En desarrollo, recompila y reinicia al detectar cambios
+    command: npx tsc-watch --onSuccess "node dist/server.js"
+
+  # ── Frontend (React + Webpack) ───────────────────────────────────────
+  frontend:
+    build:
+      context: ./Front
+      dockerfile: Dockerfile
+    container_name: dsw-frontend
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    depends_on:
+      - backend
+    volumes:
+      - ./Front/src:/app/src
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+
+volumes:
+  mysql_data:

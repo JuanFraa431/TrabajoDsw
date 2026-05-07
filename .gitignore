@@ -4,6 +4,10 @@ coverage
 # API keys and secrets
 **/.env
 
+# Docker
+docker-compose.override.yml
+mysql_data/
+
 # dependency directory
 **/node_modules/
 

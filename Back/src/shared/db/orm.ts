@@ -21,3 +21,36 @@ export const orm = await MikroORM.init({
   },
 });
 
+// Auto-sync del schema: crea/actualiza tablas si no existen (solo en desarrollo)
+if (process.env.NODE_ENV !== 'production') {
+  const generator = orm.getSchemaGenerator();
+  await generator.updateSchema({ safe: true });
+  console.log('✅ Schema de base de datos sincronizado');
+
+  // Crear vista vw_precio_paquete si no existe
+  const connection = orm.em.getConnection();
+  await connection.execute(`
+    CREATE OR REPLACE VIEW vw_precio_paquete AS
+    SELECT
+      p.id AS paquete_id,
+      COALESCE(
+        (SELECT SUM(h.precio_x_dia * DATEDIFF(e.fecha_fin, e.fecha_ini))
+         FROM estadia e
+         JOIN hotel h ON e.hotel_id = h.id
+         WHERE e.paquete_id = p.id), 0
+      ) +
+      COALESCE(
+        (SELECT SUM(ex.precio)
+         FROM paquete_excursion pe
+         JOIN excursion ex ON pe.excursion_id = ex.id
+         WHERE pe.paquete_id = p.id), 0
+      ) +
+      COALESCE(
+        (SELECT SUM(tp.precio)
+         FROM transporte_paquete tp
+         WHERE tp.paquete_id = p.id), 0
+      ) AS precio_total
+    FROM paquete p
+  `);
+  console.log('✅ Vista vw_precio_paquete creada/actualizada');
+}
