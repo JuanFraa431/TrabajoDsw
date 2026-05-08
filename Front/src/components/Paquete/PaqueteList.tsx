@@ -557,6 +557,38 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
     }
   };
 
+  const handleDeletePaquete = (paquete: Paquete) => {
+    Swal.fire({
+      title: "¿Estás seguro que deseas eliminar el paquete?",
+      text: "Esta acción no se puede deshacer.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Sí, eliminar",
+      cancelButtonText: "Cancelar",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await axios.delete(`/api/paquete/${paquete.id}`);
+          setPaquetes((prev) => prev.filter((p) => p.id !== paquete.id));
+          onDelete(paquete);
+          Swal.fire(
+            "Eliminado",
+            "El paquete fue eliminado correctamente.",
+            "success",
+          );
+        } catch (error: any) {
+          Swal.fire(
+            "Error",
+            error.response?.data?.message || "No se pudo eliminar el paquete",
+            "error",
+          );
+        }
+      }
+    });
+  };
+
   useEffect(() => {
     fetchHoteles();
     fetchTiposTransporte();
@@ -2281,7 +2313,7 @@ const PaqueteList: React.FC<PaqueteListProps> = ({
                     </button>
                     <button
                       className="btn-delete"
-                      onClick={() => onDelete(paquete)}
+                      onClick={() => handleDeletePaquete(paquete)}
                     >
                       Eliminar
                     </button>

@@ -4,6 +4,9 @@ import axios from "axios";
 const CLOUDINARY_CLOUD_NAME = "dy8lzfj2h";
 const CLOUDINARY_UPLOAD_PRESET = "ml_default";
 
+// Instancia de axios sin interceptores globales (evita enviar Authorization a Cloudinary)
+const cloudinaryAxios = axios.create();
+
 export interface CloudinaryUploadResult {
   secure_url: string;
   public_id: string;
@@ -26,7 +29,7 @@ export const uploadImageToCloudinary = async (
 
   const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/upload`;
   
-  const response = await axios.post<CloudinaryUploadResult>(cloudinaryUrl, formData);
+  const response = await cloudinaryAxios.post<CloudinaryUploadResult>(cloudinaryUrl, formData);
   return response.data.secure_url;
 };
 
