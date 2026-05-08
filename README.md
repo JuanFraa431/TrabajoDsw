@@ -1,53 +1,30 @@
-# Propuesta TP DSW
+﻿# Seminario Integrador - Analista Universitario de Sistemas de Información
 
-## Grupo
-
-### Integrantes
-
-- 51331 - Alaniz, Juan Francisco
+## Integrantes
 - 51564 - Cascardo, Bruno
 - 50489 - Dragotta, Tomás
 - 51200 - Martinez, Jano
 
-## Tema
+## Descripción
+El sistema de gestión para la agencia de turismo automatiza procesos de alta, baja, modificación y consulta de destinos, excursiones y clientes. Permite la creación flexible de paquetes de viaje e integra un módulo de reservas en línea. Incluye herramientas para seguimiento de consultas y quejas, garantizando una gestión eficiente y transparente.
 
-### Descripción
-
-_El sistema de gestión para la agencia de turismo automatiza procesos de alta, baja, modificación y consulta de destinos, excursiones y clientes. Permite la creación flexible de paquetes de viaje e integra un módulo de reservas en línea. Incluye herramientas para seguimiento de consultas y quejas, garantizando una gestión eficiente y transparente._
-
-### Modelo
-
-![Modelo de Clases](<(https://github.com/JuanFraa431/TrabajoDsw/blob/main/MD%20dsw.drawio.png)>)
-
-## Alcance Funcional
-
-### Alcance Mínimo
-
-Regularidad:
-|Req|Detalle|
-|:-|:-|
-|CRUD simple|1. CRUD Paquete<br>2. CRUD Cliente<br>3. CRUD Ciudad<br>4.CRUD Transporte|
-|CRUD dependiente|1. CRUD Hotel {depende de} CRUD Ciudad<br>2. CRUD Excursión {depende de} CRUD Ciudad|
-|Listado<br>+<br>detalle| 1. Listado de paquetes filtrado por ciudad, muestra nro, excursiones y transporte => detalle CRUD Paquete<br> 2. Listado de paquetes filtrado por rango de fecha, muestra nro, excursiones, transporte y ciudad => detalle muestra datos completos del paquete y
-|CUU/Epic|1. Reservar un paquete<br>2. Realizar la creación de un paquete|
-
-Adicionales para Aprobación
-|Req|Detalle|
-|:-|:-|
-|CRUD |CRUD Usuario<br>CRUD Reserva de Paquete<br>CRUD Pago<br>CRUD Comentario<br>CRUD Cancelación<br>CRUD Tipo de Transporte<br>CRUD PaqueteExcursión<br>CRUD PaqueteTransporte<br>CRUD Estadía|
-|CUU/Epic|Aprobar/Rechazar pago y reserva del paquete<br>Realizar un comentario en un paquete y permitir borrado por el usuario o por un admin|
-
-### Alcance Adicional Voluntario
-
-| Req      | Detalle                                                                                                                                                                                                             |
-| :------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Listados | Listado de hoteles<br>Listado de excursiones                                                                                                                                                                        |
-| CUU/Epic | Consultar estadísticas de Destinos más populares (admin)<br>Consultar estadísticas de Reservas por período (admin)<br>Consultar estadísticas de Ingresos y facturación (admin)<br>Cancelar la reserva de un paquete |
-| Otros    | Inicio de sesión con cuenta de Google<br>Subir imágenes automáticamente a la nube<br>Envío de mails para confirmar solicitud y confirmar/rechazar reserva                                                           |
+## Casos de Uso
+- E03-R02-ART-CUU 01 - Realizar Reserva Paquete
+- E03-R02-ART-CUU 02 - ABM Paquete
+- E03-R02-ART-CUU 03 - ABM Cliente
+- E03-R02-ART-CUU 04 - ABM Tipo de Transporte
+- E03-R02-ART-CUU 05 - Cancelar reserva paquete
+- E03-R02-ART-CUU 06 - ABM Hotel
+- E03-R02-ART-CUU 07 - ABM Excursión
+- E03-R02-ART-CUU 08 - ABM Ciudad
+- E03-R02-ART-CUU 09 - Registrar comentarios
+- E03-R02-ART-CUU 10 - Consultar reporte de ventas
+- E03-R02-ART-CUU 11 - Reporte ciudades más elegidas
+- E03-R02-ART-CUU 12 - Reporte de reservas por periodo
 
 ## Página pública
 
-https://odysseytravels.infinityfreeapp.com/
+http://34.151.237.162/
 
 ## Ejecutar el proyecto localmente
 
@@ -57,8 +34,8 @@ Solo necesitás tener [Docker Desktop](https://www.docker.com/products/docker-de
 
 ```bash
 # 1. Cloná el repositorio
-git clone https://github.com/JuanFraa431/TrabajoDsw.git
-cd TrabajoDsw
+git clone https://github.com/JuanFraa431/TP_Seminario.git
+cd TP_Seminario
 
 # 2. Copiá el archivo de variables de entorno y completá los valores
 cp .env.docker.example .env
